@@ -1,54 +1,84 @@
-# CLAUDE.md: Project Memory for "Bench" (codename)
+# CLAUDE.md
 
-Claude reads this file at the start of every session in this folder. Keep it short and current. Details live in `docs/`.
+Bench (codename): a cross-platform desktop app for a glass-box team of Claude agents. Keep this file under 200 lines; details belong in `docs/`. Personal notes go in `CLAUDE.local.md` (gitignored).
 
-## What we're building
-A native, cross-platform desktop app (Windows first, then macOS/Linux): a **glass-box team of Claude agents**. Each agent has a role, its own model, memory and chat. Agents hand off work to each other, and group chats have router-based turn-taking. The founder sees and controls everything (traces, prompts, tokens, approvals).
-→ [docs/VISION.md](docs/VISION.md) · [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [docs/ROADMAP.md](docs/ROADMAP.md) · [docs/BACKLOG.md](docs/BACKLOG.md)
+## Commands
 
-## Roles
-- **Founder (user):** product owner, final decisions, human in the loop.
-- **Claude:** acts as PM + CTO. Plans in sprints, writes code, keeps docs and this file current, and asks before irreversible or outward-facing actions.
+> No app code yet (Sprint 0). These are the target commands, introduced in S1-1 (ADR-0003). Until then, only docs and CI exist.
 
-## Product model (founder, 2026-10-21): read docs/PRODUCT-MODEL.md
-- **One main agent** + agents the founder creates (no predefined agents). Each agent is like a Claude Project: name, description, role, model, knowledge, **private memory**; all agents read **global memory**.
-- Connectors, plugins and skills = the founder's global account inventory; **each agent gets only the subset chosen for it** (saves tokens).
+```bash
+pnpm bootstrap          # install deps, set up git hooks (lefthook)
+pnpm dev                # run the Electron app in dev mode (uses a separate BENCH_HOME)
+pnpm lint               # prettier --check + eslint
+pnpm typecheck
+pnpm test               # vitest, all packages
+pnpm test -- path/to/file.test.ts   # one test file
+pnpm test:e2e           # Playwright against the built Electron app
+pnpm build
+pnpm check:all          # lint + typecheck + test: run before every PR
+pnpm changeset          # add a changeset for user-visible changes
+```
 
-## Current phase
-**Sprint 0: Inception** (started 2026-10-21). Research done (docs/research/). Repo: https://github.com/Majd-Alhakim/bench (private). Next up: spikes S0-1, S0-2, S0-3.
+## What This Is
 
-## Key decisions (see docs/adr/)
-- ADR-0001 *(proposed)*: Electron + React/TS + Claude Agent SDK in the main process; SQLite; files as the source of truth.
-- ADR-0002 *(accepted, personal use)*: drive the **official unmodified Claude Code binary** via the Agent SDK, inheriting the user's own `claude login`. **Never** build a login, never read or store OAuth tokens, never share a plan, strip `ANTHROPIC_API_KEY` unless in API mode, never call the product "Claude Code".
-- Per-agent isolation: `mcpServers` + `strictMcpConfig: true`, `tools`/`disallowedTools` (not `allowedTools`), `settingSources: []`, `skills`, `plugins`.
-- Model tiers: `fast` = claude-haiku-5-5, `balanced` = claude-sonnet-5-5, `deep` = claude-opus-5-5 (`config/models.yaml`).
+You talk to **one main agent** and create your own agents, each like a Claude Project: name, description, role, model, knowledge files, **private memory**, plus a **global memory** every agent reads. Connectors, plugins and skills come from the user's own Claude Code inventory, and **each agent gets only the subset chosen for it**. Groups let agents talk and hand off work, and the user sees every step, prompt and token.
+Read first: [PRODUCT-MODEL](docs/PRODUCT-MODEL.md) · [ARCHITECTURE](docs/ARCHITECTURE.md) · [BACKLOG](docs/BACKLOG.md) · [research](docs/research/).
 
-## Founder answers (2026-10-21)
-- **Audience:** personal first, maybe share later. Keep auth (API-key backend), naming and licensing clean enough to go public.
-- **Platforms:** must run on **Windows, macOS and Linux** eventually. Windows is the first target, but no Windows-only dependencies.
-- **First connectors:** Gmail + GitHub.
-- **Repo:** private first; open-source at v0.1 once the auth/terms questions are settled.
+## Architecture
 
-## Open questions for the founder
-1. Confirm Electron (ADR-0001), now that it's been re-checked against the cross-platform requirement.
-2. First agents the founder will create for dogfooding, and the real goal they work on in week 2.
+- `apps/desktop/`: Electron. `src/main` (Node: runs agents), `src/preload` (minimal typed bridge), `src/renderer` (React, no Node). OS-specific code only in `src/main/platform/`.
+- `packages/core/`: orchestrator, router, agent runner, memory, ledger. Pure TypeScript, **no Electron imports**.
+- `packages/shared/`: zod schemas, IPC contracts, typed errors.
+- `packages/bench-mcp/`: in-process MCP server (handoff, ask_agent, memory tools).
+- Agents and memory are **files** in the Bench home folder; SQLite holds messages, runs, tasks and the ledger only.
 
-## Engineering workflow (founder standing order, 2026-10-21: always follow)
-1. **Never commit to `main` directly.** One branch per story/fix: `feat/…`, `fix/…`, `chore/…`, `docs/…`, `spike/…`.
-2. **Before opening a PR, self-review the diff for:** bugs, edge cases, dead code, duplication, unclear names, over-abstraction, "slop" (generic filler comments, unused params, copy-paste blocks, TODOs without an issue), and structure. Fix them, then re-run checks. Run `/code-review` or `/simplify` on non-trivial changes.
-3. **Tests are part of the change:** Vitest for `packages/core` logic (bug fix = failing test first), Playwright-Electron for critical UI flows. No PR lowers coverage on core.
-4. **Local gate = CI gate:** `npm run lint && npm run typecheck && npm test && npm run build`, plus `npm audit --audit-level=high`. CI runs the same on windows/macos/ubuntu, plus a secret scan (gitleaks). Red CI never merges.
-5. **PR:** use the template, link the backlog ID, describe how it was tested. Squash-merge with a Conventional Commit title. Delete the branch after merging.
-6. **Security per change:** check against [docs/security-baseline.md](docs/security-baseline.md). Never commit secrets; never touch Claude OAuth credentials (ADR-0002).
-7. **Release:** follow [docs/deploy-checklist.md](docs/deploy-checklist.md); update [docs/production-readiness-report.md](docs/production-readiness-report.md) each release.
-8. Update BACKLOG.md status and this file when a story lands.
+## Key Concepts
 
-## Conventions
-- TypeScript strict. Business logic in `packages/core` (no Electron imports there).
-- Agents/memory = files in the Bench home folder (Markdown + YAML frontmatter). SQLite only for messages/runs/tasks/ledger.
-- Every feature ships with a trace event so it's visible in the UI.
-- Cross-platform: use `path`/`os` APIs (never hard-coded `\` or `C:\`), no Windows-only native modules, and CI runs on windows/macos/ubuntu.
-- Security: renderer sandboxed, secrets only in the OS keychain via Electron `safeStorage`, tools that act outside the app always need approval.
+- **Agent run** = one Agent SDK `query()` with per-agent options: `model`, `systemPrompt`, `mcpServers` + `strictMcpConfig: true`, `tools`/`disallowedTools`, `skills`, `plugins`, `settingSources: []`, `cwd`, `resume`.
+- **Router**: rules first (@mention, task owner), then a Haiku call over agent cards + thread digest. One responder by default.
+- **Handoff**: a structured brief (task, summary, artifact refs, acceptance criteria). The receiver never gets the sender's transcript.
+- **Model tiers** (`config/models.yaml`): fast = claude-haiku-5-5, balanced = claude-sonnet-5-5, deep = claude-opus-5-5.
 
-## Definition of Done
-Branch + PR · self-reviewed (no slop) · tests added and passing · CI green on all 3 OSes · secret scan clean · visible in trace · docs/backlog updated · founder demoed it.
+## Things That Will Bite You
+
+- **Auth (ADR-0002):** Bench runs the official, unmodified Claude Code binary and inherits the user's `claude login`. Never build a login, never read or store `~/.claude/.credentials.json` or OAuth tokens, never share one plan between people, never name the product "Claude Code".
+- An `ANTHROPIC_API_KEY` in the environment silently overrides the subscription (billing!). Strip it from the agent `env` unless API mode is on.
+- Without `strictMcpConfig: true`, the user's claude.ai connectors load into **every** agent.
+- `allowedTools` only auto-approves; it does **not** restrict. Restrict with `tools` / `disallowedTools`.
+- Without `settingSources: []`, agents load the user's global CLAUDE.md, skills and agents.
+- Memory tools must derive the agent id from the runner context, never from a model-supplied argument (isolation).
+- Renderer: `contextIsolation: true`, `sandbox: true`, no `nodeIntegration`; every IPC payload is zod-validated in main.
+- Cross-platform: `path`/`os` APIs only; never hard-code `\` or `C:\`.
+
+## Code Conventions
+
+- TypeScript strict (see ADR-0003 flags). kebab-case files. Domain folders.
+- Typed errors from a shared base class; exhaustive `switch` with `checkNever()`.
+- zod at every trust boundary: IPC, files read from disk, tool inputs.
+- One retry/backoff helper; no ad-hoc retry loops.
+- Module boundaries are enforced by ESLint `no-restricted-imports` (core ↛ electron, renderer ↛ core).
+- Comments: one line inline, JSDoc on public API only. Formatting is Prettier's job.
+- Every feature emits a trace event so it's visible in the UI.
+
+## Testing
+
+- Vitest next to the code (`*.test.ts`). A bug fix starts with a failing test.
+- Isolation tests are mandatory for memory/connector features (agent A can't reach agent B's data).
+- Playwright e2e for critical flows (onboarding, chat, approval gate).
+
+## Git & PRs
+
+Full workflow: [CONTRIBUTING.md](CONTRIBUTING.md). Review standard: [REVIEW.md](REVIEW.md). Founder standing order (2026-10-21):
+- Never commit to `main`. One branch per change: `feat/ fix/ chore/ docs/ spike/`.
+- Before a PR, review the diff for bugs and slop and clean the structure (`/review-pr` or the reviewer agents in `.claude/agents/`).
+- `pnpm check:all` green locally; CI green on windows/macos/ubuntu plus gitleaks; then squash-merge with a Conventional Commit title.
+- Security: [docs/security-baseline.md](docs/security-baseline.md). Releases: [RELEASING.md](RELEASING.md).
+
+**Definition of Done:** branch + PR · self-reviewed (no slop) · tests pass · CI green on 3 OSes · secret scan clean · visible in trace · docs/backlog updated · founder demoed it.
+
+## Project Status & Open Decisions
+
+- **Sprint 0** (from 2026-10-21). Repo: github.com/Majd-Alhakim/bench (private). Next: spikes S0-1..3.
+- Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
+- Open: confirm Electron (ADR-0001) · first agents to dogfood and their week-2 goal.
+- Roles: the founder is product owner and human in the loop; Claude acts as PM + CTO and asks before irreversible or outward-facing actions.

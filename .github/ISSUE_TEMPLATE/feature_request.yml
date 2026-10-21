@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest a capability for Bench
+labels: [enhancement]
+body:
+  - type: textarea
+    id: job
+    attributes:
+      label: What are you trying to get done?
+      description: The job, not the solution. "When I…, I want to…, so I can…"
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposed solution
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What do you do today instead?

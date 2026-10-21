@@ -13,3 +13,6 @@ Thumbs.db
 *.log
 coverage/
 .claude/settings.local.json
+
+# Claude Code personal files
+CLAUDE.local.md
