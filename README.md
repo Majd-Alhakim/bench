@@ -1,6 +1,6 @@
 # Bench (codename)
 
-A native cross-platform desktop app (Windows first, then macOS and Linux) for running a **glass-box team of Claude agents**. Build an AI "company" (chiefs, employees, groups) where every agent has its own role, model, memory and chat. Agents hand work to each other while you watch every message, tool call and token.
+A native cross-platform desktop app (Windows first, then macOS and Linux) for running a **glass-box team of Claude agents**. You talk to one main agent and create your own agents, each with its own role, model, private memory and connectors, plus a global memory they all share. Agents hand work to each other while you watch every message, tool call and token.
 
 > Status: **Sprint 0, Inception.** No app code yet. See [docs/ROADMAP.md](docs/ROADMAP.md).
 

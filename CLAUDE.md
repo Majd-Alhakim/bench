@@ -33,13 +33,22 @@ A native, cross-platform desktop app (Windows first, then macOS/Linux): a **glas
 1. Confirm Electron (ADR-0001), now that it's been re-checked against the cross-platform requirement.
 2. First agents the founder will create for dogfooding, and the real goal they work on in week 2.
 
+## Engineering workflow (founder standing order, 2026-10-21: always follow)
+1. **Never commit to `main` directly.** One branch per story/fix: `feat/…`, `fix/…`, `chore/…`, `docs/…`, `spike/…`.
+2. **Before opening a PR, self-review the diff for:** bugs, edge cases, dead code, duplication, unclear names, over-abstraction, "slop" (generic filler comments, unused params, copy-paste blocks, TODOs without an issue), and structure. Fix them, then re-run checks. Run `/code-review` or `/simplify` on non-trivial changes.
+3. **Tests are part of the change:** Vitest for `packages/core` logic (bug fix = failing test first), Playwright-Electron for critical UI flows. No PR lowers coverage on core.
+4. **Local gate = CI gate:** `npm run lint && npm run typecheck && npm test && npm run build`, plus `npm audit --audit-level=high`. CI runs the same on windows/macos/ubuntu, plus a secret scan (gitleaks). Red CI never merges.
+5. **PR:** use the template, link the backlog ID, describe how it was tested. Squash-merge with a Conventional Commit title. Delete the branch after merging.
+6. **Security per change:** check against [docs/security-baseline.md](docs/security-baseline.md). Never commit secrets; never touch Claude OAuth credentials (ADR-0002).
+7. **Release:** follow [docs/deploy-checklist.md](docs/deploy-checklist.md); update [docs/production-readiness-report.md](docs/production-readiness-report.md) each release.
+8. Update BACKLOG.md status and this file when a story lands.
+
 ## Conventions
 - TypeScript strict. Business logic in `packages/core` (no Electron imports there).
-- Agents/memory/org = files in `workspace/` (Markdown + YAML frontmatter). DB = SQLite for messages/runs/tokens only.
-- Every feature ships with: Vitest tests for core logic, and a trace event so it's visible in the UI.
-- Conventional Commits. Small PRs. Update BACKLOG.md status when a story is done.
+- Agents/memory = files in the Bench home folder (Markdown + YAML frontmatter). SQLite only for messages/runs/tasks/ledger.
+- Every feature ships with a trace event so it's visible in the UI.
 - Cross-platform: use `path`/`os` APIs (never hard-coded `\` or `C:\`), no Windows-only native modules, and CI runs on windows/macos/ubuntu.
 - Security: renderer sandboxed, secrets only in the OS keychain via Electron `safeStorage`, tools that act outside the app always need approval.
 
 ## Definition of Done
-Code merged · tests pass · visible in trace · docs/backlog updated · founder demoed it.
+Branch + PR · self-reviewed (no slop) · tests added and passing · CI green on all 3 OSes · secret scan clean · visible in trace · docs/backlog updated · founder demoed it.
