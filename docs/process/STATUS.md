@@ -2,15 +2,15 @@
 
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
-**Current phase:** 1 (requirements gathering in progress)
-**Next step:** `/brd` (users & roles and goals & scenarios covered); remaining themes (budgets, connectors per role, data) can be marked as assumptions; look and feel and naming come in Phase 5
+**Current phase:** 1 (BRD v0.1 In Review)
+**Next step:** client reviews the BRD and answers its open issues (§10) → `/gate G1`
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
 | 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [competitive brief](../research/competitive-brief.md), [research](../research/) | G0 ⏳ |
-| 1 | Requirements / BRD | 🟡 Interviews in progress ([users & roles](../requirements/interviews/2026-10-21-users-and-roles.md) ✅, [goals & scenarios](../requirements/interviews/2026-10-21-goals-and-scenarios.md) ✅) | `docs/requirements/BRD.md` | G1 ⏳ |
+| 1 | Requirements / BRD | 🟡 Interviews in progress ([users & roles](../requirements/interviews/2026-10-21-users-and-roles.md) ✅, [goals & scenarios](../requirements/interviews/2026-10-21-goals-and-scenarios.md) ✅) | [BRD v0.1](../requirements/BRD.md) **In Review** | G1 ⏳ |
 | 2 | PRD | ⚪ Not started | `docs/requirements/PRD.md` | G2 ⏳ |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
 | 4 | UX design | ⚪ Not started | `docs/design/ux/` | G4 ⏳ |
