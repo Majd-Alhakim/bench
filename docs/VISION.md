@@ -8,7 +8,7 @@
 
 ## 1. One-liner
 
-A native Windows desktop app where you build and run a **team of Claude agents** (your own AI company). Each agent has a role, a model, memory and a chat. They hand work to each other in group chats while you watch, with every message, tool call, token and file visible and editable.
+A native desktop app (Windows first, then macOS and Linux) where you build and run a **team of Claude agents** (your own AI company). Each agent has a role, a model, memory and a chat. They hand work to each other in group chats while you watch, with every message, tool call, token and file visible and editable.
 
 ## 2. The problem
 

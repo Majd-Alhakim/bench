@@ -11,9 +11,9 @@ The founder wants Bench to be "an extension of my Claude subscription" so usage 
 ## Decision (provisional)
 - **Provider abstraction** with two backends behind one interface:
   - `subscription`: uses the local, already-logged-in Claude Code install (Agent SDK / `claude` CLI auth). Personal use only.
-  - `api`: `ANTHROPIC_API_KEY`, stored in Windows Credential Manager.
+  - `api`: `ANTHROPIC_API_KEY`, stored in the OS keychain via Electron `safeStorage`.
 - The app never handles the claude.ai password or OAuth tokens itself. It relies on Claude Code's own login.
-- **If Bench is ever distributed publicly, the `api` backend is the only option** unless Anthropic approves otherwise.
+- **If Bench is ever distributed publicly, the `api` backend is the only option** unless Anthropic approves otherwise. The founder answered "personal first, maybe share", so the `api` backend is a first-class path, not an afterthought.
 
 ## Consequences
 - Usage limits are shared with the founder's normal Claude and Claude Code usage. That makes model tiering and the token ledger *critical* (see ARCHITECTURE §4.3).

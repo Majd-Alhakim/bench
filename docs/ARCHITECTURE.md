@@ -8,15 +8,15 @@
 
 | Layer | Choice | Why |
 |---|---|---|
-| Desktop shell | **Electron** (latest stable) + electron-vite | The Claude Agent SDK is TypeScript/Node-native, so it runs in Electron's main process with no sidecar. Mature Windows packaging and auto-update |
+| Desktop shell | **Electron** (latest stable) + electron-vite | Cross-platform (Windows → macOS → Linux) from one codebase. The Claude Agent SDK is TypeScript/Node-native, so it runs in Electron's main process with no sidecar |
 | UI | React 19 + TypeScript + Tailwind + shadcn/ui | Fast to build, accessible primitives |
 | Agent runtime | **`@anthropic-ai/claude-agent-sdk`** | The same engine as Claude Code: tools, MCP, permissions, hooks, compaction, sessions, subagents. We don't reinvent the agent loop |
 | Local DB | SQLite (`better-sqlite3`) + Drizzle ORM | Messages, runs, token ledger, search. Single file, zero ops |
 | Agent/memory storage | Plain files under the workspace (`.md` + YAML frontmatter) | Glass box: readable, diffable, git-versionable |
 | IPC | Typed IPC (main ↔ renderer) with zod schemas | Security boundary; renderer never touches the SDK or secrets |
-| Secrets | Windows Credential Manager via `keytar` (or Electron `safeStorage`) | Never store keys in plain files |
-| Tests | Vitest (unit), Playwright for Electron (e2e) | |
-| Packaging | electron-builder → NSIS installer, GitHub Releases auto-update | |
+| Secrets | Electron `safeStorage` → DPAPI (Win) / Keychain (macOS) / libsecret (Linux) | Never store keys in plain files |
+| Tests | Vitest (unit), Playwright for Electron (e2e), CI matrix on Win/macOS/Linux | |
+| Packaging | electron-builder → NSIS (Win), DMG (macOS), AppImage/deb (Linux); GitHub Releases auto-update | |
 | Package manager | npm (already installed); pnpm optional | |
 
 ## 2. System view
@@ -102,8 +102,10 @@ Each agent pins a tier or an exact model. Optional **escalation**: an agent can 
 
 ## 6. Repo layout (target)
 
+Portability rules are in ADR-0001: OS-specific code lives only in `apps/desktop/src/main/platform/`.
+
 ```
-apps/desktop/            Electron app (main, preload, renderer)
+apps/desktop/            Electron app (main, preload, renderer); main/platform/ = OS adapters
 packages/core/           Orchestrator, router, memory, ledger (pure TS, testable)
 packages/bench-mcp/      In-process MCP server (handoff, ask_agent, …)
 packages/shared/         Types, zod schemas, IPC contracts

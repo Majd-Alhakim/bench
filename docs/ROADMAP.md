@@ -10,7 +10,10 @@
 | **S3 — Group chat** | A group conversation with router-based turn-taking and rolling summaries. | 4 chiefs in one group; @mention; cost-per-message chips |
 | **S4 — Control & economics** | Approval gates, a token ledger dashboard, budgets per agent, pause/stop/reroute. | "Developer wants to run `npm install`": approve; usage-window meter |
 | **S5 — Memory that lasts** | Memory curator, compaction notes, weekly dedupe with a diff review. | Agent remembers a decision from S2 without being told |
-| **S6 — Connectors** | MCP connectors per agent (Gmail, Calendar, GitHub, filesystem) + scheduler for reminders. | Haiku "Chief of Staff" morning brief from email and calendar |
-| **S7 — Hardening & installer** | Security review, e2e tests, signed NSIS installer, auto-update. | v0.1.0 installed from GitHub Releases |
+| **S6 — Connectors** | Per-agent MCP connectors (**Gmail** read/draft, **GitHub**) + scheduler for reminders. | Haiku "Chief of Staff" morning inbox brief; CTO opens a PR on a real repo |
+| **S7 — Hardening & installer** | Security review, e2e tests, Windows installer + auto-update; Linux AppImage. | v0.1.0 installed from GitHub Releases (Windows); repo can go open-source |
+| **S8+ — macOS** | Signed and notarized DMG. | Same app running on a Mac |
+
+Cross-platform is enforced from S1: the CI matrix builds and tests on Windows, macOS and Linux every PR.
 
 **MVP = end of S4.** Everything after that is driven by what dogfooding teaches us.

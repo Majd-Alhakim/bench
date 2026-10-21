@@ -15,7 +15,7 @@ Format: `ID · Story · Acceptance criteria (short) · Size (S/M/L)`. Ordered by
 
 ## Sprint 1: Walking skeleton
 
-- **S1-1** Scaffold monorepo (electron-vite + React + TS + Tailwind + shadcn, Vitest, ESLint/Prettier, CI on GitHub Actions)
+- **S1-1** Scaffold monorepo (electron-vite + React + TS + Tailwind + shadcn, Vitest, ESLint/Prettier, CI on GitHub Actions with a windows/macos/ubuntu matrix, `main/platform/` adapter folder)
 - **S1-2** Agent definition loader: parse `workspace/agents/*.md` (frontmatter + prompt), validate with zod, hot-reload
 - **S1-3** Agent Runner: wraps the SDK `query()`, streams events to the renderer over IPC
 - **S1-4** Chat UI for one agent (streaming, markdown, stop button)
