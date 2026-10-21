@@ -1,0 +1,27 @@
+name: Epic
+description: A large capability made of several user stories
+labels: [epic]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal and user value
+    validations:
+      required: true
+  - type: input
+    id: trace
+    attributes:
+      label: Use cases / requirements
+      placeholder: "UC-03..UC-05, FR-010..FR-020"
+    validations:
+      required: true
+  - type: textarea
+    id: stories
+    attributes:
+      label: Stories (task list)
+      value: |
+        - [ ] #
+  - type: textarea
+    id: done
+    attributes:
+      label: Epic done when

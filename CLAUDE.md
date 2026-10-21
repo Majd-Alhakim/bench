@@ -76,9 +76,16 @@ Full workflow: [CONTRIBUTING.md](CONTRIBUTING.md). Review standard: [REVIEW.md](
 
 **Definition of Done:** branch + PR · self-reviewed (no slop) · tests pass · CI green on PR checks · secret scan clean · visible in trace · docs/backlog updated · founder demoed it.
 
+## Delivery Process
+
+The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.md](docs/process/LIFECYCLE.md). The team and RACI are in [TEAM.md](docs/process/TEAM.md), and the live phase and gate log are in [STATUS.md](docs/process/STATUS.md).
+- The main session is the **Product Manager**. Role agents: `business-analyst`, `product-manager`, `ux-designer`, `ui-designer`, `tech-lead`, `developer`, `qa-engineer`. The founder is the **client** and the only one who approves gates.
+- Phase commands: `/discovery` → `/brd` → `/prd` → `/specs` → `/design-ux` → `/design-ui` → `/plan-sprint` → (`/standup`, `/qa`, `/bug`, `/sprint-review`) → `/release`. Plus `/gate` and `/change-request`.
+- **No implementation before Gate 6.** Templates are in `docs/templates/`.
+
 ## Project Status & Open Decisions
 
-- **Sprint 0** (from 2026-10-21). Repo: github.com/Majd-Alhakim/bench (private). Next: spikes S0-1..3.
+- **Phase 0 → 1** (see STATUS.md). Repo: github.com/Majd-Alhakim/bench (private). Next: `/discovery` (requirements interview).
 - Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
-- Open: confirm Electron (ADR-0001) · first agents to dogfood and their week-2 goal.
+- Open: product name ("Bench" is a codename only; decided in Phase 5) · look and feel, avatars, animation · MVP scope · sprint length · confirm Electron (ADR-0001).
 - Roles: the founder is product owner and human in the loop; Claude acts as PM + CTO and asks before irreversible or outward-facing actions.

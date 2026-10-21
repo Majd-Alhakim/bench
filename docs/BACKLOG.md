@@ -1,5 +1,7 @@
 # Product Backlog — Bench
 
+> **Provisional.** Written before requirements gathering. It will be rebuilt from the approved BRD, PRD and SRS in Phase 6 ([LIFECYCLE](process/LIFECYCLE.md)). The Sprint 0 spikes still count as Phase 0 feasibility validation.
+
 Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priority, top = next. Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md).
 
 ## Sprint 0: Inception

@@ -1,5 +1,7 @@
 # Roadmap — Bench
 
+> **Provisional.** Written before requirements gathering. It will be rebuilt from the approved BRD, PRD and SRS in Phase 6 ([LIFECYCLE](process/LIFECYCLE.md)). The Sprint 0 spikes still count as Phase 0 feasibility validation.
+
 1-week sprints. Each sprint ends with a demo the founder actually uses (dogfooding). Scope is negotiable; dates aren't.
 
 | Sprint | Goal (one sentence) | Demo at the end |
