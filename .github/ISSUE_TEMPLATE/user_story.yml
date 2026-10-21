@@ -1,0 +1,51 @@
+name: User story
+description: A slice of user value, ready for a sprint
+labels: [story]
+body:
+  - type: input
+    id: epic
+    attributes:
+      label: Epic
+      placeholder: "#12 Agents you create"
+  - type: textarea
+    id: story
+    attributes:
+      label: Story
+      value: "As a <role>, I want <capability>, so that <benefit>."
+    validations:
+      required: true
+  - type: input
+    id: trace
+    attributes:
+      label: Traces to
+      description: Use case and requirement IDs
+      placeholder: "UC-03, FR-012, NFR-004"
+    validations:
+      required: true
+  - type: textarea
+    id: ac
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - Given … When … Then …
+        - Given … When … Then …
+    validations:
+      required: true
+  - type: input
+    id: design
+    attributes:
+      label: Design reference
+      description: Screen or prototype link (required if the story has UI)
+  - type: dropdown
+    id: points
+    attributes:
+      label: Estimate (points)
+      options: ["1", "2", "3", "5", "8", "13 (split it)"]
+  - type: checkboxes
+    id: dor
+    attributes:
+      label: Definition of Ready
+      options:
+        - label: Traces to an approved use case / requirement
+        - label: Acceptance criteria are testable
+        - label: Design attached (if UI) and no open blockers
