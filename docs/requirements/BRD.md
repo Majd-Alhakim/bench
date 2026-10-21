@@ -3,17 +3,20 @@
 | Field | Value |
 |---|---|
 | Status | In Review |
-| Version | 0.1 |
+| Version | 0.2 |
+| Date | 2026-10-22 |
 | Owner | Business Analyst |
 | Approver | Client |
-| Sources | Interview notes `docs/requirements/interviews/2026-10-21-users-and-roles.md` (batches 1–3), `docs/requirements/interviews/2026-10-21-goals-and-scenarios.md` (batch 4 + open answers of 2026-10-22); `docs/PRODUCT-MODEL.md`; `docs/VISION.md`. Constraints only: `docs/ARCHITECTURE.md`, `docs/security-baseline.md`, `docs/adr/0002-auth-subscription-vs-api-key.md` |
+| Sources | Interview notes `docs/requirements/interviews/2026-10-21-users-and-roles.md` (batches 1–3), `docs/requirements/interviews/2026-10-21-goals-and-scenarios.md` (batch 4 + open answers of 2026-10-22), `docs/requirements/interviews/2026-10-22-brd-open-issues.md` (batch 5: answers #1–#9 and clarifications C1–C4); `docs/PRODUCT-MODEL.md`; `docs/VISION.md`. Constraints only: `docs/ARCHITECTURE.md`, `docs/security-baseline.md`, `docs/adr/0002-auth-subscription-vs-api-key.md` |
 
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 0.1 | 2026-10-22 | BA | First draft (lean mode: MVP use cases only) |
+| 0.2 | 2026-10-22 | BA | Applied batch 5 answers. Content pipeline dropped from the MVP; UC-39 retired (B5-C1). UC-26 became the **project dashboard** (B5-#1). UC-11 rewritten: debate = temporary meeting session, 5-minute timebox, highest-ranked participant decides, decision memo kept, chat archived in the trace (B5-#2, B5-C2); UC-30/UC-31 aligned. Gmail on the CEO, draft-only, may email the client (B5-#3): UC-37, UC-06, UC-35. Proposal = one-pager the client approves or rejects (B5-#4): UC-12. Deputy has broad work authority, with 4 reserved actions and "no agent ever pays" (B5-#5, B5-C3): AS-7, BR-14, new BR-57/BR-58. Outward actions revised: `git push` not outward, email draft-only (B5-#6): BR-15, AS-8, glossary. Leads read private memory on demand only (B5-#7): BR-23. BA lead added to the day-1 tree, and the project template plus new UC-43 (B5-#8). O4 = Bench open-source ready 14 days after build starts, old O4 → O5 (B5-#9, B5-C4). New BR-57 – BR-64. §10: resolved items removed, new items #26 – #31 |
 
 **How to read this document**
-- Everything not marked comes from a client answer or an approved document. The source is shown in brackets, for example *(B1-Q4)* = batch 1, question 4; *(B4-Q3)* = batch 4 scenario walkthrough; *(B4-EXC)* = batch 4 exception rules; *(B4-EDGE)* = batch 4 concurrency answer; *(PM)* = `PRODUCT-MODEL.md`; *(VIS)* = `VISION.md`; *(SEC)* = `security-baseline.md`; *(ADR-2)* = ADR-0002; *(ARCH)* = `ARCHITECTURE.md`.
+- Everything not marked comes from a client answer or an approved document. The source is shown in brackets, for example *(B1-Q4)* = batch 1, question 4; *(B4-Q3)* = batch 4 scenario walkthrough; *(B4-EXC)* = batch 4 exception rules; *(B4-EDGE)* = batch 4 concurrency answer; *(B5-#n)* = batch 5 answer n; *(B5-Cn)* = batch 5 clarification n; *(PM)* = `PRODUCT-MODEL.md`; *(VIS)* = `VISION.md`; *(SEC)* = `security-baseline.md`; *(ADR-2)* = ADR-0002; *(ARCH)* = `ARCHITECTURE.md`.
+- **Retired IDs** (v0.2): UC-39 is retired and will not be reused (B5-C1). No other ID was renumbered.
 - **`[ASSUMPTION – confirm]`** marks a BA inference or a proposed default. As the client asked, **all budgets and limits, all connectors per role, and all data rules (retention, storage, what leaves the device, deletion) are assumptions** until confirmed.
 - Lean mode: only MVP use cases are described. Phase-2 items are listed in §2 Out of scope.
 - Frequencies in the use cases are BA estimates and are all `[ASSUMPTION – confirm]`.
@@ -33,7 +36,8 @@
 1. Support the client's day job as a BA (requirements, documents, research).
 2. Run the client's personal projects end to end, idea to delivered product (scenario #1).
 3. Do real software development on the client's repos.
-4. Handle recurring personal work: inbox triage, research, routines, content.
+4. Handle recurring personal work: inbox triage, research, routines, content. Content is not in the MVP; it comes later as a project template *(B5-C1)*.
+5. Bench itself is ready to be open-sourced as a full application 14 days after the build starts *(B5-#9, B5-C4)*.
 
 **Business objectives (measurable)** *(B4-Q4 and its numbers; VIS §7)*
 
@@ -42,7 +46,8 @@
 | O1 | Daily habit | The client uses Bench every day for 2 weeks instead of plain chats | Days with at least one client session `[ASSUMPTION – confirm the measure]` |
 | O2 | Accepted work | **≥ 10 tasks per week** accepted by the client without redoing them | Count of tasks in state Accepted per week (see UC-24) |
 | O3 | Cost under control | **≥ 30 %** of the weekly subscription limit left free; zero unapproved outward or destructive actions | Usage meter (UC-40); approval log (UC-23) |
-| O4 | Concrete deliverable | A **full working product within 14 days** of a project starting in Bench (target for the product Bench builds, not Bench itself) | Project start date vs. client acceptance of the product (BR-35). The named first deliverable is still pending (§10 #9) |
+| O4 | Bench open-source ready | **Bench itself is fully ready to be open-sourced, as a full application, 14 days after the build starts (Gate 6)** *(B5-#9, B5-C4)* | Date of G6 approval vs. the date Bench is open-source ready. What "open-source ready" must include (licence, README, build from source, no secrets in the repo…) `[ASSUMPTION – confirm in the PRD]`. The PRD's MVP cut must make this achievable (§10 #26) |
+| O5 | Products Bench builds | A **full working product within 14 days** of a project starting in Bench (target for the products Bench builds, not Bench itself) *(B4-Q4; kept as O5 in v0.2, B5-C4)* | Project start date vs. client acceptance of the product (BR-35) |
 
 ---
 
@@ -53,14 +58,14 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 
 | # | Capability | Use cases |
 |---|---|---|
-| S1 | Org tree: CEO root, nodes, leads, workers, freelancers, communication rules, agent lifecycle | UC-01 – UC-07 |
-| S2 | Conversations: CEO chat, direct chat with any agent, group chats, project team chat, group debate | UC-08 – UC-11 |
-| S3 | Scenario #1 "idea to delivered product": CEO intake → proposal → PM → BA interview session → documents → epics/stories → design/dev → "something to show you" → review meeting session → repeat | UC-12 – UC-17, UC-24, UC-29 – UC-31 |
+| S1 | Org tree: CEO root, nodes, leads, workers, freelancers, communication rules, agent lifecycle; day-1 tree with a BA lead; projects created from a project template *(B5-#8)* | UC-01 – UC-07, UC-43 |
+| S2 | Conversations: CEO chat, direct chat with any agent, group chats, project team chat, group debate as a timeboxed temporary meeting session *(B5-#2)* | UC-08 – UC-11 |
+| S3 | Scenario #1 "idea to delivered product": CEO intake → one-pager proposal → client approves *(B5-#4)* → project from template → PM → BA interview session → documents → epics/stories → design/dev → "something to show you" → review meeting session → repeat | UC-12 – UC-17, UC-24, UC-29 – UC-31, UC-43 |
 | S4 | Delegating a feature to the Dev team with full file and shell access (scoped, approvals) | UC-14, UC-32 – UC-34 |
 | S5 | Three-layer memory with automatic work logs and lazy roll-up | UC-18 – UC-21 |
-| S6 | Approvals and autonomy (Deputy, presets, approval inbox, outward actions) | UC-22 – UC-24 |
-| S7 | Visibility: morning status and "what needs me", project board, live agent view, trace | UC-25 – UC-28 |
-| S8 | Research reports, Gmail inbox triage, scheduled routines, content pipeline | UC-35 – UC-39 |
+| S6 | Approvals and autonomy (Deputy with broad work authority and reserved actions, presets, approval inbox, outward actions) *(B5-#5, B5-#6, B5-C3)* | UC-22 – UC-24 |
+| S7 | Visibility: morning status and "what needs me", project dashboard *(B5-#1)*, live agent view, trace | UC-25 – UC-28 |
+| S8 | Research reports, Gmail inbox triage by the CEO *(B5-#3)*, scheduled routines | UC-35 – UC-38 |
 | S9 | Usage and cost: meter, budgets, pause and resume at the usage limit | UC-40 – UC-42 |
 
 ### Out of scope (this release)
@@ -68,7 +73,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 |---|---|
 | Claude Code depth: **diff review UI, integrated terminal, slash commands** | Phase 2 / v1 *(B4-Q8b)*. The client keeps Claude Code meanwhile |
 | Fully replacing Claude Code | After v1 *(B4-Q8b)* |
-| **Mobile companion app** (Android first), phone notifications for approvals and email | Parked *(B1-Q5)* |
+| **Content pipeline** (was UC-39, now retired) | Dropped from the MVP; it can come later **as a project template** (UC-43) *(B5-C1)* |
+| **Mobile companion app** (Android first), phone notifications for approvals and email | Parked *(B1-Q5)*. Exception: the CEO may email the client about urgent things *(B5-#3)* (UC-29, UC-37) |
 | Multi-user / team accounts, cloud sync, agent marketplace, non-Anthropic models, voice | *(VIS §8)* |
 | Outside-user validation (waitlist, public posts) | Client is the only user *(LIFECYCLE lean mode)* |
 | Final product name, look and feel, avatars and animations | Phase 5, not a BRD topic *(STATUS)* |
@@ -81,9 +87,9 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | AS-3 | A 30 % weekly-headroom guard defers non-urgent work `[ASSUMPTION – confirm]` | UC-40, BR-52 |
 | AS-4 | Connectors, model and folder access per day-1 role as proposed in UC-06 `[ASSUMPTION – confirm]` | UC-06, UC-35 |
 | AS-5 | Data stays on the device except model traffic to Anthropic and connector calls; retention and deletion as in §8 `[ASSUMPTION – confirm]` | §8, BR-55, BR-56 |
-| AS-6 | A "project" is a body of work created from an accepted proposal, with its own board, team chat, documents folder and repo(s), owned by the Product lead (PM) `[ASSUMPTION – confirm]` | UC-12, UC-16, UC-26 |
-| AS-7 | The Deputy cannot change autonomy, permissions, connectors, folder grants or budgets of any agent (only the client can) `[ASSUMPTION – confirm]` | UC-04, UC-22, BR-14 |
-| AS-8 | `git push` and any change to an external service (including Gmail labels) count as outward actions `[ASSUMPTION – confirm]` | BR-15 |
+| AS-6 | A "project" is a body of work created from a client-approved proposal *(B5-#4)* and from the project template *(B5-#8)*, with its own dashboard, team chat, documents folder and repo(s). It is a node under the CEO led by its PM `[ASSUMPTION – confirm the node placement and the PM as lead]` | UC-12, UC-16, UC-26, UC-43 |
+| AS-7 | **Confirmed in v0.2, now a rule:** the Deputy has broad authority over all work-related actions. It may **not** do the 4 reserved actions, which always need the client: delete agents, projects or repos; create permanent agents or projects (it may draft them); deploy, release or merge to `main`; spend money or use paid services. **No agent ever pays** *(B5-#5, B5-C3)*. See BR-14, BR-57, BR-58. Still assumed: the Deputy cannot widen its own powers `[ASSUMPTION – confirm]` | UC-04, UC-22, UC-23, BR-14, BR-57, BR-58 |
+| AS-8 | **Partly confirmed in v0.2:** `git push` is **not** outward; email is draft-only, and sending is allowed only to the client or when the client explicitly asked for that reply to be sent *(B5-#6)*. **Still assumed:** applying Gmail labels or archiving in Gmail counts as an outward action `[ASSUMPTION – confirm]` | BR-15, UC-37 |
 
 ### Constraints
 | Type | Constraint | Source |
@@ -95,6 +101,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | Security | Local-first; no Bench server; no telemetry; outward and dangerous actions behind approval; email, web and file content is untrusted data | *(SEC)* |
 | Transparency | "Glass box": everything an agent does is visible; agents, memory and org chart are files on disk the client can edit | *(VIS §5)* |
 | Timeline | 3-day sprints; Gmail and scheduler add about +2 sprints, accepted by the client | *(LIFECYCLE, B4 summary)* |
+| Timeline | Bench must be open-source ready 14 days after the build starts (G6) (O4) | *(B5-#9, B5-C4)* |
+| Money | No agent ever pays or enters payment details; anything that needs payment goes to the client | *(B5-#5, B5-C3)* |
 
 ### Dependencies
 - Claude Code binary installed and signed in by the client (`claude login`); Claude Agent SDK *(ADR-2, ARCH)*.
@@ -108,13 +116,13 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 
 | Role | Description | Goals | Permissions |
 |---|---|---|---|
-| **Client** (founder, owner) | The only human user. Builds the org, gives ideas and tasks, answers interviews, tests and accepts work *(B1, B4)* | Get real work delivered with little routing effort; see and control everything; keep cost under control | Everything. Only the client: creates (saves) and deletes agents *(B1-Q1)*; approves **all outward actions** *(B1-Q12)*; sets autonomy, grants and communication links *(B1-Q2, B1-Q4)*; can message any agent *(B3-Q14)*; joins groups as participant or observer *(B1-Q7)*; accepts or rejects work *(B4-EXC c)*; final say on unresolved disagreements and blockers *(B4-EXC b)* |
-| **CEO / main agent** (root node, Deputy) | System agent; exactly one, always present; the client's front door *(PM §1, B2-Q9)* | Understand the client's intent; route work; give status and "what needs me"; act as Deputy | Full read access to the whole tree *(B2)*. As Deputy, without asking: edits agent cards and instructions, approves global-memory writes, approves other agents' tool requests **within permissions the client already granted** *(B1-Q1)*. May draft agents (client saves) *(PM §1)*. **Never** approves outward actions *(B1-Q12)*. Cannot create or delete agents *(B1-Q1)* |
-| **Lead** (any node with children) | Agent that is the single point of contact for its subtree toward its parent *(B2-Q11)* | Keep its subtree moving; consolidate status; resolve problems before they reach the client | Reads everything below it (read-only) *(B3 proposal 5)*; assigns and re-assigns tasks to its children; maintains its node summary (lazy roll-up) *(B3-Q13)*; decides disagreements in its team *(B4-EXC b)*; receives escalations after 2 failed attempts *(B4-EXC a)*; receives open tasks of paused or archived members *(B3-Q16)*; may hire freelancers within its limits *(B3-Q15)* |
+| **Client** (founder, owner) | The only human user. Builds the org, gives ideas and tasks, answers interviews, tests and accepts work *(B1, B4)* | Get real work delivered with little routing effort; see and control everything; keep cost under control | Everything. Only the client: does the **reserved actions** (BR-58): creates (saves) and deletes agents, creates and deletes projects, deletes repos, deploys, releases or merges to `main`, spends money or uses paid services *(B1-Q1, B5-C3)*; approves **outward actions** (BR-15) *(B1-Q12, B5-#6)*; approves or rejects the CEO's proposals *(B5-#4)*; sets communication links *(B1-Q2)*; can message any agent *(B3-Q14)*; joins groups as participant or observer *(B1-Q7)*; accepts or rejects work *(B4-EXC c)*; final say on unresolved disagreements and blockers *(B4-EXC b)*; customizes the project template and each project's team *(B5-#8)*. The client is the owner; the CEO runs the business for them *(B5-#3)* |
+| **CEO / main agent** (root node, Deputy) | System agent; exactly one, always present; the client's front door. Acts as the CEO who runs the client's business: always communicates with the client, gives updates and checks the client's email *(PM §1, B2-Q9, B5-#3)* | Understand the client's intent; route work; give status and "what needs me"; triage the client's email; act as Deputy | Full read access to the whole tree *(B2)*. As Deputy: **broad authority over all work-related actions**, with most of the permissions the client has *(B5-#5)*, except the reserved actions (BR-58) and paying (BR-57) *(B5-C3)*. May draft agents and projects (the client saves them) *(PM §1, B5-C3)*. **Never** approves outward actions *(B1-Q12)*. Writes one-pager proposals for client approval *(B5-#4)*. Day 1: the only agent with the Gmail connector; reads and triages the client's email, drafts replies, may email the client about urgent things *(B5-#3)* |
+| **Lead** (any node with children) | Agent that is the single point of contact for its subtree toward its parent *(B2-Q11)* | Keep its subtree moving; consolidate status; resolve problems before they reach the client | Reads everything below it (read-only) *(B3 proposal 5)*; reads a worker's private memory **only on demand, when needed, never loaded by default** *(B5-#7)*; decides debates as the highest-ranked participant (BR-59) *(B5-#2)*; assigns and re-assigns tasks to its children; maintains its node summary (lazy roll-up) *(B3-Q13)*; decides disagreements in its team *(B4-EXC b)*; receives escalations after 2 failed attempts *(B4-EXC a)*; receives open tasks of paused or archived members *(B3-Q16)*; may hire freelancers within its limits *(B3-Q15)* |
 | **Worker** (leaf node) | Agent that does tasks *(B2)* | Complete tasks to their acceptance criteria | Only its own tools, connectors, folders and private memory; its work is auto-logged to its team memory *(B3-Q13)*; talks along the tree and client-defined links *(B1-Q2, B3-Q14)*; may hire freelancers within its limits *(B3-Q15)* |
 | **Freelancer** | Temporary agent hired by any agent for one task, then released *(B1-Q3, B3-Q15)* | Finish one task cheaply | A subset of the hirer's tools, connectors and budget; visible in the trace and cost meter; never on the roster *(B3-Q15)*. Cannot hire freelancers `[ASSUMPTION – confirm]` |
 | **System services**: router, curator, scheduler | Background services, not agents *(B1-Q6, ARCH)* | Route messages cheaply, keep digests, run routines | Shown as labelled system lines in chats with their cost; configurable in settings; not on the roster *(B1-Q6)*. Curator writes memory only `[ASSUMPTION – confirm, from SEC identities]`; scheduler runs routines with the tightest scope *(SEC)* |
-| **External services** (Anthropic via Claude Code, Gmail, web, GitHub) | Outside systems reached through connectors | — | Reached only through connectors ticked for an agent *(PM §3)*; any change to them is an outward action (BR-15) |
+| **External services** (Anthropic via Claude Code, Gmail, web, GitHub) | Outside systems reached through connectors | — | Reached only through connectors ticked for an agent *(PM §3)*; outward actions toward them follow BR-15 (`git push` is not outward *(B5-#6)*; merging to `main`, deploying and releasing are reserved for the client, BR-58) |
 
 ---
 
@@ -125,7 +133,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Agent** | A named, persistent AI teammate: "a Claude Project turned into a person", with a card, instructions, knowledge files, private memory, model, connectors, skills, permissions and budget *(PM §1)* |
 | **Agent card** | The short public description of an agent (name, avatar, description, role, connectors) that other agents, the CEO and the router see. Not the full prompt or memory *(PM §1)* |
 | **CEO / main agent** | The one root agent the client always talks to; full read access; acts as the Deputy *(B2-Q9, B1-Q1)* |
-| **Deputy** | The CEO's authority to make in-app decisions on the client's behalf within grants the client already gave; never outward actions *(B1-Q1, B1-Q12)* |
+| **Deputy** | The CEO's broad authority to take and approve all work-related actions on the client's behalf, like someone running the client's business *(B1-Q1, B5-#5)*. Never outward actions (BR-15), never the reserved actions (BR-58), never paying (BR-57) *(B1-Q12, B5-C3)* |
+| **Reserved action** | An action that always needs the client and that no agent, including the Deputy, may take or approve: delete agents, projects or repos; create permanent agents or projects (agents may draft them); deploy, release or merge to `main`; spend money or use paid services *(B5-C3)* |
 | **Org tree** | The structure of all agents as a tree with the CEO at the root. The client builds and changes it at any time *(B2-Q9)* |
 | **Node** | A position in the org tree: a team, department, project group or single agent. A node with children has a lead *(B2-Q11)* |
 | **Team** | Working name for a node with children (department, project, team); "name it what you want" *(B1-Q2)* |
@@ -136,7 +145,7 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Communication link** | A client-defined permission for agent → agent, agent → team, or team → team contact beyond the tree *(B1-Q2)* |
 | **Global memory** | Company-wide memory at the root, readable by every agent; writes are proposed and approved *(PM §2, B2-Q10)* |
 | **Team memory / node memory** | The shared memory of a node (team, project, department). Holds the dated work logs of its members and the lead's summary *(B2-Q10, B2-Q11)* |
-| **Private memory** | Memory of one agent, read and written by that agent only *(PM §2)* |
+| **Private memory** | Memory of one agent, read and written by that agent only *(PM §2)*. A lead above it may read it on demand when needed; it is never loaded into the lead's context by default *(B5-#7)* |
 | **Work log** | A dated entry the app writes into the team memory from a task record, with no LLM call *(B3-Q13)* |
 | **Roll-up** | Passing status up the tree: each level reads summaries of the level below *(B2-Q11)* |
 | **Lazy roll-up** | The default roll-up: a lead re-summarizes only when its parent asks and the log changed; otherwise the cached summary is reused; optional daily cheap refresh *(B3-Q13)* |
@@ -145,18 +154,24 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Autonomy preset** | Per-agent setting: "Ask every time", "Trusted", or "Autonomous" (everything except outward actions), with per-tool overrides *(B1-Q4)* |
 | **Grant / standing rule** | A permission the client gave once (for an agent + tool + scope) so requests inside it no longer ask the client *(B1-Q1, SEC)* |
 | **Approval inbox** | The desktop list of pending approval requests; items wait there until resolved *(B1-Q5)* |
-| **Outward action** | Any action that leaves the app and affects the outside world: send, post, publish, delete or change external data, pay *(B1-Q4, B1-Q12, SEC)*. Always needs the client. Whether `git push` and Gmail labelling are outward: `[ASSUMPTION – confirm]` yes |
+| **Outward action** | Any action that leaves the app and affects the outside world: send, post, publish, delete or change external data *(B1-Q4, B1-Q12, SEC)*. Needs the client (BR-15). **Not outward:** `git push` *(B5-#6)*. **Email:** agents draft only; sending is allowed only to the client, or when the client explicitly asked for that reply to be sent *(B5-#6)*. Gmail labelling or archiving: outward `[ASSUMPTION – confirm]`. Paying is not an outward action an agent can be approved for: no agent ever pays (BR-57) *(B5-C3)* |
+| **Draft-only email** | An email an agent wrote but did not send. If it needs the client's action, it becomes a "needs me" item: "I drafted this, send it or change it?" *(B5-#6)* |
 | **Risky action** | A local action that can do damage: run shell commands, delete or overwrite files, write global memory *(B4-Q6, SEC)*. Behind approval unless granted |
 | **Task** | A unit of work with one owner, a state and an expected outcome, created by a handoff or by the client |
 | **Handoff** | Passing a task to another agent with a payload (task, context summary, artifact references, acceptance criteria) *(ARCH §6)* |
-| **Project** | A body of work started from an accepted proposal, with its own board, team chat, documents and repo(s) `[ASSUMPTION – confirm]` |
-| **Proposal** | The CEO's high-level write-up of the client's idea, sent to the PM *(B4-Q3)* |
-| **Project board** | The views of a project: backlog, epics, user stories, tasks, Kanban, flow and status *(B4-Q3)* |
+| **Project** | A body of work started from a client-approved proposal *(B5-#4)*, created from the project template *(B5-#8)*, with its own team, dashboard, team chat, documents and repo(s) `[ASSUMPTION – confirm documents and repos]` |
+| **Project template** | The standard set of agents every new project is created with (by default the same agents as the day-1 delivery team). The client can add, remove or change any agent, in the template and in each project; a minimal project with only the main agent is fine *(B5-#8)*. More templates later, e.g. a content pipeline *(B5-C1)* |
+| **Proposal** | The CEO's one-pager Markdown file about the client's idea: the problem, what to build, what the team should do. General, not detailed. The client approves or rejects it before it goes to the PM *(B4-Q3, B5-#4)* |
+| **Project dashboard** | The one page per project that shows the project's team, the backlog with the highest-priority stories and tasks first (expandable to the full backlog), and the current sprint's To Do / In Progress / Done. The layout stays the same; the content changes with each sprint *(B5-#1)*. Replaces the v0.1 "project board" as the project's main view |
+| **Project board** | The detailed views behind the dashboard: backlog, epics, user stories, tasks, Kanban, flow and status *(B4-Q3)* |
+| **Sprint** | A time-boxed iteration inside a project; each sprint has its own To Do / In Progress / Done *(B5-#1)*. Length `[ASSUMPTION – confirm: 3 days, like this project]` |
+| **BA lead** | The senior Business Analyst in the day-1 tree: one agent *(B5-#8)* |
 | **Group** | A chat with a set of agents and the client *(PM §1)* |
-| **Project team chat** | The group of a project's PM, BA(s) and team leads; the client can enter, watch, assign tasks and talk *(B4-Q3)* |
-| **Group debate** | A group conversation where agents argue a question and the outcome is decided by the lead or the client *(B4-Q2, B4-EXC b)* |
-| **Meeting session** | A structured chat session with the client: a **BA interview session** (requirements) or a **review meeting session** (demo, test, feedback) *(B4-Q3)* |
-| **Trace** | The full record of a run: messages, tool calls, files touched, commands, approvals, tokens, cost *(VIS §4)* |
+| **Project team chat** | The group of a project's PM, BA lead, BA(s) and team leads; the client can enter, watch, assign tasks and talk *(B4-Q3, B5-#8)* |
+| **Group debate** | A temporary meeting session of the stakeholders involved in one point, timeboxed to 5 minutes. They may agree early; otherwise the highest-ranked participant in the tree decides. A decision memo is kept; the chat is removed *(B5-#2, B5-C2)* |
+| **Meeting session** | A temporary, structured chat session: a **BA interview session** (requirements), a **review meeting session** (demo, test, feedback) or a **debate** *(B4-Q3, B5-#2)*. When it closes, its record is kept (notes or decision memo) and the chat leaves the client's views; the raw transcript is archived in the trace *(B5-C2)* |
+| **Decision memo** | The record a debate or meeting leaves in memory: the decision, the attendees and the rationale *(B5-#2, B5-C2)*. Agents remember the memo only, never the transcript |
+| **Trace** | The full record of a run: messages, tool calls, files touched, commands, approvals, tokens, cost *(VIS §4)*. Also holds the hidden archive of closed meeting and debate transcripts until retention removes them *(B5-C2)* |
 | **System line** | A labelled line in a chat showing what a system service did and what it cost *(B1-Q6)* |
 | **Routine** | A scheduled job an agent runs unattended *(B4-Q7)* |
 | **Usage limit** | The Claude subscription's rolling session and weekly limits *(ADR-2)* |
@@ -180,7 +195,10 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 ### 5.2 To-be (with Bench)
 
 ```
-Client ──idea──> CEO (intake, back-and-forth) ──proposal──> PM (Product lead)
+Client ──idea──> CEO (intake, back-and-forth) ──one-pager proposal──> Client approves / rejects
+                                                              │ approved: project created from template
+                                                              v
+                                                         PM (Product lead)
                                                               │ assigns
                                                               v
              "The BA wants to meet you"  <── CEO ── BA prepares question set
@@ -193,25 +211,27 @@ Client ──answers──> BA interview session ──> BA + PM: documents ─�
                                                               v
              "We have something to show you" <── PM
 Client ──tests, feedback──> review meeting session (PM asks, BA takes notes) ──> new tasks ──> repeat
-Escalations at any time: 2 failed attempts → lead → "needs me"; disagreement → lead → client
+Escalations at any time: 2 failed attempts → lead → "needs me"; disagreement → debate session
+(5 min) → highest-ranked participant decides → decision memo; unresolved → client
 ```
 
 **Scenario #1, "idea to delivered product"** *(B4-Q3)*
 1. The client pitches an idea to the CEO (UC-12).
 2. The CEO asks clarifying questions back and forth until it understands at a high level.
-3. The CEO accepts ("we will take this") and writes a proposal for the PM.
-4. The PM takes it over and assigns BA(s) (UC-13, UC-30).
+3. The CEO accepts ("we will take this") and writes a one-pager proposal: the problem, what to build, what the team should do *(B5-#4)*.
+3a. The client reads it and approves or rejects it; only an approved proposal goes to the PM *(B5-#4)*. On approval the project is created from the project template (UC-43) *(B5-#8)*.
+4. The PM takes it over and assigns the BA lead / BA(s) (UC-13, UC-30). Details come from the PM's and BA's discovery, not from the proposal *(B5-#4)*.
 5. The CEO tells the client: "The BA wants to meet you" (UC-29).
 6. BA interview session in the BA's chat, drill-me style (UC-30).
 7. BA and PM produce the required documents (UC-15).
 8. The PM creates epics and user stories and distributes tasks to design and dev (UC-16).
-9. The BA tracks progress continuously (UC-16, UC-26).
+9. The BA tracks progress continuously; the client follows it on the project dashboard (UC-16, UC-26) *(B5-#1)*.
 10. Designers and developers report to the PM against stories, tasks and epics (UC-13, UC-14, UC-18).
 11. The PM notifies "We have something to show you" (UC-29).
-12. Review meeting session: the client tests and gives feedback, the BA takes notes, the PM asks questions (UC-31, UC-24).
+12. Review meeting session: the client tests and gives feedback, the BA takes notes, the PM asks questions; contested points are debated in a 5-minute session (UC-31, UC-11, UC-24) *(B5-#2)*.
 13. The cycle repeats until the thing is built (BR-35). Major decisions and blockers are escalated to the client at any time (UC-17).
 
-**Daily loop:** the client opens Bench → morning status and "what needs me" (UC-25) → resolves approvals (UC-23) → enters any chat, agent or board (UC-09, UC-10, UC-26, UC-27). Routines, inbox triage and research run in the background (UC-36 – UC-38).
+**Daily loop:** the client opens Bench → morning status and "what needs me" (UC-25), including emails the CEO flagged and drafts waiting for "send it or change it?" *(B5-#3, B5-#6)* → resolves approvals (UC-23) → enters any chat, agent or project dashboard (UC-09, UC-10, UC-26, UC-27). Routines, the CEO's inbox triage and research run in the background (UC-36 – UC-38).
 
 **At any moment** the client can enter the project team chat, watch the agents, assign tasks, open any agent, stop it and redirect it, and look at the board *(B4-Q3)*.
 

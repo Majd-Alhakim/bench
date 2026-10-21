@@ -56,3 +56,8 @@
 | C2 | Debate or meeting transcript after deletion | **Archive and hide it.** The chat leaves the client's views and agents only remember the decision memo. The raw transcript stays in the trace archive for audit until retention removes it. |
 | C3 | Which "big" actions the Deputy can't take (they need the client) | **All four:** delete agents, projects or repos · create permanent agents or projects (the CEO may still draft them) · deploy, release or merge to `main` · spend money or use paid services (agents never pay). |
 | C4 | Which application must be open-source ready in 14 days? | **Bench itself:** 14 days after build starts (Gate 6). PM note: very ambitious for 42 use cases, so the PRD's MVP cut and phasing must make it achievable. |
+
+## Decision D1: no scope cut (2026-10-22)
+> No don't cut, it is achievable don't worry i want to test the limits, form experience 14 days for agents is long time
+
+**Recorded:** Bench keeps the **full MVP scope** (all Must use cases). The target stays **open-source ready 14 days after build start (G6)**. The PRD *sequences* the work into 3-day sprints; it doesn't cut anything. The PM tracks the risks (usage-limit throughput, the client's review bandwidth, CI time) from Sprint 1 velocity and raises them early if the trend misses the target.
