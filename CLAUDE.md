@@ -71,10 +71,10 @@ Read first: [PRODUCT-MODEL](docs/PRODUCT-MODEL.md) · [ARCHITECTURE](docs/ARCHIT
 Full workflow: [CONTRIBUTING.md](CONTRIBUTING.md). Review standard: [REVIEW.md](REVIEW.md). Founder standing order (2026-10-21):
 - Never commit to `main`. One branch per change: `feat/ fix/ chore/ docs/ spike/`.
 - Before a PR, review the diff for bugs and slop and clean the structure (`/review-pr` or the reviewer agents in `.claude/agents/`).
-- `pnpm check:all` green locally; CI green on windows/macos/ubuntu plus gitleaks; then squash-merge with a Conventional Commit title.
+- `pnpm check:all` green locally; CI green (PRs: windows + ubuntu + gitleaks; `main` also runs macOS); then squash-merge with a Conventional Commit title.
 - Security: [docs/security-baseline.md](docs/security-baseline.md). Releases: [RELEASING.md](RELEASING.md).
 
-**Definition of Done:** branch + PR · self-reviewed (no slop) · tests pass · CI green on 3 OSes · secret scan clean · visible in trace · docs/backlog updated · founder demoed it.
+**Definition of Done:** branch + PR · self-reviewed (no slop) · tests pass · CI green on PR checks · secret scan clean · visible in trace · docs/backlog updated · founder demoed it.
 
 ## Project Status & Open Decisions
 
