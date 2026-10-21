@@ -1,0 +1,15 @@
+node_modules/
+dist/
+out/
+release/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-*
+/workspace/
+.DS_Store
+Thumbs.db
+*.log
+coverage/
+.claude/settings.local.json

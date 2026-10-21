@@ -1,0 +1,27 @@
+# Model tiers. Agents reference a tier (or pin an exact model id).
+# Router, summarizer and memory curator always use `fast` to save usage.
+tiers:
+  fast:
+    model: claude-haiku-5-5
+    use_for: [routing, summaries, reminders, inbox-triage, memory-compaction]
+  balanced:
+    model: claude-sonnet-5-5
+    use_for: [employees, writing, analysis, routine-coding]
+  deep:
+    model: claude-opus-5-5
+    use_for: [chief-officers, architecture, strategy, hard-design]
+
+system_agents:
+  router: fast
+  summarizer: fast
+  memory_curator: fast
+
+escalation:
+  allow_one_turn_upgrade: true   # agent may request one higher-tier turn
+  requires_approval: true
+
+group_chat:
+  max_responders_per_message: 2
+  recent_messages_in_context: 8
+  summarize_every_n_messages: 10
+  max_delegation_depth: 3
