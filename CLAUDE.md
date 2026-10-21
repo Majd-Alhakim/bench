@@ -10,12 +10,17 @@ A native, cross-platform desktop app (Windows first, then macOS/Linux): a **glas
 - **Founder (user):** product owner, final decisions, human in the loop.
 - **Claude:** acts as PM + CTO. Plans in sprints, writes code, keeps docs and this file current, and asks before irreversible or outward-facing actions.
 
+## Product model (founder, 2026-10-21): read docs/PRODUCT-MODEL.md
+- **One main agent** + agents the founder creates (no predefined agents). Each agent is like a Claude Project: name, description, role, model, knowledge, **private memory**; all agents read **global memory**.
+- Connectors, plugins and skills = the founder's global account inventory; **each agent gets only the subset chosen for it** (saves tokens).
+
 ## Current phase
-**Sprint 0: Inception** (started 2026-10-21). Next up: spikes S0-1 (subscription auth), S0-2 (group-chat token economics), S0-3 (MCP handoff).
+**Sprint 0: Inception** (started 2026-10-21). Research done (docs/research/). Repo: https://github.com/Majd-Alhakim/bench (private). Next up: spikes S0-1, S0-2, S0-3.
 
 ## Key decisions (see docs/adr/)
 - ADR-0001 *(proposed)*: Electron + React/TS + Claude Agent SDK in the main process; SQLite; files as the source of truth.
-- ADR-0002 *(proposed, blocked on S0-1)*: subscription backend via the local Claude Code login (personal use) + API-key fallback.
+- ADR-0002 *(accepted, personal use)*: drive the **official unmodified Claude Code binary** via the Agent SDK, inheriting the user's own `claude login`. **Never** build a login, never read or store OAuth tokens, never share a plan, strip `ANTHROPIC_API_KEY` unless in API mode, never call the product "Claude Code".
+- Per-agent isolation: `mcpServers` + `strictMcpConfig: true`, `tools`/`disallowedTools` (not `allowedTools`), `settingSources: []`, `skills`, `plugins`.
 - Model tiers: `fast` = claude-haiku-5-5, `balanced` = claude-sonnet-5-5, `deep` = claude-opus-5-5 (`config/models.yaml`).
 
 ## Founder answers (2026-10-21)
@@ -26,7 +31,7 @@ A native, cross-platform desktop app (Windows first, then macOS/Linux): a **glas
 
 ## Open questions for the founder
 1. Confirm Electron (ADR-0001), now that it's been re-checked against the cross-platform requirement.
-2. First "company" to dogfood: which 4 chiefs, and which real goal do they work on in week 2?
+2. First agents the founder will create for dogfooding, and the real goal they work on in week 2.
 
 ## Conventions
 - TypeScript strict. Business logic in `packages/core` (no Electron imports there).

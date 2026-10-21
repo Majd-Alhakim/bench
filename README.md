@@ -8,4 +8,6 @@ A native cross-platform desktop app (Windows first, then macOS and Linux) for ru
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Backlog: [docs/BACKLOG.md](docs/BACKLOG.md)
 - Setup & connectors: [docs/SETUP.md](docs/SETUP.md)
-- Starter agents: [workspace-template/](workspace-template/)
+- Product model: [docs/PRODUCT-MODEL.md](docs/PRODUCT-MODEL.md)
+- Research: [docs/research/](docs/research/)
+- Templates (main agent + blank agent): [templates/](templates/)

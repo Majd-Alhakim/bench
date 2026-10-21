@@ -1,20 +1,17 @@
-# ADR-0002: Authentication, Claude subscription first, API key fallback
+# ADR-0002: Authentication, subscription via the official Claude Code binary; API key optional
 
-- **Status:** Proposed. **Blocked on Spike S0-1** (verify terms and technical behavior)
+- **Status:** Accepted for personal use (2026-10-21), based on research in [docs/research/anthropic-repos-and-auth.md](../research/anthropic-repos-and-auth.md). Spike S0-1 still confirms it works technically.
 - **Date:** 2026-10-21
 
 ## Context
-The founder wants Bench to be "an extension of my Claude subscription" so usage counts against their plan instead of pay-per-token API billing.
+The founder wants Bench to run on their Claude subscription. Anthropic's docs (verified 2026-10-21) allow an end user to sign in to the **unmodified Claude Code binary** with their own subscription. The Help Center confirms the Agent SDK and third-party apps can use subscription limits. They forbid third parties from offering claude.ai login, intermediating credentials or tokens, or routing other people's requests through one plan.
 
-**Known constraint:** Anthropic's Agent SDK docs state that third-party developers may not *offer* claude.ai login or subscription rate limits in their products without approval. Bench is a **personal, local tool** that runs on the founder's own machine through the official Claude Code installation, which is a different situation from a distributed product. We still have to read the current terms ourselves before relying on it.
-
-## Decision (provisional)
-- **Provider abstraction** with two backends behind one interface:
-  - `subscription`: uses the local, already-logged-in Claude Code install (Agent SDK / `claude` CLI auth). Personal use only.
-  - `api`: `ANTHROPIC_API_KEY`, stored in the OS keychain via Electron `safeStorage`.
-- The app never handles the claude.ai password or OAuth tokens itself. It relies on Claude Code's own login.
-- **If Bench is ever distributed publicly, the `api` backend is the only option** unless Anthropic approves otherwise. The founder answered "personal first, maybe share", so the `api` backend is a first-class path, not an afterthought.
+## Decision
+- Bench drives agents through `@anthropic-ai/claude-agent-sdk`, which spawns the official Claude Code binary and **inherits the user's own `claude login`**.
+- Bench never shows a claude.ai login, and never reads, stores or forwards OAuth credentials.
+- `ANTHROPIC_API_KEY` is stripped from the agent environment unless the user explicitly chooses the API-key backend (stored in the OS keychain).
+- If Bench is shared later, every user signs in with their own account (via `claude login`) or brings an API key. Nobody shares a plan. The product name must not be "Claude Code" or imitate its branding.
 
 ## Consequences
-- Usage limits are shared with the founder's normal Claude and Claude Code usage. That makes model tiering and the token ledger *critical* (see ARCHITECTURE §4.3).
-- Spike S0-1 must confirm: rate-limit behavior with parallel agents, model selection per call, and the terms.
+- Subscription limits are shared with the founder's normal Claude usage, and they assume "ordinary, individual usage". Routing, per-agent model tiers, budgets and the usage meter (`/usage` rate limits) are core features, not extras.
+- Policy risk: Anthropic can change enforcement without notice. Re-check the legal page each release; the API-key backend is the escape hatch.

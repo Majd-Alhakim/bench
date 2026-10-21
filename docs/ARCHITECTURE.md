@@ -1,115 +1,103 @@
 # Architecture — Bench
 
-**Status:** Draft v0.1 (Sprint 0). Decisions are recorded as ADRs in [`docs/adr/`](adr/).
+**Status:** Draft v0.2 (Sprint 0). Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md). Decisions: [`docs/adr/`](adr/). Evidence: [`docs/research/`](research/).
 
 ---
 
-## 1. Stack (proposed, see ADR-0001)
+## 1. Stack (ADR-0001)
 
 | Layer | Choice | Why |
 |---|---|---|
-| Desktop shell | **Electron** (latest stable) + electron-vite | Cross-platform (Windows → macOS → Linux) from one codebase. The Claude Agent SDK is TypeScript/Node-native, so it runs in Electron's main process with no sidecar |
-| UI | React 19 + TypeScript + Tailwind + shadcn/ui | Fast to build, accessible primitives |
-| Agent runtime | **`@anthropic-ai/claude-agent-sdk`** | The same engine as Claude Code: tools, MCP, permissions, hooks, compaction, sessions, subagents. We don't reinvent the agent loop |
-| Local DB | SQLite (`better-sqlite3`) + Drizzle ORM | Messages, runs, token ledger, search. Single file, zero ops |
-| Agent/memory storage | Plain files under the workspace (`.md` + YAML frontmatter) | Glass box: readable, diffable, git-versionable |
-| IPC | Typed IPC (main ↔ renderer) with zod schemas | Security boundary; renderer never touches the SDK or secrets |
-| Secrets | Electron `safeStorage` → DPAPI (Win) / Keychain (macOS) / libsecret (Linux) | Never store keys in plain files |
-| Tests | Vitest (unit), Playwright for Electron (e2e), CI matrix on Win/macOS/Linux | |
-| Packaging | electron-builder → NSIS (Win), DMG (macOS), AppImage/deb (Linux); GitHub Releases auto-update | |
-| Package manager | npm (already installed); pnpm optional | |
+| Desktop shell | **Electron** + electron-vite | Cross-platform (Windows → macOS → Linux) from one codebase; the Agent SDK runs natively in the main process |
+| UI | React 19 + TypeScript + Tailwind + shadcn/ui | |
+| Agent runtime | **`@anthropic-ai/claude-agent-sdk`** | Spawns the official Claude Code binary. Gives us model per agent, tools, MCP, skills, plugins, hooks, compaction, sessions and usage reporting. Subscription-compatible (ADR-0002) |
+| Local DB | SQLite + Drizzle | Messages, runs, token ledger, task board, archival memory (+ vector index later) |
+| Agent & memory storage | Plain files in the Bench home folder | Glass box: readable, diffable, git-versionable |
+| IPC | Typed IPC with zod schemas | Renderer never touches the SDK or secrets |
+| Secrets | Electron `safeStorage` (OS keychain) | Only for an optional API key and connector tokens Bench itself owns. Never Claude OAuth tokens |
+| Tests / CI | Vitest, Playwright-Electron, GitHub Actions matrix win/mac/linux | |
+| Packaging | electron-builder: NSIS / DMG / AppImage | |
 
 ## 2. System view
 
 ```
-┌──────────────────────────── Renderer (React) ────────────────────────────┐
-│  Org chart │ Agent chat │ Group chat │ Activity/Trace │ Memory editor │ $ │
-└───────────────────────────────▲──────────────────────────────────────────┘
-                                │ typed IPC (zod)
-┌───────────────────────────────┴──── Main process (Node) ─────────────────┐
-│  Orchestrator ─────────────┬─ Router (Haiku): who should speak/act next   │
-│   • message bus            ├─ Agent Runner ×N  (Agent SDK query())        │
-│   • handoff queue          │     model / tools / MCP / permissions        │
-│   • approval gate (HITL)   ├─ Memory Service (per-agent .md + compaction) │
-│   • token ledger           ├─ Summarizer (Haiku): rolling group summaries │
-│                            └─ Scheduler (reminders, recurring jobs)       │
-│  Bench MCP server (in-process): ask_agent, handoff, post_to_group,        │
-│                                  remember, recall, create_task            │
-│  Storage: SQLite (runs, messages, tokens) + workspace files (agents, mem)│
-└──────────────────────────────────────────────────────────────────────────┘
-                                │
-              Claude Code auth (subscription)  or  ANTHROPIC_API_KEY
+┌─────────────────────────────── Renderer (React) ─────────────────────────────────┐
+│ Main agent chat │ Agent chats │ Groups │ Agent editor │ Memory │ Trace │ Usage meter │
+└──────────────────────────────────▲───────────────────────────────────────────────┘
+                                   │ typed IPC
+┌──────────────────────────────────┴──── Main process ─────────────────────────────┐
+│ Orchestrator                                                                      │
+│  ├─ Router: rules first (@mention, task owner, subscriptions) → Haiku on cards    │
+│  ├─ Agent Runner ×N: one SDK query() per turn, with per-agent options (§4)        │
+│  ├─ Handoff + Task board (states, deps, verifier)                                 │
+│  ├─ Approval gate (canUseTool) · Budgets · Token ledger (/usage, modelUsage)      │
+│  ├─ Background curator (Haiku): thread digests, memory extraction, dedupe         │
+│  └─ Scheduler: routines                                                           │
+│ Inventory service: reads the user's Claude Code MCP servers, plugins, skills      │
+│ Bench MCP server (in-process, createSdkMcpServer):                                │
+│   handoff · ask_agent · post_to_group · task_* · memory_global_* · memory_private_*│
+└───────────────────────────────────────────────────────────────────────────────────┘
+                      │ spawns the official Claude Code binary (user's own `claude login`)
 ```
 
-## 3. Core concepts (domain model)
-
-| Entity | Lives in | Key fields |
-|---|---|---|
-| **Agent** | `workspace/agents/<id>.md` | name, role, `model`, `reports_to`, tools allowlist, MCP servers, permission mode, system prompt (body), `budget` |
-| **Memory** | `workspace/memory/<agent-id>/*.md` + `MEMORY.md` index | One fact per file (same pattern as Claude Code memory). Agents read the index and pull files on demand |
-| **Conversation** | SQLite | type: `direct` / `group`, participants, rolling summary |
-| **Message** | SQLite | author (user / agent), mentions, handoff ref, tokens in/out, model, cost estimate |
-| **Run / Trace** | SQLite | every SDK event: tool call, tool result, permission request, compaction |
-| **Task / Handoff** | SQLite | from → to, brief, status (`queued`, `running`, `needs_approval`, `done`, `rejected`), result |
-| **Org** | `workspace/org.yaml` | hierarchy, groups, who may talk to whom |
-
-## 4. How the key features work
-
-### 4.1 Agent → agent handoff
-Each agent gets the **Bench MCP server**, which exposes:
-- `ask_agent(agent, question)`: synchronous consult. The callee answers with its own memory and context and returns text.
-- `handoff(agent, task_brief, expected_output)`: async. Creates a Task, and the callee runs it in its own session. The result posts back to the caller and to the thread.
-- `post_to_group(group, message)`, `remember(fact)`, `recall(query)`, `create_task(...)`
-
-Org rules (`org.yaml`) limit who can hand off to whom (an employee can't assign work to the CEO), and there is a **max delegation depth** (default 3) to stop loops.
-
-### 4.2 Group chat without a token explosion
-Naive version: every agent reads every message, so cost grows with N agents × M messages.
-Our version:
-1. **Router (Haiku)** reads the new message plus the group summary and picks the 0–2 agents who should respond. @mentions override the router.
-2. Responders get **the rolling group summary + the last K messages + messages that mention them**, not the full transcript.
-3. **Summarizer (Haiku)** updates the group summary every N messages.
-4. **Prompt caching** on stable prefixes (system prompt + memory index).
-5. A visible **"cost of this message"** chip on every bubble.
-
-### 4.3 Model tiering (`config/models.yaml`)
-| Tier | Default model | Used for |
-|---|---|---|
-| `fast` | `claude-haiku-5-5` | Router, summarizer, reminders, inbox triage, memory compaction |
-| `balanced` | `claude-sonnet-5-5` | Most employees (writers, analysts, developers on routine work) |
-| `deep` | `claude-opus-5-5` | Chief officers, architects, hard design or strategy |
-
-Each agent pins a tier or an exact model. Optional **escalation**: an agent can request one higher-tier turn, which goes through an approval gate.
-
-### 4.4 Memory and auto-compact
-- **Session level:** use the SDK's built-in compaction, then write the compacted summary as a *session note*.
-- **Long-term:** after each task, a Haiku "memory curator" proposes facts to save (`remember`). You can see the proposals, and the agent may auto-accept them if you allow it.
-- **Weekly:** a dedupe/merge pass across memory files. You get a diff to approve.
-
-### 4.5 Visibility (the differentiator)
-- **Trace panel:** every tool call, input, output, permission prompt and timing, streamed live.
-- **Prompt inspector:** the exact system prompt, memory and context an agent saw for any turn.
-- **Token ledger:** per agent, per conversation, per day, plus the percentage of the usage window spent.
-- **Edit anything:** agent prompts, memories and org are files, and they hot-reload.
-- **Intervene:** pause or stop any running agent, rewrite its last message, reroute a handoff.
-
-## 5. Security model
-- The renderer is sandboxed (`contextIsolation`, no `nodeIntegration`, strict CSP). Only the main process holds credentials.
-- Per-agent tool allowlists. Destructive tools (shell, file write outside the workspace, sending email or messages) need approval by default.
-- Agents work in a **workspace directory**. They get file access outside it only through an explicit grant.
-- Content from email, web or files is treated as **untrusted data**, with prompt-injection guards on tools that act outside the app (send, post, pay = always human-approved).
-- No telemetry leaves the machine.
-
-## 6. Repo layout (target)
-
-Portability rules are in ADR-0001: OS-specific code lives only in `apps/desktop/src/main/platform/`.
+## 3. Data on disk
 
 ```
-apps/desktop/            Electron app (main, preload, renderer); main/platform/ = OS adapters
-packages/core/           Orchestrator, router, memory, ledger (pure TS, testable)
-packages/bench-mcp/      In-process MCP server (handoff, ask_agent, …)
+<bench-home>/
+  main-agent/agent.md            # the one main agent (name, model, instructions)
+  agents/<slug>/
+     agent.md                    # frontmatter: name, description, model, connectors, skills, plugins, permissions, budget
+     knowledge/                  # files attached to this agent only (like Project knowledge)
+     memory/MEMORY.md + *.md     # PRIVATE memory: one fact per file + index
+  memory/global/MEMORY.md + *.md # GLOBAL memory: every agent reads the index
+  groups/<slug>.yaml             # members, settings
+  bench.sqlite                   # messages, runs, tasks, ledger, digests, archival index
+```
+
+## 4. How each agent is run (SDK options per turn)
+
+| Option | Value | Effect |
+|---|---|---|
+| `model` | the agent's model | Haiku / Sonnet / Opus per agent |
+| `systemPrompt` | role + private core memory + **global memory index** | Stable prefix → prompt cache hits |
+| `mcpServers` + `strictMcpConfig: true` | the agent's selected connectors + `bench` | Only selected tool definitions load. Without strict mode, claude.ai connectors leak in |
+| `tools` / `disallowedTools` | the agent's tool set | Real restriction (`allowedTools` only auto-approves) |
+| `skills`, `plugins` | the agent's selections from the inventory | Per-agent skills and plugins |
+| `settingSources: []` | — | Isolates agents from the global Claude Code config, so we control exactly what loads |
+| `cwd` | `agents/<slug>/` | Agent works inside its own folder by default |
+| `env` | `process.env` minus `ANTHROPIC_API_KEY` (unless API mode), `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` | Subscription stays in use; Bench owns memory |
+| `resume` | the agent's session id per thread | Continuity; the SDK auto-compacts and we log `compact_boundary` |
+| `canUseTool`, hooks | approval gate + trace events | Human in the loop + full visibility |
+
+## 5. Group chat without a token explosion
+(Evidence: [research/multi-agent-efficiency.md](research/multi-agent-efficiency.md))
+1. **Rules first:** an @mention, the agent that owns the task, or a topic subscription decides who replies. Only if nothing matches does the **Haiku router** pick, using **agent cards + thread digest** only.
+2. **Default: one responder.** Max k per message, max hops per request.
+3. Each responder gets: its own prefix (cached) + **thread digest** + messages addressed to it (verbatim) + the task card. **Never** other agents' raw tool outputs. Long outputs pass as file or artifact references.
+4. The **curator** (Haiku, in the background) updates digests when a thread goes idle.
+5. Answers are forwarded **verbatim**, not re-paraphrased by a supervisor.
+6. Every bubble shows its cost; every group shows its running total.
+
+## 6. Handoffs
+`handoff(to, task, context_summary, artifact_refs, acceptance_criteria)` creates a task on the board. The receiver runs with **the payload + its own memory**, not the sender's transcript. The result comes back verbatim. Optional verifier step. Org rules: max delegation depth (default 3), and you can disable agent→agent handoffs per agent.
+
+## 7. Memory
+- **Private:** small core notes always in context; the rest fetched on demand. Written via `memory_private_*` tools.
+- **Global:** the index is always in context; full entries fetched on demand. Agents *propose* global writes; the main agent or you approve (configurable). Append-style to avoid last-writer-wins clobbering.
+- **Group digest:** per group, maintained by the curator.
+- **Curator jobs:** after each task, extract facts (Mem0-style add/update/delete). Weekly dedupe, shown to you as a diff.
+
+## 8. Security
+Renderer sandboxed (`contextIsolation`, no `nodeIntegration`, strict CSP). Tools that act outside the app (send, post, delete, pay) always need approval. Content from email, web or files is untrusted data. Bench never handles Claude credentials (ADR-0002). No telemetry leaves the machine.
+
+## 9. Repo layout
+
+```
+apps/desktop/            Electron (main, preload, renderer); main/platform/ = OS adapters
+packages/core/           Orchestrator, router, runner, memory, ledger (pure TS)
+packages/bench-mcp/      In-process MCP server
 packages/shared/         Types, zod schemas, IPC contracts
-config/                  models.yaml, default permissions
-workspace-template/      Starter org: agents/, memory/, org.yaml
-docs/                    Vision, architecture, ADRs, roadmap, backlog
+config/                  models.yaml defaults
+templates/               OPTIONAL agent templates (never pre-installed)
+docs/
 ```

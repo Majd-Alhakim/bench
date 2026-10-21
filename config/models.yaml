@@ -9,7 +9,7 @@ tiers:
     use_for: [employees, writing, analysis, routine-coding]
   deep:
     model: claude-opus-5-5
-    use_for: [chief-officers, architecture, strategy, hard-design]
+    use_for: [main-agent-hard-tasks, architecture, strategy, hard-design]
 
 system_agents:
   router: fast

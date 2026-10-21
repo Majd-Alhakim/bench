@@ -1,28 +1,38 @@
 # Product Backlog — Bench
 
-Format: `ID · Story · Acceptance criteria (short) · Size (S/M/L)`. Ordered by priority, top = next.
+Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priority, top = next. Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md).
 
-## Sprint 0: Inception (spikes, time-boxed)
+## Sprint 0: Inception
 
-- **S0-1 · Spike: subscription auth via the Agent SDK** (L, 1 day)
-  - AC: a Node script runs `query()` with `model: claude-haiku-5-5`, then `claude-opus-5-5`, using the local Claude Code login (no API key). Records rate-limit behavior with 3 parallel queries. Written verdict in `docs/spikes/S0-1.md`, including the terms check.
-- **S0-2 · Spike: group-chat token economics** (M)
-  - AC: script simulates 4 agents × 20 turns, naive vs. router + summary. Table of tokens in `docs/spikes/S0-2.md`.
-- **S0-3 · Spike: in-process MCP handoff** (M)
-  - AC: agent A calls the `ask_agent` tool, and agent B answers in its own session. Works end to end in a script.
-- **S0-4 · Founder sign-off on ADR-0001 / ADR-0002** (S)
-- **S0-5 · Competitor teardown** (M): hands-on notes on the agent-team bots the founder tested (what feels good, what breaks, what it costs). Output: `docs/research/competitors.md`.
+- ✅ **S0-4** ADR-0002 accepted for personal use (research: [anthropic-repos-and-auth](research/anthropic-repos-and-auth.md)). ADR-0001 awaiting founder confirmation.
+- ✅ **S0-5** Competitor teardown: [competitive-brief](research/competitive-brief.md)
+- ✅ **S0-6** Multi-agent efficiency research: [multi-agent-efficiency](research/multi-agent-efficiency.md)
+- ✅ Private GitHub repo: github.com/Majd-Alhakim/bench
+- **S0-1 · Spike: SDK on subscription, per-agent isolation** (M)
+  - AC: a script runs `query()` with no API key, inheriting `claude login`, once with Haiku and once with Opus.
+  - AC: with `strictMcpConfig` + `settingSources: []`, the agent sees ONLY the MCP servers and skills we pass (shown via its init message).
+  - AC: 3 parallel queries; record `/usage` rate-limit percent and `modelUsage`.
+  - Output: `docs/spikes/S0-1.md`.
+- **S0-2 · Spike: group-chat economics** (M)
+  - AC: 4 agents × 20 turns, naive broadcast vs rules + router + digest. Token table in `docs/spikes/S0-2.md`.
+- **S0-3 · Spike: in-process Bench MCP** (M)
+  - AC: agent A calls `handoff` / `ask_agent`, and agent B answers in its own session with its own memory. `memory_global_read` works from both.
 
-## Sprint 1: Walking skeleton
+## Sprint 1: Walking skeleton (main agent only)
 
-- **S1-1** Scaffold monorepo (electron-vite + React + TS + Tailwind + shadcn, Vitest, ESLint/Prettier, CI on GitHub Actions with a windows/macos/ubuntu matrix, `main/platform/` adapter folder)
-- **S1-2** Agent definition loader: parse `workspace/agents/*.md` (frontmatter + prompt), validate with zod, hot-reload
-- **S1-3** Agent Runner: wraps the SDK `query()`, streams events to the renderer over IPC
-- **S1-4** Chat UI for one agent (streaming, markdown, stop button)
-- **S1-5** Trace panel: tool calls, results, timings, tokens per turn
-- **S1-6** SQLite persistence of conversations and runs
-- **S1-7** Settings: provider (subscription / API key), workspace folder
+- **S1-1** Scaffold monorepo (electron-vite + React + TS + Tailwind + shadcn, Vitest, ESLint/Prettier, CI matrix windows/macos/ubuntu, `main/platform/`)
+- **S1-2** Onboarding: detect Claude Code and login status; strip `ANTHROPIC_API_KEY`; choose the Bench home folder
+- **S1-3** Main agent from `main-agent/agent.md`; Agent Runner wraps `query()`; stream to UI
+- **S1-4** Chat UI (streaming, markdown, stop)
+- **S1-5** Trace panel + per-message tokens/cost + plan-usage meter
+- **S1-6** SQLite persistence; session resume
+
+## Sprint 2: Agents you create
+
+- Agent editor (name, avatar, description, role, model, knowledge files); main agent can draft an agent from chat
+- **Inventory service:** list the user's MCP servers, plugins and skills; per-agent picker → SDK options
+- Private memory + global memory (Bench MCP tools); memory viewer/editor
+- Duplicate an agent (without memory)
 
 ## Later (groomed per sprint)
-
-Epics: **E2 Team & handoffs** · **E3 Group chat & router** · **E4 Approvals, budgets, ledger** · **E5 Memory curator & compaction** · **E6 Connectors & scheduler** · **E7 Packaging & security**
+**E3** Groups & router · **E4** Handoffs & task board · **E5** Approvals, budgets, ledger · **E6** Curator (digests, extraction, dedupe) · **E7** Routines + Gmail/GitHub · **E8** Packaging, security, open-source at v0.1
