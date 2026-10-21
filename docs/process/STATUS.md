@@ -20,7 +20,12 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 
 ## Already decided (input to the phases above, not a substitute for them)
 Product model (main agent + user-created agents, private and global memory, connectors per agent) · auth approach (ADR-0002) · cross-platform Electron stack (ADR-0001, *to confirm*) · repo conventions (ADR-0003) · engineering workflow (CLAUDE.md).
-**Not decided:** product name ("Bench" is only a codename), look and feel, avatars and animation, MVP scope, sprint length.
+**Client decisions (2026-10-21):**
+- Personal project: the client is the only user for now, so there is no outside validation.
+- **Lean mode**: MVP-only documents, and the UX prototype comes early.
+- **3-day sprints**, re-measured after Sprint 2.
+
+**Not decided:** product name ("Bench" is only a codename), look and feel, avatars and animation, MVP scope.
 
 ## Gate log
 

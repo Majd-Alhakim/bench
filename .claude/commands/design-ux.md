@@ -2,7 +2,7 @@
 description: Phase 4. UX research, personas, journeys, flows and a low-fi prototype
 ---
 
-Precondition: G2 is approved (UX can run in parallel with Phase 3).
+Precondition (lean mode): a BRD draft exists. The low-fi prototype starts right after it, in parallel with the PRD, and its feedback corrects the BRD and PRD. The G4 approval still comes after the PRD (G2).
 
 1. Brief the `ux-designer`:
    - inputs: BRD, PRD, `docs/PRODUCT-MODEL.md`, the competitive brief, the interview notes

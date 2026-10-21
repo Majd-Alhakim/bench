@@ -6,7 +6,13 @@ How this project moves from idea to shipped product. It follows the classic BA �
 - **Team:** Claude-run role agents. See [TEAM.md](TEAM.md).
 - **Live status:** [STATUS.md](STATUS.md). Each phase has a command in `.claude/commands/`.
 
-> Rule: **no phase starts until the previous gate is approved by the client** in STATUS.md. Phases 1–6 can overlap a little (UX research can start while the PRD is in review), but nothing is *implemented* before Gate 6.
+> Rule: **no phase starts until the previous gate is approved by the client** in STATUS.md, and nothing is *implemented* before Gate 6.
+
+> **Lean mode (client decision, 2026-10-21):** "Seeing is believing."
+> - Every document covers **only the MVP's use cases** and stays short: the BRD lists use cases, the PRD is 1–2 pages, and the SRS only holds requirements a developer or tester needs.
+> - The **UX low-fi prototype comes early**: it is drafted right after the first BRD draft, in parallel with the PRD.
+> - The documents are then corrected against what the client sees in the prototype. Documents are living until their gate; after that, changes go through a change request.
+> - Out of scope for now: outside-user validation (no waitlist or public post). **The client is the only user** of this personal project.
 
 ## Phases and gates
 
@@ -36,7 +42,11 @@ Every document has a version table. Traceability chain: **Use case (BRD) → Req
 
 ## Agile delivery rules (Phase 7)
 
-- **Sprint length: 2 weeks** (client's preference; may shorten to 1 week, since agent velocity is high). Ceremonies:
+- **Sprint length: 3 days, goal-boxed** (client decision, 2026-10-21; human-speed 2-week sprints rejected). Re-measure after Sprints 1–2 and adjust in the retro.
+  - Why 3 days: one task (branch, code, tests, CI, review, PR) takes an agent about 15–60 minutes. Coding is not the bottleneck. The real limits are: (1) the client's demo, UAT and approval time; (2) the Claude subscription's usage windows when several developer agents run in parallel; (3) CI time. Three days fits roughly 8–15 tasks, one demo and one retro.
+  - Rhythm: Day 1 planning (morning) → build → Day 3 review + retro → the next sprint starts right away.
+  - Velocity is tracked in points and in tokens per accepted story, so the usage limit is planned like team capacity.
+- Ceremonies:
   - **Sprint planning** (`/plan-sprint`): PM proposes a sprint goal + stories from the top of the backlog. Tech Lead splits them into tasks. Client approves.
   - **Daily standup** (`/standup`): done / doing / blocked, read from the board and git activity.
   - **Sprint review** (`/sprint-review`): demo to the client, accept or reject each story.

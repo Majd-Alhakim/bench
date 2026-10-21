@@ -82,10 +82,11 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 - The main session is the **Product Manager**. Role agents: `business-analyst`, `product-manager`, `ux-designer`, `ui-designer`, `tech-lead`, `developer`, `qa-engineer`. The founder is the **client** and the only one who approves gates.
 - Phase commands: `/discovery` → `/brd` → `/prd` → `/specs` → `/design-ux` → `/design-ui` → `/plan-sprint` → (`/standup`, `/qa`, `/bug`, `/sprint-review`) → `/release`. Plus `/gate` and `/change-request`.
 - **No implementation before Gate 6.** Templates are in `docs/templates/`.
+- **Lean mode:** documents cover only the MVP use cases, and the UX prototype is shown early, then the documents are corrected from it. Sprints are **3 days**, goal-boxed. The founder is the only user (a personal project for now).
 
 ## Project Status & Open Decisions
 
 - **Phase 0 → 1** (see STATUS.md). Repo: github.com/Majd-Alhakim/bench (private). Next: `/discovery` (requirements interview).
 - Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
-- Open: product name ("Bench" is a codename only; decided in Phase 5) · look and feel, avatars, animation · MVP scope · sprint length · confirm Electron (ADR-0001).
+- Open: product name ("Bench" is a codename only; decided in Phase 5) · look and feel, avatars, animation · MVP scope · confirm Electron (ADR-0001).
 - Roles: the founder is product owner and human in the loop; Claude acts as PM + CTO and asks before irreversible or outward-facing actions.
