@@ -15,7 +15,7 @@
 | 5 Secrets | ✅ | `safeStorage` only; never Claude OAuth; gitleaks in CI; packaged-app scan for secrets before release | S0 CI ✅ / S7 |
 | 6 Privacy & data rights | ✅ (light) | Local-first: document what leaves the device (prompts to Anthropic via Claude Code; connector calls). "Delete agent" deletes its memory and knowledge; "export" = copy the folder | S2 / S7 |
 | 7 Environments | ✅, adapted | dev (electron-vite) → PR CI builds → pre-release (GitHub prerelease channel) → stable. Separate Bench home for dev (`BENCH_HOME`) so dev never touches real data | S1 |
-| 8 CI/CD & review gates | ✅ | Branch per change, PR template, required checks on `main`, squash-merge. CI: lint, typecheck, test, build ×3 OS, audit, gitleaks | S0 ✅ partial / S1 full |
+| 8 CI/CD & review gates | ✅ | Branch per change, PR template, required checks on `main`, squash-merge. CI: lint, typecheck, test, build on Windows + Ubuntu per PR and macOS on `main`, audit, gitleaks | S0 ✅ partial / S1 full |
 | 9 Platform limits / background jobs | ✅, adapted | Subscription usage window, SDK `maxTurns`/`maxBudgetUsd`, routines as a durable local queue (survive restart, idempotent) | S4 / S6 |
 | 10 Caching & rate limiting | ✅, adapted | Prompt caching (stable prefixes, cache-hit metrics); local concurrency cap on parallel agents | S3 / S4 |
 | 11 Scaling & external limits | ✅, adapted | Backoff and retries on rate limits; budgets per agent; Gmail/GitHub API limits; graceful "usage exhausted" UI | S4 / S6 |

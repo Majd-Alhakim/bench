@@ -10,7 +10,7 @@ Bench is a desktop app, so "deploy" means **merge to `main`**, then **publish a 
 3. Self-review the diff: bugs, edge cases, dead code, duplication, naming, slop comments, structure. Run `/code-review` (or `/simplify`) on non-trivial PRs and fix the findings.
 4. Local gate: `pnpm check:all && pnpm build && pnpm audit --audit-level high`.
 5. Security checklist in [security-baseline.md §3](security-baseline.md).
-6. Open the PR with the template; CI must be green on windows/macos/ubuntu, plus gitleaks.
+6. Open the PR with the template; CI must be green on Windows + Ubuntu + gitleaks; macOS runs on `main` after merge (fix immediately if red).
 7. Squash-merge with a Conventional Commit title; delete the branch; update BACKLOG.md.
 
 ## B. Release (vX.Y.Z)

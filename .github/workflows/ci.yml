@@ -34,7 +34,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        # macOS runners are capacity-limited and bill 10x on private repos: PRs run Windows + Ubuntu,
+        # pushes to main and manual runs add macOS. Revisit in S1-1 (macOS on PRs that touch packaging).
+        os: ${{ fromJSON(github.event_name == 'pull_request' && '["windows-latest","ubuntu-latest"]' || '["windows-latest","macos-latest","ubuntu-latest"]') }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     steps:

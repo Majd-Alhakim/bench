@@ -8,7 +8,7 @@ Applies to humans and AI agents alike.
 3. Run `pnpm check:all` (lint, typecheck, test). Run `pnpm build` for anything touching packaging.
 4. **Review your own diff before opening the PR**, against [REVIEW.md](REVIEW.md). On non-trivial changes, run `/review-pr` (or the reviewer agents in `.claude/agents/`) and fix what they find.
 5. Add a changeset (`pnpm changeset`) when users will notice the change.
-6. Open the PR with the template. CI must be green on windows/macos/ubuntu, plus the gitleaks secret scan.
+6. Open the PR with the template. CI must be green on Windows and Ubuntu plus the gitleaks secret scan. macOS runs after merge on `main` (and on demand via "Run workflow"); a red macOS run on `main` gets a fix PR right away.
 7. **Squash-merge** with a Conventional Commit title, then delete the branch.
 
 ## Commit messages
