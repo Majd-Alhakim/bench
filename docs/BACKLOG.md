@@ -20,7 +20,7 @@ Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priorit
 
 ## Sprint 1: Walking skeleton (main agent only)
 
-- **S1-1** Scaffold monorepo (electron-vite + React + TS + Tailwind + shadcn, Vitest, ESLint/Prettier, CI matrix windows/macos/ubuntu, `main/platform/`)
+- **S1-1** Scaffold per ADR-0003: pnpm workspace, strict tsconfig.base, ESLint 9 + Prettier, Vitest, lefthook, changesets, `scripts/*`, `.claude/settings.json` format hook, electron-vite + React + Tailwind + shadcn, CI on windows/macos/ubuntu, `main/platform/`; add npm to Dependabot
 - **S1-2** Onboarding: detect Claude Code and login status; strip `ANTHROPIC_API_KEY`; choose the Bench home folder
 - **S1-3** Main agent from `main-agent/agent.md`; Agent Runner wraps `query()`; stream to UI
 - **S1-4** Chat UI (streaming, markdown, stop)

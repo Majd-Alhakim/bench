@@ -9,7 +9,7 @@
 |---|---|---|---|
 | 0 Inventory & threat model | ✅ | Done: [security-baseline.md §1](security-baseline.md). Stack in [ARCHITECTURE.md](ARCHITECTURE.md) | S0 ✅ |
 | 1 Database architecture | ✅ (local SQLite) | Drizzle schema + **migrations** from day one; FKs, indexes on (conversation_id, created_at), (agent_id, created_at), (task status); bounded pagination | S1 |
-| 2 Dependency security | ✅ | Lock file, `npm audit` in CI, Dependabot (npm + actions) | S0 config ✅ / S1 enforced |
+| 2 Dependency security | ✅ | Lock file, `pnpm audit` in CI, Dependabot (npm + actions) | S0 config ✅ / S1 enforced |
 | 3 Authz & ownership | ✅, adapted | No user accounts; the boundary is **agent isolation** (private memory, knowledge, connectors). Cross-agent access tests required | S2 |
 | 4 Row-level security / multi-tenancy | ❌ N/A | Single user, local DB. Agent scoping is enforced in Bench MCP + repository functions (Layer 3) | — |
 | 5 Secrets | ✅ | `safeStorage` only; never Claude OAuth; gitleaks in CI; packaged-app scan for secrets before release | S0 CI ✅ / S7 |

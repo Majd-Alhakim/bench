@@ -42,8 +42,8 @@ Applies to every PR. Bench is a **local-first desktop app**: there is no Bench s
 - Crash reports: off by default; if added later, opt-in and redacted.
 
 ### Supply chain
-- Lock files committed. `npm audit --audit-level=high` in CI; high or critical findings block the merge unless a risk acceptance with a review date is recorded in the readiness report.
-- Dependabot for npm and GitHub Actions. Pin Actions to major versions from trusted publishers.
+- Lock files committed. `pnpm audit --audit-level high` in CI; high or critical findings block the merge unless a risk acceptance with a review date is recorded in the readiness report.
+- Dependabot for npm and GitHub Actions. Pin Actions to full commit SHAs with a `# vX.Y.Z` comment (Dependabot keeps them current).
 - Gitleaks secret scan on every PR and push.
 - Check the license before copying code from any repo (no AGPL, and no unlicensed code).
 
