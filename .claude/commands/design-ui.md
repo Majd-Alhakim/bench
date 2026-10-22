@@ -5,6 +5,7 @@ argument-hint: "[naming | brand | avatars | prototype]"
 
 Precondition: G4 is approved (naming and the moodboard may start earlier). Focus: $ARGUMENTS
 
+0. Load the `ui-ux-guide` skill and include it in the brief: the designer applies its rules and returns its review checklist with the deliverable.
 1. Brief the `ui-designer`:
    - inputs: the PRD, the UX package, the client's answers about taste
    - template: `docs/templates/UI-BRIEF.md`

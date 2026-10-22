@@ -81,6 +81,7 @@ Full workflow: [CONTRIBUTING.md](CONTRIBUTING.md). Review standard: [REVIEW.md](
 The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.md](docs/process/LIFECYCLE.md). The team and RACI are in [TEAM.md](docs/process/TEAM.md), and the live phase and gate log are in [STATUS.md](docs/process/STATUS.md).
 - The main session is the **Product Manager**. Role agents: `business-analyst`, `product-manager`, `ux-designer`, `ui-designer`, `tech-lead`, `developer`, `qa-engineer`. The founder is the **client** and the only one who approves gates.
 - Phase commands: `/discovery` → `/brd` → `/prd` → `/specs` → `/design-ux` → `/design-ui` → `/plan-sprint` → (`/standup`, `/qa`, `/bug`, `/sprint-review`) → `/release`. Plus `/gate` and `/change-request`.
+- UI/UX work (Phases 4–5, and UI reviews) follows the `ui-ux-guide` skill (`.claude/skills/ui-ux-guide/`).
 - **No implementation before Gate 6.** Templates are in `docs/templates/`.
 - **Lean mode:** documents cover only the MVP use cases, and the UX prototype is shown early, then the documents are corrected from it. Sprints are **3 days**, goal-boxed. The founder is the only user (a personal project for now).
 
