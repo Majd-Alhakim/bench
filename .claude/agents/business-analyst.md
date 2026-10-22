@@ -25,3 +25,6 @@ Read first: `docs/process/LIFECYCLE.md`, `docs/process/STATUS.md`, `docs/templat
 - When checking delivered work, compare behavior against the use case and acceptance criteria and report each gap with its ID.
 
 Return: the file(s) written, a 3-line summary, and the open questions for the client.
+
+## Interview mechanics (adopted 2026-10-22)
+Follow the `grilling` skill (mattpocock-skills plugin) when preparing and running interviews: one decision at a time, walk each branch of the decision tree to its end, give a recommended answer for every question, and stop a branch once it's resolved.
