@@ -8,11 +8,12 @@
 | Prototype modified? | Not by the audit itself. The findings were then applied in prototype **v0.2** (`docs/design/ux/prototype/index.html`), together with client decisions D1–D6 (`docs/requirements/interviews/2026-10-22-ux-audit-decisions.md`). See the Status marker on each finding |
 | Auditor | UX Designer, 2026-10-22 |
 | Status update | 2026-10-22, v0.2: 32 of 32 Must-fix-before-G4 findings **Fixed (v0.2)**; 8 findings remain **Phase 5** (handed to UI). §1 and §2 still describe v0.1 as audited |
+| Status update | 2026-10-22, v0.3 (client feedback round 1, CR-001): **L13 is now Partly addressed (v0.3)**: avatars carry a status ring or badge with the text label, at 40 px in trees and rows and 64 px on the agent page; the final art stays Phase 5. All other statuses are unchanged; the v0.2 fixes were carried over to the new screens (M8's Org tree actions now live on each project's Team page; M13's tabs and leave guard on the merged agent page) |
 
 Legend: ✅ passes · ❌ fails (see notes and findings) · N/A not applicable or deferred to Phase 5.
 Severity: **High** (blocks a validation task or breaks a Bench adaptation), **Medium** (a rule broken on a key flow), **Low** (polish or an edge case).
 Tag: **Must-fix-before-G4** (fix in the low-fi or the UX package) or **Phase-5** (hand over to the UI phase).
-Status (added 2026-10-22): **Fixed (v0.2)** (applied in prototype v0.2) or **Phase 5** (open, handed to the UI phase).
+Status (added 2026-10-22): **Fixed (v0.2)** (applied in prototype v0.2), **Partly addressed (v0.3)** (structure done in the low-fi, final design in Phase 5) or **Phase 5** (open, handed to the UI phase).
 
 ---
 
@@ -150,7 +151,7 @@ Format: `screen — rule — problem — fix` · **severity** · **tag**.
 
 **L12.** First run and dialogs — *Navigation: actions on the right; Z pattern ends on the primary* — Back and Continue are left-aligned together, so the eye path doesn't end on the primary. · **Low** · **Phase-5** · Status: **Phase 5** (open, handed to UI)
 
-**L13.** Global — *Avatars* — Initials only, 26px in lists and 44px on profiles; status beside rather than on the avatar. Apply the size rules and the status ring + label once H1's vocabulary is fixed. · **Low** · **Phase-5** · Status: **Phase 5** (open, handed to UI)
+**L13.** Global — *Avatars* — Initials only, 26px in lists and 44px on profiles; status beside rather than on the avatar. Apply the size rules and the status ring + label once H1's vocabulary is fixed. · **Low** · **Phase-5** · Status: **Partly addressed (v0.3)**. CR-001 brought avatars into the low-fi: every agent has a greyscale placeholder avatar with its status as a ring or badge on the avatar plus the text tag, 40 px in trees and team rows, 56–64 px on panels and the agent page (24–28 px inline chips stay below the 40–48 px list rule; see README Q15), CSS animations off under reduced motion, and a customizer. Still Phase 5: the final art, motion and size tokens
 
 **L14.** Global — *Distinct states* — No active state; disabled is opacity only (`.45`). · **Low** · **Phase-5** · Status: **Phase 5** (open, handed to UI)
 
@@ -160,6 +161,7 @@ Format: `screen — rule — problem — fix` · **severity** · **tag**.
 
 **Counts:** High 8 · Medium 16 · Low 16 = **40 findings**. Must-fix-before-G4: **32** · Phase-5: **8**.
 **Status (v0.2):** Fixed (v0.2): **32** (H1–H8, M1–M14, L1–L10) · Phase 5: **8** (M15, M16, L11–L16).
+**Status (v0.3):** Fixed (v0.2): **32** · Partly addressed (v0.3): **1** (L13) · Phase 5: **7** (M15, M16, L11, L12, L14, L15, L16).
 
 ---
 
