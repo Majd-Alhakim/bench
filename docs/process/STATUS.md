@@ -2,15 +2,15 @@
 
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
-**Current phase:** 1 (BRD v0.5 In Review, no open issues)
-**Next step:** client approves the BRD → `/gate G1` → `/prd` and `/design-ux` (lean mode: prototype early)
+**Current phase:** 2 (PRD) + 4 (early UX prototype, lean mode). G1 approved 2026-10-22
+**Next step:** `/prd` (PM drafts the PRD from BRD v1.0) and, in parallel, `/design-ux` (low-fi prototype)
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
 | 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [competitive brief](../research/competitive-brief.md), [research](../research/) | G0 ⏳ |
-| 1 | Requirements / BRD | 🟡 Interviews in progress ([users & roles](../requirements/interviews/2026-10-21-users-and-roles.md) ✅, [goals & scenarios](../requirements/interviews/2026-10-21-goals-and-scenarios.md) ✅) | [BRD v0.5](../requirements/BRD.md) **In Review** | G1 ⏳ |
+| 1 | Requirements / BRD | ✅ Done ([interviews](../requirements/interviews/)) | [BRD v1.0](../requirements/BRD.md) **Baselined** | G1 ✅ 2026-10-22 |
 | 2 | PRD | ⚪ Not started | `docs/requirements/PRD.md` | G2 ⏳ |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
 | 4 | UX design | ⚪ Not started | `docs/design/ux/` | G4 ⏳ |
@@ -31,7 +31,7 @@ Product model (main agent + user-created agents, private and global memory, conn
 
 | Date | Gate | Decision | Client comments |
 |---|---|---|---|
-| — | — | — | — |
+| 2026-10-22 | G1 (BRD) | **Approved**: BRD v0.5 baselined as v1.0 | "yes". Remaining detail assumptions are carried into the PRD/SRS as defaults |
 
 ## Change requests
 
