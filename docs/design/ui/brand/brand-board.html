@@ -3,9 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brand board · bench (codename) · stage 1</title>
+<title>Brand board · bench (codename) · v1.1</title>
+<link rel="icon" type="image/svg+xml" href="logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Self-contained: a copy of the tokens this page needs (source of truth: ../system/tokens.css). No network. */
+/* A copy of the tokens this page needs (source of truth: ../system/tokens.css). The only network use is Google Fonts,
+   for review; the app bundles the same OFL files. Brand round 2 (2026-10-23) applied: Quartet, Instrument Sans, sound. */
 :root{
   color-scheme:light;
   --ink:#15171d; --ink-2:#474b57; --ink-3:#646976;
@@ -16,9 +21,9 @@
   --danger-ink:#c0262d; --danger-tint:#fdeaea; --danger-fill:#e5383b;
   --on-ink:#eceef3; --on-ink-2:#a9adb8; --ink-raised:#1f2128; --ink-line:rgb(255 255 255 / .08);
   --line-subtle:rgb(21 23 29 / .07); --line:rgb(21 23 29 / .11);
-  --font-text:"SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;
-  --font-display:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;
-  --font-mono:"SF Mono",ui-monospace,"Cascadia Code","Cascadia Mono",Consolas,monospace;
+  --font-text:"Instrument Sans","Segoe UI Variable Text","Segoe UI",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-display:var(--font-text);
+  --font-mono:"JetBrains Mono","Cascadia Mono","SF Mono",ui-monospace,Consolas,monospace;
   --corner:round; --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px;
   --elev-1:0 0 0 1px var(--line-subtle);
   --elev-3:0 0 0 1px hsl(228 16% 10% / .07),0 4px 10px hsl(228 16% 10% / .08),0 16px 40px hsl(228 16% 10% / .10);
@@ -77,8 +82,10 @@ b,strong{font-weight:600}
 .masthead{min-height:min(100vh,900px);padding:24px 0 28px;display:flex;flex-direction:column}
 .topbar{display:flex;align-items:center;gap:24px;height:48px}
 .topbar .grow{flex:1}
-.lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .36)}
-.lockup svg{display:block}
+/* Lockup (Quartet): mark, gap 0.36 × its height, the name in Instrument Sans 600 at 0.84 × height, −0.035em */
+.lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .36);line-height:1}
+.lockup svg{display:block;flex:none}
+.lk-t{font-family:var(--font-display);font-weight:600;font-size:calc(var(--h) * .84);letter-spacing:-.035em;line-height:1;transform:translateY(-.04em);white-space:nowrap}
 .rm-btn{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);height:32px;padding:0 4px}
 .sw{width:34px;height:20px;border-radius:999px;background:var(--p300);position:relative;transition:background .2s ease}
 .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / .2);transition:transform .32s var(--spring-snappy)}
@@ -152,7 +159,7 @@ b,strong{font-weight:600}
 
 /* logo */
 .logo-stage{display:grid;place-items:center;height:380px;position:relative;overflow:hidden}
-.clear{position:relative;padding:34px;border-radius:var(--r-lg);corner-shape:var(--corner);background:repeating-linear-gradient(135deg,rgb(46 91 255 / .07) 0 8px,rgb(46 91 255 / .03) 8px 16px)}
+.clear{position:relative;padding:38px;border-radius:var(--r-lg);corner-shape:var(--corner);background:repeating-linear-gradient(135deg,rgb(46 91 255 / .07) 0 8px,rgb(46 91 255 / .03) 8px 16px)}
 .clear-note{position:absolute;left:24px;bottom:20px}
 .logo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
 .logo-tile{border-radius:var(--r-md);corner-shape:var(--corner);padding:20px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
@@ -167,7 +174,9 @@ b,strong{font-weight:600}
 .rules li{list-style:none;padding-left:22px;position:relative;color:var(--ink-2)}
 .rules li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:50%;background:var(--p500)}
 .rules li.dont::before{background:none;border-radius:0;width:10px;height:2px;top:10px;background:var(--danger-ink)}
-.construct{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;align-items:center;margin-top:16px;padding:32px}
+.construct{display:grid;grid-template-columns:360px minmax(0,1fr);gap:56px;align-items:center;margin-top:16px;padding:32px}
+.construct svg{display:block}
+.slots{display:grid;gap:10px;margin-top:20px}
 
 /* icon */
 .icon-grid{display:grid;grid-template-columns:420px minmax(0,1fr);gap:72px;align-items:center}
@@ -181,6 +190,29 @@ b,strong{font-weight:600}
 .tb-slot i{display:block;width:16px;height:3px;border-radius:2px;background:var(--cobalt)}
 .icon-sizes{display:flex;align-items:flex-end;gap:28px;margin-top:40px}
 .icon-sizes figure{display:grid;justify-items:center;gap:10px}
+.icon-sizes svg{display:block}
+.dock-ic svg,.task-ic svg{display:block}
+
+/* sound */
+/* The sound chapter sits on white, so its panels are Porcelain wells (tone, not shadow) */
+.snd-bar{display:flex;align-items:center;gap:20px;padding:12px 20px;margin-bottom:16px;flex-wrap:wrap;background:var(--porcelain);border-radius:var(--r-md);corner-shape:var(--corner)}
+.snd-bar .vol{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
+.snd-bar input[type=range]{width:140px;accent-color:var(--ink)}
+.snd-bar .status{margin-left:auto;font-size:13px;color:var(--ink-3)}
+.snds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.snd-card{padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0;background:var(--porcelain);border-radius:var(--r-md);corner-shape:var(--corner)}
+.snd-card.optional{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.snd-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.snd-h .meta{display:block;margin-top:2px}
+.snd-h svg{width:18px;height:18px;flex:none;color:var(--ink-2)}
+.scope{display:block;width:100%;height:64px;border-radius:var(--r-sm);corner-shape:var(--corner);background:var(--white)}
+.snd-card.optional .scope{background:var(--porcelain)}
+.snd-card dl{display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px 10px;font-size:13px;line-height:18px;padding-top:12px;border-top:1px solid var(--line);margin-top:auto}
+.snd-card dt{color:var(--ink-3)}
+.snd-card dd{color:var(--ink-2)}
+.snd-card .btn{align-self:flex-start}
+.snd-card .btn svg{width:12px;height:12px}
+.muted-note{font-size:12px;line-height:16px;color:var(--attn-ink);min-height:16px}
 
 /* family */
 .shapes{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
@@ -327,7 +359,7 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
   <div class="topbar">
     <span class="lockup" style="--h:28px" id="topLockup" aria-label="bench (codename)"></span>
     <span class="grow"></span>
-    <span class="cap">Brand identity and design system · stage 1 · 22 Oct 2026 · for your review</span>
+    <span class="cap">Brand identity and design system · v1.1 · decided 23 Oct 2026</span>
     <button class="rm-btn" id="rmToggle" role="switch" aria-checked="false"><span class="sw" aria-hidden="true"></span>Reduce motion</button>
   </div>
   <div class="hero-grid">
@@ -338,7 +370,7 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
     </div>
     <figure class="icon-fig">
       <span id="heroIcon"></span>
-      <figcaption class="cap">The app icon is a lit window. Your team works inside, and the glass lets you see all of it.</figcaption>
+      <figcaption class="cap">The app icon is the team: four characters, four seats. Every agent you create is one of these shapes.</figcaption>
     </figure>
   </div>
   <div class="team" id="team"></div>
@@ -377,12 +409,12 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
   <div class="wrap">
     <div class="ch-head">
       <h2 class="ch-title">The signature is the Look.</h2>
-      <p class="ch-lead">Two slanted strokes. They are every agent’s face, the mark, the way you open the glass box, and the way the team asks for you. One shape, four jobs, used nowhere else.</p>
+      <p class="ch-lead">Two slanted strokes. They are every agent’s face, the way you open the glass box, and the way the team asks for you. One shape, three jobs, used nowhere else.</p>
     </div>
     <div class="look-grid">
       <div class="big-eyes">
         <svg viewBox="0 0 380 300" aria-hidden="true"><g transform="translate(118 150)"><g class="blink" style="--bd:1.2s" fill="#eceef3"><rect x="-34" y="-92" width="68" height="184" rx="34" transform="rotate(-12)"/><rect x="110" y="-92" width="68" height="184" rx="34" transform="rotate(-12 144 0)"/></g></g></svg>
-        <p class="cap">The stroke is a pill rotated 12°, about 2.6 times as tall as it is wide. In the wordmark, the letters are drawn with the same stroke.</p>
+        <p class="cap">The stroke is a pill rotated 12°, about 2.6 times as tall as it is wide. The eyes stay on the faces; the logo is the team’s shapes (Quartet, below).</p>
       </div>
       <div class="jobs">
         <div class="job">
@@ -408,10 +440,6 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
             <div class="tkt"><span id="noorGlance" class="glance"></span><div class="t"><b>Noor asks to run pnpm test</b><span class="row" style="gap:6px;margin-top:2px"><span class="tag attn">Needs you</span><span class="cap num">≈ 0.9 % of your week</span></span></div><span class="btn primary">Allow once</span></div>
           </div>
         </div>
-        <div class="job">
-          <div><h3 class="h3">The mark</h3><p class="p">The same eyes on an Ink squircle. It stands for the team as a whole, so it never takes an agent’s hue.</p></div>
-          <div class="row" style="gap:20px"><span id="markInk"></span><span id="markWhite"></span><span class="cap" style="max-width:30ch;color:var(--on-ink-2)">Ink on light grounds, white on Ink. Never on Cobalt, never on a hue.</span></div>
-        </div>
       </div>
     </div>
   </div>
@@ -421,31 +449,33 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
 <section class="ch">
   <div class="wrap">
     <div class="ch-head">
-      <h2 class="ch-title">A wordmark that takes any name.</h2>
-      <p class="ch-lead">The mark carries the identity, so the name can change. The letters are drawn with the eye stroke: lowercase, monoline, round ends, bowls from one circle. Any short name can be drawn to the same rules.</p>
+      <h2 class="ch-title">Quartet: the team is the logo.</h2>
+      <p class="ch-lead">Four seats, four different characters: a sphere, a triangle, a rounded square and a droplet, cut from the same bodies your agents wear. Every agent you create is one of these shapes, so the mark means “your team” and survives any name.</p>
     </div>
     <div class="card logo-stage">
       <div class="clear" id="bigLockupWrap"><span class="lockup" style="--h:112px" id="bigLockup"></span></div>
-      <span class="cap clear-note">Tinted area: clear space, one eye height on every side. Nothing enters it.</span>
+      <span class="cap clear-note">Tinted area: clear space, a third of the mark’s height on every side. Nothing enters it.</span>
     </div>
     <div class="logo-grid">
-      <div class="logo-tile on-white"><span class="lockup" style="--h:36px" id="lk1"></span><p class="cap">On Porcelain and white. Ink only.</p></div>
-      <div class="logo-tile on-ink"><span class="lockup" style="--h:36px" id="lk2"></span><p class="cap">On Ink: the mark inverts, white squircle, Ink eyes.</p></div>
+      <div class="logo-tile on-white"><span class="lockup" style="--h:36px" id="lk1"></span><p class="cap">On Porcelain and white: Ink, one colour.</p></div>
+      <div class="logo-tile on-ink"><span class="lockup" style="--h:36px" id="lk2"></span><p class="cap">On Ink: the same shapes in Porcelain white. Never boxed or inverted.</p></div>
       <div class="logo-tile on-white"><div class="sizes" id="markSizes"></div><p class="cap">Smallest: 16 px. Below 24 px the mark stands alone, without the name.</p></div>
-      <div class="logo-tile on-white"><div class="rename" id="renameSlots"></div><p class="cap">Rename grammar: mark, gap of 0.36 × height, name of 3 to 8 lowercase letters.</p></div>
+      <div class="logo-tile on-white"><span id="markColour"></span><p class="cap">In colour only on the app icon and brand moments. Coral, Honey, Mint, Orchid, fixed: they never follow your agents.</p></div>
     </div>
     <div class="card construct">
       <div id="construct"></div>
       <div>
         <h3 class="h3">Construction</h3>
         <ul class="rules" style="grid-template-columns:1fr;margin-top:12px">
-          <li>x-height 50, ascender 80, stroke 10 (the eye stroke at this size)</li>
-          <li>Every bowl is one circle (r 20); every arch is a half circle</li>
-          <li>Round ends and joins; no contrast, no italics, no capitals</li>
-          <li>Spacing optical: round to round 8, straight to round 10</li>
-          <li class="dont">No mouth, no third eye, no gradient on the wordmark</li>
-          <li class="dont">Never outline, stretch or recolour the mark in a hue</li>
+          <li>A 100-unit square split in four; each character sits in its own 50-unit seat</li>
+          <li>Sphere r 20 · triangle with 6-unit round joins · square 38 at r 12 · droplet at 0.46</li>
+          <li>Gaps of 8 units or more, so the four still separate at 16 px</li>
+          <li>Lockup: mark, gap 0.36 × its height, the name in Instrument Sans 600 at 0.84 × height, −0.035em</li>
+          <li class="dont">Never four squares (that’s a tile logo), never a fifth shape, never rearranged</li>
+          <li class="dont">Never one shape in an agent’s hue, never outlined, never on Cobalt</li>
         </ul>
+        <div class="slots" id="renameSlots" aria-label="Rename grammar: 3, 5 and 8 letters"></div>
+        <p class="cap" style="margin-top:8px">Rename grammar: any 3 to 8 lowercase letters take the same slot. “bench” is a codename.</p>
       </div>
     </div>
   </div>
@@ -457,11 +487,11 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
     <div class="icon-grid">
       <figure class="icon-fig"><span id="iconBig"></span></figure>
       <div>
-        <h2 class="ch-title">A lit window at night.</h2>
-        <p class="ch-lead" style="margin-top:16px">Dark glass, the eyes, and the team’s colours glowing low inside like a room still at work. It reads as one object in a dock full of flat tiles, and it is the only place the brand uses a full spectrum.</p>
+        <h2 class="ch-title">Four seats on dark glass.</h2>
+        <p class="ch-lead" style="margin-top:16px">Ink glass, a soft light along the top edge, and the four characters in full colour. It’s the one place the mark wears colour, so it reads as a bright, friendly object in a dock or taskbar and stays legible at 16 px.</p>
         <div style="margin-top:40px;display:grid;gap:20px">
-          <div class="osbar dock" aria-label="macOS dock (generic)"><span class="ph"></span><span class="ph"></span><span id="iconDock"></span><span class="ph"></span><span class="ph"></span></div>
-          <div class="osbar task" aria-label="Windows taskbar (generic)"><span class="tb-slot"><span class="ph"></span><b style="height:3px"></b></span><span class="tb-slot on"><span id="iconTask"></span><i></i></span><span class="tb-slot"><span class="ph"></span></span><span class="tb-slot"><span class="ph"></span></span></div>
+          <div class="osbar dock" aria-label="macOS dock (generic)"><span class="ph"></span><span class="ph"></span><span class="dock-ic" id="iconDock"></span><span class="ph"></span><span class="ph"></span></div>
+          <div class="osbar task" aria-label="Windows taskbar (generic)"><span class="tb-slot"><span class="ph"></span><b style="height:3px"></b></span><span class="tb-slot on"><span class="task-ic" id="iconTask"></span><i></i></span><span class="tb-slot"><span class="ph"></span></span><span class="tb-slot"><span class="ph"></span></span></div>
         </div>
         <div class="icon-sizes" id="iconSizes"></div>
       </div>
@@ -522,9 +552,9 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
       <thead><tr><th>Hue</th><th>Base</th><th>Ink</th><th>Tint</th><th>Wash</th><th>In use</th><th class="r">Ink on white</th><th class="r">Ink on tint</th><th class="r">Ink text on tint</th></tr></thead>
       <tbody></tbody>
     </table>
-    <p class="cap" style="margin-top:12px">Ratios are computed live on this page from the token values. AA needs 4.5:1 for text. Pear replaces Periwinkle (proposal): a blue-violet agent ink read like a link next to Cobalt.</p>
+    <p class="cap" style="margin-top:12px">Ratios are computed live on this page from the token values. AA needs 4.5:1 for text. Pear replaces Periwinkle (decided): a blue-violet agent ink read like a link next to Cobalt.</p>
     <div class="versus">
-      <div class="card"><span class="btn primary lg">Allow once</span><div><b>Cobalt #2e5bff</b> <span class="tag neutral">Proposed</span><p class="cap">Deeper and inkier than stock Apple Blue; shares the undertone of Ink and Porcelain. White on it 5.17:1.</p></div></div>
+      <div class="card"><span class="btn primary lg">Allow once</span><div><b>Cobalt #2e5bff</b> <span class="tag ok">Decided</span><p class="cap">Deeper and inkier than stock Apple Blue; shares the undertone of Ink and Porcelain. White on it 5.17:1.</p></div></div>
       <div class="card"><span class="btn lg" style="background:#0071e3;color:#fff">Allow once</span><div><b>Apple Blue #0071e3</b> <span class="tag neutral">v0.2</span><p class="cap">Familiar, and that is the problem: it makes the app read as a borrowed system. White on it 4.70:1.</p></div></div>
     </div>
   </div>
@@ -535,15 +565,15 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
   <div class="wrap type-grid">
     <div>
       <div class="aa-spec" aria-hidden="true">Aa</div>
-      <h2 class="ch-title" style="margin-top:8px">The platform’s own voice.</h2>
-      <p class="ch-lead" style="margin-top:16px">SF Pro on macOS, Segoe UI Variable on Windows, Inter on Linux. Native type makes it feel like it belongs on your machine; identity comes from the drawn wordmark, the eyes and the colour.</p>
-      <p class="cap" style="margin-top:16px">Two weights: 400 and 600. Tabular figures on every number that changes. Code and commands only in the monospace.</p>
+      <h2 class="ch-title" style="margin-top:8px">Instrument Sans, and a mono for the work.</h2>
+      <p class="ch-lead" style="margin-top:16px">A precise grotesk with soft curves and a confident 600: calm like the chrome, warm like the team, and not the look every dev tool shares. JetBrains Mono sets commands, diffs and the trace.</p>
+      <p class="cap" style="margin-top:16px">Two weights: 400 and 600. Tabular figures on every number that changes. Both faces are SIL OFL and ship inside the app, so Windows, macOS and Linux read the same.</p>
     </div>
     <div>
       <div class="ladder" id="ladder"></div>
       <div class="numerals">
         <div class="card"><span class="meta">Tabular figures</span><p class="num" style="font-size:20px;line-height:28px;margin-top:6px">28.4k tokens<br>0.9 % of your week<br>11.1k tokens</p></div>
-        <div class="card"><span class="meta">Monospace, commands only</span><p style="font:13px/20px var(--font-mono);margin-top:6px">$ pnpm test<br>214 passed · 2 min 41 s</p></div>
+        <div class="card"><span class="meta">JetBrains Mono, commands and the trace</span><p style="font:13px/20px var(--font-mono);margin-top:6px">$ pnpm test<br>214 passed · 2 min 41 s<br>Il1 O0 {} =&gt;</p></div>
       </div>
     </div>
   </div>
@@ -590,8 +620,25 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
   </div>
 </section>
 
+<!-- ============================== SOUND ============================== -->
+<section class="ch white" id="sound">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">Three sounds, one family.</h2>
+      <p class="ch-lead">Soft, short and pitched in one key, never an alarm. Each one tells you something, so they’re on by default. Mute them in Settings › Notifications; Focus and Do Not Disturb silence them all.</p>
+    </div>
+    <div class="snd-bar">
+      <button class="rm-btn" id="sndToggle" type="button" role="switch" aria-checked="true"><span class="sw" aria-hidden="true"></span>Sound</button>
+      <label class="vol" for="sndVol">Volume <input id="sndVol" type="range" min="0" max="100" value="70"></label>
+      <button class="btn secondary" id="sndStory" type="button"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Play a short story: needs you, handoff, done</button>
+      <span class="status" id="sndStatus" role="status" aria-live="polite">Nothing plays until you press a button.</span>
+    </div>
+    <div class="snds" id="snds"></div>
+  </div>
+</section>
+
 <!-- ============================== ALTERNATIVES ============================== -->
-<section class="ch white">
+<section class="ch">
   <div class="wrap">
     <div class="ch-head">
       <h2 class="ch-title">Two other directions we weighed.</h2>
@@ -603,14 +650,14 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
           <svg viewBox="0 0 588 240" width="100%" height="240" aria-hidden="true">
             <rect width="588" height="240" fill="#fbfbfc"/>
             <path d="M24 150 C 120 150, 140 90, 210 90 S 300 150, 360 150 S 450 70, 564 70" fill="none" stroke="#15171d" stroke-width="2"/>
-            <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="12" fill="#646976">
+            <g font-family="Instrument Sans, Segoe UI, sans-serif" font-size="12" fill="#646976">
               <circle cx="96" cy="136" r="7" fill="#ff5f73"/><text x="80" y="172">read</text>
               <circle cx="210" cy="90" r="7" fill="#f2ab1d"/><text x="194" y="74">edit</text>
               <circle cx="300" cy="140" r="7" fill="#3cc47c"/><text x="288" y="172">test</text>
               <circle cx="420" cy="104" r="7" fill="#2db4dc"/><text x="396" y="88">handoff</text>
               <circle cx="540" cy="71" r="7" fill="#2e5bff"/><text x="528" y="54">done</text>
             </g>
-            <text x="24" y="44" font-family="Segoe UI Variable Display, Segoe UI, sans-serif" font-weight="600" font-size="26" fill="#15171d" letter-spacing="-0.6">Follow the thread.</text>
+            <text x="24" y="44" font-family="Instrument Sans, Segoe UI, sans-serif" font-weight="600" font-size="26" fill="#15171d" letter-spacing="-0.6">Follow the thread.</text>
           </svg>
         </div>
         <div class="txt">
@@ -635,25 +682,30 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
 <section class="ch ink">
   <div class="wrap">
     <div class="ch-head">
-      <h2 class="ch-title">What you still decide.</h2>
-      <p class="ch-lead">Six choices are open. Each is a proposal on top of the base you approved, and the recommended option is what this board and direction v0.3 show.</p>
+      <h2 class="ch-title">Where the brand stands.</h2>
+      <p class="ch-lead">Your second brand round on 23 Oct closed every open choice. Only the name is still yours to pick, and nothing on this board depends on it.</p>
     </div>
     <div class="decisions">
-      <div class="dec"><b>B-2 · App icon</b><span class="cap">The lit window (dark glass, the eyes, the team’s colours glowing low), or the flat Ink mark</span><span class="rec">Recommended: the lit window</span></div>
-      <div class="dec"><b>P-1 · Signature neutral</b><span class="cap">Porcelain and Ink (faint blue undertone) instead of Apple Frost and Carbon</span><span class="rec">Recommended: Porcelain and Ink</span></div>
-      <div class="dec"><b>P-2 · Action colour</b><span class="cap">Cobalt #2e5bff instead of Apple Blue #0071e3; still one blue per screen, and blue means your call</span><span class="rec">Recommended: Cobalt</span></div>
-      <div class="dec"><b>P-3 · Typeface</b><span class="cap">The platform’s own face (SF Pro, Segoe UI Variable), or bundle one face everywhere (Inter)</span><span class="rec">Recommended: the platform’s own face</span></div>
-      <div class="dec"><b>P-4 · Pear replaces Periwinkle</b><span class="cap">Keeps blue for actions only; Karim moves to Pear</span><span class="rec">Recommended: yes</span></div>
-      <div class="dec"><b>P-7 · Sound</b><span class="cap">Silent by default; three optional soft sounds (needs you, done, handoff)</span><span class="rec">Recommended: silent by default</span></div>
+      <div class="dec"><b>B-2 · Logo and app icon</b><span class="cap">Quartet: four character shapes in a 2 × 2, for the mark, the app icon, the favicon and the lockup. It replaces the lit-window eyes mark.</span><span class="rec">Decided 23 Oct · “the logo of the quadrat”</span></div>
+      <div class="dec"><b>P-1 · Signature neutral</b><span class="cap">Porcelain and Ink, one faint blue undertone, instead of Apple Frost and Carbon</span><span class="rec">Decided 23 Oct · kept as built</span></div>
+      <div class="dec"><b>P-2 · Action colour</b><span class="cap">Cobalt #2e5bff; one blue per screen, and blue means your call. Replaces the earlier “not blue” note.</span><span class="rec">Decided 23 Oct · kept as built</span></div>
+      <div class="dec"><b>P-3 · Typeface</b><span class="cap">Instrument Sans 400/600 and JetBrains Mono, both SIL OFL, bundled with the app</span><span class="rec">Decided 23 Oct · the recommended pair</span></div>
+      <div class="dec"><b>P-4 · Pear replaces Periwinkle</b><span class="cap">Blue stays for actions only; Karim is Pear</span><span class="rec">Decided 23 Oct</span></div>
+      <div class="dec"><b>P-7 · Sound</b><span class="cap">Needs you, done and handoff, on by default with a mute in Settings; the first-open chime is optional and off</span><span class="rec">Decided 23 Oct · “the sounds are good”</span></div>
     </div>
-    <h3 class="h3" style="margin-top:56px">Already decided</h3>
+    <h3 class="h3" style="margin-top:56px">Decided earlier</h3>
     <div class="decisions" style="margin-top:16px">
       <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>Direction · the Look</b><span class="cap">A · In plain sight. The office concept was explored and dropped; the Look is the active direction.</span></div>
       <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>P-5 · One corner family</b><span class="cap">Decided through R3: 18 for objects, 10 for things inside them, pills for controls; continuous corners.</span></div>
       <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>P-6 · “Look inside”</b><span class="cap">You kept it: the eyes glyph and “Look inside” open the trace everywhere.</span></div>
       <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>R1–R11 and D-UI7–11</b><span class="cap">Blue is your call, one inbox, FYI not counted, Atlas approves learned notes with Undo, the top ticket opens, routines can do anything the agent can.</span></div>
     </div>
-    <div class="foot"><span class="lockup" style="--h:24px" id="footLockup"></span><span class="cap">Stage 2: direction v0.3, the hi-fi prototype on this system (prototype/direction.html).</span></div>
+    <h3 class="h3" style="margin-top:56px">Still open</h3>
+    <div class="decisions" style="margin-top:16px">
+      <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>D-UI5 · The name</b><span class="cap">“bench” is a codename. The lockup takes any 3 to 8 lowercase letters; the mark doesn’t change.</span></div>
+      <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>Dark mode (Phase 5b)</b><span class="cap">Mapped in the system, not built yet. The mark on dark is already defined: the same four shapes in #eceef3.</span></div>
+    </div>
+    <div class="foot"><span class="lockup" style="--h:24px" id="footLockup"></span><span class="cap">The hi-fi prototype on this system: prototype/direction.html. Logo files: brand/logo/.</span></div>
   </div>
 </section>
 
@@ -763,46 +815,40 @@ function avatar(a, size, o={}){
   return `<span class="av${o.hero?" hero":""}${o.cls?" "+o.cls:""}" role="img" aria-label="${label}" title="${label}" style="--s:${size}px;--b:${b}px${o.bd?";--bd:"+o.bd:""}">${avatarSVG(a,{hero:o.hero,expr})}${st&&size>=24&&!o.hero?`<span class="bdg ${ST[st].c}">${glyph(st)}</span>`:""}</span>`;
 }
 const SQ = "M50 0 C77 0 89 0 94.5 5.5 C100 11 100 23 100 50 C100 77 100 89 94.5 94.5 C89 100 77 100 50 100 C23 100 11 100 5.5 94.5 C0 89 0 77 0 50 C0 23 0 11 5.5 5.5 C11 0 23 0 50 0Z";
-function markSVG(size, fill="#15171d", eye="#fff"){
-  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><path d="${SQ}" fill="${fill}"/><g fill="${eye}"><rect x="34" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 40.25 49)"/><rect x="55" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 61.25 49)"/></g></svg>`;
+/* Quartet (B-2, decided 23 Oct), exactly as on the explorations page. One colour in the interface and the lockup;
+   colour (Coral, Honey, Mint, Orchid: fixed, never an agent's) only on the app icon and brand moments. */
+const Q_HUE = {coral:"#ff5f73", honey:"#f2ab1d", mint:"#3cc47c", orchid:"#e05cb4"};
+const DROP = "M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z";
+function quartet(fg, color=false){
+  const c = k => color ? Q_HUE[k] : fg;
+  return `<circle cx="26" cy="26" r="20" fill="${c("coral")}"/>
+    <path d="M74 10 L91 43 L57 43 Z" fill="${c("honey")}" stroke="${c("honey")}" stroke-width="6" stroke-linejoin="round"/>
+    <rect x="7" y="55" width="38" height="38" rx="12" fill="${c("mint")}"/>
+    <path transform="translate(51.1 50.3) scale(.46)" d="${DROP}" fill="${c("orchid")}"/>`;
 }
-/* "bench" drawn with the eye stroke: x-height 50, ascender 80, stroke 10, bowls r 20, arches r 16 */
-const WM_PATHS = `<path d="M6 6V74"/><circle cx="26" cy="54" r="20"/>
-    <path d="M64 54H104A20 20 0 1 0 98.14 68.14"/>
-    <path d="M124 74V48A16 16 0 0 1 156 48V74"/>
-    <path d="M210.14 39.86A20 20 0 1 0 210.14 68.14"/>
-    <path d="M230 6V74M230 48A16 16 0 0 1 262 48V74"/>`;
-const WM_ATTR = (c)=>`fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"`;
-function wordmarkSVG(h, color="#15171d"){
-  return `<svg viewBox="0 0 268 80" width="${h*268/80}" height="${h}" ${WM_ATTR(color)} aria-hidden="true">${WM_PATHS}</svg>`;
+function markSVG(size, fg="#15171d", color=false){
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false">${quartet(fg, color)}</svg>`;
 }
+/* Lockup: mark, gap 0.36 × height (CSS), the name in Instrument Sans 600 at 0.84 × height. */
 function lockup(el, inverse=false){
   const h=parseFloat(getComputedStyle(el).getPropertyValue("--h"));
-  el.innerHTML = (inverse?markSVG(h,"#fff","#15171d"):markSVG(h)) + wordmarkSVG(h*0.8, inverse?"#eceef3":"#15171d");
-  el.style.alignItems="flex-end";
+  const fg=inverse?"#eceef3":"#15171d";
+  el.innerHTML = markSVG(h, fg) + `<span class="lk-t" style="color:${fg}">bench</span>`;
 }
-function iconSVG(size){
+/* App icon: Ink glass (lighter at the top edge), the coloured mark at 56 % (macOS squircle) or 60 % (Windows tile, r 10). */
+function iconSVG(size, plat="mac"){
   const id="i"+(++UID);
-  return `<svg viewBox="0 0 512 512" width="${size}" height="${size}" aria-hidden="true">
+  const shape = plat==="mac" ? `<path d="${SQ}"/>` : `<rect width="100" height="100" rx="10"/>`;
+  const s = plat==="mac" ? 56 : 60, off=(100-s)/2;
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" role="img" aria-label="App icon, ${plat==="mac"?"macOS":"Windows"}, ${size} px">
     <defs>
-      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2f3a"/><stop offset=".55" stop-color="#17191f"/><stop offset="1" stop-color="#0c0d11"/></linearGradient>
-      <clipPath id="${id}c"><path d="${SQ}" transform="scale(5.12)"/></clipPath>
-      <filter id="${id}b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="34"/></filter>
-      <linearGradient id="${id}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".25" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2f38"/><stop offset="1" stop-color="#15171d"/></linearGradient>
+      <linearGradient id="${id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".13"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <clipPath id="${id}c">${shape}</clipPath>
     </defs>
-    <g clip-path="url(#${id}c)">
-      <rect width="512" height="512" fill="url(#${id}g)"/>
-      <g filter="url(#${id}b)" opacity=".95">
-        <ellipse cx="70" cy="500" rx="110" ry="80" fill="#ff5f73"/>
-        <ellipse cx="190" cy="520" rx="100" ry="80" fill="#f2ab1d"/>
-        <ellipse cx="300" cy="510" rx="100" ry="80" fill="#3cc47c"/>
-        <ellipse cx="410" cy="515" rx="100" ry="80" fill="#2db4dc"/>
-        <ellipse cx="500" cy="490" rx="90" ry="80" fill="#e05cb4"/>
-      </g>
-      <rect width="512" height="512" fill="url(#${id}e)"/>
-      <path d="${SQ}" transform="translate(2 2) scale(5.08)" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width=".6"/>
-    </g>
-    <g fill="#fff"><rect x="176" y="150" width="64" height="156" rx="32" transform="rotate(-12 208 228)"/><rect x="284" y="150" width="64" height="156" rx="32" transform="rotate(-12 316 228)"/></g>
+    <g clip-path="url(#${id}c)"><rect width="100" height="100" fill="url(#${id}g)"/><rect width="100" height="100" fill="url(#${id}h)"/>
+      <g fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1.4">${shape}</g></g>
+    <g transform="translate(${off} ${off}) scale(${s/100})">${quartet("#f4f4f1", true)}</g>
   </svg>`;
 }
 /* contrast */
@@ -816,19 +862,20 @@ document.querySelectorAll(".lockup").forEach(el=>lockup(el, !!el.closest(".ink,.
 $("#heroIcon").innerHTML = iconSVG(340);
 $("#iconBig").innerHTML = iconSVG(380);
 $("#iconDock").innerHTML = iconSVG(52);
-$("#iconTask").innerHTML = iconSVG(28);
-$("#iconSizes").innerHTML = [128,64,48,32,16].map(s=>`<figure>${iconSVG(s)}<figcaption class="meta num">${s} px</figcaption></figure>`).join("");
-$("#markInk").innerHTML = markSVG(64,"#eceef3","#15171d");
-$("#markWhite").innerHTML = `<span style="display:inline-grid;place-items:center;width:96px;height:96px;border-radius:22px;background:#f3f4f7">${markSVG(56)}</span>`;
+$("#iconTask").innerHTML = iconSVG(28,"win");
+$("#iconSizes").innerHTML = [[128,"mac"],[64,"mac"],[48,"win"],[32,"win"],[16,"win"]].map(([s,p])=>`<figure>${iconSVG(s,p)}<figcaption class="meta num">${p==="mac"?"macOS":"Windows"} · ${s}</figcaption></figure>`).join("");
+$("#markColour").innerHTML = markSVG(88,"#15171d",true);
 $("#markSizes").innerHTML = [48,32,24,20,16].map(s=>`<figure>${markSVG(s)}<figcaption class="meta num">${s}</figcaption></figure>`).join("");
-$("#renameSlots").innerHTML = [3,5,8].map(n=>`<span class="lockup" style="--h:24px;display:flex;align-items:flex-end;gap:9px">${markSVG(24)}<span class="slot" style="width:${n*11}px;height:12px;margin-bottom:1px"></span></span>`).join("");
-$("#construct").innerHTML = `<svg viewBox="-8 -10 336 100" width="100%" aria-label="Wordmark construction">
-  <g ${WM_ATTR("#15171d")} opacity=".9">${WM_PATHS}</g>
-  <g stroke="#2e5bff" stroke-opacity=".55" stroke-width=".6" fill="none">
-    <path d="M-8 1H276M-8 29H276M-8 79H276"/>
-    <circle cx="26" cy="54" r="20"/><circle cx="84" cy="54" r="20"/><circle cx="196" cy="54" r="20"/><circle cx="140" cy="48" r="16"/><circle cx="246" cy="48" r="16"/>
-  </g>
-  <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="7" fill="#2e5bff"><text x="282" y="3.5">ascender</text><text x="282" y="31.5">x-height</text><text x="282" y="81.5">baseline</text></g></svg>`;
+$("#renameSlots").innerHTML = [3,5,8].map(n=>`<span class="lockup" style="--h:24px">${markSVG(24)}<span class="slot" style="width:${n*11}px;height:12px"></span></span>`).join("");
+/* Construction: the four seats on the 100 grid, each shape in its own cell. Shapes at low tone so the guides read. */
+$("#construct").innerHTML = `<svg viewBox="-6 -14 112 128" width="340" height="389" role="img" aria-label="Quartet construction: four 50-unit seats on a 100-unit square">
+  <g fill="none" stroke="#2e5bff" stroke-opacity=".5" stroke-width=".4" stroke-dasharray="1.6 1.6"><rect x="0" y="0" width="50" height="50"/><rect x="50" y="0" width="50" height="50"/><rect x="0" y="50" width="50" height="50"/><rect x="50" y="50" width="50" height="50"/></g>
+  <g opacity=".16">${quartet("#15171d")}</g>
+  <g fill="none" stroke="#15171d" stroke-width=".5"><circle cx="26" cy="26" r="20"/><rect x="7" y="55" width="38" height="38" rx="12"/><path transform="translate(51.1 50.3) scale(.46)" d="${DROP}" stroke-width="1.09"/></g>
+  <g fill="none" stroke="#2e5bff" stroke-width=".5"><path d="M74 10 L91 43 L57 43 Z"/><path d="M26 26H46"/><circle cx="26" cy="26" r=".9" fill="#2e5bff"/></g>
+  <g font-family="Instrument Sans, Segoe UI, sans-serif" font-size="4.2" fill="#2e5bff">
+    <text x="0" y="-5">sphere · r 20</text><text x="50" y="-5">triangle · 6 round joins</text>
+    <text x="0" y="108">square 38 · r 12</text><text x="50" y="108">droplet · × 0.46</text></g></svg>`;
 
 /* hero team, eyes follow the pointer */
 const CAST_SIZE = 100;
@@ -891,7 +938,7 @@ document.querySelectorAll("#mBirth .ghost .blink").forEach(b=>b.style.animation=
     gentle:["#ff5f73",[[0,0],[.05,.074],[.1,.249],[.15,.463],[.2,.673],[.25,.85],[.3,.983],[.35,1.069],[.4,1.114],[.45,1.127],[.5,1.117],[.6,1.068],[.7,1.019],[.8,.991],[.9,.984],[1,1]]]};
   const X=t=>40+t*580, Y=v=>190-v*150;
   let s=`<g stroke="rgb(21 23 29 / .08)" stroke-width="1"><path d="M40 ${Y(0)}H620M40 ${Y(1)}H620"/></g>
-    <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="12" fill="#646976"><text x="0" y="${Y(0)+4}">0</text><text x="0" y="${Y(1)+4}">1</text><text x="40" y="214">start</text><text x="586" y="214">end</text></g>`;
+    <g font-family="Instrument Sans, Segoe UI, sans-serif" font-size="12" fill="#646976"><text x="0" y="${Y(0)+4}">0</text><text x="0" y="${Y(1)+4}">1</text><text x="40" y="214">start</text><text x="586" y="214">end</text></g>`;
   for(const [k,[c,pts]] of Object.entries(curves)) s+=`<polyline fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round" points="${pts.map(([t,v])=>X(t).toFixed(1)+","+Y(v).toFixed(1)).join(" ")}"/>`;
   $("#springChart").innerHTML=s;
 })();
@@ -912,6 +959,140 @@ $("#pairs").innerHTML = pairs.map(([d,n])=>`<div class="pair"><div class="say do
 /* alt C art */
 $("#altDaylight").innerHTML = `<div style="position:absolute;left:28px;top:28px;font:600 30px/34px var(--font-display);letter-spacing:-.02em;color:#006b85">hi, i’m iris.<br><span style="font-weight:400;font-size:17px;line-height:24px">what should i keep an eye on?</span></div>
   <div style="position:absolute;right:24px;bottom:-14px;display:flex;align-items:flex-end;gap:0">${avatar(A.iris,150,{hero:true,cls:"breathe"})}<span style="margin-left:-26px">${avatar(A.lumen,96,{hero:true,cls:"breathe",bd:"1s"})}</span><span style="margin-left:-18px">${avatar(A.maya,120,{hero:true,cls:"breathe",bd:"2s",expr:"pleased"})}</span></div>`;
+
+/* ---------- sound (P-7, decided 23 Oct): the explorations sounds, synthesised live; no files, no autoplay ---------- */
+const SND = {on:true, volume:.7, ac:null, master:null, analyser:null, nb:null, run:0};
+function sndAudio(){
+  if (!SND.ac) {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    const ac = SND.ac = new C();
+    SND.master = ac.createGain(); SND.master.gain.value = SND.volume;
+    const comp = ac.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 3; comp.attack.value = .003; comp.release.value = .12;
+    SND.analyser = ac.createAnalyser(); SND.analyser.fftSize = 1024;
+    SND.master.connect(comp); comp.connect(SND.analyser); SND.analyser.connect(ac.destination);
+  }
+  if (SND.ac.state === "suspended") SND.ac.resume();
+  return SND.ac;
+}
+function tone(t0, freq, dur, o={}){
+  const ac = SND.ac, gain = o.gain ?? .16, attack = o.attack ?? .008;
+  const osc = ac.createOscillator(); osc.type = o.type || "sine";
+  osc.frequency.setValueAtTime(freq, t0);
+  if (o.glide) osc.frequency.exponentialRampToValueAtTime(freq * o.glide, t0 + dur * .8);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(gain, t0 + attack); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  osc.connect(g);
+  let out = g;
+  if (o.lp) { const f = ac.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = o.lp; out.connect(f); out = f; }
+  out.connect(SND.master);
+  osc.start(t0); osc.stop(t0 + dur + .03);
+}
+function noiseBuf(){
+  if (SND.nb) return SND.nb;
+  const ac = SND.ac, len = Math.floor(ac.sampleRate * .5);
+  SND.nb = ac.createBuffer(1, len, ac.sampleRate);
+  const d = SND.nb.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  return SND.nb;
+}
+/* One family: D major pentatonic, sine bodies, a soft low-pass, 8 ms attacks. */
+const SOUNDS = {
+  needs:{n:"Needs you", dur:320, spec:"A4 → D5, a rising fourth · 320 ms",
+    intent:"A light tap on the shoulder. Rising, like a question, so it asks rather than warns. The only one that wants you to look.",
+    when:"An approval or question lands in What needs you while Bench isn’t the window you’re in.", never:"For agents talking to each other, or twice for one item.",
+    play(t){ tone(t,440,.17,{gain:.17,lp:2600}); tone(t,880,.09,{gain:.025}); tone(t+.11,587.33,.21,{gain:.18,lp:2600}); tone(t+.11,1174.66,.1,{gain:.03}); }},
+  done:{n:"Done", dur:380, spec:"F♯5 with soft partials · 380 ms",
+    intent:"One rounded note that lands and settles: quietly satisfied. It closes something and asks nothing of you.",
+    when:"A task or run you started finishes all green, or a ticket you decided resolves, while you’re elsewhere.", never:"For every step inside a run; only the finish.",
+    play(t){ tone(t,739.99*1.012,.38,{gain:.19,glide:1/1.012,lp:3200}); tone(t,1479.98,.16,{gain:.04}); tone(t,2219.97,.08,{gain:.014}); }},
+  handoff:{n:"Handoff", dur:290, spec:"A breath, left → right, E5 → A5 · 290 ms",
+    intent:"A brief passing from one hand to the next. It crosses the stereo field the way the handoff chip crosses the screen.",
+    when:"An agent hands work to another in the project you’re viewing.", never:"In the background, for projects you aren’t viewing.",
+    play(t){
+      const ac = SND.ac, src = ac.createBufferSource(); src.buffer = noiseBuf();
+      const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.3;
+      bp.frequency.setValueAtTime(650, t); bp.frequency.exponentialRampToValueAtTime(2600, t + .24);
+      const g = ac.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.2, t + .06); g.gain.exponentialRampToValueAtTime(.0001, t + .28);
+      const p = ac.createStereoPanner(); p.pan.setValueAtTime(-.6, t); p.pan.linearRampToValueAtTime(.6, t + .27);
+      src.connect(bp); bp.connect(g); g.connect(p); p.connect(SND.master);
+      src.start(t); src.stop(t + .3);
+      tone(t + .03, 659.25, .22, {gain:.05, glide:1.335, lp:2400});
+    }},
+  morning:{n:"First open of the day", dur:900, optional:true, spec:"Optional, off by default · D5, A5, E6 · 900 ms",
+    intent:"The studio lights coming on. Open and unhurried, once, the first time you open Bench each day.",
+    when:"First open after 05:00 local time, only if you turn it on.", never:"On every launch, or under Focus or Do Not Disturb.",
+    play(t){ [[587.33,0,.12],[880,.13,.09],[1318.51,.26,.06]].forEach(([f,d,g]) => { tone(t+d,f,.62,{gain:g,lp:3000}); tone(t+d,f*2,.2,{gain:g*.15}); }); }}
+};
+const SND_IC = {
+  needs:'<path d="M7 2v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="7" cy="11" r="1.1" fill="currentColor"/>',
+  done:'<path d="M3 7.3l2.6 2.6L11 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+  handoff:'<path d="M2 7h9M8 4l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  morning:'<path d="M2 10h10M4 10a3 3 0 0 1 6 0M7 3v1.6M3.3 5.3l1 1M10.7 5.3l-1 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+};
+const PLAY_IC = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>';
+$("#snds").innerHTML = Object.entries(SOUNDS).map(([k,s])=>`<article class="snd-card${s.optional?" optional":""}" aria-label="${s.n}">
+  <div class="snd-h"><div><h3 class="h3">${s.n}</h3><span class="meta">${s.spec}</span></div><svg viewBox="0 0 14 14" aria-hidden="true">${SND_IC[k]}</svg></div>
+  <canvas class="scope" data-scope="${k}" aria-hidden="true"></canvas>
+  <p class="cap" style="color:var(--ink-2)">${s.intent}</p>
+  <dl><dt>Plays when</dt><dd>${s.when}</dd><dt>Never</dt><dd>${s.never}</dd></dl>
+  <p class="muted-note" data-note="${k}"></p>
+  <button class="btn secondary" type="button" data-play="${k}" aria-label="Play the ${s.n} sound">${PLAY_IC}Play · ${s.dur} ms</button>
+</article>`).join("");
+function sizeScope(cv){
+  const dpr = window.devicePixelRatio || 1, r = cv.getBoundingClientRect();
+  cv.width = Math.max(1, Math.round(r.width * dpr)); cv.height = Math.max(1, Math.round(r.height * dpr));
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return {ctx, w:r.width, h:r.height};
+}
+function idleScope(cv){
+  const {ctx, w, h} = sizeScope(cv);
+  ctx.clearRect(0, 0, w, h); ctx.strokeStyle = "rgba(21,23,29,.18)"; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(12, h / 2); ctx.lineTo(w - 12, h / 2); ctx.stroke();
+}
+document.querySelectorAll(".scope").forEach(idleScope);
+const rmOn = () => document.documentElement.classList.contains("rm") || matchMedia("(prefers-reduced-motion: reduce)").matches;
+function runScope(key, ms){
+  const cv = document.querySelector(`.scope[data-scope="${key}"]`);
+  if (!cv || !SND.analyser || rmOn()) return;   // the waveform is motion; the sound still plays
+  const {ctx, w, h} = sizeScope(cv), buf = new Uint8Array(SND.analyser.fftSize);
+  const run = ++SND.run, end = performance.now() + ms + 160;
+  const frame = () => {
+    SND.analyser.getByteTimeDomainData(buf);
+    ctx.clearRect(0, 0, w, h); ctx.strokeStyle = "#15171d"; ctx.lineWidth = 1.5; ctx.lineJoin = "round"; ctx.beginPath();
+    for (let i = 0; i < buf.length; i++) { const x = 12 + (w - 24) * i / (buf.length - 1), y = h / 2 + (buf[i] - 128) / 128 * (h / 2 - 6) * 2.2; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+    ctx.stroke();
+    if (performance.now() < end && run === SND.run) requestAnimationFrame(frame); else idleScope(cv);
+  };
+  requestAnimationFrame(frame);
+}
+const sndStatus = t => { $("#sndStatus").textContent = t; };
+function playSound(key){
+  const s = SOUNDS[key], note = document.querySelector(`[data-note="${key}"]`);
+  if (!SND.on) { if (note) note.textContent = "Sound is off. Turn it on to hear it."; sndStatus("Sound is off: nothing played."); return false; }
+  if (note) note.textContent = "";
+  if (!sndAudio()) { sndStatus("This browser has no Web Audio."); return false; }
+  s.play(SND.ac.currentTime + .02);
+  runScope(key, s.dur);
+  sndStatus(`Played ${s.n} · ${s.dur} ms`);
+  return true;
+}
+document.querySelectorAll("[data-play]").forEach(b => b.addEventListener("click", () => playSound(b.dataset.play)));
+$("#sndStory").addEventListener("click", () => {
+  if (!playSound("needs")) return;
+  setTimeout(() => { if (SND.on) playSound("handoff"); }, 900);
+  setTimeout(() => { if (SND.on) { playSound("done"); sndStatus("Needs you, then handoff, then done"); } }, 1800);
+});
+$("#sndVol").addEventListener("input", e => { SND.volume = Number(e.target.value) / 100; if (SND.master) SND.master.gain.setTargetAtTime(SND.on ? SND.volume : 0, SND.ac.currentTime, .02); });
+$("#sndToggle").addEventListener("click", e => {
+  SND.on = !SND.on;
+  e.currentTarget.setAttribute("aria-checked", SND.on);
+  if (SND.master) SND.master.gain.setTargetAtTime(SND.on ? SND.volume : 0, SND.ac.currentTime, .02);
+  if (SND.on) document.querySelectorAll("[data-note]").forEach(n => { n.textContent = ""; });
+  sndStatus(SND.on ? "Sound on" : "Sound off");
+});
+let sndRs = 0;
+addEventListener("resize", () => { clearTimeout(sndRs); sndRs = setTimeout(() => document.querySelectorAll(".scope").forEach(idleScope), 120); });
 
 /* reduce motion demo switch */
 $("#rmToggle").addEventListener("click",e=>{const on=document.documentElement.classList.toggle("rm");e.currentTarget.setAttribute("aria-checked",on);if(on)looks.forEach(l=>l.style.transform="")});

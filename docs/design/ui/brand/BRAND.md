@@ -1,9 +1,9 @@
-# Brand platform: "In plain sight" (stage 1, for client review)
+# Brand platform: "In plain sight"
 
-**Status:** Draft v1.0, 2026-10-22. Phase 5, stage 1 (brand identity and design system). Stage 2 rebuilds the hi-fi prototype on top of this, together with the UX spec.
-**Inputs:** [DIRECTION.md](../DIRECTION.md) (D-UI1 to D-UI11), client feedback [round 1](../../../requirements/interviews/2026-10-22-ui-feedback-1.md) and [round 2](../../../requirements/interviews/2026-10-22-ui-feedback-2.md), [VISION.md](../../../VISION.md), [PRODUCT-MODEL.md](../../../PRODUCT-MODEL.md), the [Grok Bot teardown](../../../research/teardowns/grok-bot-ui-video.md), [references/](../references/).
-**Visual:** [brand-board.html](brand-board.html) (one file, no network). **System:** [../system/DESIGN-SYSTEM.md](../system/DESIGN-SYSTEM.md), [tokens.css](../system/tokens.css), [components.html](../system/components.html).
-**Name:** deferred by the client. "bench" is the codename. Nothing here depends on it: the mark carries the identity, and the wordmark is a set of drawing rules that takes any short name.
+**Status:** v1.1, 2026-10-23. Every brand decision is closed except the name: brand round 2 ([client notes](../../../requirements/interviews/2026-10-23-brand-decisions.md)) kept the brand and Porcelain / Ink / Cobalt, chose the **Quartet** logo, **Instrument Sans + JetBrains Mono**, and the **three sounds on by default**. Explorations it chose from: [explorations/](explorations/) (read-only).
+**Inputs:** [DIRECTION.md](../DIRECTION.md) (D-UI1 to D-UI11), client feedback [round 1](../../../requirements/interviews/2026-10-22-ui-feedback-1.md), [round 2](../../../requirements/interviews/2026-10-22-ui-feedback-2.md) and [brand round 2](../../../requirements/interviews/2026-10-23-brand-decisions.md), [VISION.md](../../../VISION.md), [PRODUCT-MODEL.md](../../../PRODUCT-MODEL.md), the [Grok Bot teardown](../../../research/teardowns/grok-bot-ui-video.md), [references/](../references/).
+**Visual:** [brand-board.html](brand-board.html) (one file; fonts from Google Fonts for review). **Logo files:** [logo/](logo/) (`mark.svg`, `mark-on-dark.svg`, `app-icon-macos.svg`, `app-icon-windows.svg`, `favicon.svg`, `lockup.svg`). **System:** [../system/DESIGN-SYSTEM.md](../system/DESIGN-SYSTEM.md), [tokens.css](../system/tokens.css), [components.html](../system/components.html).
+**Name:** deferred by the client. "bench" is the codename. Nothing here depends on it: the Quartet mark carries the identity, and the lockup takes any short name.
 
 The client's brief for this pass: *"it feels like normal and with no clear identity that makes it unique; it needs a brand and a design system that make it feel premium."*
 
@@ -98,14 +98,15 @@ The fix isn't more decoration. It's taking the one original idea (agents as shap
 
 **Committed:** the signature is **the Look**, the pair of slanted eye strokes. Two rounded pills, rotated −12°, about 2.6 times as tall as they are wide.
 
-It's the one element that's ours already (it came from the client's avatar reference) and that ties both halves of the product idea together: **the glass box** (you look in) and **the team** (they look back). It does four jobs and appears nowhere else:
+It's the one element that's ours already (it came from the client's avatar reference) and that ties both halves of the product idea together: **the glass box** (you look in) and **the team** (they look back). It does three jobs and appears nowhere else:
 
 | Job | Where | Rule |
 |---|---|---|
 | **1. A face for every agent** | Every avatar, all 90 hue × shape combinations | The hue and the shape change; the eyes never do. That family resemblance is what makes many agents feel like one team. |
-| **2. The mark** | App icon, title bar, wordmark lockup, favicon | The same eyes on an Ink squircle. The mark is the team as a whole, so it never takes an agent's hue. |
-| **3. Look inside** (the glass-box handle) | Next to every agent message's cost, every run summary, file, memory note, approval | A small eyes glyph and the words "Look inside" open the trace of whatever they sit next to. One glyph, one place, everywhere (proposal P-6, replaces the "Trace" link). Your message also gets a "Seen by Noor" receipt with the same glyph. |
-| **4. Attention, not alarms** | Hero avatar, tickets, approval cards | When an agent needs you, its eyes move to the thing to decide (the button, the draft, the command). The amber tag and the words carry the meaning; the eyes carry the feeling. No red dots, no pings. |
+| **2. Look inside** (the glass-box handle) | Next to every agent message's cost, every run summary, file, memory note, approval | A small eyes glyph and the words "Look inside" open the trace of whatever they sit next to. One glyph, one place, everywhere (P-6, replaces the "Trace" link). Your message also gets a "Seen by Noor" receipt with the same glyph. |
+| **3. Attention, not alarms** | Hero avatar, tickets, approval cards | When an agent needs you, its eyes move to the thing to decide (the button, the draft, the command). The amber tag and the words carry the meaning; the eyes carry the feeling. A soft "needs you" sound (§11) helps when you're in another window; there are still no red dots. |
+
+**Retired (2026-10-23): "the eyes as the logo".** The eyes-on-a-squircle mark and the lit-window icon are replaced by the Quartet (§6). The eyes stay where they mean something: on the agents' faces and on Look inside. That keeps the Look from becoming wallpaper.
 
 **Why not the alternatives as the signature:**
 - *Glass material* (blur, translucency): it's the most copied effect of 2025–26 (OS-level "liquid glass", every generated landing page) and it costs contrast. The glass box is a promise about behaviour, so we express it as a behaviour (Look inside), not as a texture.
@@ -113,45 +114,46 @@ It's the one element that's ours already (it came from the client's avatar refer
 
 **Rules for the Look**
 - Eyes only. Never a mouth, brows, a nose, hands or accessories.
-- Eyes are always white on an agent; Ink on the inverted mark.
+- Eyes are always white on an agent; the Look inside glyph takes the colour of its text.
 - Expressions change the eye shape, never the count or the colour (see §8).
 - The glyph is never used as decoration: if it's on screen, it either is someone or opens something.
 
 ---
 
-## 6. Logo and wordmark (renameable)
+## 6. Logo: Quartet (B-2, decided 2026-10-23)
+
+**The story.** Four seats, four different characters. The team is the logo: a sphere, a triangle, a rounded square and a droplet, cut from the same bodies your agents wear, sitting together in a 2 × 2. Every agent you create is one of these shapes, so the mark means "your team" before anyone reads a word, and it survives any name. The client chose it on 2026-10-23: *"I liked the logo of the quadrat the most."*
+
+Files: [logo/](logo/). Source of truth for the geometry: the Quartet entry on the explorations page ([explorations.html](explorations/explorations.html)), copied exactly.
 
 ### The mark
-- An **Ink squircle** (continuous corners) with the white eyes, slightly above centre.
-- Inverted on Ink: a white squircle with Ink eyes.
-- **Never** on Cobalt (the action colour) or on an agent hue; never outlined; never with a gradient (the app icon is the only dimensional render).
-- Minimum size 16 px. Below 24 px the mark stands alone, without the name.
-
-### The wordmark: a drawing system, not a font
-The letters are **drawn with the eye stroke**, so the wordmark and the mark are visibly one family.
-
 | Rule | Value |
 |---|---|
-| Case | lowercase only (matches the agents' voice) |
-| Construction | monoline, round ends and joins; every bowl is one circle (r 20), every arch a half circle (r 16) |
-| Metrics (units) | x-height 50, ascender 80, stroke 10 (equal to the eye width at lockup scale) |
-| Spacing | optical: round to round 8, straight to round 10, straight to straight 14 |
-| Never | capitals, italics, contrast, outlines, gradients, a hue |
+| Grid | A 100-unit square split into four 50-unit seats; one character per seat |
+| Shapes | Sphere `r 20` at (26, 26) · triangle (74,10)(91,43)(57,43) with 6-unit round joins · square 38 at `r 12` from (7, 55) · the avatar droplet at 0.46 from (51.1, 50.3) |
+| Gaps | 8 units or more between shapes, so the four still separate at 16 px |
+| One colour (the default) | Ink `#15171d` on light grounds (`mark.svg`); Porcelain white `#eceef3` on Ink and dark grounds (`mark-on-dark.svg`). The mark is the team as a whole, so in the interface it never wears an agent's hue |
+| Colour | Coral, Honey, Mint, Orchid (`#ff5f73`, `#f2ab1d`, `#3cc47c`, `#e05cb4`), fixed. Only on the app icon and brand moments (first open, the brand board). They never follow your agents' hues |
+| Minimum size | 16 px. Below 24 px the mark stands alone, without the name |
+| Clear space | A third of the mark's height on every side |
+| Never | Four squares (that's a tile logo, and the mixed shapes are what keep it ours), a fifth shape, a rearranged order, one shape recoloured in an agent's hue, an outline, a box around it, Cobalt |
 
-**Rename grammar (any short name):** `[mark] + gap of 0.36 × mark height + [name, 3 to 8 lowercase letters]`, with the name drawn to the rules above at 0.8 × the mark's height, bottoms aligned. Until a name is drawn, the fallback is the name set in the display face at 600 with −0.03em tracking. The board shows "bench" drawn and the 3, 5 and 8 letter slots.
+### The lockup (renameable)
+`[mark] + gap of 0.36 × mark height + [name]`, the name in **Instrument Sans 600** at 0.84 × the mark's height, lowercase, tracking −0.035em, centred on the mark (`lockup.svg`). Any 3 to 8 lowercase letters take the same slot; the board shows the 3, 5 and 8 letter slots. `lockup.svg` keeps the codename as live text; convert it to outlines once the name is final.
 
-**Clear space:** one eye height on every side of the lockup.
+The drawn monoline wordmark of v1.0 (letters built from the eye stroke) is retired with the eyes mark: with Quartet, the identity is the shapes, and the name is simply set well.
 
 ---
 
 ## 7. App icon
 
-**Concept: a lit window at night.** A dark glass squircle (Ink, lighter at the top edge like real glass), the white eyes, and the team's colours glowing low inside, as if the room behind the glass is still at work. It's the only place the brand uses the full spectrum of hues.
+**Concept: four seats on dark glass.** An Ink glass tile, slightly lighter along its top edge, with the Quartet in full colour. It's the only everyday place the mark wears colour, so it reads as one bright, friendly object in a dock or taskbar.
 
-- **Why it works:** it reads as one object in a dock or taskbar full of flat, bright tiles; it says "a team inside a glass box" without a word; the eyes make it a character, so it's recognisable at 16 px.
-- **macOS:** full-bleed squircle at Apple's icon grid, with the system's own shadow.
-- **Windows:** the same artwork in the ICO sizes (16 to 256). Below 32 px the glow is dropped (it turns to mud) and the icon is the flat mark.
+- **Why it works:** it shows a team, not a tool; the four different shapes are recognisable at 16 px (gaps ≥ 8 units); and it isn't another blue or purple gradient tile.
+- **macOS** (`app-icon-macos.svg`, 512 master): continuous-corner squircle, the mark at 56 % of the tile, with the system's own shadow.
+- **Windows** (`app-icon-windows.svg`, 256 master): a rounded tile (r 10 of 100), the mark at 60 %, exported to the ICO sizes 16 to 256.
 - **Linux:** the PNG set from the macOS master.
+- **Favicon** (`favicon.svg`): the one-colour mark, Ink, switching to `#eceef3` when the browser is dark.
 - **Taskbar states (later):** a small amber dot on the icon when something needs you; never a number bigger than the OS badge allows.
 
 ---
@@ -176,10 +178,10 @@ The letters are **drawn with the eye stroke**, so the wordmark and the mark are 
 
 ## 9. Colour and type identity (summary; values in the design system)
 
-- **Ink `#15171d`, Porcelain `#f3f4f7`, Cobalt `#2e5bff`.** The three chrome colours share one faint blue undertone, so the chrome, the text and the one action read as one material (proposals P-1 and P-2). 60 % Porcelain, 30 % white and Ink, 10 % meaning.
+- **Ink `#15171d`, Porcelain `#f3f4f7`, Cobalt `#2e5bff`.** The three chrome colours share one faint blue undertone, so the chrome, the text and the one action read as one material (P-1 and P-2, decided 23 Oct). 60 % Porcelain, 30 % white and Ink, 10 % meaning.
 - **Meaning colours:** Cobalt for the one action per screen, amber for *needs you*, green for done, red for errors, always with a word.
 - **Agent hues** live only on their own things: avatar, name tag, mention chip, your bubbles in their chat, the faint wash behind their conversation, their thinking dots. Never on a button.
-- **Type:** the platform's own grotesk (SF Pro on macOS, Segoe UI Variable on Windows, Inter on Linux), two weights (400 and 600), six far-apart steps with at most four in one view (proposal P-3). Identity comes from the drawn wordmark, not from a downloaded face.
+- **Type (P-3, decided 2026-10-23):** **Instrument Sans** in two weights (400 and 600) for everything, and **JetBrains Mono** for code, commands, diffs and the trace. Both SIL OFL 1.1 and bundled with the app, so every OS reads the same. Six far-apart steps with at most four in one view. Why: precise like a grotesk, warm in its curves, and its 600 gives the lockup a voice without looking like every other dev tool (Inter, Geist).
 - **Shape:** one continuous-corner family (squircles where the engine draws them), pills for buttons (proposal P-5).
 
 ---
@@ -207,9 +209,15 @@ The letters are **drawn with the eye stroke**, so the wordmark and the mark are 
 
 ## 11. Sound and haptics (desktop)
 
-- **Silent by default.** It's a work app that runs all day; sound is a choice you make, not one we impose.
-- **Three optional sounds** (Settings › Notifications, off by default), each under 300 ms, soft, pitched low, from one family: *needs you* (two soft notes, rising), *done* (one rounded note), *handoff* (a short airy pass). Never a sound for agents talking to each other, for typing or for errors you didn't trigger.
-- Respect the OS: Focus and Do Not Disturb silence everything; the notification itself uses the OS sound setting.
+**P-7, decided 2026-10-23:** *"the sounds are good."* The three sounds from the explorations page, as designed, **on by default**, with a mute in Settings › Notifications.
+
+- **Needs you:** two rising notes (A4 → D5), 320 ms. A light tap on the shoulder that asks rather than warns; the only one that wants you to look. Plays when an approval or question lands in What needs you while Bench isn't the window you're in.
+- **Done:** one rounded note (F♯5), 380 ms, quietly satisfied. Plays when a task or run you started finishes all green, or a ticket you decided resolves, while you're elsewhere.
+- **Handoff:** a soft breath moving left → right with a small rising glide, 290 ms, the way the handoff chip crosses the screen. Plays when an agent hands work to another in the project you're viewing.
+- **First open of the day** (optional, **off by default**): D5, A5, E6 in stacked fifths, 900 ms, the studio lights coming on. Something you turn on, not something you get.
+- **Why on by default:** each of the three carries information you'd otherwise have to look for; all are soft, short (under 400 ms), pitched in one key and never alarming. Never a sound for agents talking to each other, for typing, for every step of a run, or for errors you didn't trigger.
+- **Sound is separate from motion:** reduced motion doesn't mute them, and every sound has a visible twin (the amber ticket, the green finish, the travelling chip), so nothing depends on hearing.
+- Respect the OS: Focus and Do Not Disturb silence everything; the OS notification itself uses the OS sound setting. Full spec: DESIGN-SYSTEM §8.5.
 - **Haptics:** none in v0.1 (Electron has no reliable desktop haptics). If a macOS build adds them later: one light tap when a dragged project snaps to the split.
 
 ---
@@ -219,7 +227,7 @@ The letters are **drawn with the eye stroke**, so the wordmark and the mark are 
 | | **A · In plain sight** (recommended) | B · The Thread | C · Daylight Studio |
 |---|---|---|---|
 | Idea | A glass box with a team inside | An instrument: follow the work | A warm studio of characters |
-| Signature | The Look (eyes): face, mark, Look inside, attention | One live line through every step, changing hue at each handoff | Plush dimensional characters everywhere, screens washed in the agent's colour |
+| Signature | The Look (eyes): face, Look inside, attention; the Quartet mark (since 23 Oct) | One live line through every step, changing hue at each handoff | Plush dimensional characters everywhere, screens washed in the agent's colour |
 | Chrome | Ink, Porcelain, Cobalt | Ink on white, numbers forward | Warm washes, rounder type |
 | Strength | Serves both halves: the glass box and the team | The most honest about cost and steps | The most lovable at first sight |
 | Weakness | Needs restraint so the eyes stay meaningful | Cold; the team becomes dots; thin lines drift into ornament | Cute beats premium; serious moments (cost, delete, deny) lose weight; tiring by hour six |
@@ -232,11 +240,12 @@ The letters are **drawn with the eye stroke**, so the wordmark and the mark are 
 
 | Area | v0.2 | Now | Why |
 |---|---|---|---|
-| Identity | No mark; eyes only inside avatars | The Look: mark, wordmark, icon, glass-box handle, attention | One signature, used for jobs, not decoration |
+| Identity | No mark; eyes only inside avatars | The Look (faces, glass-box handle, attention) and the Quartet mark, icon and lockup (v1.1) | One signature for behaviour, one mark for the team |
 | Neutrals | Apple Frost/Carbon | Porcelain/Ink with one shared undertone (P-1) | Our own material; still Apple-calm |
 | Action | Apple Blue `#0071e3` | Cobalt `#2e5bff` (P-2) | Ownable, deeper, AA as text and as fill |
 | Agent hues | 10 incl. Periwinkle | Pear replaces Periwinkle (P-4) | A blue-violet agent ink read like a link next to the action blue |
-| Type | 7 sizes (14 and 15 both), 300 subheads | 6 steps far apart, ≤ 4 per view, 400/600 only, native face (P-3) | Fewer, clearer steps; native feel on each OS |
+| Type | 7 sizes (14 and 15 both), 300 subheads, Inter | 6 steps far apart, ≤ 4 per view, 400/600 only, Instrument Sans + JetBrains Mono, bundled (P-3) | Fewer, clearer steps; a face of our own that reads the same on every OS |
+| Sound | None | Needs you, done, handoff, on by default (P-7) | Information you'd otherwise have to look for |
 | Shape | 8 px cards, 18 px bubbles, 980 px pills | One continuous-corner family (P-5) | One shape language |
 | Depth | No shadows anywhere | Tone first; shadows only on what floats | Menus and dialogs need to float |
 | Inputs | 1.5:1 hairline edges (open v0.2 item) | 3.4:1 control edge | WCAG 1.4.11 |
@@ -246,18 +255,18 @@ The letters are **drawn with the eye stroke**, so the wordmark and the mark are 
 
 ---
 
-## 14. Decisions for you
+## 14. Decisions
 
-| # | Decision | Options | Recommended |
-|---|---|---|---|
-| B-1 | Direction | A In plain sight · B The Thread · C Daylight Studio | **A** |
-| P-1 | Signature neutral | Porcelain + Ink · keep Apple Frost + Carbon | **Porcelain + Ink** |
-| P-2 | Action colour | Cobalt `#2e5bff` · keep Apple Blue `#0071e3` | **Cobalt** |
-| P-3 | Typeface | Platform's own face · bundle Inter everywhere | **Platform's own** |
-| P-4 | Pear replaces Periwinkle | Yes · keep Periwinkle | **Yes** |
-| P-5 | Continuous corners | Yes · plain rounded corners | **Yes** |
-| P-6 | "Look inside" replaces "Trace" | Yes · keep the word Trace | **Yes** |
-| P-7 | Sound | Silent by default with 3 optional sounds · always silent · sounds on | **Silent by default** |
-| B-2 | App icon | Lit window (dark glass + glow) · flat Ink mark | **Lit window** |
+| # | Decision | Decided |
+|---|---|---|
+| B-1 | Direction: A · In plain sight | 22 Oct |
+| **B-2** | **Logo, app icon, favicon, lockup: Quartet** (replaces the lit-window eyes mark) | **23 Oct** |
+| **P-1** | **Porcelain + Ink**, kept as built | **23 Oct** |
+| **P-2** | **Cobalt `#2e5bff`**, kept as built (supersedes the 22 Oct "not blue" note) | **23 Oct** |
+| **P-3** | **Instrument Sans 400/600 + JetBrains Mono**, OFL, bundled | **23 Oct** |
+| **P-4** | **Pear replaces Periwinkle** (Karim) | **23 Oct** |
+| P-5 | Continuous corners, one family (R3) | 22 Oct |
+| P-6 | "Look inside" replaces "Trace" | 22 Oct |
+| **P-7** | **Sound: needs you, done, handoff on by default, mute in Settings; first-open chime optional, off** | **23 Oct** |
 
-Still deferred, by your choice: the name (D-UI5). Dark mode is mapped but not built (Phase 5b).
+Boards B ("The Proof") and C ("Night Glasshouse") stay as explorations only. Still deferred, by your choice: the name (D-UI5). Dark mode is mapped but not built (Phase 5b).

@@ -3,8 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Components · bench (codename) design system · stage 1</title>
-<!-- Local file, no network: the single source of truth for every value below. -->
+<title>Components · bench (codename) design system · v1.1</title>
+<link rel="icon" type="image/svg+xml" href="../brand/logo/favicon.svg">
+<!-- Review page: Instrument Sans and JetBrains Mono come from Google Fonts here; the app bundles the same OFL files. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<!-- The single source of truth for every value below. -->
 <link rel="stylesheet" href="tokens.css">
 <style>
 /* ======================================================================
@@ -28,7 +33,9 @@ button{background:none;border:0;cursor:pointer}
 
 /* ---------- page shell (documentation only) ---------- */
 .toc{position:fixed;inset:0 auto 0 0;width:232px;padding:24px 16px;overflow:auto;background:var(--bg-ground);box-shadow:inset -1px 0 0 var(--line-subtle);z-index:var(--z-sidebar)}
-.toc .brand{display:flex;align-items:flex-end;gap:8px;padding:0 8px 4px}
+.toc .brand{display:flex;align-items:center;gap:calc(24px * .36);padding:0 8px 6px}
+.toc .brand svg{display:block;flex:none}
+.toc .wm{font-family:var(--font-display);font-weight:var(--weight-strong);font-size:20px;line-height:1;letter-spacing:-.035em;transform:translateY(-.04em)}
 .toc .brand-sub{padding:0 8px 20px}
 .toc a{display:flex;align-items:center;height:32px;padding:0 10px;border-radius:var(--r-sm);corner-shape:var(--corner);color:var(--text-2);text-decoration:none;font-size:var(--fs-sub)}
 .toc a:hover{background:var(--state-hover);color:var(--text-1)}
@@ -388,7 +395,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
 <nav class="toc" aria-label="Sections">
   <div class="brand" id="tocBrand"></div>
-  <div class="brand-sub meta">Design system · stage 1 · light</div>
+  <div class="brand-sub meta">Design system · v1.1 · light</div>
   <div class="grp">Foundations</div>
   <a href="#colour">Colour</a><a href="#hues">Agent hues</a><a href="#type">Type</a><a href="#space">Space, shape, depth</a><a href="#motion">Motion and layers</a>
   <div class="grp">Controls</div>
@@ -424,7 +431,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
   <!-- ===================== TYPE ===================== -->
   <section class="sec" id="type">
-    <div class="sec-h"><h2>Type</h2><p>The platform’s own grotesk, two weights, six steps far apart. A single view uses four steps at most; the h1 is the only headline.</p></div>
+    <div class="sec-h"><h2>Type</h2><p>Instrument Sans in two weights, six steps far apart; JetBrains Mono for code, commands and the trace. Both SIL OFL, bundled with the app. A single view uses four steps at most; the h1 is the only headline.</p></div>
     <div class="board" id="typeRows"></div>
   </section>
 
@@ -775,9 +782,8 @@ function avatarSVG(a,o={}){const P=HUE[a.hue],S=SHAPES[a.shape],id="g"+(++UID);c
 function glyph(st){const g={idle:'<circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/>',thinking:'<circle cx="2.8" cy="6" r="1.2" fill="currentColor"/><circle cx="6" cy="6" r="1.2" fill="currentColor"/><circle cx="9.2" cy="6" r="1.2" fill="currentColor"/>',working:'<path d="M6 2.5a3.5 3.5 0 1 1-3.4 2.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',waiting:'<path d="M6 2.6v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="6" cy="9.1" r="1.1" fill="currentColor"/>',blocked:'<path d="M3 6h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',paused:'<path d="M4.4 3.4v5.2M7.6 3.4v5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',error:'<path d="M4 4l4 4M8 4l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',done:'<path d="M3.4 6.2l1.8 1.8 3.4-3.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'}[st];return `<svg viewBox="0 0 12 12" aria-hidden="true">${g}</svg>`;}
 function av(id,size,o={}){const a=typeof id==="string"?CAST[id]:id;const st=o.status;const b=size>=64?20:size>=40?16:size>=32?14:12;const label=a.name+(st?` · ${ST[st].l}`:"");const expr=o.expr||(st?ST[st].e:"calm");
   return `<span class="av${o.hero?" hero":""}${st==="paused"?" is-paused":""}" role="img" aria-label="${label}" title="${label}" style="--s:${size}px;--b:${b}px">${avatarSVG(a,{hero:o.hero,expr})}${st&&size>=24&&!o.hero?`<span class="bdg ${ST[st].c}">${glyph(st)}</span>`:""}</span>`;}
-const SQ="M50 0 C77 0 89 0 94.5 5.5 C100 11 100 23 100 50 C100 77 100 89 94.5 94.5 C89 100 77 100 50 100 C23 100 11 100 5.5 94.5 C0 89 0 77 0 50 C0 23 0 11 5.5 5.5 C11 0 23 0 50 0Z";
-const mark=s=>`<svg viewBox="0 0 100 100" width="${s}" height="${s}" aria-hidden="true"><path d="${SQ}" fill="#15171d"/><g fill="#fff"><rect x="34" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 40.25 49)"/><rect x="55" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 61.25 49)"/></g></svg>`;
-const wordmark=h=>`<svg viewBox="0 0 268 80" width="${h*268/80}" height="${h}" fill="none" stroke="#15171d" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6V74"/><circle cx="26" cy="54" r="20"/><path d="M64 54H104A20 20 0 1 0 98.14 68.14"/><path d="M124 74V48A16 16 0 0 1 156 48V74"/><path d="M210.14 39.86A20 20 0 1 0 210.14 68.14"/><path d="M230 6V74M230 48A16 16 0 0 1 262 48V74"/></svg>`;
+/* Quartet (B-2, decided 23 Oct), one colour; the same paths as brand/logo/mark.svg */
+const mark=s=>`<svg viewBox="0 0 100 100" width="${s}" height="${s}" aria-hidden="true" focusable="false"><g fill="#15171d"><circle cx="26" cy="26" r="20"/><path d="M74 10 L91 43 L57 43 Z" stroke="#15171d" stroke-width="6" stroke-linejoin="round"/><rect x="7" y="55" width="38" height="38" rx="12"/><path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/></g></svg>`;
 const EYES='<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 6.1)" fill="currentColor"/><rect x="8.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 6.1)" fill="currentColor"/></svg>';
 const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>';
 const CHEV='<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5L8 10l3.5-3.5"/></svg>';
@@ -789,7 +795,7 @@ const aa=r=>`<span class="aa${r<3?" fail":r<4.5?" ui":""}">${r.toFixed(2)}${r>=7
 const $=s=>document.querySelector(s);
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-$("#tocBrand").innerHTML = mark(24)+wordmark(19.2);
+$("#tocBrand").innerHTML = mark(24)+`<span class="wm">bench</span>`;
 
 /* ---------- foundations ---------- */
 const neutrals=[["Ink","--porcelain-900","Text 1, the mark"],["Text 2","--porcelain-700","Secondary text"],["Text 3","--porcelain-600","Meta, placeholders"],["Control edge","--porcelain-500","Input, switch edges"],["Porcelain 100","--porcelain-100","Sunken, tracks"],["Porcelain","--porcelain-50","The ground"]];

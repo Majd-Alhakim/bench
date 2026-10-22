@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>bench · UI direction v0.3 · In plain sight</title>
+<link rel="icon" type="image/svg+xml" href="../brand/logo/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <script>
 /* Prototype safety net: any script error shows here instead of a blank page. Not part of the UI. */
 window.addEventListener("error", function (e) {
@@ -16,11 +20,13 @@ window.addEventListener("error", function (e) {
 /* ==========================================================================
    bench direction v0.3 · "In plain sight"
    Built on the stage-1 brand (BRAND.md) and design system (DESIGN-SYSTEM.md,
-   tokens.css), inlined here so the file stays single and offline, plus the UX
-   premium spec (state matrix, worst moments, intelligence layer, moments).
-   Decided and applied: R1–R11 (UX recommendations), D-UI7–11, P-5 (via R3)
-   and P-6 (Look inside). Built with the recommended options for the brand
-   decisions still open: B-2, P-1, P-2, P-3, P-4, P-7.
+   tokens.css), inlined here so the file stays single, plus the UX premium
+   spec (state matrix, worst moments, intelligence layer, moments).
+   Decided and applied: R1–R11 (UX recommendations), D-UI7–11, P-5 (via R3),
+   P-6 (Look inside), and brand round 2 (2026-10-23): B-2 Quartet mark,
+   P-1/P-2 Porcelain, Ink, Cobalt, P-3 Instrument Sans + JetBrains Mono,
+   P-4 Pear, P-7 sound on. The only network use is Google Fonts, for review;
+   the app bundles the same OFL files.
    ========================================================================== */
 :root{
   color-scheme:light;
@@ -56,10 +62,10 @@ window.addEventListener("error", function (e) {
   --attn-ink:var(--amber-700); --attn-tint:var(--amber-50); --attn-fill:var(--amber-500);
   --danger-ink:var(--red-700); --danger-tint:var(--red-50); --danger-fill:var(--red-500);
   --agent-base:var(--hue-none-base); --agent-light:var(--hue-none-light); --agent-deep:var(--hue-none-deep); --agent-ink:var(--hue-none-ink); --agent-tint:var(--hue-none-tint); --agent-wash:var(--hue-none-wash);
-  /* Type (P-3: the platform's own face) */
-  --font-text:"SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;
-  --font-display:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;
-  --font-mono:"SF Mono",ui-monospace,"Cascadia Code","Cascadia Mono",Consolas,monospace;
+  /* Type (P-3, decided 23 Oct): Instrument Sans 400/600, JetBrains Mono for code; both OFL, bundled in the app */
+  --font-text:"Instrument Sans","Segoe UI Variable Text","Segoe UI",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-display:var(--font-text);
+  --font-mono:"JetBrains Mono","Cascadia Mono","SF Mono",ui-monospace,Consolas,monospace;
   --fs-meta:12px; --lh-meta:16px; --fs-sub:13px; --lh-sub:18px; --fs-body:15px; --lh-body:22px;
   --fs-title:20px; --lh-title:26px; --fs-headline:28px; --lh-headline:34px; --fs-display:44px; --lh-display:48px;
   --measure-chat:34em;
@@ -144,6 +150,9 @@ code,.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
 .demo-rm input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform var(--dur-move) var(--spring-snappy)}
 .demo-rm input:checked{background:var(--cobalt-300)}
 .demo-rm input:checked::after{transform:translateX(12px)}
+.demo-snd{margin-left:auto}
+.demo-snd+.demo-rm{margin-left:0}
+@media (max-width:1500px){.demo-id span{display:none}}
 
 /* ---------- buttons (one recipe, components.html §buttons) ---------- */
 .btn{--h:32px;position:relative;display:inline-flex;align-items:center;justify-content:center;gap:6px;height:var(--h);padding:0 14px;border-radius:999px;font-size:13px;line-height:1;font-weight:600;letter-spacing:0;white-space:nowrap;color:var(--text-1);transition:background-color var(--dur-micro) ease,box-shadow var(--dur-micro) ease,color var(--dur-micro) ease,transform var(--dur-micro) var(--ease-out)}
@@ -284,8 +293,12 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .side{width:280px;flex:none;display:flex;flex-direction:column;background:var(--bg-ground);box-shadow:inset -1px 0 0 var(--line-subtle);overflow:hidden;--cut:var(--bg-ground);transition:width var(--dur-scene) var(--spring-smooth);position:relative;z-index:20}
 .side.collapsed{width:56px}
 .side-top{display:flex;align-items:center;gap:6px;height:56px;padding:0 8px 0 14px;flex:none}
-.brand{display:flex;align-items:flex-end;gap:7px;flex:1;min-width:0;height:24px;padding:0 2px;border-radius:6px}
-.brand .wm{display:block;margin-bottom:1px}
+/* Lockup (Quartet): mark, gap 0.36 × its height, the name in Instrument Sans 600 at 0.84 × height, −0.035em */
+.brand{display:flex;align-items:center;flex:1;min-width:0;height:28px;padding:0 2px;border-radius:6px;color:var(--text-1)}
+.brand:hover{text-decoration:none}
+.lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .36);line-height:1;flex:none}
+.lockup svg{display:block;flex:none}
+.wm{font-family:var(--font-display);font-size:calc(var(--h) * .84);font-weight:600;line-height:1;letter-spacing:-.035em;color:var(--text-1);white-space:nowrap;transform:translateY(-.04em)}
 .side-search{position:relative;margin:0 12px 6px;flex:none}
 .side-search svg{position:absolute;left:10px;top:8px;width:16px;height:16px;color:var(--text-3);pointer-events:none}
 .side-search input{width:100%;height:32px;border:0;border-radius:var(--r-sm);corner-shape:var(--corner);background:var(--bg-surface);box-shadow:inset 0 0 0 1px var(--line-control);padding:0 44px 0 32px;font-size:13px}
@@ -989,7 +1002,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .fr-stage .nametag{margin-top:0}
 .fr-stage .nametag.drop{animation:tagDrop var(--dur-move) var(--spring-snappy) both}
 .fr-stage .say{max-width:36ch;color:var(--text-2)}
-.fr-main .brandrow{display:flex;align-items:flex-end;gap:10px}
+.fr-main .brandrow{display:flex;align-items:center;gap:12px}
 .fr-main h1{margin-top:28px;font:600 var(--fs-display)/var(--lh-display) var(--font-display);letter-spacing:-.032em}
 .fr-main .lede{margin-top:8px;color:var(--text-2);max-width:46ch}
 .steps-fr{list-style:none;margin-top:28px;display:grid;gap:8px}
@@ -1117,7 +1130,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.3</b><span>Built with the recommended options</span></div>
+  <div class="demo-id"><b>Direction v0.3</b><span>Brand decisions of 23 Oct applied</span></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -1131,6 +1144,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
     <option value="live">Noor: live</option><option value="idle">Idle</option><option value="thinking">Thinking</option><option value="working">Working</option>
     <option value="waiting">Needs you</option><option value="blocked">Blocked</option><option value="paused">Paused</option><option value="error">Error</option><option value="done">Done</option>
   </select></label>
+  <label class="demo-rm demo-snd" title="The three sounds play in the demos once you've clicked or pressed a key"><input type="checkbox" id="sndToggle" checked> Sound</label>
   <label class="demo-rm"><input type="checkbox" id="rmToggle"> Reduce motion</label>
 </header>
 
@@ -1429,13 +1443,84 @@ const IC = {
 function ic(name, size = 16){ return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IC[name] || ""}</svg>`; }
 /* The Look as a glyph: it opens the glass box (Look inside) or marks who saw something. Never decoration. */
 function eyes(size = 14){ return `<svg width="${size}" height="${size}" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><g fill="currentColor"><rect x="3.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 7)"/><rect x="8.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 7)"/></g></svg>`; }
-const SQ = "M50 0 C77 0 89 0 94.5 5.5 C100 11 100 23 100 50 C100 77 100 89 94.5 94.5 C89 100 77 100 50 100 C23 100 11 100 5.5 94.5 C0 89 0 77 0 50 C0 23 0 11 5.5 5.5 C11 0 23 0 50 0Z";
-function markSVG(size, fill = "#15171d", eye = "#fff"){
-  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false"><path d="${SQ}" fill="${fill}"/><g fill="${eye}"><rect x="34" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 40.25 49)"/><rect x="55" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 61.25 49)"/></g></svg>`;
+/* Quartet (B-2, decided 23 Oct): four character shapes in a 2 × 2, exactly as on the explorations page.
+   One colour in the interface; the coloured version (fixed Coral, Honey, Mint, Orchid) is for the app icon only. */
+const Q_HUE = {coral:"#ff5f73", honey:"#f2ab1d", mint:"#3cc47c", orchid:"#e05cb4"};
+function markSVG(size, fg = "#15171d", color = false){
+  const c = k => color ? Q_HUE[k] : fg;
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false"><circle cx="26" cy="26" r="20" fill="${c("coral")}"/><path d="M74 10 L91 43 L57 43 Z" fill="${c("honey")}" stroke="${c("honey")}" stroke-width="6" stroke-linejoin="round"/><rect x="7" y="55" width="38" height="38" rx="12" fill="${c("mint")}"/><path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z" fill="${c("orchid")}"/></svg>`;
 }
-const WM_PATHS = '<path d="M6 6V74"/><circle cx="26" cy="54" r="20"/><path d="M64 54H104A20 20 0 1 0 98.14 68.14"/><path d="M124 74V48A16 16 0 0 1 156 48V74"/><path d="M210.14 39.86A20 20 0 1 0 210.14 68.14"/><path d="M230 6V74M230 48A16 16 0 0 1 262 48V74"/>';
-function wordmarkSVG(h, color = "#15171d"){ return `<svg class="wm" viewBox="0 0 268 80" width="${(h * 268 / 80).toFixed(1)}" height="${h}" fill="none" stroke="${color}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${WM_PATHS}</svg>`; }
-function lockupHTML(h){ return `${markSVG(h)}${wordmarkSVG(Math.round(h * 0.8))}`; }
+/* Lockup: mark, gap 0.36 × its height, the name (a codename) in Instrument Sans 600 at 0.84 × height. */
+function lockupHTML(h){ return `<span class="lockup" style="--h:${h}px">${markSVG(h)}<span class="wm">bench</span></span>`; }
+
+/* ---------- sound (P-7, decided 23 Oct): the explorations' three sounds, synthesised live, no files ----------
+   On by default (the Sound switch in the demo bar). Nothing plays before your first click or key press, and the
+   AudioContext is only created then (browser autoplay rules). In the app, needs you and done play only when Bench
+   isn't the window you're in; here they play in view so you can hear them. Sound is separate from reduced motion. */
+const SND = {on:true, armed:false, ac:null, master:null, nb:null, last:{}};
+try { SND.on = localStorage.getItem("bench-proto-sound") !== "off"; } catch (e) { SND.on = true; }
+function sndArm(){ SND.armed = true; removeEventListener("pointerdown", sndArm, true); removeEventListener("keydown", sndArm, true); }
+addEventListener("pointerdown", sndArm, true);
+addEventListener("keydown", sndArm, true);
+function sndCtx(){
+  if (!SND.ac) {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    const ac = SND.ac = new C();
+    SND.master = ac.createGain(); SND.master.gain.value = 0.7;   /* --sound-volume */
+    const comp = ac.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 3; comp.attack.value = .003; comp.release.value = .12;
+    SND.master.connect(comp); comp.connect(ac.destination);
+  }
+  if (SND.ac.state === "suspended") SND.ac.resume();
+  return SND.ac;
+}
+function sndTone(t0, freq, dur, o = {}){
+  const ac = SND.ac, gain = o.gain ?? .16, attack = o.attack ?? .008;
+  const osc = ac.createOscillator(); osc.type = "sine";
+  osc.frequency.setValueAtTime(freq, t0);
+  if (o.glide) osc.frequency.exponentialRampToValueAtTime(freq * o.glide, t0 + dur * .8);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(gain, t0 + attack); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  osc.connect(g);
+  let out = g;
+  if (o.lp) { const f = ac.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = o.lp; out.connect(f); out = f; }
+  out.connect(SND.master);
+  osc.start(t0); osc.stop(t0 + dur + .03);
+}
+function sndNoise(){
+  if (SND.nb) return SND.nb;
+  const ac = SND.ac, len = Math.floor(ac.sampleRate * .5);
+  SND.nb = ac.createBuffer(1, len, ac.sampleRate);
+  const d = SND.nb.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  return SND.nb;
+}
+/* One family: D major pentatonic, sine bodies, a soft low-pass, 8 ms attacks. */
+const SFX = {
+  needs:{n:"Needs you", spec:"A4 → D5, a rising fourth · 320 ms", when:"An approval or question lands in What needs you",
+    play(t){ sndTone(t, 440, .17, {gain:.17, lp:2600}); sndTone(t, 880, .09, {gain:.025}); sndTone(t + .11, 587.33, .21, {gain:.18, lp:2600}); sndTone(t + .11, 1174.66, .1, {gain:.03}); }},
+  done:{n:"Done", spec:"F♯5 with soft partials · 380 ms", when:"A run finishes all green, or a ticket you decided resolves",
+    play(t){ sndTone(t, 739.99 * 1.012, .38, {gain:.19, glide:1 / 1.012, lp:3200}); sndTone(t, 1479.98, .16, {gain:.04}); sndTone(t, 2219.97, .08, {gain:.014}); }},
+  handoff:{n:"Handoff", spec:"A breath, left → right, E5 → A5 · 290 ms", when:"The brief travels from one agent to another in the project you're viewing",
+    play(t){
+      const ac = SND.ac, src = ac.createBufferSource(); src.buffer = sndNoise();
+      const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.3;
+      bp.frequency.setValueAtTime(650, t); bp.frequency.exponentialRampToValueAtTime(2600, t + .24);
+      const g = ac.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.2, t + .06); g.gain.exponentialRampToValueAtTime(.0001, t + .28);
+      const p = ac.createStereoPanner(); p.pan.setValueAtTime(-.6, t); p.pan.linearRampToValueAtTime(.6, t + .27);
+      src.connect(bp); bp.connect(g); g.connect(p); p.connect(SND.master);
+      src.start(t); src.stop(t + .3);
+      sndTone(t + .03, 659.25, .22, {gain:.05, glide:1.335, lp:2400});
+    }}
+};
+/* Play a sound if sound is on and you've interacted; one sound per kind per 600 ms. Audio never breaks the demo. */
+function sfx(key, delayMs = 0){
+  if (!SND.on || !SND.armed || !SFX[key]) return;
+  const now = performance.now();
+  if (now - (SND.last[key] || 0) < 600) return;
+  SND.last[key] = now;
+  try { const ac = sndCtx(); if (ac) SFX[key].play(ac.currentTime + .02 + delayMs / 1000); } catch (e) { /* no audio: carry on silently */ }
+}
 
 /* ---------- avatars: one renderer, flat and soft-dimensional ---------- */
 let UID = 0;
@@ -2106,6 +2191,7 @@ function refreshTicketBoxes(animateOpen){
 function resolveTicket(box, k, how, msg, undoFn){
   if (H.done.has(k)) return;
   H.done.add(k);
+  if (how === "primary" || how === "allow") sfx("done");
   const li = box ? box.querySelector(`.tk[data-k="${k}"]`) : null;
   const btn = li ? li.querySelector(`[data-tka="${how === "primary" || how === "allow" ? how : "x"}"]`) : null;
   const finish = () => {
@@ -2588,7 +2674,7 @@ function startNoorTicker(){
       clearInterval(nTick); nTick = null;
       const ll = $("#liveLine"); if (ll) ll.remove();
       addN(sysL(`<code>pnpm test chat</code> passed 12 of 12 · allowed by your standing grant · 1.4k tokens</span> ${lookBtn("n0912")}<span>`, "check"));
-      if (N.appr === null) setNoor("waiting", "pnpm test in bench");
+      if (N.appr === null) { setNoor("waiting", "pnpm test in bench"); sfx("needs"); }
     }
   }, 2200);
 }
@@ -2633,7 +2719,7 @@ function approvePnpm(kind, box){
   const msg = kind === "always" ? "<b>Always allowed:</b> pnpm test in bench. Revoke it any time in Noor › Settings › Autonomy." : "<b>Allowed once.</b> Noor is running pnpm test in bench. A run can't be undone once it starts; Stop is in her chat.";
   const undo = kind === "always" ? () => { SET.grants.shift(); toast("Undone. No standing grant; Noor runs it this once.", {icon:"undo"}); } : null;
   if (box && box.dataset.tkbox !== "dock") resolveTicket(box, "pnpm", "allow", msg, undo);
-  else { H.done.add("pnpm"); paintCounts(); toast(msg, {undo}); buildSidebar(); buildProjects(); if ($("#tkList")) renderNeeds(); }
+  else { H.done.add("pnpm"); sfx("done"); paintCounts(); toast(msg, {undo}); buildSidebar(); buildProjects(); if ($("#tkList")) renderNeeds(); }
   if (!N.built) return;
   renderDock();
   $("#nHead").innerHTML = noorHeadHTML();
@@ -2659,6 +2745,7 @@ function finishGreen(){
   setNoor("working", "wrapping the run");
   nAfter(800, () => {
     addN(greenMsg(animate()));
+    sfx("done");
     setPill("done");
     AG.noor.runs++; tickTo($('[data-led="runs"]'), AG.noor.runs);
     setNoor("done", "214 of 214 passed");
@@ -3200,7 +3287,9 @@ function startTeamTimer(){
 }
 /* M-T1: the brief travels from Maya to Karim, Karim catches it. */
 function playHandoff(){
-  const h = $("#handoff"); if (!h || !animate()) return;
+  const h = $("#handoff"); if (!h) return;
+  sfx("handoff", animate() ? 120 : 0);   /* starts with the chip's flight; plays under reduced motion too */
+  if (!animate()) return;
   h.classList.remove("go"); void h.offsetWidth; h.classList.add("go");
   const row = $("#handoff"); row.scrollIntoView({block:"center", behavior:"smooth"});
 }
@@ -3499,7 +3588,7 @@ function firstAsk(text){
     const m = $("#fMsgs"); if (!m) return;
     m.insertAdjacentHTML("beforeend", agM(`<p>here's what's open in bench:</p>${checklist([["7 open issues","2 look like bugs, 1 needs a decision from you"],["#12","sign the Windows installer? it's in What needs you"],["#9 and #14","bugs: developer work, once you have one"]])}`, rcpt(["now","1.2k tokens","0.04 % of your week"], "first"), `<div class="hintbubble" role="note">${eyes(16)}<span>Every message shows what it cost. Look inside shows each step.</span><button type="button" class="btn sm on-ink" data-act="gotIt">Got it</button></div>`, {who:"atlas", cls:animate() ? "arrive" : ""}));
     S.ringPct = 0.04; renderTop();
-    H.firstTicket = true; paintCounts(); renderNeeds({animateOpen:true}); buildSidebar();
+    H.firstTicket = true; paintCounts(); renderNeeds({animateOpen:true}); buildSidebar(); sfx("needs");
     const sec = $("#needsH"); if (sec && !sec.querySelector(".count")) sec.insertAdjacentHTML("beforeend", ' <span class="count attn" data-cnt="all">1</span>');
     announce("Atlas answered. One thing needs you.");
   }, reduced() ? 300 : 1600);
@@ -3517,17 +3606,17 @@ function renderSheet(){
   const states = ["idle","thinking","working","waiting","blocked","paused","error","done"];
   $("#sheet").innerHTML = `<div class="row" style="gap:12px">${lockupHTML(40)}</div>
     <h1 class="t-head" style="font-size:44px;line-height:48px;letter-spacing:-.032em;margin-top:28px">The system under direction v0.3.</h1>
-    <p class="lede">Ink, Porcelain and Cobalt, one continuous-corner family, the platform's own type, springs, and the Look. This page computes its contrast ratios live from the same values the screens use. The full gallery is <code>system/components.html</code>; the brand is <code>brand/brand-board.html</code>; the tokens are <code>system/tokens.css</code>.</p>
-    <section><h2>The Look: four jobs</h2><div class="gallery" style="margin-top:20px">
-      <figure>${avatar("noor", 64, {nobadge:true})}<figcaption><b>A face</b>every agent</figcaption></figure>
-      <figure>${markSVG(64)}<figcaption><b>The mark</b>the team as a whole</figcaption></figure>
+    <p class="lede">Ink, Porcelain and Cobalt, one continuous-corner family, Instrument Sans, springs, the Look and three sounds. This page computes its contrast ratios live from the same values the screens use. The full gallery is <code>system/components.html</code>; the brand is <code>brand/brand-board.html</code>; the tokens are <code>system/tokens.css</code>; the logo files are in <code>brand/logo/</code>.</p>
+    <section><h2>The mark and the Look</h2><div class="gallery" style="margin-top:20px">
+      <figure>${markSVG(64)}<figcaption><b>The mark: Quartet</b>the team as a whole</figcaption></figure>
+      <figure>${avatar("noor", 64, {nobadge:true})}<figcaption><b>The Look: a face</b>every agent</figcaption></figure>
       <figure><span class="lookin" style="background:var(--action-tint);height:32px;font-size:13px">${eyes(16)}Look inside</span><figcaption><b>The glass-box handle</b>on every cost, file and note</figcaption></figure>
       <figure><span class="tk-av glance" style="width:64px;height:64px;display:block">${avatar("karim", 64, {fluid:true, status:"waiting"})}</span><figcaption><b>Attention</b>the eyes go to the decision</figcaption></figure></div></section>
     <section><h2>Colour</h2><p class="lede">60 % Porcelain, 30 % white and Ink, 10 % meaning. One Cobalt control per screen; amber only means needs you; hues only mean an agent.</p>
       <div class="swatches" style="margin-top:20px">${core.map(c => `<div class="swatch"><i style="background:${c[1]}"></i><div><b>${c[0]}</b><span class="num">${c[1]} · ${c[2]}</span>${c[3].map(bg => `<span>on ${bg}: ${aa(cr(c[1], bg), c[0] === "Control edge" ? 3 : 4.5)}</span>`).join("")}</div></div>`).join("")}</div>
       <h3>Agent hues: ink on white, ink on its own tint, Ink text on the tint</h3>
       <table class="spec"><thead><tr><th>Hue</th><th>Avatar</th><th>Mention</th><th>Ink on white</th><th>Ink on tint</th><th>Ink text on tint</th></tr></thead><tbody>${HUE_ORDER.map(h => { const P = HUE[h], who = Object.keys(AG).find(k => AG[k].hue === h && k !== "lea") || "noor"; return `<tr><td><b>${P.n}</b></td><td>${avatar({name:P.n, shape:AG[who].shape, hue:h}, 32, {nobadge:true})}</td><td><span class="mention" data-hue="${h}">${avatar({name:P.n, shape:AG[who].shape, hue:h}, 16, {nobadge:true, hidden:true})}${AG[who].name}</span></td><td class="num">${aa(cr(P.ink, "#ffffff"))}</td><td class="num">${aa(cr(P.ink, P.tint))}</td><td class="num">${aa(cr("#15171d", P.tint))}</td></tr>`; }).join("")}</tbody></table></section>
-    <section><h2>Type</h2><p class="lede">The platform's own grotesk, two weights, six steps far apart, four at most in one view, tabular figures on every number that changes.</p>
+    <section><h2>Type</h2><p class="lede">Instrument Sans in two weights, six steps far apart, four at most in one view, tabular figures on every number that changes. JetBrains Mono for commands, diffs and the trace. Both SIL OFL, bundled with the app.</p>
       <table class="spec" style="margin-top:12px"><tbody>${steps.map(s => `<tr><td style="width:120px"><b>${s[0]}</b><br><span class="t-meta ink3">${s[1]}</span></td><td><span style="font:${s[4]};letter-spacing:${s[5]}">${s[3]}</span></td><td class="t-meta ink3" style="width:220px">${s[2]}</td></tr>`).join("")}</tbody></table></section>
     <section><h2>Shape and depth</h2><p class="lede">One continuous-corner family with three values (R3, decided): 18 for objects on the canvas, 10 for things inside them, pills for controls. Squircles where the engine draws them. Tone first; a shadow only means it floats.</p>
       <div class="shape-demo" style="margin-top:16px"><div style="border-radius:var(--r-obj)">18 · objects<br>tickets, cards, bubbles, dialogs, menus</div><div style="border-radius:var(--r-in)">10 · inside them<br>options, inputs, wells, menu items</div><div style="border-radius:999px;corner-shape:round">pill · controls<br>buttons, chips, tags</div></div>
@@ -3539,7 +3628,9 @@ function renderSheet(){
         <tr><td><code>--spring-smooth</code></td><td>ζ 1.0 · 420 ms</td><td>Tickets, panes, dialogs, the flight to the sidebar</td><td>Instant</td></tr>
         <tr><td><code>--spring-snappy</code></td><td>ζ 0.8 · 320 ms</td><td>Switch knobs, counters ticking</td><td>Instant</td></tr>
         <tr><td><code>--spring-gentle</code></td><td>ζ 0.55 · 640 ms</td><td>Characters only: birth, the catch, the hop</td><td>Instant, eyes open</td></tr>
-        <tr><td>Signature moments</td><td colspan="2">Morning open · resolve and fold · all caught up · birth and flight · the brief travels · all green · Applied glow · Atlas forms · waking in resume order · the memo · the team gathers</td><td>Same information, at rest</td></tr></tbody></table></section>`;
+        <tr><td>Signature moments</td><td colspan="2">Morning open · resolve and fold · all caught up · birth and flight · the brief travels · all green · Applied glow · Atlas forms · waking in resume order · the memo · the team gathers</td><td>Same information, at rest</td></tr></tbody></table></section>
+    <section><h2>Sound</h2><p class="lede">Three soft sounds from one family, on by default; mute them in Settings › Notifications. Sound is separate from motion: reduced motion doesn't silence them, Focus and Do Not Disturb do.</p>
+      <table class="spec" style="margin-top:12px"><thead><tr><th>Sound</th><th>What you hear</th><th>Plays when</th><th></th></tr></thead><tbody>${Object.keys(SFX).map(k => `<tr><td><b>${SFX[k].n}</b></td><td class="num">${SFX[k].spec}</td><td>${SFX[k].when}</td><td style="width:110px"><button type="button" class="btn secondary sm" data-sfx="${k}" aria-label="Play the ${SFX[k].n} sound"><svg width="14" height="14" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Play</button></td></tr>`).join("")}</tbody></table></section>`;
 }
 
 /* ---------- moments (the Play button in the demo bar replays them) ---------- */
@@ -3547,9 +3638,9 @@ function playMorning(){
   if (current !== "home") return;
   renderNeeds({open:null});
   const box = $("#tkList"), lis = $$(".tk", box);
-  if (!animate()) { renderNeeds(); return; }
+  if (!animate()) { renderNeeds(); sfx("needs"); return; }
   lis.forEach((li, i) => { li.style.setProperty("--d", (i * 30) + "ms"); li.classList.add("rise"); });
-  setTimeout(() => { if (lis[0]) setTicket(box, lis[0].dataset.k); }, 340);
+  setTimeout(() => { if (lis[0]) { setTicket(box, lis[0].dataset.k); sfx("needs"); } }, 340);
 }
 function playCaughtUp(){
   H.variant = "solo"; H.done.delete("pay");
@@ -3560,6 +3651,7 @@ function playCaughtUp(){
 function replayGreen(){
   const g = $("#greenMsg"); if (!g) return;
   g.outerHTML = greenMsg(true);
+  sfx("done");
   setNoor("done", "214 of 214 passed");
   nAfter(1600, () => setNoor("idle", "PR #44 open, waiting for Karim"));
 }
@@ -3639,6 +3731,16 @@ $$(".demo-tabs [role=tab]").forEach((t, i, all) => {
 const DEMO_TEXT = {idle:"PR #44 open, waiting for Karim", thinking:"planning the next step", working:"running tests", waiting:"pnpm test in bench", blocked:"waiting for GitHub", paused:"you have the workspace", error:"the test runner ran out of memory", done:"214 of 214 passed"};
 $("#heroSel").addEventListener("change", e => { const v = e.target.value; if (v === "live") { N.override = null; paintNoor(N.status, N.text); } else { N.override = v; paintNoor(v, DEMO_TEXT[v]); } });
 $("#rmToggle").addEventListener("change", e => root.classList.toggle("rm", e.target.checked));
+$("#sndToggle").checked = SND.on;
+$("#sndToggle").addEventListener("change", e => {
+  SND.on = e.target.checked;
+  try { localStorage.setItem("bench-proto-sound", SND.on ? "on" : "off"); } catch (err) { /* file:// may block storage */ }
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-sfx]"); if (!b) return;
+  if (!SND.on) { toast("<b>Sound is off.</b> Turn it on with the Sound switch in the demo bar.", {icon:"info"}); return; }
+  SND.last[b.dataset.sfx] = 0; sfx(b.dataset.sfx);
+});
 
 /* ---------- screens and router ---------- */
 const SCREENS = ["home","needs","agent","room","team","split","project","memory","usage","trace"];

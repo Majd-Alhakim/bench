@@ -1,10 +1,10 @@
 # UI Direction: "Apple built a Grok Bot × Dots" (draft for client review)
 
-**Status:** Draft **v0.3** (2026-10-22), for client review. v0.3 rebuilds the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec. **§0 below is the current state**; §1–§5 are kept as the v0.1/v0.2 history. v0.1 was the PM synthesis of the client's references; v0.2 applied the first round of UI feedback (U1–U8, [interview notes](../../requirements/interviews/2026-10-22-ui-feedback-1.md)). ADR-0001 is accepted, and the name is still deferred ("bench" stays the codename). The low-fi flows (UX prototype v0.4) stay the structure; this defines the look and feel.
+**Status:** **v0.3**, updated **2026-10-23** with the client's brand round 2 ([notes](../../requirements/interviews/2026-10-23-brand-decisions.md)): every brand decision is now closed except the name (§0.1, §0.2). v0.3 rebuilds the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec. **§0 below is the current state**; §1–§5 are kept as the v0.1/v0.2 history. v0.1 was the PM synthesis of the client's references; v0.2 applied the first round of UI feedback (U1–U8, [interview notes](../../requirements/interviews/2026-10-22-ui-feedback-1.md)). ADR-0001 is accepted, and the name is still deferred ("bench" stays the codename). The low-fi flows (UX prototype v0.4) stay the structure; this defines the look and feel.
 
 ## 0. Direction v0.3 (current)
 
-**Artifact:** [`prototype/direction.html`](prototype/direction.html), one file, no network. **Brand:** [`brand/BRAND.md`](brand/BRAND.md) and [`brand/brand-board.html`](brand/brand-board.html). **System:** [`system/DESIGN-SYSTEM.md`](system/DESIGN-SYSTEM.md), [`system/tokens.css`](system/tokens.css), [`system/components.html`](system/components.html). **UX spec:** [`../ux/premium/`](../ux/premium/README.md). The 3D office concept was explored and dropped by the client; it is archived and plays no part in v0.3.
+**Artifact:** [`prototype/direction.html`](prototype/direction.html), one file; its only network use is Google Fonts for review (the app bundles the OFL files). **Logo files:** [`brand/logo/`](brand/logo/). **Brand:** [`brand/BRAND.md`](brand/BRAND.md) and [`brand/brand-board.html`](brand/brand-board.html). **System:** [`system/DESIGN-SYSTEM.md`](system/DESIGN-SYSTEM.md), [`system/tokens.css`](system/tokens.css), [`system/components.html`](system/components.html). **UX spec:** [`../ux/premium/`](../ux/premium/README.md). The 3D office concept was explored and dropped by the client; it is archived and plays no part in v0.3.
 
 ### 0.1 Decided (final, applied everywhere in v0.3)
 
@@ -28,21 +28,19 @@
 | D-UI11 / CR-006 | A routine can do anything the agent can | Routine badges come from Noor's permissions (Can edit files / Read-only); "Anything outward or reserved waits for you" |
 | P-5 | Continuous corners | Covered by R3 |
 | P-6 | "Look inside" replaces "Trace" | The client kept it: the eyes glyph + "Look inside" on every receipt, run, note and approval |
+| **B-2** (23 Oct) | **Logo = Quartet**: four character shapes in a 2 × 2, for the mark, app icon, favicon and lockup; replaces the lit-window eyes mark | The sidebar lockup, the first-run screens, the System sheet, Bench's own tickets (the mark in Ink), the favicon; files in `brand/logo/`. The eyes stay on the faces and on Look inside |
+| **P-1, P-2** (23 Oct) | **Keep the brand and Porcelain / Ink / Cobalt** (supersedes the 22 Oct "not blue" note) | Unchanged: they were built that way |
+| **P-3** (23 Oct) | **Instrument Sans 400/600 + JetBrains Mono**, SIL OFL, bundled | Every screen. Same six steps and two weights; the face sets a little narrower than Segoe UI, so nothing that fitted before overflows. The lockup's name is part of the logo, not a type step (R8 unchanged) |
+| **P-4** (23 Oct) | **Pear replaces Periwinkle** | Karim is Pear everywhere |
+| **P-7** (23 Oct) | **Sound on by default**: needs you, done, handoff; mute in Settings › Notifications; the first-open chime optional, off | The demo bar has a **Sound** switch (on). Needs you plays when the top ticket opens in the morning-open demo, when Atlas's first answer lands and when Noor's request appears; done on all green and when a ticket resolves; handoff when the brief chip travels. Nothing plays before your first click or key press. The System sheet has a Sound table with Play buttons |
 
-### 0.2 Still open (brand stage 1), with recommendations
+### 0.2 Still open
 
-| # | Decision | Options | Recommended, and why |
-|---|---|---|---|
-| B-2 | App icon | The lit window (dark glass, the eyes, the team's colours glowing low) · the flat Ink mark | **Lit window.** One object in a dock of flat tiles; says "a team inside a glass box" without a word; falls back to the flat mark below 32 px |
-| P-1 | Signature neutral | Porcelain + Ink · Apple Frost + Carbon | **Porcelain + Ink.** One shared undertone makes chrome, text and action read as one material; Frost reads as a borrowed Apple template |
-| P-2 | Action colour | Cobalt `#2e5bff` · Apple Blue `#0071e3` | **Cobalt.** Ownable, AA as text and as fill (5.17:1 with white), and it carries R1 ("blue is your call") |
-| P-3 | Typeface | The platform's own face · Inter everywhere | **The platform's own.** Native on each OS; identity comes from the drawn wordmark and the eyes |
-| P-4 | Pear replaces Periwinkle | Yes · keep Periwinkle | **Yes.** A blue-violet agent ink reads like a link next to Cobalt |
-| P-7 | Sound | Silent by default, 3 optional sounds · always silent · sounds on | **Silent by default.** An all-day work app; Focus and Do Not Disturb win |
+Only **D-UI5, the name** ("bench" is a codename; the lockup takes any 3 to 8 lowercase letters). Boards B and C in `brand/explorations/` stay explorations. Dark mode is mapped, not built (Phase 5b). **Check in the build:** Instrument Sans at 12–13 px on Windows/Electron, and tabular figures in the bundled file.
 
 ### 0.3 What changed from v0.2
 
-1. **Brand and system applied everywhere:** Porcelain/Ink/Cobalt, the platform's type with 6 steps and 2 weights, Pear, one continuous corner family, tone-first elevation, springs (`--spring-smooth/snappy/gentle`), the Look (agent faces, the mark and lockup, Look inside, attention glances), silent.
+1. **Brand and system applied everywhere:** Porcelain/Ink/Cobalt, Instrument Sans + JetBrains Mono with 6 steps and 2 weights (since 23 Oct; was the platform's type), Pear, one continuous corner family, tone-first elevation, springs (`--spring-smooth/snappy/gentle`), the Look (agent faces, Look inside, attention glances), the Quartet mark and lockup (since 23 Oct; was the eyes mark), and three sounds (since 23 Oct; was silent).
 2. **Every S1 and S2 coherence finding fixed** ([coherence-audit.md](../ux/premium/coherence-audit.md)): C-01 top ticket open · C-02 routine badges from permissions · C-03 "Open in a new tab" · C-04 New project with fields you type into and the consequence on Create · C-05 one ApprovalCard (the Ticket) in inbox, Home and workspace · C-06 one Receipt (`time · tokens · % of your week · Look inside`) · C-07 `pnpm test` throughout (the brand board too) · C-08 counts are Decide + Meet, one inbox · C-09 Team and Sessions on the project group, clickable crumbs · C-10 one corner family · C-11 the Ticket everywhere (compact in panes) · C-12 one status vocabulary · C-13 tag grammar Kind / Gate (outline + lock) / State (filled) · C-14 Ink Send · C-15 de-boxed agent header · C-16 one time format ("since 07:45") · C-17 crumb grammar Project › Page · C-18 Undo on every reversible toast · C-19 "Open Lumen" · C-20 "Balanced" · C-21 guard vocabulary · C-22 verb + object primaries with the consequence · C-23 Join and decide is the debate's blue.
 3. **S3s fixed:** C-24 (R8), C-26 (R4), C-27, C-28, C-30, C-31 (the draft's system line), C-32 (R9), C-34 (control edges 3.4:1), C-35 ("1 needs you" link in the header), C-36 (settings in three groups), C-37 ("uses no tokens" captions), C-38 (Watch / Take over). C-25 (spacing snaps) is mostly done; C-29 (tinted bubbles in 1:1 rooms only) is built, and still needs a line in DESIGN-SYSTEM; C-33 is the PM's render pass.
 4. **Worst moments designed per [worst-moments.md](../ux/premium/worst-moments.md)**, each with cause, what's safe, one next step and the "they caught me" detail, plus the ending (While you were away / You're signed in again / Good morning, your week reset). New in this pass: `#guard-exempt`, `#slow` (status line changes at 10 s and 60 s; Stop never moves), `#long-message` (a 500-line log shows the 12 lines around the error with the count, scrolls inside, or opens in the workspace), `#long-names` (ellipsis in the sidebar, tickets and headers; project names clamp to 2 lines), and Maya's sprint proposal on `#limit-reset`.
@@ -62,7 +60,7 @@
 | Axis | Level | Evidence |
 |---|---|---|
 | Copy | **Staff** | Second person throughout; consequences on buttons ("Merge PR #41 · 6 files · notifies Karim and Noor", "Let it run · ≈ 0.30 % a week"); recoveries name cause, what's safe and one step; the Monday digest and "Bench never saw your password" answer the next question |
-| Visuals | **Staff** | The Look is the one custom visual language (faces, mark, Look inside, attention); nothing decorative besides the hero render, which is the agent |
+| Visuals | **Staff** | The Look is the custom visual language (faces, Look inside, attention) and the Quartet mark is built from the agents' own shapes; nothing decorative besides the hero render, which is the agent |
 | Color | **Senior** | 60-30-10, one Cobalt decision per screen (R1), amber only for needs you, hues only for agents, every status also in words |
 | Type | **Senior** | 6-step scale, ≤ 4 sizes per content view, weights 400/600, tabular figures on every changing number, tight tracking on 20+ |
 | Structure | **Senior** | One grid and 4-pt spacing by relationship; one corner family; the hierarchy test passes on Home (the open ticket, then the list, then projects) |

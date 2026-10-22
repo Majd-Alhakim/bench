@@ -1,7 +1,7 @@
-# Design system (stage 1, for client review)
+# Design system
 
-**Status:** Draft v1.0, 2026-10-22, light theme built, dark planned. Brand platform: [../brand/BRAND.md](../brand/BRAND.md).
-**Files:** [tokens.css](tokens.css) (the source of truth, importable as is) · [components.html](components.html) (every core component in every state, links `tokens.css` locally, no network) · [../brand/brand-board.html](../brand/brand-board.html).
+**Status:** v1.1, 2026-10-23. Light theme built, dark planned. Brand round 2 applied: P-1, P-2, P-3 (Instrument Sans + JetBrains Mono), P-4 and P-7 (sound on) are decided ([client notes](../../../requirements/interviews/2026-10-23-brand-decisions.md)). Brand platform: [../brand/BRAND.md](../brand/BRAND.md).
+**Files:** [tokens.css](tokens.css) (the source of truth, importable as is) · [components.html](components.html) (every core component in every state, links `tokens.css` locally; fonts from Google Fonts for review) · [../brand/brand-board.html](../brand/brand-board.html) · logo files in [../brand/logo/](../brand/logo/).
 **Skills applied:** premium-craft (gates, rubric), ui-ux-guide (rules, checklist), design-taste-frontend (app-screen rules, tells).
 **Proposals** that change approved values are marked **P-n** and listed in §14. Everything else keeps the confirmed base: Apple foundation, light first, one blue action per screen, agent identity = hue × non-human shape with eyes only, soft dimensional hero avatar, 15 px body, 18 px bubbles, second-person voice, lowercase agent voice.
 
@@ -105,7 +105,12 @@ Every agent ink passes AA on white and on its own tint; Ink text passes AAA on e
 
 ## 4. Type
 
-**Face (P-3):** the platform's own grotesk. `--font-text` / `--font-display` resolve to SF Pro Text/Display on macOS, Segoe UI Variable Text/Display on Windows, Inter on Linux. `--font-mono` (SF Mono, Cascadia Code) only for code, commands and diffs. **Two weights:** 400 and 600.
+**Faces (P-3, decided 2026-10-23):** **Instrument Sans** for everything (`--font-text`; `--font-display` is the same family, kept as a name) and **JetBrains Mono** (`--font-mono`) only for code, commands, diffs and the trace. **Two weights:** 400 and 600.
+
+- **Why:** a precise grotesk with soft curves and a confident 600, distinct from the Inter/Geist look of every dev tool; JetBrains Mono is the clearest small mono for the trace (`Il1 O0` never collide).
+- **Licence and delivery:** both are SIL Open Font License 1.1. **The app bundles the font files** (variable WOFF2, declared once with `@font-face`, `font-display: block` so nothing reflows on launch); the OFL text ships in the app's licence notices. No network font loading in the app. The review pages (brand board, components, prototype) load the same faces from Google Fonts with a `<link>`.
+- **Fallbacks** (only if a file is missing): Segoe UI Variable / Segoe UI, the Apple system face, `system-ui`; for mono, Cascadia Mono, SF Mono, Consolas.
+- **Check before locking the build:** 13 px and 12 px rendering on Windows/Electron (ClearType hinting; Instrument Sans is a newer family), and that the bundled file includes tabular figures (`tnum`) for `.num`. If 12 px reads soft on Windows, raise meta to 600 only in tags, never add a third weight.
 
 | Step | Size / line | Tracking | Weight | Use |
 |---|---|---|---|---|
@@ -116,7 +121,7 @@ Every agent ink passes AA on white and on its own tint; Ink text passes AAA on e
 | `headline` | 28 / 34 | −0.022em | 600 | The one h1 per screen |
 | `display` | 44 / 48 | −0.032em | 600 | First run and brand only; never in a working screen |
 
-- **Budget:** ≤ 4 steps in any one view (for example Home: meta, sub, body, headline; an agent chat: meta, sub, body, title).
+- **Budget:** ≤ 4 steps in any one view (for example Home: meta, sub, body, headline; an agent chat: meta, sub, body, title). The switch to Instrument Sans keeps the same six steps; it sets slightly narrower than Segoe UI, so no label that fitted before can overflow now. The wordmark in the lockup is part of the logo, not a type step.
 - **Numbers that change** use `font-variant-numeric: tabular-nums` (`.num`), right-aligned in columns.
 - **Measure:** chat bubbles max `--measure-chat` (34em ≈ 60 characters); prose 62ch.
 - **Sentence case** everywhere in the interface. Agents write lowercase (their own messages only). No uppercase tracked labels.
@@ -215,6 +220,24 @@ Developers using a JS spring library take the stiffness and damping columns; CSS
 ### 8.4 Signature moments (pinned per flow)
 Birth (first blink at Create) · the glance (eyes go to the request) · green finish (checks cascade, then pleased eyes for 1.6 s) · the brief travels (handoff chip) · Applied (one glow the first time a lesson is used). See BRAND §10 for which flow gets which.
 
+### 8.5 Sound (P-7, decided 2026-10-23)
+Three sounds from one family, as designed on the explorations page and heard on the brand board: synthesised (Web Audio in the renderer, no audio files), D major pentatonic, sine bodies through a soft low-pass, 8 ms attacks, one compressor, all under 400 ms and never alarming.
+
+| Sound | What you hear | Plays when | Never |
+|---|---|---|---|
+| **Needs you** | Two rising notes, A4 → D5 (a fourth), 320 ms: a question, not a warning | An approval or question lands in What needs you while Bench isn't the focused window | For agents talking to each other; twice for one item |
+| **Done** | One rounded note, F♯5 with soft partials, 380 ms | A task or run you started finishes all green, or a ticket you decided resolves, while you're elsewhere | For every step inside a run; only the finish |
+| **Handoff** | A band-passed breath panned left → right with an E5 → A5 glide, 290 ms (it crosses the stereo field like the chip crosses the screen) | An agent hands work to another in the project you're viewing | In the background, for projects you aren't viewing |
+| First open of the day (optional) | D5, A5, E6 in stacked fifths, 900 ms | The first open after 05:00 local time | Unless you turned it on; on every launch |
+
+- **Default:** the three are **on**; the first-open chime is **off**. Volume: master gain 0.7 (`--sound-volume`) into the system output, so the OS volume still rules.
+- **Controls:** Settings › Notifications has one Sound switch, a volume slider and a separate switch for the first-open chime. Muting is instant and remembered.
+- **The OS wins:** Focus / Do Not Disturb silence all of them; OS notifications use the OS's own sound setting, never ours on top.
+- **Rate:** one sound per kind per 600 ms; a burst of resolutions plays once.
+- **Sound is separate from motion.** Reduced motion doesn't mute sounds (they carry information, not movement), and muting doesn't change motion. Every sound has a visible twin (the amber ticket, the green finish, the travelling chip), so nothing depends on hearing it.
+- **Autoplay:** nothing plays before the first user interaction of a session (browser and Electron autoplay rules); the AudioContext is created on that first gesture.
+- **Prototype:** `direction.html` plays needs you when the top ticket opens in the morning-open demo, when Atlas's first answer lands and when Noor's request appears; done on all green and when a ticket resolves; handoff when the brief chip travels. The Sound switch in the demo bar is on by default. In the prototype they play in view so you can hear them; the app follows the "while you're elsewhere" rules above.
+
 ---
 
 ## 9. Layers
@@ -241,7 +264,7 @@ Rules: don't invert. Depth comes from lighter surfaces, not shadows. No pure whi
 | Agent ink | hue's ink | hue's light step |
 | Agent tint | hue's tint | base at 16 % over surface |
 | Agent wash | hue's wash | base at 5 % over ground |
-| The mark | Ink squircle, white eyes | white squircle, Ink eyes |
+| The mark (Quartet) | Ink `#15171d` | Porcelain white `#eceef3` (`brand/logo/mark-on-dark.svg`) |
 
 Every pair is re-verified when 5b is built; the commented block at the end of `tokens.css` holds these values so nobody ships them by accident.
 
@@ -435,7 +458,7 @@ Chosen 2–3 per flow (full table in BRAND §10): **Create** → birth + "Rename
 | Axis | Level | Evidence | Left for stage 2 |
 |---|---|---|---|
 | Copy | **Senior** | Second person throughout; consequence on buttons; recovery copy with cause, what's safe, next step; Write/Not table | Staff needs the copy walked through every flow |
-| Visuals | **Staff** | Custom language: the Look, drawn wordmark, lit-window icon, 90-identity family, Look inside glyph | Hold restraint on real screens |
+| Visuals | **Staff** | Custom language: the Look, the Quartet mark built from the agents' own shapes, 90-identity family, Look inside glyph, three sounds from one family | Hold restraint on real screens |
 | Color | **Staff** | Colour only for action, needs-you, state and identity; 60-30-10; every text pair verified live | Measure colour share per screen |
 | Type | **Senior** | Six steps, ≤ 4 per view, two weights, tabular figures, tracking per step | Prove "type does the hierarchy" on screens |
 | Structure | **Senior** | 4-pt scale by relationship, one radius family, sizes table | Grid arithmetic per screen |
@@ -448,19 +471,19 @@ No axis is below Senior. **Render check:** this session had no browser to render
 
 ---
 
-## 14. Proposals and decisions for the client
+## 14. Decisions (all closed on 2026-10-23)
 
-| # | Proposal | Replaces | Why | Recommended |
-|---|---|---|---|---|
-| P-1 | Porcelain + Ink neutrals | Apple Frost `#f5f5f7` + Carbon `#1d1d1f` | Our own material; one undertone with the action | Yes |
-| P-2 | Cobalt `#2e5bff` | Apple Blue `#0071e3` | Ownable; reads deeper; AA as fill and as text | Yes |
-| P-3 | Platform's own face (SF Pro / Segoe UI Variable / Inter) | Inter everywhere | Native feel, zero download; identity lives in the drawn wordmark | Yes (alternative: bundle Inter for identical rendering on every OS) |
-| P-4 | Pear replaces Periwinkle | Periwinkle | Blue means action only | Yes |
-| P-5 | Continuous corners, one radius family | 8 / 18 / 980 | One shape language; Apple-grade curvature | Yes |
-| P-6 | "Look inside" with the eyes glyph | "Trace" link | The glass box gets one recognisable handle | Yes |
-| P-7 | Silent by default, 3 optional sounds | (none) | All-day work app | Yes |
+| # | Decision | Replaces | Status |
+|---|---|---|---|
+| P-1 | Porcelain + Ink neutrals | Apple Frost `#f5f5f7` + Carbon `#1d1d1f` | **Decided 23 Oct**, kept as built |
+| P-2 | Cobalt `#2e5bff` | Apple Blue `#0071e3` | **Decided 23 Oct**, kept as built (supersedes the 22 Oct "not blue" note) |
+| P-3 | Instrument Sans 400/600 + JetBrains Mono, OFL, bundled | The platform's own face | **Decided 23 Oct** (§4) |
+| P-4 | Pear replaces Periwinkle | Periwinkle | **Decided 23 Oct** |
+| P-5 | Continuous corners, one radius family | 8 / 18 / 980 | Decided 22 Oct (R3) |
+| P-6 | "Look inside" with the eyes glyph | "Trace" link | Decided 22 Oct |
+| P-7 | Three sounds on by default, mute in Settings; first-open chime optional, off | Silent by default | **Decided 23 Oct** (§8.5) |
 
-Also from BRAND: B-1 direction (A recommended), B-2 app icon (lit window recommended).
+Also from BRAND: B-1 direction A (decided), **B-2 logo = Quartet** (decided 23 Oct; replaces the lit-window eyes mark). Only the name (D-UI5) is still open.
 
 ---
 
@@ -476,7 +499,8 @@ Also from BRAND: B-1 direction (A recommended), B-2 app icon (lit window recomme
 | Sizes 12/14/15/17/21/28/40 | 12/13/15/20/28/44 |
 | PAL.periwinkle | `--hue-pear-*` |
 | EXPR idle "sleepy", error "surprised" | idle "calm", error "concerned"; new "pleased", "concerned" |
-
+| Platform face (SF Pro / Segoe UI Variable / Inter) | `--font-text` / `--font-display` = Instrument Sans, `--font-mono` = JetBrains Mono (v1.1) |
+| Eyes-on-squircle mark, drawn monoline wordmark | Quartet mark + the name set in Instrument Sans 600 (v1.1, `brand/logo/`) |
 
 ## Addendum (v0.3)
 - **C-29:** the agent's tint on your bubbles appears only in one-to-one chats with that agent; team chats and meeting sessions use the neutral bubble so no agent's colour dominates a shared space.
