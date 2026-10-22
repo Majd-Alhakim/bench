@@ -149,4 +149,4 @@ Design reference: docs/research/memory-vault.md.
 5. The requesting lead creates a temporary copy in its own team and assigns it tasks.
 6. When the work is done, the copy is deleted, so there are no duplicates.
 
-**PM proposal, pending client confirmation:** before the copy is deleted, its work log and lessons are merged back into the original agent's memory, so its learning isn't lost.
+**Merge-back (confirmed, B7-#31b, client: "yes"):** before the copy is deleted, its work log and lessons are merged back into the original agent's memory, so its learning isn't lost.
