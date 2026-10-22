@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bench (codename): low-fi UX prototype v0.1</title>
+<!--
+  Low-fi, greyscale, clickable prototype. Phase 4 (UX), lean mode.
+  Source of truth: docs/requirements/BRD.md v1.0. UX package: docs/design/ux/README.md.
+  Rules: no brand colours, no external requests, plain HTML/CSS/JS, one file.
+  Sample data is fictional: the founder's day-1 tree working on project "Bench" (dogfood).
+-->
+<style>
+:root{
+  --bg:#ffffff; --p1:#f6f6f6; --p2:#ececec; --p3:#dedede; --line:#c4c4c4;
+  --mid:#8c8c8c; --ink2:#4d4d4d; --ink:#161616;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid #000;outline-offset:2px}
+h1{font-size:20px;margin:0 0 4px} h2{font-size:16px;margin:0 0 8px} h3{font-size:14px;margin:0 0 6px}
+p{margin:0 0 8px}
+a{color:inherit}
+.muted{color:var(--ink2)} .small{font-size:12px} .xs{font-size:11px}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.col{display:flex;flex-direction:column;gap:8px}
+.grow{flex:1}
+.hidden{display:none!important}
+
+/* Layout */
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:48px auto 1fr;height:100vh}
+.top{grid-column:1/3;display:flex;align-items:center;gap:12px;padding:0 12px;border-bottom:1px solid var(--line);background:var(--p1)}
+.brand{font-weight:700;letter-spacing:.3px}
+.brand small{font-weight:400;color:var(--ink2)}
+.banner{grid-column:1/3}
+.side{border-right:1px solid var(--line);background:var(--p1);overflow:auto;padding:8px}
+.main{overflow:auto;padding:0 0 40px}
+.app.setup{grid-template-columns:1fr}
+.app.setup .side{display:none}
+.app.setup .top,.app.setup .banner,.app.setup .main{grid-column:1/2}
+
+.nav{list-style:none;margin:0;padding:0}
+.nav button{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;align-items:center;width:100%;padding:7px 10px;border-radius:6px;cursor:pointer}
+.nav button:hover{background:var(--p2)}
+.nav button[aria-current="page"]{background:var(--ink);color:#fff}
+.nav button:focus-visible{outline:2px solid #000}
+.nav .sub button{padding-left:24px;font-size:13px}
+.nav .label{padding:12px 10px 4px;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink2)}
+.badge{display:inline-block;min-width:20px;padding:0 6px;border-radius:10px;border:1px solid currentColor;font-size:11px;text-align:center}
+
+/* Controls */
+.btn{border:1px solid var(--ink);background:#fff;border-radius:6px;padding:6px 12px;cursor:pointer}
+.btn:hover{background:var(--p2)}
+.btn.pri{background:var(--ink);color:#fff}
+.btn.pri:hover{background:#333}
+.btn.ghost{border-color:var(--line)}
+.btn.sm{padding:3px 8px;font-size:12px}
+.btn.lg{padding:10px 18px;font-size:15px}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.link{all:unset;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.link:focus-visible{outline:2px solid #000}
+input[type=text],input[type=number],textarea,select{border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:#fff;width:100%}
+textarea{min-height:70px;resize:vertical}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.err{border:1px solid var(--ink);border-left:6px solid var(--ink);background:var(--p2);padding:8px 10px;border-radius:6px}
+.warn{border:1px dashed var(--ink);background:var(--p1);padding:8px 10px;border-radius:6px}
+.ok{border:1px solid var(--line);background:var(--p1);padding:8px 10px;border-radius:6px}
+.fielderr{font-size:12px;font-weight:600}
+
+/* Tags (status is text, never colour alone) */
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--ink);border-radius:4px;padding:0 5px;line-height:17px;white-space:nowrap}
+.tag.solid{background:var(--ink);color:#fff}
+.tag.dash{border-style:dashed}
+.tag.soft{border-color:var(--mid);color:var(--ink2);font-weight:600}
+
+/* Cards and panels */
+.card{border:1px solid var(--line);border-radius:8px;padding:12px;background:#fff}
+.card.flat{background:var(--p1)}
+.pad{padding:16px 20px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.section-title{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 8px}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid var(--p3);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--ink2);font-weight:600}
+.skel{background:repeating-linear-gradient(90deg,var(--p2) 0 40px,var(--p1) 40px 80px);border-radius:4px;height:12px;margin:6px 0}
+
+/* Annotation bar */
+.ann{margin:0;padding:10px 20px;border-bottom:1px dashed var(--mid);background:repeating-linear-gradient(135deg,#fafafa 0 10px,#f3f3f3 10px 20px);font-size:12.5px}
+.ann .k{font-family:ui-monospace,Consolas,monospace;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink2)}
+.ann .states button{border:1px solid var(--mid);background:#fff;border-radius:12px;padding:1px 9px;font-size:12px;cursor:pointer}
+.ann .states button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ann-grid{display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
+
+/* Chat */
+.chat{display:flex;flex-direction:column;gap:10px}
+.msg{max-width:78%;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff}
+.msg.me{align-self:flex-end;background:var(--p2);border-color:var(--p3)}
+.msg .who{font-weight:600;font-size:12px;margin-bottom:2px}
+.msg .meta{margin-top:4px;font-size:11px;color:var(--ink2);display:flex;gap:8px}
+.sys{align-self:stretch;font-size:12px;color:var(--ink2);border-top:1px dotted var(--mid);border-bottom:1px dotted var(--mid);padding:3px 6px;font-family:ui-monospace,Consolas,monospace}
+.composer{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px dashed var(--ink2);background:#fff;border-radius:14px;padding:3px 10px;cursor:pointer;font-size:12.5px}
+.chip:hover{background:var(--p2)}
+.cost{font-size:11px;color:var(--ink2)}
+.scroll{max-height:440px;overflow:auto;padding-right:4px}
+
+/* What needs me */
+.wnm{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.wnm li{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff}
+.wnm li.first{border:2px solid var(--ink)}
+.wnm .t{font-weight:600}
+
+/* Org tree */
+.tree,.tree ul{list-style:none;margin:0;padding-left:22px;position:relative}
+.tree{padding-left:0}
+.tree ul li{position:relative;padding-left:14px}
+.tree ul li::before{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1px solid var(--mid)}
+.tree ul li:last-child::before{bottom:auto;height:20px}
+.tree ul li::after{content:"";position:absolute;left:0;top:20px;width:12px;border-top:1px solid var(--mid)}
+.node{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ink2);border-radius:8px;padding:6px 10px;margin:4px 0;background:#fff;cursor:pointer}
+.node:hover{background:var(--p2)}
+.node[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:1px}
+.node.loan{border-style:dashed}
+.node.removed{opacity:.4;text-decoration:line-through}
+.group{display:inline-block;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink2);margin-top:8px}
+.av{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--ink2);background:var(--p2);font-size:11px;font-weight:700;flex:none}
+.av.lg{width:44px;height:44px;font-size:16px}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:12px;flex-wrap:wrap}
+.tabs button{border:1px solid transparent;border-bottom:none;background:none;padding:6px 12px;border-radius:6px 6px 0 0;cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--line);background:#fff;font-weight:600;margin-bottom:-1px}
+
+/* Kanban */
+.kan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kcol{background:var(--p1);border:1px solid var(--line);border-radius:8px;padding:8px;min-height:160px}
+.kcard{display:block;width:100%;text-align:left;border:1px solid var(--ink2);border-radius:6px;background:#fff;padding:7px 8px;margin-bottom:6px;cursor:pointer}
+.kcard:hover{background:var(--p2)}
+.kcard.blocked{border-width:2px;border-style:dashed}
+
+/* Meters */
+.bar{position:relative;height:14px;border:1px solid var(--ink);border-radius:7px;background:#fff;overflow:hidden}
+.bar>i{position:absolute;left:0;top:0;bottom:0;background:var(--ink2)}
+.bar .mark{position:absolute;top:-3px;bottom:-3px;border-left:2px dashed var(--ink)}
+.mini{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:16px;padding:3px 10px;cursor:pointer}
+.mini .bar{width:90px;height:8px}
+
+/* Steps */
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 14px;padding:0;list-style:none}
+.steps li{border:1px solid var(--line);border-radius:14px;padding:2px 10px;font-size:12px;color:var(--ink2)}
+.steps li.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.steps li.done{border-color:var(--ink2);color:var(--ink)}
+
+/* Modal + toast */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:50}
+.dialog{background:#fff;border:1px solid var(--ink);border-radius:10px;max-width:680px;width:100%;max-height:86vh;overflow:auto;padding:18px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:8px;padding:10px 14px;max-width:560px;z-index:60;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.timer{font-family:ui-monospace,Consolas,monospace;font-size:28px;font-weight:700;border:2px solid var(--ink);border-radius:8px;padding:2px 12px}
+details{border:1px solid var(--line);border-radius:6px;padding:6px 10px;margin-bottom:6px;background:#fff}
+details summary{cursor:pointer}
+.doc{max-width:720px;border:1px solid var(--line);border-radius:8px;padding:20px 26px;background:#fff}
+.doc h2{border-bottom:1px solid var(--p3);padding-bottom:4px;margin-top:16px}
+.wikilink{all:unset;cursor:pointer;border-bottom:1px dashed var(--ink);font-weight:600}
+.wikilink:focus-visible{outline:2px solid #000}
+.wikilink.unres{border-bottom-style:dotted;color:var(--ink2)}
+.three{display:grid;grid-template-columns:230px minmax(0,1fr) 230px;gap:14px}
+@media (max-width:1100px){.grid2,.three{grid-template-columns:1fr}.kan,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app setup" id="app">
+  <header class="top" id="top"></header>
+  <div class="banner" id="banner"></div>
+  <nav class="side" id="side" aria-label="Main"></nav>
+  <main class="main" id="main" tabindex="-1">
+    <section class="ann" id="ann" aria-label="Screen annotation"></section>
+    <div id="screen"></div>
+  </main>
+</div>
+<div id="modal"></div>
+<div id="toast" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   Helpers
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const h = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cost = (t, d) => `<span class="cost">${t} tokens · ≈$${d}</span>`;
+const initials = n => n.split(/\s+/).map(x => x[0]).join("").slice(0,2).toUpperCase();
+let timers = [];
+function every(fn, ms){ timers.push(setInterval(fn, ms)); }
+function clearTimers(){ timers.forEach(clearInterval); timers = []; }
+function toast(msg){ const t=$("#toast"); t.innerHTML=`<div class="toast" role="status">${msg}</div>`; clearTimeout(toast._t); toast._t=setTimeout(()=>t.innerHTML="",4200); }
+
+/* ============================================================
+   Sample data: the founder's day-1 tree, working on project "Bench"
+   ============================================================ */
+const INV = {
+  bench:{name:"Bench tools (handoff, ask, memory, board)", tok:"1.1k", always:true},
+  gmail:{name:"Gmail", tok:"2.4k", note:"Read, label, archive, draft. Sends only to you; any email to someone else needs you, one at a time."},
+  github:{name:"GitHub (issues, PRs)", tok:"3.0k"},
+  shell:{name:"Shell (git, npm, tests)", tok:"0.9k"},
+  webfetch:{name:"Web fetch", tok:"0.4k"},
+  websearch:{name:"Web search", tok:"0.5k"},
+  figma:{name:"Figma", tok:"2.0k", missing:true}
+};
+function baseAgents(){ return {
+  atlas:{name:"Atlas",role:"CEO",team:"Root (CEO)",lead:true,model:"Sonnet",auto:"Trusted",state:"Active",run:"idle",desc:"Runs the business for you. Your front door: status, routing, proposals and inbox triage.",conn:["bench","gmail"],folders:["Read: Bench home"],ctx:80,task:"Morning status (done 08:02)"},
+  maya:{name:"Maya",role:"PM",team:"Product team",lead:true,model:"Sonnet",auto:"Trusted",state:"Active",run:"working",desc:"Product manager. Turns proposals into epics, stories and sprints; calls review meetings.",conn:["bench","github"],folders:["Read/write: bench/docs/"],ctx:80,task:"Planning Sprint 2 follow-ups"},
+  omar:{name:"Omar",role:"BA lead",team:"Requirements (Product team)",lead:true,model:"Sonnet",auto:"Trusted",state:"Active",run:"working",desc:"Senior business analyst. Runs interviews, owns requirement documents, tracks work against them.",conn:["bench","webfetch"],folders:["Read/write: bench/docs/requirements/"],ctx:80,task:"Preparing interview: memory browser filters"},
+  lina:{name:"Lina",role:"BA",team:"Requirements (Product team)",lead:false,model:"Sonnet",auto:"Trusted",state:"Active",run:"idle",desc:"Business analyst. Takes notes in meetings, drafts stories with the PM.",conn:["bench","webfetch"],folders:["Read/write: bench/docs/requirements/"],ctx:80,task:"Idle"},
+  sam:{name:"Sam",role:"UX/UI",team:"Product team",lead:false,model:"Sonnet",auto:"Ask every time",state:"Active",run:"working",desc:"UX and UI designer. Flows, wireframes, prototypes.",conn:["bench","figma"],folders:["Read/write: bench/docs/design/"],ctx:80,task:"UX-1 First-run wireframes"},
+  karim:{name:"Karim",role:"Tech lead",team:"Dev team",lead:true,model:"Opus",auto:"Ask every time",state:"Active",run:"idle",desc:"Tech lead. Splits stories into tasks, reviews PRs, writes ADRs.",conn:["bench","github","shell"],folders:["Read: bench/ (whole repo)","Write: bench/docs/adr/"],ctx:80,task:"Reviewing PR #41"},
+  noor:{name:"Noor",role:"Developer",team:"Dev team",lead:false,model:"Sonnet",auto:"Ask every time",state:"Active",run:"running",desc:"Developer. Writes code and tests in the repos you point her to.",conn:["bench","shell","github"],folders:["Read/write: bench/"],ctx:70,task:"S1-4 Chat UI: streaming, markdown, stop"},
+  jade:{name:"Jade",role:"QA",team:"Dev team",lead:false,model:"Sonnet",auto:"Ask every time",state:"Active",run:"blocked",desc:"QA engineer. Test plans, automated tests, bug reports.",conn:["bench","shell"],folders:["Read: bench/","Write: bench/tests/"],ctx:80,task:"QA-3 E2E tests on Windows CI (blocked)"}
+};}
+const IK_TEAM = [["rana","Rana","PM"],["yusuf","Yusuf","BA lead"],["hala","Hala","BA"],["ilias","Ilias","UX/UI"],["tariq","Tariq","Tech lead"],["mina","Mina","Developer"],["zaid","Zaid","QA"]];
+
+function baseItems(){ return [
+  {id:"S1-4",title:"Chat UI: streaming, markdown, stop",type:"Story",owner:"noor",state:"In progress",pr:1,sprint:2},
+  {id:"S1-2",title:"Onboarding: detect Claude Code and login",type:"Story",owner:"noor",state:"In review",pr:2,sprint:2},
+  {id:"S1-5",title:"Trace panel, per-message cost, plan meter",type:"Story",owner:"noor",state:"To Do",pr:3,sprint:2},
+  {id:"UX-1",title:"First-run wireframes",type:"Task",owner:"sam",state:"In progress",pr:4,sprint:2},
+  {id:"S1-6",title:"SQLite persistence and session resume",type:"Story",owner:"karim",state:"To Do",pr:5,sprint:2},
+  {id:"QA-3",title:"E2E tests on Windows CI",type:"Task",owner:"jade",state:"Blocked",pr:6,sprint:2},
+  {id:"QA-2",title:"Test plan for onboarding",type:"Task",owner:"jade",state:"To Do",pr:7,sprint:2},
+  {id:"S2-1",title:"Agent editor (name, role, model, knowledge)",type:"Story",owner:"",state:"Backlog",pr:8,sprint:0},
+  {id:"S2-2",title:"Inventory service: per-agent connector picker",type:"Story",owner:"",state:"Backlog",pr:9,sprint:0},
+  {id:"S2-3",title:"Private and global memory (Bench Memory layers 1–3)",type:"Epic",owner:"",state:"Backlog",pr:10,sprint:0},
+  {id:"S2-4",title:"Duplicate an agent without memory",type:"Story",owner:"",state:"Backlog",pr:11,sprint:0},
+  {id:"E3",title:"Groups and router",type:"Epic",owner:"",state:"Backlog",pr:12,sprint:0},
+  {id:"E4",title:"Handoffs and task board",type:"Epic",owner:"",state:"Backlog",pr:13,sprint:0},
+  {id:"E5",title:"Approvals and usage ledger",type:"Epic",owner:"",state:"Backlog",pr:14,sprint:0},
+  {id:"E7",title:"Routines and Gmail triage",type:"Epic",owner:"",state:"Backlog",pr:15,sprint:0},
+  {id:"S1-1",title:"Scaffold per ADR-0003",type:"Story",owner:"karim",state:"Done",pr:0,sprint:2},
+  {id:"S1-3",title:"Main agent runner wraps query()",type:"Story",owner:"noor",state:"Done",pr:0,sprint:2},
+  {id:"DOC-1",title:"BRD v1.0 baselined",type:"Task",owner:"omar",state:"Done",pr:0,sprint:2}
+];}
+
+function baseApprovals(){ return [
+  {id:"a1",kind:"outward",agent:"atlas",action:"Send email reply",target:"To: dana.k@example.com (recruiter) · Subject: Re: Interview availability",reason:"Dana asked for your availability this week. You have Thu 14:00 free.",source:"Gmail triage, 07:55",cost:"3.1k tokens · ≈$0.010",draft:"Hi Dana,\n\nThanks for reaching out. Thursday at 14:00 works for me. Could you send a calendar invite?\n\nBest regards",status:"pending"},
+  {id:"a2",kind:"reserved",agent:"karim",action:"Merge pull request to main",target:"Repo: bench · PR #41 \"S1-3 Main agent runner\" → main",reason:"Approved by review; CI green on Windows and Ubuntu.",source:"Task S1-3",cost:"41k tokens · ≈$0.33",status:"pending"},
+  {id:"a3",kind:"work",agent:"noor",action:"Run shell command",target:"Repo: bench · `rm -rf node_modules/.vite && pnpm dev`",reason:"Vite cache is stale after the Electron upgrade; HMR stopped working.",source:"Task S1-4",cost:"184k tokens · ≈$0.61",status:"pending",deputyNote:"Atlas can approve work requests like this one. It sent it to you because it deletes files."},
+  {id:"a4",kind:"payment",agent:"sam",action:"Payment needed",target:"Figma Professional seat · about $15/month",reason:"Figma is not in your connector inventory; a paid seat is needed for shared prototypes. Agents never pay.",source:"Task UX-1",cost:"—",status:"pending"}
+];}
+
+function baseNotes(){ return {
+  "client-preferences":{title:"Client preferences",type:"fact",scope:"Global",tags:["client","style"],updated:"2026-10-21",source:"Atlas (approved by you)",body:"The client prefers short sentences and plain words. Ask in batches of at most 8 questions. Decisions go to [[Decision: 3-day sprints]] style memos."},
+  "claude-login-rule":{title:"Claude login rule",type:"fact",scope:"Global",tags:["security"],updated:"2026-10-21",source:"Omar (approved by Atlas)",body:"Bench never shows a Claude login and never touches Claude credentials. See [[Onboarding flow]]."},
+  "onboarding-flow":{title:"Onboarding flow",type:"fact",scope:"Product team",tags:["ux","onboarding"],updated:"2026-10-22",source:"Sam · task UX-1",body:"Four steps: detect Claude Code, home folder, create the CEO, team. Linked rule: [[Claude login rule]]. Open question: [[Stop button placement]]."},
+  "sprint-2-summary":{title:"Dev team summary, Sprint 2",type:"summary",scope:"Dev team",tags:["status"],updated:"2026-10-22 08:00",source:"Karim (lazy roll-up)",body:"Done: [[S1-3 Main agent runner]]. In progress: S1-4 (Noor). Blocked: QA-3 E2E on Windows CI. Needs you: merge PR #41."},
+  "noor-checkpoint-3":{title:"Checkpoint: Noor #3",type:"checkpoint",scope:"Private: Noor",tags:["checkpoint"],updated:"2026-10-22 07:40",source:"Noor · session 7 (archived)",body:"Goal: S1-4. Decisions: use the SDK stream events. Files: Composer.tsx, useStream.ts. Current step: Stop button. Next: markdown rendering. Open questions: [[Stop button placement]]. Tried and failed: polling. Mistakes and fixes: [[Lesson: Vite cache on Windows]]."},
+  "lesson-vite":{title:"Lesson: Vite cache on Windows",type:"lesson",scope:"Private: Noor",tags:["windows","build"],updated:"2026-10-22",source:"Noor · task S1-4",body:"After an Electron upgrade, clear node_modules/.vite or HMR silently stops."},
+  "decision-sprints":{title:"Decision: 3-day sprints",type:"decision memo",scope:"Product team",tags:["process"],updated:"2026-10-21",source:"Debate session (archived) · decider: Maya",body:"Decision: sprints are 3 days. Attendees: Maya, Karim, Omar. Rationale: matches the client's pace; re-measure after Sprint 2."},
+  "s1-3":{title:"S1-3 Main agent runner",type:"work log",scope:"Dev team",tags:["log"],updated:"2026-10-21",source:"App (task record, 0 tokens)",body:"2026-10-21 Noor: wrapped query(); streaming to UI. PR #41 opened. Reviewed by Karim."},
+  "old-ci":{title:"CI matrix (old)",type:"fact",scope:"Dev team",tags:["ci"],updated:"2026-08-20",source:"Karim",stale:"Not updated for 60 days · possible duplicate of [[Dev team summary, Sprint 2]]",body:"CI runs on Ubuntu only."}
+};}
+const NOTE_BY_TITLE = t => Object.keys(S.notes).find(k => S.notes[k].title.toLowerCase() === t.toLowerCase());
+
+/* ============================================================
+   State
+   ============================================================ */
+let S;
+function baseCeo(){ return [
+  {who:"me",text:"Get the Dev team to fix the Windows path bug in onboarding.",meta:"Yesterday 18:20"},
+  {who:"atlas",text:"Handed to Karim (Dev lead) as task \"Fix Windows path in onboarding\". Noor has it; I'll tell you when it's in review.",meta:"Yesterday 18:20",c:["2.2k","0.007"]},
+  {sys:"Router → Karim (rule: Dev team owns onboarding code) · 0.3k tokens · ≈$0.0003"}
+];}
+function reset(){
+  S = {
+    screen:"fr", prev:null, annOn:true,
+    st:{fr:"checking",home:"normal",org:"normal",agent:"normal",live:"running",team:"participant",session:"debate",proposal:"awaiting",dash:"normal",appr:"normal",trace:"normal",usage:"ok",mem:"note",settings:"normal"},
+    fr:{step:1,ceo:"Atlas",model:"Sonnet",team:"template",removed:{},gmail:true,folder:"C:\\Users\\you\\Bench"},
+    setupDone:false,
+    agents:baseAgents(), items:baseItems(), approvals:baseApprovals(), notes:baseNotes(),
+    deputy:[
+      "08:41 · Atlas approved Noor: run `pnpm test` in repo bench (work request)",
+      "08:12 · Atlas changed Jade's autonomy: Ask every time → Trusted (diff logged)",
+      "07:58 · Atlas approved a global-memory write by Omar: \"Client prefers short sentences\"",
+      "07:55 · Atlas labelled and archived 12 newsletters in Gmail (not outward, no approval needed)"
+    ],
+    ceo:baseCeo(), fresh:false,
+    intake:0, proposal:"none", ikCreated:false, ikNames:Object.fromEntries(IK_TEAM.map(x=>[x[0],x[1]])), ikRemoved:{},
+    escalation:"open", interview:{q:3,answers:{1:"Only me for now.",2:"Scope and agent first."},open:[]},
+    review:{items:{"S1-2":"pending","S1-3":"pending"},notes:["Client opened the onboarding build.","Client: \"The 'Check again' button is easy to find.\""],closed:false},
+    debate:{secs:300,state:"open",shown:2,joined:false,closed:false},
+    team:[
+      {who:"maya",text:"Sprint 2 started (Oct 22–24). Top priorities: S1-4 chat UI, S1-2 onboarding (in review), S1-5 trace panel.",c:["1.4k","0.004"]},
+      {sys:"Router → Karim (rule: task owner's lead) · 0.4k tokens · ≈$0.0004"},
+      {who:"karim",text:"Noor is on S1-4. Streaming works; the Stop button is next. Jade is blocked on Windows CI runners.",c:["2.0k","0.016"]},
+      {who:"sam",text:"Question: should Stop live in the composer or the header? I think the header, so it stays visible when the chat scrolls.",c:["0.9k","0.003"]},
+      {who:"karim",text:"Noor and I prefer the composer. That's where the user's eyes are when they send.",c:["1.1k","0.009"]},
+      {sys:"Maya opened a debate: \"Where does the Stop button live?\" · participants Sam, Noor, Maya · decider Maya"},
+      {sys:"Curator updated the group digest · 0.6k tokens · ≈$0.0005"}
+    ],
+    run:{state:"running",steps:2,redirect:null},
+    loan:null, selNode:"maya", agentId:"noor", agentTab:"card", memNote:"onboarding-flow", memEdit:false, memQuery:"", memScope:"All",
+    dashFull:false, dashSprint:2, dashProject:"bench", apprTab:"wait", apprFilter:"all", traceRun:"r1", usageMode:"ok",
+    ckpt:80, ckptErr:""
+  };
+}
+
+/* ============================================================
+   Annotations: purpose, primary action, UC IDs, states
+   ============================================================ */
+const ANN = {
+  fr:{t:"First run",p:"Get from install to a working CEO in 4 short steps. Detect Claude Code; never show a Claude login.",a:"Continue",u:"UC-06, UC-08 E1, UC-35, BR-04, BR-54",s:[["checking","Detecting (loading)"],["found","Found + signed in"],["notinstalled","Error: not installed"],["notsigned","Error: not signed in"],["apikey","Warning: API key found"]]},
+  home:{t:"Home: CEO chat, What needs me, morning status",p:"Start the day: see what needs you (instant, 0 tokens), read the CEO's status, talk to the CEO.",a:"Act on the top \"needs me\" item · Send to the CEO",u:"UC-08, UC-12, UC-25, UC-29, UC-17",s:[["normal","Normal (day 3)"],["empty","Empty (first day)"],["loading","Status loading"],["limit","Error: usage limit (cached status)"]]},
+  org:{t:"Org tree and editor",p:"See and change the organisation as a tree: nodes, leads, agents, loans.",a:"Add agent",u:"UC-01, UC-02, UC-03, UC-05, UC-06, UC-07, UC-43, UC-47",s:[["normal","Normal"],["empty","Empty (CEO only)"],["loading","Loading"],["error","Error (write failed, rolled back)"]]},
+  agent:{t:"Agent profile",p:"Everything about one agent in one place: card, instructions, model, autonomy, connectors, memory, folders, lifecycle.",a:"Save changes",u:"UC-02, UC-03, UC-04, UC-21, UC-22, UC-32, UC-35, BR-66",s:[["normal","Active"],["draft","Draft (drafted by CEO)"],["paused","Paused"],["archived","Archived (read-only)"]]},
+  live:{t:"Agent live chat",p:"Talk to any agent directly and see what it is doing right now; stop it and redirect it.",a:"Stop · then send a new instruction",u:"UC-09, UC-27, UC-28",s:[["running","Running"],["stopped","Stopped"],["idle","Idle (empty)"],["archived","Archived (read-only)"]]},
+  team:{t:"Project team chat",p:"Drop into the project team's conversation; watch, talk, assign with @mention.",a:"Send / assign a task",u:"UC-10, UC-13, UC-11 A5, BR-38, BR-39, BR-41",s:[["participant","You: participant"],["observer","You: observer"],["empty","Empty (new project)"],["error","Error (send failed)"]]},
+  session:{t:"Meeting session (temporary)",p:"A temporary session: 5-minute debate, BA interview or review. On close, the memo or notes stay; the chat leaves your views and is archived in the trace.",a:"Debate: Agree / Close · Interview: Answer · Review: Accept or Reject",u:"UC-11, UC-24, UC-29, UC-30, UC-31, BR-59, BR-60",s:[["debate","Debate (timer)"],["decided","Debate: time's up"],["interview","BA interview"],["review","Review session"],["paused","Paused (usage limit)"]]},
+  proposal:{t:"Proposal one-pager",p:"Check that the CEO understood your idea before any team starts. Approve, edit or reject.",a:"Approve (then confirm the project team)",u:"UC-12, UC-43, BR-58, BR-61, BR-62",s:[["awaiting","Awaiting you"],["rejected","Rejected (CEO revising)"],["preview","Approved: project preview"],["created","Project created"],["error","Error (creation failed)"]]},
+  dash:{t:"Project dashboard",p:"Where the project is right now: team, top of the backlog, current sprint. Same layout every sprint.",a:"Open a card · Full backlog",u:"UC-26, UC-16, UC-24, UC-27, BR-37, BR-63",s:[["normal","Normal"],["nosprint","No sprint yet"],["loading","Loading"],["stale","Error: stale data"]]},
+  appr:{t:"Approval inbox",p:"Decide what agents may do. Outward and reserved actions always come here; the CEO decides other work requests and logs them.",a:"Allow once",u:"UC-23, UC-22 A1, UC-37, BR-14, BR-15, BR-57, BR-58, BR-64",s:[["normal","Normal"],["empty","Empty"],["failed","Error: action failed after approval"]]},
+  trace:{t:"Trace and cost",p:"Glass box: every step of a run with its model, tools, files, approvals, freelancers, system lines and cost.",a:"Expand a step",u:"UC-28, UC-07, UC-40, BR-38, BR-39, BR-60",s:[["normal","Normal"],["loading","Loading"],["retention","Past retention (summary only)"]]},
+  usage:{t:"Usage meter",p:"Keep at least 30 % of the weekly limit free. See who used what. No per-agent caps.",a:"Open runs · Run now (when the guard is on)",u:"UC-40, UC-41, UC-42, BR-52, BR-53",s:[["ok","Headroom OK"],["guard","30 % guard ON"],["limit","Limit reached (paused)"],["ledger","Error: plan data unavailable"]]},
+  mem:{t:"Bench Memory browser",p:"Read and edit what agents remember: notes, backlinks, graph, filters, stale flags. Obsidian-compatible, no Obsidian needed.",a:"Save note",u:"UC-21, UC-44, UC-45, UC-46, BR-67–BR-73",s:[["note","Note + backlinks"],["graph","Graph view"],["stale","Stale flag"],["rebuilding","Error: index rebuilding"]]},
+  settings:{t:"Settings",p:"System behaviour: context checkpoint threshold, headroom guard, system services, folders, Claude Code status.",a:"Save",u:"BR-66, BR-52, BR-38, BR-54, BR-76, §8.3",s:[["normal","Normal"],["error","Error: out of range"]]}
+};
+
+/* ============================================================
+   Computed: What needs me
+   ============================================================ */
+function needs(){
+  const L = [];
+  if (S.proposal==="awaiting") L.push({k:"proposal",t:"Proposal awaiting your approval: InterviewKit",d:`${S.agents.atlas.name} wrote a one-pager. Nothing starts until you approve.`,v:"Review proposal",go:["proposal"]});
+  if (S.fresh) return L; // just installed: only what the client creates shows up
+  if (S.usageMode==="guard") L.push({k:"guard",t:"Weekly headroom forecast 24 %: 2 routines deferred",d:"The 30 % guard is on. Work you start still runs.",v:"Open usage",go:["usage"]});
+  if (!S.review.closed) L.push({k:"review",t:"Maya: \"We have something to show you\"",d:"Sprint 2 increment: onboarding (S1-2) and the main agent runner (S1-3).",v:"Join review",go:["session",{type:"review"}]});
+  if (S.interview.q<=8 && !S.interview.closed) L.push({k:"meet",t:"Omar, BA lead, wants to meet you",d:`8 questions about memory browser filters. ${S.interview.q>1?`Continue at question ${S.interview.q}.`:""}`,v:"Start interview",go:["session",{type:"interview"}]});
+  S.approvals.filter(a=>a.status==="pending").forEach(a=>{
+    const lbl = {outward:"Email needs your action: \"I drafted this, send it or change it?\"",reserved:"Reserved action: Karim wants to merge PR #41 to main",work:"Noor asks to run a command that deletes files",payment:"Payment needed: Figma seat for Sam"}[a.kind];
+    L.push({k:a.kind,t:lbl,d:a.target.replace(/`/g,""),v:a.kind==="payment"?"Open":"Decide",go:["appr",{focus:a.id}]});
+  });
+  if (S.escalation==="open") L.push({k:"blocked",t:"Blocked: Jade's E2E tests failed twice on Windows CI",d:"Karim couldn't resolve it. He suggests 2 options.",v:"Decide",act:"escalation"});
+  return L;
+}
+const pendingCount = () => S.approvals.filter(a=>a.status==="pending").length;
+
+/* ============================================================
+   Shell: top bar, banner, sidebar, annotation
+   ============================================================ */
+function renderTop(){
+  const used = {ok:41,guard:63,limit:100,ledger:null}[S.usageMode];
+  const n = needs().length;
+  $("#top").innerHTML = `
+    <span class="brand">Bench <small>(codename) · low-fi prototype v0.1</small></span>
+    <span class="grow"></span>
+    ${S.setupDone?`
+    <button class="mini" data-go="usage" aria-label="Plan usage: ${used===null?"unknown":used+" percent of weekly limit used"}. Open usage meter">
+      <span class="small">Week</span><span class="bar" aria-hidden="true"><i style="width:${used??0}%"></i><span class="mark" style="left:70%"></span></span>
+      <span class="small">${used===null?"ledger only":used+" % used"}</span></button>
+    <button class="btn sm ghost" data-go="home" aria-label="${n} items need you">Needs me <span class="badge">${n}</span></button>`:""}
+    <button class="btn sm ghost" data-act="guide">Prototype guide</button>
+    <button class="btn sm ghost" data-act="annToggle" aria-pressed="${S.annOn}">Annotations: ${S.annOn?"on":"off"}</button>`;
+  let b = "";
+  if (S.setupDone && S.usageMode==="limit") b = `<div class="err" role="alert" style="border-radius:0;margin:0">Usage limit reached. All agents stopped at a safe point and their work is saved. Resumes automatically at <b>14:00</b> (in 2 h 10 min). "What needs me" still works. <button class="link" data-go="usage">See paused work</button></div>`;
+  else if (S.setupDone && S.usageMode==="guard") b = `<div class="warn" role="status" style="border-radius:0;margin:0">30 % headroom guard is on: routines and the daily summary refresh wait until the forecast recovers. Work you start still runs. <button class="link" data-go="usage">Details</button></div>`;
+  $("#banner").innerHTML = b;
+}
+
+function navBtn(id,label,extra="",sub=false,params=null){
+  const cur = S.screen===id && (!params || JSON.stringify(params)===JSON.stringify(S.params||null)) ;
+  return `<li class="${sub?"sub":""}"><button data-go="${id}" ${params?`data-p='${JSON.stringify(params)}'`:""} ${cur?'aria-current="page"':""}><span>${label}</span>${extra}</button></li>`;
+}
+function renderSide(){
+  const live = [];
+  if (S.screen==="session") live.push(`<li class="sub"><button aria-current="page"><span>${{interview:"BA interview",review:"Review"}[S.st.session]||"Debate"}</span><span class="tag solid">Live</span></button></li>`);
+  else if (S.debate.state==="open" && !S.debate.closed) live.push(navBtn("session","Debate: Stop button",`<span class="tag">Live</span>`,true,{type:"debate"}));
+  $("#side").innerHTML = `<ul class="nav">
+    ${navBtn("home","Home",`<span class="badge" aria-label="${needs().length} need you">${needs().length}</span>`)}
+    ${navBtn("appr","Approvals",`<span class="badge">${pendingCount()}</span>`)}
+    <li class="label">Projects</li>
+    ${navBtn("dash","Bench · Dashboard","",true,{p:"bench"})}
+    ${navBtn("team","Bench · Team chat","",true)}
+    ${live.join("")}
+    ${S.ikCreated?navBtn("dash","InterviewKit · Dashboard","",true,{p:"ik"}):""}
+    <li class="sub"><button data-act="newProject"><span>+ New project</span></button></li>
+    <li class="label">Organisation</li>
+    ${navBtn("org","Org tree")}
+    ${navBtn("live","Chat: Noor","",true,{id:"noor"})}
+    ${navBtn("agent","Profile: Noor","",true,{id:"noor"})}
+    <li class="label">Insight</li>
+    ${navBtn("mem","Memory")}
+    ${navBtn("usage","Usage")}
+    ${navBtn("trace","Trace")}
+    ${navBtn("settings","Settings")}
+  </ul>
+  <p class="xs muted" style="padding:16px 10px 0">Closing the window keeps Bench in the tray. Quit from the tray stops everything (BR-76).</p>`;
+}
+function renderAnn(){
+  const a = ANN[S.screen]; const el=$("#ann");
+  if (!S.annOn || !a){ el.classList.add("hidden"); return; }
+  el.classList.remove("hidden");
+  el.innerHTML = `<div class="row between"><b>${a.t}</b><span class="k">Annotation (not part of the UI)</span></div>
+   <div class="ann-grid" style="margin-top:4px">
+     <span class="k">Purpose</span><span>${a.p}</span>
+     <span class="k">Primary</span><span>${a.a}</span>
+     <span class="k">Serves</span><span>${a.u}</span>
+     <span class="k">States</span><span class="states row">${a.s.map(([v,l])=>`<button data-act="state" data-v="${v}" aria-pressed="${S.st[S.screen]===v}">${l}</button>`).join("")}</span>
+   </div>`;
+}
+
+/* ============================================================
+   Router
+   ============================================================ */
+function go(screen, params){
+  clearTimers();
+  S.prev = S.screen;
+  S.screen = screen; S.params = params||null;
+  if (screen==="agent"||screen==="live") S.agentId = params?.id || S.agentId;
+  if (!S.agents[S.agentId]) S.agentId = "noor";
+  if (screen==="agent") S.st.agent = {Active:"normal",Draft:"draft",Paused:"paused",Archived:"archived"}[S.agents[S.agentId].state] || "normal";
+  if (screen==="live"){
+    if (S.agentId!=="noor") S.st.live = S.agents[S.agentId].state==="Archived" ? "archived" : "idle";
+    else if (S.st.live==="idle" && !S.run.cancelled) S.st.live = "running";
+  }
+  if (screen==="mem" && params?.scope) S.memScope = params.scope;
+  if (screen==="dash") S.dashProject = params?.p || "bench";
+  if (screen==="session" && params?.type) S.st.session = params.type==="debate" ? (S.debate.state==="open"?"debate":"decided") : params.type;
+  render();
+  $("#main").scrollTop = 0;
+  $("#main").focus({preventScroll:true});
+}
+function render(){
+  clearTimers(); // every render re-creates the timers it needs (AFTER hooks), so none pile up
+  $("#app").classList.toggle("setup", !S.setupDone);
+  renderTop(); renderSide(); renderAnn();
+  $("#screen").innerHTML = (SCREENS[S.screen]||(()=>"<div class='pad'>Not found</div>"))();
+  (AFTER[S.screen]||(()=>{}))();
+}
+
+/* ============================================================
+   Screen: First run
+   ============================================================ */
+function scrFr(){
+  const f = S.fr, st = S.st.fr;
+  const steps = ["Claude Code","Home folder","Your CEO","Your team"];
+  let body = "";
+  if (f.step===1){
+    const states = {
+      checking:`<div class="ok" role="status"><b>Checking for Claude Code…</b><div class="skel" style="width:60%"></div><div class="skel" style="width:40%"></div></div>`,
+      found:`<div class="ok"><b>Found Claude Code 2.1 and you're signed in.</b><p class="small muted" style="margin-top:4px">Bench runs your agents through this login. It never sees or stores your Claude password or tokens.</p></div>`,
+      notinstalled:`<div class="err" role="alert"><b>Claude Code isn't installed.</b><p class="small">Install it, then come back. Bench needs it to run agents on your Claude plan.</p><code class="mono">npm install -g @anthropic-ai/claude-code</code> <button class="btn sm" data-act="copy">Copy</button></div>`,
+      notsigned:`<div class="err" role="alert"><b>Claude Code is installed, but you're not signed in.</b><p class="small">Open a terminal and run this command, then press "Check again". Bench never shows its own Claude login.</p><code class="mono">claude login</code> <button class="btn sm" data-act="copy">Copy</button></div>`,
+      apikey:`<div class="ok"><b>Found Claude Code 2.1 and you're signed in.</b></div><div class="warn" style="margin-top:8px"><b>An ANTHROPIC_API_KEY is set on this machine.</b> Bench removes it from your agents so they use your plan, not paid API credits. You can turn on an API key later in Settings.</div>`
+    };
+    const okToGo = st==="found"||st==="apikey";
+    body = `<h2>1. Connect to Claude Code</h2>${states[st]}
+      <div class="row" style="margin-top:14px">${okToGo?`<button class="btn pri lg" data-act="frNext">Continue</button>`:`<button class="btn pri" data-act="frCheck" ${st==="checking"?"disabled":""}>Check again</button>`}</div>`;
+  } else if (f.step===2){
+    body = `<h2>2. Where Bench keeps its files</h2>
+      <p class="muted">Agents, memory and projects are plain files here. You can open, edit and version them with any tool.</p>
+      <label class="f">Bench home folder<input type="text" id="frFolder" value="${h(f.folder)}"></label>
+      <div class="row" style="margin-top:14px"><button class="btn ghost" data-act="frBack">Back</button><button class="btn pri lg" data-act="frNext">Continue</button></div>`;
+  } else if (f.step===3){
+    body = `<h2>3. Create your CEO</h2>
+      <p class="muted">The CEO is your front door: you talk to it, it runs the team. You can change everything later.</p>
+      <div class="row" style="align-items:flex-start;gap:16px"><span class="av lg" aria-hidden="true">${initials(f.ceo||"?")}</span>
+      <div class="col grow">
+        <label class="f">Name<input type="text" id="frCeo" maxlength="40" value="${h(f.ceo)}" aria-describedby="frCeoErr"></label>
+        <span id="frCeoErr" class="fielderr" aria-live="polite"></span>
+        <label class="f">Model<select id="frModel">${["Haiku","Sonnet","Opus"].map(m=>`<option ${m===f.model?"selected":""}>${m}</option>`).join("")}</select></label>
+        <span class="small muted">Sonnet is a good default. Use Opus for harder thinking; it uses your plan faster.</span>
+      </div></div>
+      <div class="row" style="margin-top:14px"><button class="btn ghost" data-act="frBack">Back</button><button class="btn pri lg" data-act="frNext">Create ${h(f.ceo||"CEO")}</button></div>`;
+  } else {
+    const roles = [["maya","PM","Product team","Lead","Sonnet","Bench tools, GitHub issues (optional)","Trusted"],["omar","BA lead","Product team › Requirements","Lead","Sonnet","Bench tools, web fetch","Trusted"],["lina","BA","Product team › Requirements","","Sonnet","Bench tools, web fetch","Trusted"],["sam","UX/UI","Product team","","Sonnet","Bench tools, Figma ⚠ not in your inventory","Ask every time"],["karim","Tech lead","Dev team","Lead","Opus","Bench tools, GitHub, shell (git, tests)","Ask every time"],["noor","Developer","Dev team","","Sonnet","Bench tools, shell (git, npm, tests)","Ask every time"],["jade","QA","Dev team","","Sonnet","Bench tools, shell (tests only)","Ask every time"]];
+    body = `<h2>4. Your team</h2>
+      <p class="muted">Start with only ${h(f.ceo)} and add agents yourself, or start from the Product + Dev template. Nothing is pre-installed; you can change everything later.</p>
+      <div class="row" role="radiogroup" aria-label="Team start">
+        <button class="btn ${f.team==="ceo"?"pri":""}" role="radio" aria-checked="${f.team==="ceo"}" data-act="frTeam" data-v="ceo">${h(f.ceo)} only</button>
+        <button class="btn ${f.team==="template"?"pri":""}" role="radio" aria-checked="${f.team==="template"}" data-act="frTeam" data-v="template">Product + Dev template</button>
+      </div>
+      ${f.team==="template"?`<div class="card" style="margin-top:12px"><h3>Preview: ${h(f.ceo)} → Product team and Dev team</h3>
+      <p class="small muted">Untick a role to leave it out. Names are suggestions; edit them now or later. Research is done by freelancers your agents hire when needed.</p>
+      <table><thead><tr><th scope="col">Keep</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Team</th><th scope="col">Model</th><th scope="col">Connectors</th><th scope="col">Autonomy</th></tr></thead><tbody>
+      ${roles.map(r=>`<tr class="${f.removed[r[0]]?"muted":""}"><td><input type="checkbox" aria-label="Keep ${r[1]}" data-act="frRemove" data-id="${r[0]}" ${f.removed[r[0]]?"":"checked"}></td><td>${S.agents[r[0]].name}</td><td>${r[1]} ${r[3]?'<span class="tag">Lead</span>':""}</td><td class="small">${r[2]}</td><td>${r[4]}</td><td class="small">${r[5]}</td><td class="small">${r[6]}</td></tr>`).join("")}
+      </tbody></table>
+      <label class="row" style="margin-top:10px"><input type="checkbox" id="frGmail" data-act="frGmail" ${f.gmail?"checked":""}> <span>Connect <b>Gmail</b> to ${h(f.ceo)} (found in your Claude Code connectors). ${h(f.ceo)} reads and sorts your email and drafts replies; it only sends to you. Every email to someone else needs you.</span></label>
+      </div>`:`<div class="card flat" style="margin-top:12px"><p class="small">${h(f.ceo)} will be your only agent. Ask it to draft agents for you, or add them in the Org tree.</p></div>`}
+      <div class="row" style="margin-top:14px"><button class="btn ghost" data-act="frBack">Back</button><button class="btn pri lg" data-act="frFinish">Finish and talk to ${h(f.ceo)}</button></div>`;
+  }
+  return `<div class="pad" style="max-width:900px;margin:0 auto">
+    <h1>Welcome to Bench</h1><p class="muted">About 2 minutes. Every step has a default.</p>
+    <ol class="steps" aria-label="Setup progress">${steps.map((s,i)=>`<li class="${i+1===f.step?"on":i+1<f.step?"done":""}" ${i+1===f.step?'aria-current="step"':""}>${i+1<f.step?"✓ ":""}${i+1}. ${s}</li>`).join("")}</ol>
+    <div class="card">${body}</div></div>`;
+}
+
+/* ============================================================
+   Screen: Home
+   ============================================================ */
+function msgHTML(m, names){
+  if (m.sys) return `<div class="sys">${m.sys}</div>`;
+  if (m.card) return m.card;
+  const me = m.who==="me";
+  const nm = me ? "You" : (S.agents[m.who]?.name||m.who) + (S.agents[m.who]?` · ${S.agents[m.who].role}`:"");
+  return `<div class="msg ${me?"me":""}"><div class="who">${h(nm)}</div><div>${h(m.text).replace(/\n/g,"<br>")}</div>
+   ${(m.c||m.meta)?`<div class="meta">${m.meta?`<span>${m.meta}</span>`:""}${m.c?cost(m.c[0],m.c[1])+` <button class="link xs" data-go="trace">Trace</button>`:""}</div>`:""}</div>`;
+}
+function scrHome(){
+  const st = S.st.home, ceo = S.agents.atlas.name;
+  const L = st==="empty" ? needs().filter(x=>x.k==="proposal") : needs();
+  const wnm = !L.length ? `<div class="card flat"><b>Nothing needs you.</b><p class="small muted">Approvals, meeting requests, proposals, blocked work and email drafts will show up here, the moment they happen.</p></div>`
+   : `<ul class="wnm">${L.map((x,i)=>`<li class="${i===0?"first":""}"><div class="t">${x.t}</div><div class="small muted">${h(x.d)}</div>
+      <div class="row" style="margin-top:6px"><button class="btn sm ${i===0?"pri":""}" ${x.go?`data-go="${x.go[0]}" ${x.go[1]?`data-p='${JSON.stringify(x.go[1])}'`:""}`:`data-act="${x.act}"`}>${x.v}</button>
+      ${["outward","reserved","work","payment"].includes(x.k)?`<span class="tag ${x.k==="outward"?"solid":""}">${{outward:"Outward",reserved:"Reserved",work:"Approval",payment:"Payment"}[x.k]}</span>`:""}</div></li>`).join("")}</ul>`;
+  let status;
+  if (st==="empty") status = `<p class="small">Your team was created a minute ago. Ask ${ceo} for status any time.</p>`;
+  else if (st==="loading") status = `<p class="small muted" role="status">Collecting summaries from Maya and Karim…</p><div class="skel"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:60%"></div>`;
+  else status = `${st==="limit"?`<div class="warn small" style="margin-bottom:6px">Cached status from 3 h ago (usage limit). The list above is live.</div>`:""}
+    <dl style="margin:0">
+     <dt><b>Done</b></dt><dd class="small">S1-3 Main agent runner (Noor, Karim) · BRD v1.0 baselined (Omar)</dd>
+     <dt><b>In progress</b></dt><dd class="small">S1-4 Chat UI, 60 % (Noor) · First-run wireframes (Sam) · Interview prep (Omar)</dd>
+     <dt><b>Blocked</b></dt><dd class="small">QA-3 E2E tests on Windows CI (Jade) → needs you</dd>
+     <dt><b>Needs you</b></dt><dd class="small">${L.length} items, listed above</dd></dl>
+    <p class="xs muted" style="margin-top:6px">${st==="limit"?"As of 05:02":"As of 08:02 · from cached team summaries"} · ${cost("1.8k","0.006")} · <button class="link xs" data-act="ceoStatus">Ask again</button></p>`;
+  const welcome = {who:"atlas",text:`Hi, I'm ${ceo}, your CEO. Tell me an idea or a problem and I'll take it from there, or ask me what's going on. I can also draft new agents for you.`,c:["0.6k","0.002"]};
+  const chat = (st==="empty" && !S.fresh) ? [welcome] : S.ceo;
+  const chips = S.intake===0 ? [["pitch","I have an idea: a tool that turns my interview notes into a first BRD draft"],["status","What's the status?"],["draft","Draft an agent that watches my GitHub issues"]]
+              : S.intake===2 ? [["answer","Just me for now. Transcripts and typed notes. A draft I edit."]] : [["status","What's the status?"]];
+  return `<div class="pad grid2">
+   <section aria-labelledby="ceoH" class="card">
+     <div class="section-title"><h2 id="ceoH"><span class="av" aria-hidden="true">${initials(ceo)}</span> ${h(ceo)} · CEO</h2>
+       <span class="row small muted">Sonnet · <button class="link" data-go="agent" data-p='{"id":"atlas"}'>Profile</button></span></div>
+     <div class="chat scroll" id="ceoChat" aria-live="polite">${chat.map(m=>msgHTML(m)).join("")}
+       ${S.intake===1||S.intake===3?`<div class="sys">${h(ceo)} is typing…</div>`:""}</div>
+     ${st==="limit"?`<div class="warn small" style="margin-top:8px">Usage limit reached. Your message will be saved and sent when the limit resets at 14:00.</div>`:""}
+     <div class="chips" style="margin-top:10px" aria-label="Suggested messages">${chips.map(c=>`<button class="chip" data-act="chip" data-v="${c[0]}">${h(c[1])}</button>`).join("")}</div>
+     <form class="composer" data-form="ceo"><label class="grow"><span class="hidden">Message ${h(ceo)}</span><input type="text" id="ceoIn" placeholder="Message ${h(ceo)}: an idea, a question, a task…" aria-label="Message ${h(ceo)}"></label><button class="btn pri">Send</button></form>
+   </section>
+   <aside class="col" aria-label="What needs me and status">
+     <section class="card"><div class="section-title"><h2>What needs me <span class="badge">${L.length}</span></h2><span class="xs muted">live · 0 tokens</span></div>${wnm}</section>
+     <section class="card"><div class="section-title"><h2>Morning status</h2><span class="xs muted">from ${h(ceo)}</span></div>${status}</section>
+   </aside></div>`;
+}
+
+/* ============================================================
+   Screen: Org tree and editor
+   ============================================================ */
+function nodeBtn(id){
+  const a = S.agents[id]; if (!a) return "";
+  if (S.fr.removed[id]) return "";
+  const sel = S.selNode===id;
+  const runTag = {running:"Running",working:"Working",idle:"Idle",blocked:"Blocked"}[a.run]||"";
+  return `<button class="node ${a.loan?"loan":""}" data-act="selNode" data-id="${id}" aria-pressed="${sel}">
+    <span class="av" aria-hidden="true">${initials(a.name)}</span><span><b>${h(a.name)}</b> <span class="small muted">${h(a.role)}</span>
+    ${a.lead?'<span class="tag">Lead</span>':""} ${a.loan?`<span class="tag dash">On loan from ${h(a.loan)}</span>`:""}
+    ${a.state!=="Active"?`<span class="tag soft">${a.state}</span>`:`<span class="tag soft">${runTag}</span>`}</span></button>`;
+}
+function scrOrg(){
+  const st = S.st.org;
+  if (st==="loading") return `<div class="pad"><h1>Org tree</h1><p role="status" class="muted">Loading the org from your Bench folder…</p>${'<div class="skel" style="width:40%"></div>'.repeat(6)}</div>`;
+  const loanCopy = S.loan && ["active","returned"].includes(S.loan.state);
+  const tree = st==="empty" ? `<ul class="tree"><li>${nodeBtn("atlas")}</li></ul>
+     <div class="card flat" style="margin-top:12px;max-width:520px"><b>Only ${h(S.agents.atlas.name)} so far.</b><p class="small muted">Add your first agent, ask ${h(S.agents.atlas.name)} to draft one, or apply the Product + Dev template.</p>
+     <div class="row"><button class="btn pri" data-act="addAgent">Add agent</button><button class="btn" data-act="askDraft">Ask ${h(S.agents.atlas.name)} to draft</button><button class="btn" data-act="state" data-v="normal">Apply template</button></div></div>`
+  : `<ul class="tree"><li>${nodeBtn("atlas")}
+      <ul>
+       <li><span class="group">Product team · works on Bench</span><br>${nodeBtn("maya")}
+         <ul><li><span class="group">Requirements</span><br>${nodeBtn("omar")}<ul><li>${nodeBtn("lina")}</li></ul></li>
+             <li>${nodeBtn("sam")}</li>
+             ${loanCopy&&S.loan.to==="Product team"?`<li>${nodeBtn("loanCopy")}</li>`:""}
+             ${(S.added||[]).map(id=>`<li>${nodeBtn(id)}</li>`).join("")}</ul></li>
+       <li><span class="group">Dev team · works on Bench</span><br>${nodeBtn("karim")}
+         <ul><li>${nodeBtn("noor")}</li><li>${nodeBtn("jade")}</li>${loanCopy&&S.loan.to==="Dev team"?`<li>${nodeBtn("loanCopy")}</li>`:""}</ul></li>
+       ${S.ikCreated?`<li><span class="group">Project: InterviewKit</span><br>${nodeBtn("rana")}<ul>${IK_TEAM.slice(1).filter(x=>!S.ikRemoved[x[0]]).map(x=>`<li>${nodeBtn(x[0])}</li>`).join("")}</ul></li>`:""}
+      </ul></li></ul>`;
+  const a = S.agents[S.selNode] || S.agents.atlas;
+  const id = S.agents[S.selNode]?S.selNode:"atlas";
+  const panel = `<aside class="card" aria-labelledby="selH"><div class="row"><span class="av lg" aria-hidden="true">${initials(a.name)}</span><div><h2 id="selH" style="margin:0">${h(a.name)}</h2><span class="small muted">${h(a.role)} · ${h(a.team)}</span></div></div>
+    <p class="small" style="margin-top:8px">${h(a.desc)}</p>
+    <p class="small"><b>Model</b> ${a.model} · <b>Autonomy</b> ${a.auto} · <b>State</b> ${a.state}</p>
+    <p class="small"><b>Now:</b> ${h(a.task||"Idle")}</p>
+    ${a.loan?`<div class="warn small">Temporary copy for ${h(S.loan.to)}. Its work log and lessons merge back into ${h(S.agents[S.loan.id].name)} before it's deleted.</div>`:""}
+    <div class="row" style="margin-top:8px"><button class="btn pri sm" data-go="live" data-p='{"id":"${id}"}'>Open chat</button><button class="btn sm" data-go="agent" data-p='{"id":"${id}"}'>Profile</button></div>
+    <hr><h3>Edit the tree</h3>
+    <div class="col">
+      <button class="btn sm" data-act="addAgent">Add agent under ${h(a.name)}</button>
+      ${id!=="atlas"?`<button class="btn sm" data-act="moveNode">Move to another node…</button>`:""}
+      ${!a.lead&&id!=="atlas"&&!a.loan?`<button class="btn sm" data-act="makeLead">Make lead of ${h(a.team.split(" (")[0])}</button>`:""}
+      <button class="btn sm" data-act="links">Communication links…</button>
+      ${id!=="atlas"&&!a.loan&&!a.lead?`<button class="btn sm" data-act="loan" data-id="${id}">Loan ${h(a.name)} to another team…</button>`:""}
+      ${a.loan?`<button class="btn sm" data-act="loan" data-id="${S.loan.id}">Loan status…</button>`:""}
+    </div>
+    ${id==="atlas"?`<p class="xs muted" style="margin-top:8px">The CEO is the root. It can't be moved, archived or deleted (BR-01).</p>`:""}
+  </aside>`;
+  return `<div class="pad">
+    ${st==="error"?`<div class="err" role="alert" style="margin-bottom:12px"><b>Couldn't save the change.</b> Bench couldn't write <span class="mono">agents/qa-helper/agent.md</span> (file is locked). Nothing was changed; everything from this attempt was rolled back. <button class="link" data-act="state" data-v="normal">Try again</button></div>`:""}
+    <div class="row between"><div><h1>Org tree</h1><p class="muted small">Every node with children has one lead, its point of contact upward. Each agent has one home node. Click an agent to see and edit it.</p></div>
+    <div class="row"><button class="btn pri" data-act="addAgent">Add agent</button><button class="btn" data-act="askDraft">Ask ${h(S.agents.atlas.name)} to draft one</button><button class="btn ghost" data-act="links">Links</button></div></div>
+    <div class="grid2" style="margin-top:8px"><section class="card" aria-label="Org tree" style="overflow:auto">${tree}
+      <p class="xs muted" style="margin-top:12px">Legend: <span class="tag">Lead</span> point of contact · <span class="tag dash">On loan</span> temporary copy (dashed) · freelancers are not on the tree; they show in the trace and usage under their hirer.</p></section>
+    ${st==="empty"?`<aside class="card flat small">Select an agent to see its card.</aside>`:panel}</div></div>`;
+}
+
+/* ============================================================
+   Screen: Agent profile
+   ============================================================ */
+function scrAgent(){
+  const id = S.agentId, a = S.agents[id], st = S.st.agent;
+  const ro = st==="archived";
+  const tabs = [["card","Card"],["instr","Instructions"],["model","Model"],["auto","Autonomy"],["conn","Connectors & skills"],["mem","Memory & checkpoint"],["folders","Folders"],["life","Lifecycle"]];
+  const dis = ro?"disabled":"";
+  let body = "";
+  const t = S.agentTab;
+  if (t==="card") body = `<div class="col" style="max-width:560px">
+     <label class="f">Name<input type="text" value="${h(a.name)}" maxlength="40" ${dis}></label>
+     <label class="f">Role<input type="text" value="${h(a.role)}" ${dis}></label>
+     <label class="f">Description <span class="xs muted">(what the CEO, the router and other agents see)</span><textarea ${dis}>${h(a.desc)}</textarea></label>
+     <p class="small"><b>Home node:</b> ${h(a.team)} · <b>Lead:</b> ${a.lead?"is a lead":(a.team.startsWith("Dev")?"Karim":a.team.startsWith("Req")?"Omar":"Maya")}</p></div>`;
+  if (t==="instr") body = `<label class="f">Instructions (the system prompt, fully visible)<textarea style="min-height:200px" ${dis}>You are ${h(a.name)}, the ${h(a.role)} on the ${h(a.team)}.
+- Work only in your assigned folders.
+- Report to your lead against the story's acceptance criteria.
+- After 2 failed attempts, escalate to your lead.
+- Log what you did; never send email to anyone but the client.</textarea></label>
+     <p class="xs muted">Saved as <span class="mono">agents/${id}/agent.md</span>. Knowledge files: <button class="link xs">Add files…</button> (2 attached)</p>`;
+  if (t==="model") body = `<fieldset style="border:0;padding:0"><legend class="small muted">Model for this agent</legend>
+     ${["Haiku","Sonnet","Opus"].map(m=>`<label class="row"><input type="radio" name="mdl" ${m===a.model?"checked":""} ${dis}> <b>${m}</b> <span class="small muted">${{Haiku:"cheapest, fast; good for routine work",Sonnet:"default; good balance",Opus:"strongest; uses your plan fastest"}[m]}</span></label>`).join("")}
+     <label class="f" style="max-width:320px;margin-top:6px">Or an exact model id<input type="text" placeholder="e.g. claude-sonnet-…" ${dis}></label></fieldset>`;
+  if (t==="auto") {
+    const rows = [["Read files and in-app actions","Allow","sel"],["Run shell: pnpm test (override)","Allow","sel"],["Run other shell commands","Ask","sel"],["git push (not outward)","Ask","sel"],["Open a pull request (not outward)","Ask","sel"],["Delete or overwrite files","Ask","sel"],["Write global memory (as a proposal)","Ask","sel"],["Send email to someone other than you","Needs you, every time","out"],["Merge to main, deploy, release","Needs you (reserved)","res"],["Pay or use paid services","Never: no agent pays","pay"]];
+    body = `<fieldset style="border:0;padding:0"><legend><b>Preset</b></legend><div class="row">
+      ${["Ask every time","Trusted","Autonomous"].map(p=>`<label class="row card" style="padding:6px 10px"><input type="radio" name="preset" ${p===a.auto?"checked":""} ${dis}> ${p}</label>`).join("")}</div>
+      <p class="xs muted">Autonomous = everything except outward actions. No preset allows outward actions, reserved actions or paying.</p></fieldset>
+      <h3 style="margin-top:12px">Per-tool overrides</h3>
+      <table><thead><tr><th scope="col">Tool / action</th><th scope="col">Behaviour</th></tr></thead><tbody>
+      ${rows.map(r=>`<tr><td>${r[0]} ${r[2]==="out"?'<span class="tag solid">Outward</span>':r[2]==="res"?'<span class="tag">Reserved</span>':""}</td><td>${r[2]==="sel"?`<select aria-label="${r[0]}" ${dis}>${["Ask","Allow","Never"].map(o=>`<option ${o===r[1]?"selected":""}>${o}</option>`).join("")}</select>`:`<span class="small"><b>${r[1]}</b> <span class="muted">(can't be changed)</span></span>`}</td></tr>`).join("")}
+      </tbody></table>`;
+  }
+  if (t==="conn") body = `<p class="small muted">From your Claude Code inventory. Each connector adds its tool definitions to <b>every</b> turn of this agent, so fewer connectors = fewer tokens and better tool choice.</p>
+     <table><thead><tr><th scope="col">On</th><th scope="col">Connector</th><th scope="col">Cost per turn</th></tr></thead><tbody>
+     ${Object.entries(INV).map(([k,c])=>`<tr><td><input type="checkbox" aria-label="${c.name}" ${a.conn.includes(k)&&!c.missing?"checked":""} ${c.always||c.missing||ro?"disabled":""}></td><td>${c.name} ${c.missing?'<span class="tag dash">Not in your inventory</span> <span class="xs">Add it in Claude Code first.</span>':""}${k==="gmail"?`<div class="xs muted">${c.note}</div>`:""}</td><td class="small">~${c.tok} tokens</td></tr>`).join("")}
+     </tbody></table><p class="small" style="margin-top:6px">This agent: ~${a.conn.filter(k=>!INV[k].missing).reduce((s,k)=>s+parseFloat(INV[k].tok),0).toFixed(1)}k tokens of tool definitions per turn.</p>
+     <h3 style="margin-top:12px">Skills and plugins</h3><label class="row small"><input type="checkbox" checked ${dis}> docx</label><label class="row small"><input type="checkbox" ${dis}> pdf</label>`;
+  if (t==="mem") body = `<div class="grid3">
+      <div class="card flat"><h3>Private memory</h3><p class="small">14 notes · only ${h(a.name)} writes here. Leads can read on demand.</p><button class="btn sm" data-go="mem" data-p='{"scope":"Private: ${h(a.name)}"}'>Open in Memory</button></div>
+      <div class="card flat"><h3>Team memory</h3><p class="small">${h(a.team)} · work logs + lead summary</p><button class="btn sm" data-go="mem">Open in Memory</button></div>
+      <div class="card flat"><h3>Global memory</h3><p class="small">Read by every agent. Writes are proposals.</p><button class="btn sm" data-go="mem">Open in Memory</button></div></div>
+      <h3 style="margin-top:14px">Context checkpoint</h3>
+      <p class="small muted">When this agent's session reaches the threshold, it saves its work at the next natural breakpoint, writes a checkpoint (8 sections), records lessons and restarts fresh. 90 % is a fixed hard ceiling.</p>
+      <label class="f" style="max-width:420px">Threshold: <b id="agCk">${a.ctx} %</b><input type="range" min="50" max="85" value="${a.ctx}" data-act="agCkpt" ${dis} aria-describedby="agCkHelp"></label>
+      <span id="agCkHelp" class="xs muted">50–85 %. Default 80 % (set in Settings).</span>
+      <p class="small" style="margin-top:6px">Current session: ${id==="noor"?"34 %":"12 %"} of 1M context · last checkpoint: ${id==="noor"?"#3, 07:40":"none yet"} <button class="link small" data-go="mem">Open</button></p>`;
+  if (t==="folders") body = `<ul>${a.folders.map(f=>`<li class="mono">${h(f)}</li>`).join("")}</ul><button class="btn sm" ${dis}>Add folder or repo…</button>
+     <p class="xs muted" style="margin-top:6px">One writer per folder at a time; others queue. If you edit a folder, the agent pauses, reviews your change, then continues.</p>`;
+  if (t==="life") body = `<p>State: <span class="tag solid">${st==="normal"?"Active":st==="draft"?"Draft":st==="paused"?"Paused":"Archived"}</span></p>
+     <p class="small muted">Draft → Active ⇄ Paused → Archived. Pausing or archiving returns open tasks to the lead.</p>
+     <div class="row">${st==="paused"?`<button class="btn" data-act="life" data-v="normal">Resume</button>`:st==="normal"?`<button class="btn" data-act="life" data-v="paused">Pause</button>`:""}
+       ${st!=="archived"?`<button class="btn" data-act="life" data-v="archived">Archive</button>`:`<button class="btn" data-act="life" data-v="normal">Restore</button>`}
+       <button class="btn" data-act="dup">Duplicate without memory</button>
+       <button class="btn" data-act="delAgent">Delete…</button></div>
+     <p class="xs muted" style="margin-top:8px">Deleting removes the agent's files and memory; its logs stay labelled "deleted agent". Only you can delete.</p>`;
+  return `<div class="pad">
+    ${st==="draft"?`<div class="warn" style="margin-bottom:10px"><b>Draft from ${h(S.agents.atlas.name)}.</b> Review it, then save to create it. Only you can create permanent agents. <button class="btn sm pri" data-act="state" data-v="normal">Save and create</button></div>`:""}
+    ${st==="paused"?`<div class="warn" style="margin-bottom:10px"><b>Paused.</b> Open tasks went back to the lead. <button class="btn sm" data-act="state" data-v="normal">Resume</button></div>`:""}
+    ${st==="archived"?`<div class="warn" style="margin-bottom:10px"><b>Archived.</b> Read-only. <button class="btn sm" data-act="state" data-v="normal">Restore</button></div>`:""}
+    <div class="row between"><div class="row"><span class="av lg" aria-hidden="true">${initials(a.name)}</span><div><h1>${h(a.name)}</h1><span class="muted">${h(a.role)} · ${h(a.team)} · ${a.model} · ${a.auto}</span></div></div>
+     <div class="row"><button class="btn" data-go="live" data-p='{"id":"${id}"}'>Open chat</button><button class="btn" data-go="trace">Trace</button><button class="btn pri" data-act="saveAgent" ${dis}>Save changes</button></div></div>
+    <div class="tabs" role="tablist" style="margin-top:12px">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${t===k}" data-act="agTab" data-v="${k}">${l}</button>`).join("")}</div>
+    <div role="tabpanel">${body}</div>
+    <p class="xs muted" style="margin-top:14px">Usage, visibility only (no per-agent caps): today ${id==="noor"?"212k":"38k"} tokens · this week ${id==="noor"?"1.1M":"240k"}.</p></div>`;
+}
+
+/* ============================================================
+   Screen: Agent live chat (watch, stop, redirect)
+   ============================================================ */
+const LIVE_STEPS = [
+  ["read","src/renderer/chat/Composer.tsx","0.8k"],
+  ["edit","src/renderer/chat/Composer.tsx (+24 −6)","2.1k"],
+  ["bash","pnpm test chat","1.4k"],
+  ["read","src/renderer/chat/useStream.ts","0.6k"],
+  ["edit","src/renderer/chat/StopButton.tsx (new file)","1.9k"],
+  ["bash","pnpm lint","0.9k"],
+  ["edit","src/renderer/chat/format/date.ts (+40) · custom date formatter","2.4k"]
+];
+function scrLive(){
+  const id = S.agentId, a = S.agents[id], st = S.st.live;
+  const running = st==="running", stopped = st==="stopped";
+  const steps = LIVE_STEPS.slice(0, S.run.steps);
+  const msgs = id==="noor" ? [
+    {who:"karim",text:"Noor, S1-4 is yours: streaming, markdown, Stop. AC in the card.",meta:"08:05 · from your lead"},
+    {who:"noor",text:"On it. Streaming is in; working on the Stop button now. I'll add a small date formatter for message times.",c:["3.4k","0.011"]}
+  ] : [{who:id,text:`Hi, I'm ${a.name}. ${a.task&&a.task!=="Idle"?"Currently: "+a.task+".":"I'm idle. Give me a task."}`,c:["0.4k","0.001"]}];
+  if (S.run.redirect) msgs.push({who:"me",text:S.run.redirect,meta:"just now"},{sys:"Redirect logged to Dev team memory so Karim stays informed"},{who:"noor",text:"Understood. Removing my custom formatter and using date-fns, which the repo already has. Continuing with the Stop button.",c:["1.2k","0.004"]});
+  const status = {running:`<span class="tag solid">Running</span>`,stopping:`<span class="tag" role="status">Stopping at next safe point…</span>`,stopped:`<span class="tag">Stopped</span>`,idle:`<span class="tag soft">${a.run==="idle"?"Idle":a.run}</span>`,archived:`<span class="tag soft">Archived</span>`}[st];
+  const activity = st==="idle" ? (a.task && a.task!=="Idle" && a.run!=="idle"
+      ? `<div class="card flat"><b>No tool call running right now.</b><p class="small">Current task: ${h(a.task)}${a.run==="blocked"?' <span class="tag">Blocked</span>':""}</p><p class="small muted">Tool calls appear here live as soon as ${h(a.name)} starts the next step.</p></div>`
+      : `<div class="card flat"><b>Idle.</b><p class="small muted">No task running. Give ${h(a.name)} a task in the chat, or assign one from the project board.</p></div>`)
+    : st==="archived" ? `<div class="card flat small">Archived agent. History is read-only.</div>`
+    : `<p class="small"><b>Task:</b> <button class="link" data-act="card" data-id="S1-4">S1-4 Chat UI: streaming, markdown, stop</button></p>
+       <p class="small"><b>Step:</b> ${stopped?"Stopped after the current tool call finished.":st==="stopping"?"Finishing the current tool call…":h((steps[steps.length-1]||LIVE_STEPS[0])[0]+" · "+(steps[steps.length-1]||LIVE_STEPS[0])[1])}</p>
+       <h3>Tool calls</h3><ol class="small mono" style="padding-left:18px;margin:0" aria-live="polite">${steps.map(s=>`<li>${s[0]} ${h(s[1])} <span class="cost">${s[2]}</span></li>`).join("")}${running?`<li class="muted">…</li>`:""}</ol>
+       <h3 style="margin-top:8px">Files touched</h3><p class="small mono">Composer.tsx · StopButton.tsx${S.run.steps>=7?" · format/date.ts":""}</p>
+       <p class="small"><b>This run:</b> ${(18+S.run.steps*1.4).toFixed(1)}k tokens · ≈$${(0.06+S.run.steps*0.005).toFixed(3)} <button class="link small" data-go="trace">Open trace</button></p>
+       <p class="small" style="margin-bottom:2px"><b>Context:</b> 34 % of 1M · checkpoint at ${a.ctx} %</p>
+       <div class="bar" aria-label="Context used 34 percent, checkpoint at ${a.ctx} percent"><i style="width:34%"></i><span class="mark" style="left:${a.ctx}%"></span></div>`;
+  return `<div class="pad">
+    <div class="row between"><div class="row"><span class="av lg" aria-hidden="true">${initials(a.name)}</span><div><h1>${h(a.name)} ${status}</h1><span class="muted small">${h(a.role)} · ${h(a.team)} · ${a.model} · <button class="link" data-go="agent" data-p='{"id":"${id}"}'>Profile</button></span></div></div>
+     <div class="row">${running?`<button class="btn pri lg" data-act="stop">■ Stop</button>`:""}${stopped?`<button class="btn" data-act="cancelTask">Cancel task</button><button class="btn" data-act="resume">Resume as before</button>`:""}</div></div>
+    ${stopped?`<div class="ok" style="margin-top:8px" role="status"><b>${h(a.name)} has stopped.</b> No further tool call will start. Tell her what to change below, or cancel the task.</div>`:""}
+    <div class="grid2" style="margin-top:12px">
+      <section class="card"><h2>Chat with ${h(a.name)}</h2><div class="chat scroll" id="liveChat">${msgs.map(m=>msgHTML(m)).join("")}</div>
+        ${st==="archived"?"":`<form class="composer" data-form="live"><input type="text" id="liveIn" aria-label="${stopped?"New instruction for "+a.name:"Message "+a.name}" placeholder="${stopped?"New instruction: what should she do instead?":"Message "+h(a.name)+"… (it's logged so the lead stays informed)"}"><button class="btn pri">${stopped?"Send instruction":"Send"}</button></form>`}
+        <p class="xs muted" style="margin-top:6px">Direct messages are logged to the team memory so ${a.lead?"the parent":"the lead"} stays informed.</p></section>
+      <aside class="card" aria-label="Live activity"><h2>Live activity</h2>${activity}</aside></div></div>`;
+}
+
+/* ============================================================
+   Screen: Project team chat
+   ============================================================ */
+function scrTeam(){
+  const st = S.st.team, observer = st==="observer";
+  const members = ["maya","omar","lina","sam","karim"];
+  const msgs = st==="empty" ? [] : S.team;
+  return `<div class="pad">
+    <div class="row between"><div><h1>Bench · Team chat</h1><p class="small muted">Members: ${members.map(m=>`<button class="link" data-go="live" data-p='{"id":"${m}"}'>${S.agents[m].name}</button> (${S.agents[m].role})`).join(", ")} and you.</p></div>
+      <div class="row"><span class="small">You are</span>
+       <div class="row" role="radiogroup" aria-label="Your role in this group"><button class="btn sm ${!observer?"pri":""}" role="radio" aria-checked="${!observer}" data-act="state" data-v="participant">Participant</button><button class="btn sm ${observer?"pri":""}" role="radio" aria-checked="${observer}" data-act="state" data-v="observer">Observer</button></div>
+       <button class="btn" data-act="startDebate">Start a debate…</button><button class="btn" data-go="dash" data-p='{"p":"bench"}'>Dashboard</button></div></div>
+    <div class="grid2" style="margin-top:10px">
+     <section class="card"><div class="chat scroll" id="teamChat">
+       ${st==="empty"?`<div class="card flat"><b>No messages yet.</b><p class="small muted">The project team talks here. You can assign work with @name, for example "@Karim add rate limiting".</p></div>`:""}
+       ${msgs.map(m=>m.who?msgHTML(m):m.sys&&m.sys.startsWith("Maya opened a debate")&&!S.debate.closed?`<div class="sys">${m.sys} <button class="link" data-go="session" data-p='{"type":"debate"}'>Open live session</button></div>`:msgHTML(m)).join("")}
+       ${S.debate.closed?`<div class="sys">Debate closed: decision memo "Stop button placement" saved to Product team memory · chat archived in the trace <button class="link" data-act="openNote" data-id="decision-stop">Open memo</button></div>`:""}
+       ${S.approvals.find(a=>a.id==="a2"&&a.status==="pending")?`<div class="sys">Karim is waiting for your approval: merge PR #41 to main <button class="link" data-go="appr" data-p='{"focus":"a2"}'>Open in Approvals</button></div>`:""}
+     </div>
+     ${st==="error"?`<div class="err" role="alert" style="margin-top:8px">Your message wasn't sent (Bench lost the connection to Claude Code). It's kept below. <button class="link" data-act="state" data-v="participant">Retry</button></div>`:""}
+     ${observer?`<div class="card flat small" style="margin-top:10px">You're observing: agents won't reply to you here and nothing you read costs tokens. <button class="link" data-act="state" data-v="participant">Switch to participant</button></div>`
+      :`<form class="composer" data-form="team"><input type="text" id="teamIn" aria-label="Message the team" placeholder="Message the team · @name to assign a task" ${st==="error"?'value="@Karim can Jade use a hosted Windows runner?"':""}><button class="btn pri">Send</button></form>`}
+     <p class="xs muted" style="margin-top:6px">Running total today: 9.2k tokens · ≈$0.04 · The router picks one responder by default.</p></section>
+     <aside class="card"><h2>Group digest</h2><p class="small">Sprint 2 is on track except Windows CI. Open question on Stop button placement is being debated. PR #41 waits for your merge approval.</p><p class="xs muted">Curator · updated 08:30 · ${cost("0.6k","0.0005")}</p>
+      <hr><h3>Assign from here</h3><p class="small muted">Type "@Karim …" in the box. A task is created on the board with Karim as owner.</p></aside></div></div>`;
+}
+
+/* ============================================================
+   Screen: Meeting session (debate / interview / review)
+   ============================================================ */
+const DEBATE_MSGS = [
+  ["sam","Header: the Stop button must stay visible when the chat scrolls. Users look for it when something goes wrong, not when they type."],
+  ["noor","Composer: that's where the cursor is when you send. One less mouse trip. The header already holds the name and status."],
+  ["maya","Both matter. Can it be in the composer while a reply streams, and pinned to the header when you scroll up?"],
+  ["noor","That works technically, two buttons with the same action. A bit more code."],
+  ["sam","Fine for me if both are labelled \"Stop\" with the same shortcut."],
+];
+const fmt = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+function scrSession(){
+  const st = S.st.session;
+  const type = ["interview","review"].includes(st) ? st : "debate";
+  if (type==="interview"){
+    const Q = ["Who will use the memory browser: only you, or agents too?","What do you filter by most: scope, agent or type?","When a note is stale, what should happen by default: flag, hide or ask you?","Should the graph start centred on the open note or show everything?","Do you want saved filters?","Is search across all scopes by default, or the current scope?","Do decision memos need their own view?","Anything you'd remove from the browser?"];
+    const q = S.interview.q;
+    return `<div class="pad"><div class="row between"><div><h1>BA interview: memory browser filters <span class="tag solid">Live</span></h1><p class="small muted">With <button class="link" data-go="live" data-p='{"id":"omar"}'>Omar</button> (BA lead). Not timeboxed. Your answers are kept word for word in the interview notes.</p></div>
+      <div class="row"><button class="btn" data-act="pauseInterview">Pause and continue later</button></div></div>
+      <ol class="steps" aria-label="Progress">${Q.map((_,i)=>`<li class="${i+1===q?"on":i+1<q?"done":""}">${i+1}</li>`).join("")}</ol>
+      <div class="grid2"><section class="card"><div class="chat">
+        ${Q.slice(0,Math.min(q,8)).map((x,i)=>`<div class="msg"><div class="who">Omar · BA lead · Question ${i+1} of 8</div>${h(x)}${i===2?`<div class="small muted" style="margin-top:4px">Options: (a) flag only (recommended) · (b) hide · (c) ask you each time</div>`:""}</div>${S.interview.answers[i+1]?`<div class="msg me"><div class="who">You</div>${h(S.interview.answers[i+1])}</div>`:""}`).join("")}
+        ${q>8?`<div class="ok"><b>All 8 questions answered.</b> Omar is writing the interview notes and will tell Maya. <button class="btn sm pri" data-act="closeInterview">Close session</button></div>`:""}
+      </div>
+      ${q<=8?`<form class="composer" data-form="interview"><input type="text" id="intIn" aria-label="Your answer to question ${q}" placeholder="Your answer to question ${q}…"><button class="btn pri">Answer</button></form><div class="row" style="margin-top:6px"><button class="link small" data-act="dontKnow">I don't know yet (add as open question)</button></div>`:""}</section>
+      <aside class="card"><h2>Notes so far</h2><ul class="small">${Object.entries(S.interview.answers).map(([k,v])=>`<li>Q${k}: "${h(v)}"</li>`).join("")}</ul>${S.interview.open.length?`<h3>Open questions</h3><ul class="small">${S.interview.open.map(x=>`<li>Q${x}</li>`).join("")}</ul>`:""}
+       <p class="xs muted">When the session closes, these notes go to the project documents and memory; the chat leaves your views and is archived in the trace.</p></aside></div></div>`;
+  }
+  if (type==="review"){
+    const it = S.review.items;
+    const row = (id,title,how) => `<div class="card" style="margin-bottom:8px"><div class="row between"><b>${id} · ${title}</b><span class="tag ${it[id]==="pending"?"soft":"solid"}">${it[id]==="pending"?"To review":it[id]}</span></div>
+       <p class="small">How to try it: <span class="mono">${how}</span></p>
+       ${it[id]==="pending"?`<div class="row"><button class="btn pri sm" data-act="revAccept" data-id="${id}">Accept</button><button class="btn sm" data-act="revReject" data-id="${id}">Reject with comment…</button></div>`:""}</div>`;
+    return `<div class="pad"><div class="row between"><div><h1>Review: Sprint 2 increment <span class="tag solid">Live</span></h1><p class="small muted">Called by <b>Maya</b> (PM). Lina (BA) takes notes. Not timeboxed; debates inside it are.</p></div>
+      <div class="row"><button class="btn" data-act="startDebate">Debate a point…</button><button class="btn pri" data-act="closeReview">Close session</button></div></div>
+      <div class="grid2" style="margin-top:10px"><section class="card"><div class="chat" style="margin-bottom:10px">
+        <div class="msg"><div class="who">Maya · PM</div>We have two things to show you against the stories. Try each, then accept or reject. Tell me anything that feels off.</div></div>
+        ${row("S1-2","Onboarding: detect Claude Code and login","pnpm dev  →  quit Claude Code and press Check again")}
+        ${row("S1-3","Main agent runner","pnpm dev  →  ask Atlas: what's the status?")}
+        <form class="composer" data-form="review"><input type="text" id="revIn" aria-label="Feedback for the team" placeholder="Feedback for Maya and Lina…"><button class="btn pri">Send</button></form></section>
+      <aside class="card" aria-live="polite"><h2>Lina's notes (live)</h2><ul class="small">${S.review.notes.map(n=>`<li>${h(n)}</li>`).join("")}</ul><p class="xs muted">Feedback becomes tasks when the session closes.</p></aside></div></div>`;
+  }
+  // debate
+  const d = S.debate, paused = st==="paused";
+  const decided = st==="decided" || d.state!=="open";
+  const shown = DEBATE_MSGS.slice(0, decided ? DEBATE_MSGS.length : d.shown);
+  return `<div class="pad">
+    <div class="row between"><div><h1>Debate: Where does the Stop button live? <span class="tag solid">Live</span></h1>
+      <p class="small">Participants: Sam (UX/UI), Noor (Developer), Maya (PM)${d.joined?", you":""} · <b>Decider: ${d.joined?"you (highest rank)":"Maya, highest-ranked participant"}</b></p></div>
+      <div class="row"><span class="timer" role="timer" aria-live="off" aria-label="Time left" id="dTimer">${fmt(decided?0:d.secs)}</span></div></div>
+    ${paused?`<div class="warn" style="margin-top:8px">Usage limit reached. The timer is paused at ${fmt(d.secs)} and resumes after the reset at 14:00.</div>`:""}
+    <div class="grid2" style="margin-top:10px"><section class="card"><div class="chat scroll" id="dChat" aria-live="polite">
+      <div class="sys">Point: Stop button in the composer or the header? · started by Maya from the team chat · 5:00 max</div>
+      ${shown.map(([w,t])=>msgHTML({who:w,text:t,c:["0.8k","0.003"]})).join("")}
+      ${d.joined?msgHTML({who:"me",text:"I'm joining. I like the both-places idea if it's one shortcut."}):""}
+      ${decided?`<div class="sys">${d.agreed?"Agreement reached before time":"Time's up · Maya decides"}</div>${msgHTML({who:d.joined?"me":"maya",text:"Decision: Stop lives in the composer while a reply streams, and is pinned to the header when the user scrolls up. Same label, same shortcut (Esc).",c:["1.1k","0.004"]})}`:""}
+    </div>
+    <div class="row" style="margin-top:10px">
+      ${decided?`<button class="btn pri" data-act="memo">Review decision memo and close</button>`:`<button class="btn pri" data-act="agree">Mark agreement reached</button>${d.joined?"":`<button class="btn" data-act="joinDebate">Join (you'll be the decider)</button>`}<button class="btn" data-act="ff">Skip to time's up (demo)</button><button class="btn ghost" data-act="cancelDebate">Cancel debate</button>`}
+    </div></section>
+    <aside class="card"><h2>Running cost</h2><p>${(shown.length*0.8+1).toFixed(1)}k tokens · ≈$${(shown.length*0.003+0.004).toFixed(3)}</p><p class="xs muted">Safety cap 100k tokens. If it's reached first, the decider decides.</p>
+      <hr><h3>What happens on close</h3><ul class="small"><li>A decision memo (decision, attendees, rationale) is saved to Product team memory.</li><li>This chat leaves your chat list.</li><li>The raw transcript is archived in the Trace, hidden from agents, for 90 days.</li></ul></aside></div></div>`;
+}
+
+/* ============================================================
+   Screen: Proposal one-pager (+ project preview)
+   ============================================================ */
+function scrProposal(){
+  const st = S.st.proposal;
+  const doc = `<article class="doc" aria-label="Proposal">
+    <p class="xs muted mono">proposals/interviewkit.md · by Atlas · 2026-10-22 09:14</p>
+    <h1>Proposal: InterviewKit</h1>
+    <h2>Problem</h2><p>As a BA you spend 3–4 hours turning raw interview notes and transcripts into a first BRD draft. You repeat the same structure and the same follow-up questions every time.</p>
+    <h2>What to build</h2><p>A tool for you (only you, for now) that takes typed notes or transcripts and produces a structured BRD draft you edit, with a list of open questions and suggested follow-ups.</p>
+    <h2>What the team should do</h2><p>PM discovery, a BA interview with you about inputs and the draft format, then a first usable version within 14 days of the project start. Details come from discovery, not from this page.</p>
+    <p class="xs muted">≈ 180 words · ${cost("4.2k","0.014")}</p></article>`;
+  let actions = "", top = "";
+  if (st==="awaiting") actions = `<div class="card" style="max-width:720px"><h2>Did ${h(S.agents.atlas.name)} understand your idea?</h2><p class="small muted">Approve to set up a project team. Nothing starts and nothing is created until you confirm the team on the next step.</p>
+     <div class="row"><button class="btn pri lg" data-act="propApprove">Approve</button><button class="btn" data-act="propReject">Reject with comment…</button><button class="btn ghost" data-act="propEdit">Edit text</button><button class="btn ghost" data-act="propPark">Park the idea</button></div></div>`;
+  if (st==="rejected") { top = `<div class="warn" style="max-width:720px;margin-bottom:10px"><b>Rejected.</b> Your comment: "${h(S.rejectComment||"You missed that it must also work offline.")}". Atlas is revising the draft and will put it back in What needs me.</div>`;
+    actions = `<button class="btn" data-act="propRevised">Demo: revised draft is ready</button>`; }
+  if (st==="preview"||st==="error") {
+    actions = `<div class="card" style="max-width:900px"><h2>Step 2 of 2: confirm the InterviewKit team</h2>
+     <p class="small muted">Approved. The project gets its own copies of your project template's agents, each with its own memory. Global memory is shared. Names are suggestions; change any of them. <b>Nothing is created until you press "Create project".</b></p>
+     ${st==="error"?`<div class="err" role="alert" style="margin:8px 0">Couldn't create the project: <span class="mono">projects/interviewkit/</span> isn't writable. Everything from this attempt was rolled back. The proposal stays approved.</div>`:""}
+     <table><thead><tr><th scope="col">Keep</th><th scope="col">Personal name</th><th scope="col">Shown as</th><th scope="col">Model</th></tr></thead><tbody>
+     ${IK_TEAM.map(([k,n,r])=>`<tr><td><input type="checkbox" aria-label="Keep ${r}" data-act="ikRemove" data-id="${k}" ${S.ikRemoved[k]?"":"checked"} ${k==="rana"?"disabled":""}></td><td><input type="text" data-act="ikName" data-id="${k}" value="${h(S.ikNames[k])}" maxlength="40" aria-label="Name for ${r}"></td><td class="small">${h(S.ikNames[k])}, ${r} of InterviewKit ${k==="rana"?'<span class="tag">Lead</span>':""}</td><td class="small">${r==="Tech lead"?"Opus":"Sonnet"}</td></tr>`).join("")}
+     </tbody></table><p class="xs muted">Created too: a dashboard, a team chat, a documents folder (with this proposal) and project memory. 0 tokens.</p>
+     <div class="row" style="margin-top:10px"><button class="btn pri lg" data-act="createProject">Create project</button><button class="btn ghost" data-act="propCancelPreview">Not now (keep approved)</button></div></div>`;
+  }
+  if (st==="created") top = `<div class="ok" style="max-width:720px;margin-bottom:10px"><b>InterviewKit is set up.</b> Rana (PM) has the task "take over proposal". You'll hear from Yusuf when he wants to meet you. <button class="btn sm pri" data-go="dash" data-p='{"p":"ik"}'>Open dashboard</button></div>`;
+  const stateTag = {awaiting:"Awaiting you",rejected:"Rejected",preview:"Approved",created:"Sent to PM",error:"Approved"}[st];
+  return `<div class="pad"><div class="row between" style="max-width:900px"><h1>Proposal <span class="tag solid">${stateTag}</span></h1><button class="link small" data-go="home">Back to ${h(S.agents.atlas.name)} chat</button></div>
+    ${top}${st==="preview"||st==="error"?actions+'<details style="margin-top:12px;max-width:720px"><summary>Show the proposal again</summary>'+doc+"</details>":doc+'<div style="margin-top:12px">'+actions+"</div>"}</div>`;
+}
+
+/* ============================================================
+   Screen: Project dashboard
+   ============================================================ */
+function scrDash(){
+  const st = S.st.dash, p = S.dashProject;
+  if (st==="loading") return `<div class="pad"><h1>${p==="ik"?"InterviewKit":"Bench"} · Dashboard</h1><p role="status" class="muted">Loading from task records…</p><div class="grid3">${'<div class="card">'+'<div class="skel"></div>'.repeat(5)+"</div>"}${'<div class="card">'+'<div class="skel"></div>'.repeat(5)+"</div>"}${'<div class="card">'+'<div class="skel"></div>'.repeat(5)+"</div>"}</div></div>`;
+  if (p==="ik"){
+    const team = IK_TEAM.filter(x=>!S.ikRemoved[x[0]]);
+    return `<div class="pad"><h1>InterviewKit · Dashboard</h1><p class="small muted">Lead: ${h(S.ikNames.rana)} (PM) · created today from your project template</p>
+     <section class="card" style="margin-top:10px"><h2>Team</h2><div class="row">${team.map(([k,n,r])=>`<button class="node" data-go="live" data-p='{"id":"${k}"}'><span class="av" aria-hidden="true">${initials(S.ikNames[k])}</span>${h(S.ikNames[k])} <span class="small muted">${r}</span> <span class="tag soft">${k==="rana"?"Working":"Idle"}</span></button>`).join("")}</div></section>
+     <div class="grid2" style="margin-top:12px"><section class="card"><h2>Current sprint</h2><div class="card flat"><b>No sprint started.</b><p class="small muted">${h(S.ikNames.rana)} is reading the proposal. The first sprint starts after discovery and the BA interview.</p></div></section>
+     <section class="card"><h2>Top of the backlog</h2><div class="card flat"><b>The backlog is empty.</b><p class="small muted">Epics and stories appear here as ${h(S.ikNames.rana)} plans them.</p></div><p class="small" style="margin-top:8px"><button class="link" data-go="proposal">Proposal</button> · Documents (1)</p></section></div></div>`;
+  }
+  const items = S.items, sprintItems = items.filter(i=>i.sprint===2);
+  const top5 = items.filter(i=>i.state!=="Done").sort((a,b)=>a.pr-b.pr).slice(0,5);
+  const col = n => sprintItems.filter(i => n==="To Do" ? i.state==="To Do" : n==="Done" ? i.state==="Done" : ["In progress","In review","Blocked"].includes(i.state));
+  const kc = i => `<button class="kcard ${i.state==="Blocked"?"blocked":""}" data-act="card" data-id="${i.id}"><span class="small mono">${i.id}</span> ${h(i.title)}<div class="row xs" style="margin-top:4px"><span>${i.owner?S.agents[i.owner].name:"Unassigned"}</span>${i.state==="Blocked"?'<span class="tag">Blocked</span>':""}${i.state==="In review"?'<span class="tag solid">In review</span>':""}</div></button>`;
+  const team = ["maya","omar","lina","sam","karim","noor","jade"];
+  const nosprint = st==="nosprint";
+  return `<div class="pad">
+    ${st==="stale"?`<div class="warn" role="alert" style="margin-bottom:10px">Showing the last loaded state from 08:31. Bench couldn't refresh the task records. Nothing is lost. <button class="link" data-act="state" data-v="normal">Retry</button></div>`:""}
+    <div class="row between"><div><h1>Bench · Dashboard</h1><p class="small muted">Lead: Maya (PM) · <button class="link" data-go="team">Team chat</button> · Documents (14) · <button class="link" data-act="openNote" data-id="decision-sprints">Decisions</button></p></div>
+     <label class="row small">Sprint <select data-act="sprintSel" aria-label="Sprint">${nosprint?"<option>None yet</option>":`<option value="2" ${S.dashSprint===2?"selected":""}>Sprint 2 · Oct 22–24 (current)</option><option value="1" ${S.dashSprint===1?"selected":""}>Sprint 1 · Oct 19–21 (closed)</option>`}</select></label></div>
+    <section class="card" style="margin-top:10px" aria-labelledby="teamH"><h2 id="teamH">Team</h2><div class="row">${team.map(k=>{const a=S.agents[k];return `<button class="node" data-go="live" data-p='{"id":"${k}"}' aria-label="${a.name}, ${a.role}, ${a.run}. Open live chat"><span class="av" aria-hidden="true">${initials(a.name)}</span>${a.name} <span class="small muted">${a.role}</span> <span class="tag soft">${a.run}</span></button>`;}).join("")}</div></section>
+    <div class="grid2" style="margin-top:12px;grid-template-columns:minmax(0,1fr) 380px">
+     <section class="card" aria-labelledby="sprH"><div class="section-title"><h2 id="sprH">${nosprint?"Current sprint":S.dashSprint===1?"Sprint 1 (closed, read-only)":"Sprint 2 · Oct 22–24"}</h2><span class="xs muted">updates live from task records</span></div>
+      ${nosprint?`<div class="card flat"><b>No sprint started.</b><p class="small muted">Maya starts the first sprint after planning. The backlog is on the right.</p></div>`
+       : S.dashSprint===1?`<div class="kan">${["To Do","In Progress","Done"].map(n=>`<div class="kcol"><h3>${n} <span class="badge">${n==="Done"?4:0}</span></h3>${n==="Done"?["S0-1 SDK spike","S0-4 ADR-0002","BRD v0.1","Repo setup"].map(t=>`<div class="kcard">${t}</div>`).join(""):""}</div>`).join("")}</div>`
+       : `<div class="kan">${["To Do","In Progress","Done"].map(n=>`<div class="kcol" role="region" aria-label="${n}"><h3>${n} <span class="badge">${col(n).length}</span></h3>${col(n).map(kc).join("")}</div>`).join("")}</div>`}
+     </section>
+     <section class="card" aria-labelledby="blH"><div class="section-title"><h2 id="blH">Top of the backlog</h2><span class="xs muted">priority order</span></div>
+      <ol style="padding-left:20px;margin:0">${top5.map(i=>`<li style="margin-bottom:6px"><button class="link" data-act="card" data-id="${i.id}">${i.id} ${h(i.title)}</button><div class="xs muted">${i.type} · ${i.owner?S.agents[i.owner].name:"Unassigned"} · ${i.state}</div></li>`).join("")}</ol>
+      <button class="btn sm" data-act="fullBacklog" aria-expanded="${S.dashFull}">${S.dashFull?"Collapse full backlog":"Full backlog ("+items.filter(i=>i.state!=="Done").length+")"}</button>
+      <p class="xs muted" style="margin-top:6px">More views: Epics · Kanban · Flow</p></section></div>
+    ${S.dashFull?`<section class="card" style="margin-top:12px" aria-label="Full backlog"><div class="section-title"><h2>Full backlog</h2><button class="link small" data-act="fullBacklog">Close</button></div>
+      <table><thead><tr><th scope="col">#</th><th scope="col">ID</th><th scope="col">Item</th><th scope="col">Type</th><th scope="col">Owner</th><th scope="col">State</th><th scope="col">Sprint</th></tr></thead><tbody>
+      ${items.filter(i=>i.state!=="Done").sort((a,b)=>a.pr-b.pr).map(i=>`<tr><td>${i.pr}</td><td class="mono">${i.id}</td><td><button class="link" data-act="card" data-id="${i.id}">${h(i.title)}</button></td><td>${i.type}</td><td>${i.owner?S.agents[i.owner].name:"—"}</td><td>${i.state}</td><td>${i.sprint?"Sprint "+i.sprint:"—"}</td></tr>`).join("")}</tbody></table></section>`:""}
+  </div>`;
+}
+
+/* ============================================================
+   Screen: Approval inbox
+   ============================================================ */
+function apprCard(a){
+  const ag = S.agents[a.agent];
+  const isOut = a.kind==="outward", isRes = a.kind==="reserved", isPay = a.kind==="payment";
+  const focus = S.params?.focus===a.id;
+  const failed = S.st.appr==="failed" && a.id==="a3";
+  return `<article class="card" id="card-${a.id}" style="${focus?"border:2px solid var(--ink)":""}" aria-labelledby="t-${a.id}">
+    <div class="row between"><div class="row"><span class="av" aria-hidden="true">${initials(ag.name)}</span><b id="t-${a.id}">${h(ag.name)} · ${h(a.action)}</b></div>
+    <div class="row">${isOut?'<span class="tag solid">Outward: leaves your machine</span>':""}${isRes?'<span class="tag">Reserved: only you</span>':""}${isPay?'<span class="tag">Payment: agents never pay</span>':""}${a.kind==="work"?'<span class="tag soft">Work request</span>':""}</div></div>
+    <dl class="small" style="display:grid;grid-template-columns:110px 1fr;gap:2px 8px;margin:8px 0">
+     <dt class="muted">Exact target</dt><dd style="margin:0" class="mono">${h(a.target)}</dd>
+     <dt class="muted">Why</dt><dd style="margin:0">${h(a.reason)}</dd>
+     <dt class="muted">Came from</dt><dd style="margin:0">${h(a.source)}</dd>
+     <dt class="muted">Cost so far</dt><dd style="margin:0">${a.cost} ${a.cost!=="—"?'<button class="link xs" data-go="trace">Trace</button>':""}</dd></dl>
+    ${a.deputyNote?`<p class="xs muted">${h(a.deputyNote)}</p>`:""}
+    ${failed?`<div class="err" role="alert">Approved at 09:02, then failed: <span class="mono">EBUSY: resource busy or locked, node_modules/.vite</span>. Noor was told; this counts as a failed attempt (1 of 2).</div>`:""}
+    ${isOut?`<label class="f" style="margin-bottom:8px">Draft (edit before sending)<textarea id="draft-${a.id}">${h(a.draft)}</textarea></label>`:""}
+    ${a.status!=="pending"?`<p class="small"><b>${a.status}</b></p>`: failed?"" : isPay ? `<div class="row"><button class="btn pri" data-act="apr" data-id="${a.id}" data-v="Marked done (paid outside Bench)">I paid outside Bench: mark done</button><button class="btn" data-act="apr" data-id="${a.id}" data-v="Declined: no payment">Don't pay</button></div>`
+     : `<div class="row"><button class="btn pri" data-act="apr" data-id="${a.id}" data-v="${isOut?"Sent once":"Allowed once"}">${isOut?"Send this email":"Allow once"}</button>
+        <button class="btn" ${isOut||isRes?'aria-disabled="true" disabled':""} data-act="apr" data-id="${a.id}" data-v="Always allowed (grant created)" aria-describedby="why-${a.id}">Always allow</button>
+        <button class="btn" data-act="deny" data-id="${a.id}">${isOut?"Discard":"Deny…"}</button></div>
+       ${isOut?`<p class="xs" id="why-${a.id}"><b>Why is "Always allow" off?</b> Every email to someone other than you needs you, one at a time. No standing rule can send email for you.</p>`:""}
+       ${isRes?`<p class="xs" id="why-${a.id}"><b>Why is "Always allow" off?</b> Merging to main, deploying and releasing are reserved: they need you every time. Atlas can't approve them either.</p>`:""}`}
+  </article>`;
+}
+function scrAppr(){
+  const st = S.st.appr;
+  const list = st==="empty" ? [] : S.approvals.filter(a=>a.status==="pending"||S.params?.focus===a.id).filter(a=>S.apprFilter==="all"||a.kind===S.apprFilter);
+  return `<div class="pad"><h1>Approvals</h1><p class="small muted">Requests wait here until you decide. They never expire. Atlas (Deputy) decides ordinary work requests for you and logs them.</p>
+    <div class="tabs" role="tablist"><button role="tab" aria-selected="${S.apprTab==="wait"}" data-act="apTab" data-v="wait">Waiting for you (${st==="empty"?0:pendingCount()})</button><button role="tab" aria-selected="${S.apprTab==="dep"}" data-act="apTab" data-v="dep">Decided by ${h(S.agents.atlas.name)} (${S.deputy.length})</button></div>
+    ${S.apprTab==="dep"?`<section class="card"><ul class="small">${S.deputy.map(d=>`<li style="margin-bottom:6px">${h(d)} <button class="link xs" data-go="trace">Trace</button></li>`).join("")}</ul><p class="xs muted">You can review any of these. Atlas never decides outward actions, reserved actions or payments, and can't widen its own powers.</p></section>`
+    : `<div class="row" style="margin-bottom:10px" role="group" aria-label="Filter">${[["all","All"],["outward","Outward"],["reserved","Reserved"],["work","Work"],["payment","Payment"]].map(([v,l])=>`<button class="btn sm ${S.apprFilter===v?"pri":"ghost"}" aria-pressed="${S.apprFilter===v}" data-act="apFilter" data-v="${v}">${l}</button>`).join("")}</div>
+      ${list.length?`<div class="col" style="max-width:820px">${list.map(apprCard).join("")}</div>`:`<div class="card flat" style="max-width:820px"><b>Nothing is waiting for you.</b><p class="small muted">New requests appear here and in What needs me the moment an agent is stopped by a permission. <button class="link" data-act="apTab" data-v="dep">See what Atlas decided</button></p></div>`}`}
+  </div>`;
+}
+
+/* ============================================================
+   Screen: Trace and cost
+   ============================================================ */
+function scrTrace(){
+  const st = S.st.trace;
+  const runs = [["r1","Noor · S1-4 Chat UI · run 128","28.4k · ≈$0.10"],["r2","Atlas · morning status","1.8k · ≈$0.006"],["r3","Omar · hired research freelancer","12.1k · ≈$0.03"],["r4","Debate: 3-day sprints (archived)","9.0k · ≈$0.03"]];
+  if (S.debate.closed) runs.splice(3,0,["r5","Debate: Stop button (archived)","6.2k · ≈$0.02"]);
+  const r = S.traceRun;
+  let steps;
+  if (st==="loading") steps = `<p role="status" class="muted">Loading trace…</p>${'<div class="skel"></div>'.repeat(6)}`;
+  else if (st==="retention") steps = `<div class="warn"><b>Details removed after 90 days.</b> Summary kept: 41 steps, 3 files changed, 1 approval, 28.4k tokens, ≈$0.10. The cost ledger and approval log are kept.</div>`;
+  else if (r==="r4"||r==="r5") steps = `<div class="warn"><b>Archived transcript, read-only.</b> Hidden from your chats and from every agent's context; agents only remember the decision memo. Removed after 90 days (memo kept).</div>
+    <div class="chat" style="margin-top:8px">${(r==="r5"?DEBATE_MSGS:DEBATE_MSGS.slice(0,2)).map(([w,t])=>msgHTML({who:w,text:t})).join("")}</div>
+    <p class="small"><button class="link" data-act="openNote" data-id="${r==="r5"?"decision-stop":"decision-sprints"}">Open the decision memo</button></p>`;
+  else if (r==="r3") steps = `<details open><summary><b>Omar</b> hires a freelancer · Haiku · tools: web search, web fetch (subset of Omar's) · <span class="cost">0.4k</span></summary><p class="small">Task: "Find 5 tools that turn interview notes into requirements." Not on the roster. Usage shown under Omar.</p></details>
+    <details><summary>Freelancer · web search ×4 · <span class="cost">6.3k · ≈$0.006</span></summary><p class="small mono">query: "interview notes to requirements tool"</p></details>
+    <details><summary>Freelancer returns result verbatim and is released · <span class="cost">3.2k</span></summary></details>
+    <details><summary><span class="mono">system</span> Curator: work log entry to Requirements memory · <span class="cost">0 tokens (app)</span></summary></details>`;
+  else if (r==="r2") steps = `<details open><summary>Prompt parts · instructions 1.1k · global memory index 0.3k · agent cards 0.6k</summary></details>
+    <details><summary>Read cached summaries: Product team (08:00), Dev team (08:00) · <span class="cost">0 tokens</span></summary></details>
+    <details><summary>Reply in fixed format · Sonnet · <span class="cost">1.8k · ≈$0.006</span></summary></details>`;
+  else steps = `<div class="row small" style="margin-bottom:8px"><label class="row"><input type="checkbox"> Files only</label><label class="row"><input type="checkbox"> Commands only</label></div>
+    <details><summary>1 · Prompt parts · Sonnet · instructions 1.4k · private memory (3 notes) 0.9k · team memory index 0.2k · <span class="cost">3.4k</span></summary><p class="small">Exact prompt this agent saw is available: <button class="link small">Show full prompt</button></p></details>
+    <details open><summary>2 · <span class="mono">Read</span> src/renderer/chat/Composer.tsx · <span class="cost">0.8k</span></summary><p class="small mono">212 lines</p></details>
+    <details><summary>3 · <span class="mono">Edit</span> Composer.tsx (+24 −6) · <span class="cost">2.1k</span></summary><p class="small mono">+ &lt;StopButton onStop={stop} /&gt;</p></details>
+    <details><summary>4 · <span class="mono">Bash</span> pnpm test chat · <span class="cost">1.4k</span> · passed 12/12</summary></details>
+    <details><summary>5 · Approval: run shell \`rm -rf node_modules/.vite\` · waiting for you</summary><p class="small"><button class="link" data-go="appr" data-p='{"focus":"a3"}'>Open in Approvals</button></p></details>
+    <details><summary><span class="mono">system</span> Router → Noor (rule: task owner) · Haiku · <span class="cost">0.3k · ≈$0.0003</span></summary></details>
+    <details><summary><span class="mono">system</span> Work log entry → Dev team memory · <span class="cost">0 tokens (app)</span></summary></details>
+    <p class="small" style="margin-top:8px"><b>Total:</b> 28.4k tokens · ≈$0.10 (sum of steps)</p>`;
+  return `<div class="pad"><h1>Trace</h1><p class="small muted">Every step, model, tool, file, approval, freelancer and system line, with its cost. Local only; secrets are redacted.</p>
+    <div class="grid2" style="grid-template-columns:300px minmax(0,1fr);margin-top:10px">
+     <nav class="card" aria-label="Runs"><h2>Runs today</h2><ul class="wnm">${runs.map(([id,l,c])=>`<li style="${r===id?"border:2px solid var(--ink)":""}"><button class="link" data-act="traceRun" data-id="${id}" aria-current="${r===id}">${l}</button><div class="xs muted">${c}</div></li>`).join("")}</ul></nav>
+     <section class="card" aria-live="polite">${steps}</section></div></div>`;
+}
+
+/* ============================================================
+   Screen: Usage meter
+   ============================================================ */
+function scrUsage(){
+  const m = S.usageMode;
+  const wk = {ok:41,guard:63,limit:100,ledger:null}[m], ss = {ok:22,guard:48,limit:100,ledger:null}[m], fc = {ok:46,guard:24,limit:0,ledger:null}[m];
+  const meter = (label,val,reset,mark) => `<div style="margin-bottom:14px"><div class="row between"><b>${label}</b><span class="small">${val===null?"not available":val+" % used"} · resets ${reset}</span></div>
+     <div class="bar" role="img" aria-label="${label}: ${val===null?"unknown":val+" percent used"}${mark?", 30 percent headroom line at 70 percent":""}" style="height:20px"><i style="width:${val??0}%"></i>${mark?`<span class="mark" style="left:70%"></span>`:""}</div>${mark?`<div class="xs muted" style="margin-left:70%">↑ 30 % headroom line</div>`:""}</div>`;
+  return `<div class="pad"><h1>Usage</h1><p class="small muted">Your Claude plan is shared with your normal Claude use. Target: keep at least 30 % of the weekly limit free. There are no per-agent caps.</p>
+    ${m==="ledger"?`<div class="warn" role="alert">Bench can't read your plan usage right now. Showing tokens from Bench's own ledger only; the 30 % guard uses the ledger forecast.</div>`:""}
+    ${m==="guard"?`<div class="warn" role="status"><b>The 30 % guard is on.</b> Forecast headroom at the weekly reset: 24 %. Deferred: <ul class="small"><li>Morning status refresh (routine, daily 07:30) <button class="btn sm" data-act="runNow">Run now</button></li><li>Weekly research digest (routine, Thu 09:00) <button class="btn sm" data-act="runNow">Run now</button></li></ul><span class="small">Work you start and tasks in progress keep running.</span></div>`:""}
+    ${m==="limit"?`<div class="err" role="alert"><b>Limit reached at 11:50.</b> Paused and saved, resuming at 14:00 in this order: <ol class="small"><li>Noor · S1-4 Chat UI</li><li>Omar · interview notes</li><li>Debate: Stop button (timer paused at 2:41)</li></ol><button class="btn sm">Change order…</button></div>`:""}
+    <div class="grid2" style="margin-top:12px;grid-template-columns:minmax(0,1fr) 320px">
+     <section class="card">${meter("Session (5-hour window)",ss,"14:00",false)}${meter("Weekly limit",wk,"Mon 09:00",true)}
+      <p><b>Forecast headroom at reset:</b> ${fc===null?"ledger estimate 40 %":fc+" %"} ${m==="ok"?'<span class="tag">Headroom OK</span>':m==="guard"?'<span class="tag solid">Guard on</span>':""}</p></section>
+     <section class="card"><h2>Accepted work</h2><p style="font-size:28px;margin:0"><b>${S.accepted||7}</b> / 10</p><p class="small muted">tasks accepted this week (target ≥ 10)</p><p class="small">Tokens per accepted task: 96k (last week 120k)</p></section></div>
+    <section class="card" style="margin-top:12px"><h2>Who used what this week</h2>
+     <table><thead><tr><th scope="col">Agent / service</th><th scope="col">Project</th><th scope="col">Tokens</th><th scope="col">≈ API price</th><th scope="col"></th></tr></thead><tbody>
+      ${[["Noor · Developer","Bench","1.10M","$3.62"],["Karim · Tech lead (Opus)","Bench","0.62M","$4.10"],["Maya · PM","Bench","0.41M","$1.30"],["Omar · BA lead","Bench","0.30M","$0.95"],["  ↳ Research freelancer (hired by Omar)","Bench","0.05M","$0.04"],["Atlas · CEO","—","0.24M","$0.78"],["Sam · UX/UI","Bench","0.21M","$0.66"],["Jade · QA","Bench","0.12M","$0.38"],["Lina · BA","Bench","0.06M","$0.19"],["System: router, curator, scheduler (Haiku)","—","0.04M","$0.03"]].map(r=>`<tr><td>${r[0].startsWith("  ")?"&nbsp;&nbsp;&nbsp;&nbsp;"+h(r[0].trim()):h(r[0])}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><button class="link small" data-go="trace">Runs</button></td></tr>`).join("")}
+     </tbody></table><p class="xs muted">Per-agent numbers are for visibility only. Nobody is capped or warned for their own usage.</p></section></div>`;
+}
+
+/* ============================================================
+   Screen: Memory browser
+   ============================================================ */
+function linkify(body){
+  return h(body).replace(/\[\[([^\]]+)\]\]/g,(_,t)=>{ const k = NOTE_BY_TITLE(t); return k?`<button class="wikilink" data-act="openNote" data-id="${k}">${h(t)}</button>`:`<button class="wikilink unres" data-act="newNote" title="Create this note">${h(t)} (no note yet)</button>`; });
+}
+function backlinks(k){ const t = S.notes[k].title.toLowerCase(); return Object.keys(S.notes).filter(x=>x!==k && S.notes[x].body.toLowerCase().includes("[["+t+"]]")); }
+function outlinks(k){ return [...S.notes[k].body.matchAll(/\[\[([^\]]+)\]\]/g)].map(m=>m[1]); }
+function graphSVG(){
+  const keys = Object.keys(S.notes); const n = keys.length, cx=300, cy=200, R=150;
+  const pos = {}; keys.forEach((k,i)=>{ const a = (i/n)*Math.PI*2 - Math.PI/2; pos[k]=[cx+R*Math.cos(a), cy+R*Math.sin(a)]; });
+  let lines = ""; keys.forEach(k=>outlinks(k).forEach(t=>{ const j = NOTE_BY_TITLE(t); if (j) lines += `<line x1="${pos[k][0]}" y1="${pos[k][1]}" x2="${pos[j][0]}" y2="${pos[j][1]}" stroke="#8c8c8c"/>`; }));
+  const dots = keys.map(k=>{ const sel = k===S.memNote, nt = S.notes[k]; return `<g role="button" tabindex="0" aria-label="Open note ${h(nt.title)}" data-act="openNote" data-id="${k}" style="cursor:pointer">
+     <circle cx="${pos[k][0]}" cy="${pos[k][1]}" r="${sel?12:8}" fill="${sel?"#161616":"#fff"}" stroke="#161616" stroke-width="1.5" ${nt.stale?'stroke-dasharray="3 2"':""}/>
+     <text x="${pos[k][0]}" y="${pos[k][1]+(pos[k][1]>cy?26:-16)}" text-anchor="middle" font-size="11" fill="#161616">${h(nt.title.length>26?nt.title.slice(0,25)+"…":nt.title)}</text></g>`; }).join("");
+  return `<svg viewBox="0 0 600 400" width="100%" role="img" aria-label="Graph of ${n} notes and their links">${lines}${dots}</svg>`;
+}
+function scrMem(){
+  const st = S.st.mem, k = S.memNote, nt = S.notes[k];
+  const scopes = ["All","Global","Product team","Dev team","Private: Noor"];
+  const q = S.memQuery.toLowerCase();
+  const list = Object.keys(S.notes).filter(x=>{const n=S.notes[x]; return (S.memScope==="All"||n.scope===S.memScope) && (!q || (n.title+" "+n.body).toLowerCase().includes(q)) && (st!=="stale"||n.stale);});
+  const center = st==="graph" ? `<div class="section-title"><h2>Graph</h2><button class="btn sm" data-act="state" data-v="note">Back to note</button></div>${graphSVG()}<p class="xs muted">Dots are notes, lines are [[links]]. Dashed dots are stale. Click a dot to open it.</p>`
+   : st==="rebuilding" ? `<div class="warn" role="status"><b>The memory index is being rebuilt.</b> Showing the folder list; backlinks, graph and search come back in about a minute. Notes on disk are safe.</div><ul class="mono small" style="margin-top:8px">${Object.keys(S.notes).map(x=>`<li>memory/${x}.md</li>`).join("")}</ul>`
+   : `<div class="row between"><h2 style="margin:0">${h(nt.title)}</h2><div class="row"><button class="btn sm" data-act="state" data-v="graph">Graph view</button>${S.memEdit?`<button class="btn sm pri" data-act="saveNote">Save note</button><button class="btn sm ghost" data-act="memEdit">Cancel</button>`:`<button class="btn sm pri" data-act="memEdit">Edit</button>`}</div></div>
+     ${nt.stale?`<div class="warn" style="margin:8px 0"><b>Stale (flagged by the curator):</b> ${linkify(nt.stale)}<div class="row" style="margin-top:6px"><button class="btn sm" data-act="stale" data-v="Kept: flag cleared">Keep</button><button class="btn sm" data-act="memEdit">Update</button><button class="btn sm" data-act="stale" data-v="Merge proposed into Sprint 2 summary">Merge</button><button class="btn sm" data-act="stale" data-v="Deleted (only you can delete)">Delete</button></div></div>`:""}
+     <table class="small" style="margin:8px 0"><tbody><tr><th scope="row">type</th><td>${nt.type}</td><th scope="row">scope</th><td>${nt.scope}</td></tr><tr><th scope="row">tags</th><td>${nt.tags.join(", ")}</td><th scope="row">updated</th><td>${nt.updated}</td></tr><tr><th scope="row">source</th><td colspan="3">${h(nt.source)} <button class="link xs" data-go="trace">Trace</button></td></tr></tbody></table>
+     ${S.memEdit?`<label class="f">Note body (Markdown)<textarea id="noteBody" style="min-height:160px">${h(nt.body)}</textarea></label><p class="xs muted">Saved through the single memory writer; the source becomes "client".</p>`:`<div class="doc" style="padding:12px 16px">${linkify(nt.body)}</div>`}
+     <p class="xs muted mono" style="margin-top:6px">memory/${k}.md · Obsidian-compatible</p>`;
+  return `<div class="pad"><div class="row between"><div><h1>Memory</h1><p class="small muted">Everything your agents remember, as Markdown notes on your machine. 0 tokens to browse.</p></div><button class="btn ghost sm">Open folder in another editor</button></div>
+   <div class="three" style="margin-top:10px">
+    <aside class="card col" aria-label="Scopes and filters">
+      <label class="f">Search (keyword + meaning)<input type="text" id="memQ" value="${h(S.memQuery)}" placeholder="e.g. stop button"></label>
+      <h3>Scope</h3><div class="col">${scopes.map(s=>`<button class="btn sm ${S.memScope===s?"pri":"ghost"}" aria-pressed="${S.memScope===s}" data-act="memScope" data-v="${s}">${s}</button>`).join("")}</div>
+      <label class="row small"><input type="checkbox" data-act="staleOnly" ${st==="stale"?"checked":""}> Stale only</label>
+      <h3>Notes (${list.length})</h3><ul class="wnm">${list.map(x=>`<li style="${x===k?"border:2px solid var(--ink)":""}"><button class="link small" data-act="openNote" data-id="${x}">${h(S.notes[x].title)}</button><div class="xs muted">${S.notes[x].type} · ${S.notes[x].scope}${S.notes[x].stale?" · stale":""}</div></li>`).join("")||'<li class="small muted">No notes match. Try another word or scope.</li>'}</ul>
+      <div class="card flat xs">Curator suggestions: 1 merge waiting. <button class="link xs" data-act="openNote" data-id="old-ci">Review</button></div>
+    </aside>
+    <section class="card">${center}</section>
+    <aside class="card" aria-label="Links">${st==="rebuilding"||st==="graph"?'<p class="small muted">Backlinks appear with a note.</p>':`<h3>Backlinks (${backlinks(k).length})</h3><ul class="small">${backlinks(k).map(b=>`<li><button class="link" data-act="openNote" data-id="${b}">${h(S.notes[b].title)}</button></li>`).join("")||"<li class='muted'>No notes link here yet.</li>"}</ul>
+      <h3>Links out (${outlinks(k).length})</h3><ul class="small">${outlinks(k).map(t=>`<li>${linkify("[["+t+"]]")}</li>`).join("")||"<li class='muted'>None</li>"}</ul>`}</aside>
+   </div></div>`;
+}
+
+/* ============================================================
+   Screen: Settings
+   ============================================================ */
+function scrSettings(){
+  const err = S.st.settings==="error";
+  return `<div class="pad" style="max-width:860px"><h1>Settings</h1>
+   <section class="card" style="margin-top:10px" aria-labelledby="ckH"><h2 id="ckH">Context checkpoint</h2>
+    <p class="small muted">When an agent's session reaches this share of its context window, it finishes the current step, saves its work, writes a checkpoint (goal, decisions, files, current step, next steps, open questions, what failed, mistakes and fixes), records lessons, and restarts as a fresh session. This saves usage.</p>
+    <div class="row" style="align-items:flex-end"><label class="f" style="width:160px">Default threshold (%)<input type="number" id="ckIn" min="50" max="85" value="${err?90:S.ckpt}" aria-describedby="ckErr ckHelp" ${err?'aria-invalid="true"':""}></label>
+     <span class="small" style="padding-bottom:8px">Hard ceiling: <b>90 %</b> <span class="tag soft">Fixed</span></span></div>
+    ${err?`<p class="fielderr" id="ckErr" role="alert">Choose a value between 50 and 85. 90 % is the fixed hard ceiling where agents checkpoint immediately.</p>`:`<span id="ckErr"></span>`}
+    <p class="xs muted" id="ckHelp">Range 50–85 %, default 80 %. Agents can override it in their profile: Noor 70 %.</p>
+    <div class="bar" style="height:16px;margin-top:6px" aria-hidden="true"><i style="width:${err?0:S.ckpt}%;opacity:.35"></i><span class="mark" style="left:${S.ckpt}%"></span><span class="mark" style="left:90%;border-left-style:solid"></span></div>
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-act="saveSettings">Save</button></div></section>
+   <section class="card" style="margin-top:12px"><h2>Usage</h2><p class="small">Weekly headroom guard: keep <b>30 %</b> free <span class="tag soft">Your target</span>. When the forecast drops below it, routines and the daily summary refresh wait.</p><p class="xs muted">Editable? Open question for the client (Q7).</p></section>
+   <section class="card" style="margin-top:12px"><h2>System services</h2><p class="small muted">Not agents, not on the roster. Their work shows as labelled lines with cost.</p>
+    <table><thead><tr><th scope="col">Service</th><th scope="col">Model</th><th scope="col">Show lines in chats</th></tr></thead><tbody>
+    ${[["Router: picks who replies in groups","Haiku"],["Curator: digests, dedupe, stale sweep","Haiku"],["Scheduler: runs routines","none (no LLM)"]].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><input type="checkbox" checked aria-label="Show ${r[0].split(":")[0]} lines"></td></tr>`).join("")}</tbody></table></section>
+   <section class="card" style="margin-top:12px"><h2>Claude Code and files</h2>
+    <p class="small">Claude Code 2.1 · signed in <button class="btn sm">Check again</button></p>
+    <p class="small">API key fallback: <b>off</b> (optional, for urgent work when the plan limit is reached)</p>
+    <p class="small">Bench home: <span class="mono">${h(S.fr.folder)}</span></p>
+    <p class="small">Retention: trace details and archived transcripts 90 days, then summarized · email items 30 days, bodies never stored · cost ledger and approval log kept.</p>
+    <p class="small">Closing the window keeps Bench running in the tray. "Quit" in the tray stops everything.</p></section></div>`;
+}
+
+const SCREENS = {fr:scrFr,home:scrHome,org:scrOrg,agent:scrAgent,live:scrLive,team:scrTeam,session:scrSession,proposal:scrProposal,dash:scrDash,appr:scrAppr,trace:scrTrace,usage:scrUsage,mem:scrMem,settings:scrSettings};
+
+/* ============================================================
+   After-render hooks (timers, scrolling)
+   ============================================================ */
+const scrollDown = id => { const e = document.getElementById(id); if (e) e.scrollTop = e.scrollHeight; };
+const AFTER = {
+  fr(){ if (S.fr.step===1 && S.st.fr==="checking") timers.push(setTimeout(()=>{ if(S.screen==="fr"&&S.st.fr==="checking"){S.st.fr="found";render();}},1400)); },
+  home(){ scrollDown("ceoChat"); if (S.st.home==="loading") timers.push(setTimeout(()=>{ if(S.screen==="home"&&S.st.home==="loading"){S.st.home="normal";render();}},1800)); },
+  live(){ scrollDown("liveChat"); if (S.st.live==="running" && S.agentId==="noor") every(()=>{
+      const max = S.run.redirect ? LIVE_STEPS.length-1 : LIVE_STEPS.length; // after a redirect, the custom formatter step never happens
+      const typing = document.activeElement && document.activeElement.matches("#screen input, #screen textarea") && document.activeElement.value;
+      if (S.run.steps<max && !typing){ S.run.steps++; render(); } },2200); },
+  team(){ scrollDown("teamChat"); },
+  session(){ scrollDown("dChat");
+    if (S.st.session==="debate" && S.debate.state==="open") every(()=>{
+      const d = S.debate; d.secs = Math.max(0,d.secs-1);
+      if (d.secs===0){ d.state="decided"; S.st.session="decided"; render(); return; }
+      if (d.secs%6===0 && d.shown<DEBATE_MSGS.length){ d.shown++; render(); return; }
+      const t = $("#dTimer"); if (t) t.textContent = fmt(d.secs);
+    },1000); },
+  dash(){}, appr(){ const f = S.params?.focus; if (f){ const e=document.getElementById("card-"+f); e&&e.scrollIntoView({block:"center"}); } },
+  mem(){ const q=$("#memQ"); if(q){ q.addEventListener("input",e=>{ S.memQuery=e.target.value; const pos=e.target.selectionStart; render(); const n=$("#memQ"); n.focus(); n.setSelectionRange(pos,pos); }); } }
+};
+
+/* ============================================================
+   Modal
+   ============================================================ */
+function modal(html, label){
+  $("#modal").innerHTML = `<div class="overlay" data-act="closeModalBg"><div class="dialog" role="dialog" aria-modal="true" aria-label="${h(label)}">${html}</div></div>`;
+  const first = $("#modal .dialog").querySelector("input,textarea,select,button"); first && first.focus();
+}
+function closeModal(){ $("#modal").innerHTML = ""; }
+
+function loanModal(){
+  const L = S.loan; const states = ["Requested","Approved","Checkpointed","Copy active","Merged back","Deleted"];
+  const idx = {requested:0,approved:1,checkpointed:2,active:3,returned:4,deleted:5,declined:-1}[L.state];
+  const o = S.agents[L.id], N = h(o.name), own = h(L.ownLead), req = h(L.reqLead), to = h(L.to);
+  let next = "";
+  if (L.state==="requested") next = `<button class="btn pri" data-act="loanStep" data-v="approved">Simulate: ${own} approves</button><button class="btn" data-act="loanStep" data-v="declined">Simulate: ${own} declines</button>`;
+  if (L.state==="approved") next = `<p class="small">${N} writes a checkpoint at the next natural breakpoint (save only, no restart). Bench checks all 8 sections.</p><button class="btn pri" data-act="loanStep" data-v="checkpointed">Simulate: checkpoint complete (8/8)</button>`;
+  if (L.state==="checkpointed") next = `<p class="small">${own} sends a copy of ${N}'s instructions, memory and checkpoint. ${req} creates the copy in the ${to}.</p><button class="btn pri" data-act="loanStep" data-v="active">Create the loan copy</button>`;
+  if (L.state==="active") next = `<p class="small">The copy shows in the ${to} with a dashed outline. The original ${N} keeps working at home.</p><button class="btn pri" data-act="loanStep" data-v="returned">Mark the loan done</button><button class="btn ghost" data-act="loanStep" data-v="returned">End early (you, as owner)</button>`;
+  if (L.state==="returned") next = `<p class="small">Merging the copy's work log and lessons into ${N}'s private memory (source "loan copy at ${to}")…</p><button class="btn pri" data-act="loanStep" data-v="deleted">Simulate: merge-back written, delete copy</button>`;
+  if (L.state==="deleted") next = `<div class="ok">Loan finished. Only the original ${N} exists. Their memory now has 3 new notes from the loan.</div>`;
+  if (L.state==="declined") next = `<div class="warn">${own} declined: "${N} is on the critical path this sprint." ${req} can hire a freelancer instead, or escalate.</div>`;
+  modal(`<h2>Agent loan: ${N} (${h(o.role)}) → ${to}</h2>
+    <p class="small muted">Requested by ${req} (${to} lead) from ${own} (${h(o.team.split(" (")[0])} lead): "${N} has the know-how we need for 1 day."</p>
+    <ol class="steps">${states.map((s,i)=>`<li class="${i===idx?"on":i<idx?"done":""}">${i<idx?"✓ ":""}${s}</li>`).join("")}</ol>
+    <div class="col">${next}</div><hr><div class="row"><button class="btn ghost" data-act="closeModal">Close</button></div>`, "Agent loan");
+}
+
+/* ============================================================
+   Guide
+   ============================================================ */
+const TASKS = [
+  ["T1","You've just installed Bench. Get to the point where you can talk to your CEO with your day-1 team, but without QA for now.","Reach the CEO chat in ≤ 6 clicks; QA removed in the preview; you can say where Bench keeps its files and that Bench uses your Claude Code login.","t1"],
+  ["T2","Tell the CEO about a new idea and get it to the point where a team is working on it.","Find the proposal from What needs me; approve; understand that \"Create project\" is a second step; end on the new project's dashboard.","t2"],
+  ["T3","It's the morning. What needs you today? Deal with the most important item, and make sure no email goes out without you.","Name 3 items within 30 s; resolve one approval; spot the OUTWARD tag and explain why \"Always allow\" is off.","t3"],
+  ["T4","Noor is going the wrong way. Make her stop and use the existing date library instead. Then find out what her run cost.","Reach Noor's live view in ≤ 2 clicks from the dashboard; stop; redirect; read the run cost in the trace.","t4"],
+  ["T5","Your team disagrees on a design point. Let them debate, then find what was decided and where the chat went.","See the timer and decider; after closing, find the memo in Memory and say the chat was archived in the trace.","t5"]
+];
+function guide(){
+  modal(`<h2>Prototype guide</h2><p class="small">Low-fi, greyscale, fictional data. The annotation bar on each screen shows its purpose, primary action, use cases and states; click a state to switch the screen into it. Click "Start" to reset the demo and begin a task.</p>
+   <table><thead><tr><th scope="col">Task</th><th scope="col">Success looks like</th><th scope="col"></th></tr></thead><tbody>
+   ${TASKS.map(t=>`<tr><td><b>${t[0]}</b> ${h(t[1])}</td><td class="small">${h(t[2])}</td><td><button class="btn sm pri" data-act="startTask" data-v="${t[3]}">Start</button></td></tr>`).join("")}</tbody></table>
+   <hr><div class="row"><button class="btn" data-act="startTask" data-v="t2">Reset to day 3 (Home)</button><button class="btn ghost" data-act="closeModal">Close</button></div>`,"Prototype guide");
+}
+
+/* ============================================================
+   Actions
+   ============================================================ */
+function addCeo(m){ S.ceo.push(m); if (S.screen==="home") render(); }
+function runIntake(){
+  S.intake = 1; const name = S.agents.atlas.name;
+  addCeo({who:"me",text:"I have an idea. As a BA I spend 3–4 hours turning interview notes into a first BRD draft. I want a tool that takes my raw notes and produces a structured draft with open questions. I keep repeating the same structure and the same follow-up questions.",meta:"now"});
+  setTimeout(()=>{ S.intake = 2; addCeo({who:"atlas",text:"Got it. Three quick questions so I understand it at a high level:\n1) Who uses it: only you, or other BAs too?\n2) Where do the notes come from: typed notes, transcripts, or both?\n3) Is \"done\" a draft you edit, or a final document?",c:["2.6k","0.008"]}); }, 1200);
+}
+function intakeAnswer(text){
+  S.intake = 3;
+  addCeo({who:"me",text:text||"Just me for now. Transcripts and typed notes. A draft I edit.",meta:"now"});
+  setTimeout(()=>{ S.intake = 4; S.proposal = "awaiting"; S.st.proposal = "awaiting";
+    addCeo({who:"atlas",text:"Okay, we will take this. I wrote a one-pager proposal for you to check. Nothing goes to a team until you approve it.",c:["4.2k","0.014"]});
+    addCeo({card:`<div class="card" style="max-width:78%"><span class="tag">Proposal</span> <b>InterviewKit</b><p class="small">Problem · What to build · What the team should do</p><button class="btn sm pri" data-go="proposal">Open proposal</button></div>`});
+    addCeo({sys:"Proposal saved · state: Awaiting you · added to What needs me"}); }, 1400);
+}
+
+const ACT = {
+  guide, closeModal, closeModalBg(e,el,ev){ if (ev.target===el) closeModal(); },
+  annToggle(){ S.annOn=!S.annOn; render(); },
+  state(el){ const v = el.dataset.v; S.st[S.screen]=v;
+    if (S.screen==="fr"){ S.fr.step=1; }
+    if (S.screen==="home"){ S.usageMode = v==="limit" ? "limit" : (S.usageMode==="limit"?"ok":S.usageMode); if (v!=="empty" && S.fresh){ S.fresh=false; S.ceo = baseCeo(); } }
+    if (S.screen==="usage"){ S.usageMode = v; }
+    if (S.screen==="live"){ S.run.state=v; if (v==="running"&&S.run.steps>=LIVE_STEPS.length) S.run.steps=2; }
+    if (S.screen==="session"){ if (v==="debate"){ S.debate.state="open"; if(S.debate.secs===0) S.debate.secs=300; } if (v==="decided"){ S.debate.state="decided"; } }
+    if (S.screen==="proposal"){ S.proposal = v==="awaiting"?"awaiting":v; }
+    if (S.screen==="mem" && v==="stale"){ S.memNote="old-ci"; }
+    if (S.screen==="agent" && S.agents[S.agentId]) S.agents[S.agentId].state = {normal:"Active",draft:"Draft",paused:"Paused",archived:"Archived"}[v];
+    clearTimers(); render(); },
+  copy(){ toast("Copied to clipboard."); },
+  frCheck(){ S.st.fr="checking"; render(); },
+  frNext(){ const f=S.fr;
+    if (f.step===2){ f.folder = $("#frFolder").value.trim() || f.folder; }
+    if (f.step===3){ const v=$("#frCeo").value.trim(); if(!v||v.length>40){ $("#frCeoErr").textContent="Give your CEO a name (1–40 characters)."; $("#frCeo").setAttribute("aria-invalid","true"); $("#frCeo").focus(); return; } f.ceo=v; f.model=$("#frModel").value; S.agents.atlas.name=v; S.agents.atlas.model=f.model; }
+    f.step++; render(); },
+  frBack(){ S.fr.step--; render(); },
+  frTeam(el){ S.fr.team=el.dataset.v; render(); },
+  frRemove(el){ S.fr.removed[el.dataset.id]=!el.checked; render(); },
+  frGmail(el){ S.fr.gmail=el.checked; },
+  frFinish(){ const g=$("#frGmail"); S.fr.gmail = g?g.checked:false; S.setupDone=true; S.st.home="empty"; S.fresh=true;
+    S.ceo = [{who:"atlas",text:`Hi, I'm ${S.agents.atlas.name}, your CEO. Tell me an idea or a problem and I'll take it from there, or ask me what's going on. I can also draft new agents for you.`,c:["0.6k","0.002"]}];
+    if (S.fr.team==="ceo") { S.st.org="empty"; }
+    if (!S.fr.gmail) S.agents.atlas.conn = ["bench"];
+    const n = S.fr.team==="ceo"?0:7-Object.values(S.fr.removed).filter(Boolean).length;
+    go("home"); toast(`Created ${h(S.fr.ceo)}${n?` and ${n} agents`:""}. Files are in ${h(S.fr.folder)}.`); },
+  chip(el){ const v=el.dataset.v;
+    if (v==="pitch") runIntake(); else if (v==="answer") intakeAnswer();
+    else if (v==="status") ACT.ceoStatus();
+    else if (v==="draft"){ addCeo({who:"me",text:"Draft an agent that watches my GitHub issues.",meta:"now"}); setTimeout(()=>{
+        S.agents.issue = {name:"Issue Watcher",role:"Issue triage",team:"Dev team",lead:false,model:"Haiku",auto:"Ask every time",state:"Draft",run:"idle",desc:"Watches GitHub issues on bench, labels them and tells Karim about bugs.",conn:["bench","github"],folders:["Read: bench/"],ctx:80,task:"Idle"};
+        addCeo({who:"atlas",text:"Drafted \"Issue Watcher\": Haiku, GitHub (read issues), Ask every time, home node Dev team. Only you can create it.",c:["1.9k","0.006"]});
+        addCeo({card:`<div class="card" style="max-width:78%"><span class="tag dash">Draft agent</span> <b>Issue Watcher</b><p class="small">Haiku · GitHub (read) · Dev team</p><button class="btn sm pri" data-go="agent" data-p='{"id":"issue"}'>Review draft</button></div>`}); },900); } },
+  ceoStatus(){ addCeo({who:"me",text:"What's the status?",meta:"now"}); setTimeout(()=>addCeo({who:"atlas",text:"Done: S1-3 main agent runner; BRD v1.0.\nIn progress: S1-4 chat UI (Noor, 60 %), first-run wireframes (Sam).\nBlocked: Windows CI for E2E tests (Jade).\nNeeds you: "+needs().length+" items, see the list on the right.",c:["1.8k","0.006"]}),900); },
+  escalation(){ modal(`<h2>Blocked: E2E tests on Windows CI</h2><p class="small">Jade's run failed twice (attempt 1: runner timeout; attempt 2: Electron didn't start headless). Karim tried a different runner image without luck.</p><p class="small"><b>Karim suggests:</b></p>
+     <div class="col"><button class="btn pri" data-act="resolveEsc" data-v="Skip on Windows for Sprint 2; Jade runs them locally">Skip on Windows for Sprint 2; run locally (recommended)</button><button class="btn" data-act="resolveEsc" data-v="Hold S1-2 until Windows E2E is green">Hold S1-2 until Windows E2E is green</button><button class="btn ghost" data-go="live" data-p='{"id":"karim"}' data-act="closeModal">Talk to Karim first</button></div>`,"Escalation"); },
+  resolveEsc(el){ S.escalation="done"; S.agents.jade.run="working"; closeModal(); render(); toast("Decision sent to Karim and logged in Dev team memory: "+h(el.dataset.v)); },
+  selNode(el){ S.selNode=el.dataset.id; render(); },
+  addAgent(){ modal(`<h2>Add agent</h2><p class="small muted">Name, role and a model are enough. Everything else has a default and can be changed later.</p>
+     <form data-form="addAgent" class="col"><label class="f">Name<input type="text" id="naName" maxlength="40" aria-describedby="naErr"></label><span id="naErr" class="fielderr" aria-live="polite"></span>
+     <label class="f">Role / what it does<input type="text" id="naRole" placeholder="e.g. Writes release notes from merged PRs"></label>
+     <label class="f">Home node<select><option>${h(S.agents[S.selNode]?.team||"Product team")}</option><option>Product team</option><option>Dev team</option></select></label>
+     <label class="f">Model<select><option>Haiku</option><option selected>Sonnet</option><option>Opus</option></select></label>
+     <label class="f">Autonomy<select><option selected>Ask every time</option><option>Trusted</option><option>Autonomous (never outward)</option></select></label>
+     <div class="row"><button class="btn pri">Create agent</button><button type="button" class="btn" data-act="askDraft">Ask ${h(S.agents.atlas.name)} to draft it instead</button><button type="button" class="btn ghost" data-act="closeModal">Cancel</button></div></form>`,"Add agent"); },
+  askDraft(){ closeModal(); go("home"); ACT.chip({dataset:{v:"draft"}}); },
+  moveNode(){ modal(`<h2>Move ${h(S.agents[S.selNode].name)}</h2><label class="f">New home node<select><option>Product team</option><option>Requirements</option><option>Dev team</option></select></label><p class="xs muted">An agent has exactly one home node. Its open tasks move with it; its lead changes.</p><div class="row" style="margin-top:8px"><button class="btn pri" data-act="closeModal">Move</button><button class="btn ghost" data-act="closeModal">Cancel</button></div>`,"Move agent"); },
+  makeLead(){ toast(h(S.agents[S.selNode].name)+" would become the lead (prototype: not applied). The current lead becomes a member."); },
+  links(){ modal(`<h2>Communication links</h2><p class="small muted">Agents talk along the tree. Add links for contact across it. On a team → team link, leads hand off tasks; members may only ask questions.</p>
+     <table><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Type</th><th></th></tr></thead><tbody><tr><td>Product team</td><td>Dev team</td><td>Team → team (leads hand off; members ask)</td><td><button class="btn sm ghost">Remove</button></td></tr><tr><td>Sam (UX/UI)</td><td>Noor (Developer)</td><td>Agent → agent (questions)</td><td><button class="btn sm ghost">Remove</button></td></tr></tbody></table>
+     <div class="row" style="margin-top:8px"><button class="btn">Add link…</button><button class="btn ghost" data-act="closeModal">Close</button></div>`,"Communication links"); },
+  loan(el){ const id = el.dataset.id;
+    if (!S.loan || ["deleted","declined"].includes(S.loan.state)){
+      const dev = S.agents[id].team.startsWith("Dev");
+      S.loan = {state:"requested", id, to: dev?"Product team":"Dev team", reqLead: dev?"Maya":"Karim", ownLead: dev?"Karim":(S.agents[id].team.startsWith("Req")?"Omar":"Maya")};
+    }
+    loanModal(); },
+  loanStep(el){ const v = el.dataset.v, L = S.loan; L.state=v;
+    if (v==="active"){ const o=S.agents[L.id]; S.agents.loanCopy = Object.assign({},o,{name:o.name+" (copy)",team:L.to,loan:o.team.split(" (")[0],lead:false,run:"working",task:"Loan work for "+L.to}); S.selNode="loanCopy"; }
+    if (v==="deleted"){ delete S.agents.loanCopy; S.selNode=L.id; }
+    render(); loanModal(); },
+  agTab(el){ S.agentTab=el.dataset.v; render(); },
+  agCkpt(el){ S.agents[S.agentId].ctx=+el.value; const o=$("#agCk"); if(o) o.textContent=el.value+" %"; },
+  saveAgent(){ toast("Saved to agents/"+S.agentId+"/agent.md. Applies from the next tool call."); },
+  life(el){ ACT.state(el); toast("State changed. "+(el.dataset.v==="paused"||el.dataset.v==="archived"?"Open tasks went back to the lead.":"")); },
+  dup(){ toast("Duplicated as \""+h(S.agents[S.agentId].name)+" 2\" (Draft) without memory."); },
+  delAgent(){ const n=S.agents[S.agentId].name; modal(`<h2>Delete ${h(n)}?</h2><p class="small">This removes ${h(n)}'s files and memory. Logs stay, labelled "deleted agent". Open tasks go to the lead. This can't be undone.</p><label class="f">Type <b>${h(n)}</b> to confirm<input type="text" id="delIn"></label><div class="row" style="margin-top:8px"><button class="btn pri" data-act="delConfirm">Delete</button><button class="btn ghost" data-act="closeModal">Cancel</button></div><p id="delErr" class="fielderr" aria-live="polite"></p>`,"Delete agent"); },
+  delConfirm(){ const n=S.agents[S.agentId].name; if ($("#delIn").value.trim()!==n){ $("#delErr").textContent="The name doesn't match."; return; } closeModal(); toast("Prototype: deletion not applied. In the app, "+h(n)+" would be removed."); },
+  stop(){ S.st.live="stopping"; render(); setTimeout(()=>{ S.st.live="stopped"; render(); $("#liveIn")&&$("#liveIn").focus(); },900); },
+  resume(){ S.st.live="running"; render(); },
+  cancelTask(){ S.st.live="idle"; S.run.cancelled=true; render(); toast("Task cancelled. Karim (lead) was told."); },
+  startDebate(){ S.debate={secs:300,state:"open",shown:1,joined:false,closed:false}; go("session",{type:"debate"}); },
+  agree(){ S.debate.state="decided"; S.debate.agreed=true; S.st.session="decided"; clearTimers(); render(); },
+  ff(){ S.debate.secs=0; S.debate.state="decided"; S.st.session="decided"; clearTimers(); render(); },
+  joinDebate(){ S.debate.joined=true; render(); },
+  cancelDebate(){ S.debate.closed=true; clearTimers(); go("team"); toast("Debate cancelled. A memo with the positions so far was saved; the chat was archived in the trace."); },
+  memo(){ const d=S.debate; modal(`<h2>Decision memo</h2><table class="small"><tbody>
+     <tr><th scope="row">Topic</th><td>Where does the Stop button live?</td></tr>
+     <tr><th scope="row">Decision</th><td>In the composer while a reply streams; pinned to the header when the user scrolls up. Same label and shortcut (Esc).</td></tr>
+     <tr><th scope="row">Decided by</th><td>${d.joined?"You":"Maya (highest-ranked participant)"}${d.agreed?" · agreed before time":" · after 5:00"}</td></tr>
+     <tr><th scope="row">Attendees</th><td>Sam, Noor, Maya${d.joined?", you":""}</td></tr>
+     <tr><th scope="row">Rationale</th><td>Stop must be where the eyes are when sending and still visible when reading back.</td></tr>
+     <tr><th scope="row">Saved to</th><td>Product team memory as "Stop button placement"; linked from the team chat and the S1-4 card</td></tr></tbody></table>
+     <div class="ok small" style="margin-top:10px">When you close: this chat leaves your chat list; the full transcript is archived in the Trace (hidden from agents, 90 days). Agents remember only this memo.</div>
+     <div class="row" style="margin-top:10px"><button class="btn pri" data-act="closeDebate">Close session</button><button class="btn ghost" data-act="closeModal">Not yet</button></div>`,"Decision memo"); },
+  closeDebate(){ closeModal(); S.debate.closed=true; S.debate.state="closed";
+    S.notes["decision-stop"]={title:"Stop button placement",type:"decision memo",scope:"Product team",tags:["ux","decision"],updated:"2026-10-22 09:40",source:"Debate session (archived) · decider: "+(S.debate.joined?"client":"Maya"),body:"Decision: Stop lives in the composer while a reply streams and is pinned to the header when scrolling up; same label and shortcut. Attendees: Sam, Noor, Maya. Relates to [[Onboarding flow]] and [[Checkpoint: Noor #3]]."};
+    go("team"); toast("Session closed. Memo saved to Product team memory. Chat archived in the Trace."); },
+  pauseInterview(){ go("home"); toast("Interview paused. Omar will continue at question "+S.interview.q+"."); },
+  dontKnow(){ S.interview.open.push(S.interview.q); S.interview.answers[S.interview.q]="(I don't know yet: added as an open question)"; S.interview.q++; render(); },
+  closeInterview(){ S.interview.closed=true; go("home"); toast("Interview closed. Notes saved to Bench docs and memory; Maya was told. The chat was archived in the Trace."); },
+  revAccept(el){ S.review.items[el.dataset.id]="Accepted"; S.accepted=(S.accepted||7)+1; S.review.notes.push(el.dataset.id+" accepted by the client."); const it=S.items.find(i=>i.id===el.dataset.id); if(it) it.state="Done"; render(); toast(el.dataset.id+" accepted · "+S.accepted+" / 10 this week"); },
+  revReject(el){ const id=el.dataset.id; modal(`<h2>Reject ${id}</h2><form data-form="revReject" data-id="${id}" class="col"><label class="f">What should change? (required, kept word for word)<textarea id="rjIn"></textarea></label><span id="rjErr" class="fielderr" aria-live="polite"></span><div class="row"><button class="btn pri">Reject and send back</button><button type="button" class="btn ghost" data-act="closeModal">Cancel</button></div></form>`,"Reject"); },
+  closeReview(){ S.review.closed=true; go("home"); toast("Review closed. Notes saved; 2 feedback items became tasks on the board; the chat was archived in the Trace."); },
+  propApprove(){ S.st.proposal="preview"; S.proposal="preview"; render(); },
+  propReject(){ modal(`<h2>Reject the proposal</h2><form data-form="propReject" class="col"><label class="f">What did ${h(S.agents.atlas.name)} get wrong? (required)<textarea id="prIn">You missed that it must also work offline.</textarea></label><span id="prErr" class="fielderr"></span><div class="row"><button class="btn pri">Reject and send back</button><button type="button" class="btn ghost" data-act="closeModal">Cancel</button></div></form>`,"Reject proposal"); },
+  propEdit(){ toast("Prototype: the one-pager would become editable in place."); },
+  propPark(){ S.proposal="parked"; go("home"); toast("Idea parked. Reopen it any time from the CEO chat."); },
+  propRevised(){ S.st.proposal="awaiting"; S.proposal="awaiting"; render(); },
+  propCancelPreview(){ S.proposal="approved"; go("home"); toast("Proposal stays approved. It goes to a team when you create the project."); },
+  ikRemove(el){ S.ikRemoved[el.dataset.id]=!el.checked; render(); },
+  createProject(){
+    const names = IK_TEAM.filter(x=>!S.ikRemoved[x[0]]).map(x=>S.ikNames[x[0]].trim());
+    const taken = Object.values(S.agents).map(a=>a.name.toLowerCase());
+    const bad = names.find(n=>!n||n.length>40||taken.includes(n.toLowerCase())) ?? (new Set(names.map(n=>n.toLowerCase())).size!==names.length ? "duplicate" : null);
+    if (bad!==null && bad!==undefined){ toast(`Name problem: "${h(bad||"(empty)")}" is empty, too long or already used. Names must be unique.`); return; }
+    IK_TEAM.forEach(([k,n,r])=>{ if(!S.ikRemoved[k]) S.agents[k]={name:S.ikNames[k],role:r,team:"InterviewKit",lead:k==="rana",model:r==="Tech lead"?"Opus":"Sonnet",auto:"Trusted",state:"Active",run:k==="rana"?"working":"idle",desc:`${r} of InterviewKit (copy of the template's ${r}).`,conn:["bench"],folders:["Read/write: interviewkit/"],ctx:80,task:k==="rana"?"Take over proposal":"Idle"}; });
+    S.ikCreated=true; S.proposal="created"; S.st.proposal="created"; render(); toast("Project InterviewKit created. Rana (PM) has the task \"take over proposal\"."); },
+  newProject(){ go("home"); toast("Tell "+h(S.agents.atlas.name)+" the idea first: projects start from a proposal you approve."); },
+  card(el){ const i = S.items.find(x=>x.id===el.dataset.id); const a = i.owner?S.agents[i.owner]:null;
+    modal(`<div class="row between"><h2>${i.id} · ${h(i.title)}</h2><span class="tag ${i.state==="In review"?"solid":""}">${i.state}</span></div>
+     <p class="small">${i.type} · Owner: ${a?`<button class="link" data-go="live" data-p='{"id":"${i.owner}"}' data-act="closeModal">${a.name}</button>`:"Unassigned"} · Sprint ${i.sprint||"—"}</p>
+     <h3>Acceptance criteria</h3><ul class="small"><li>Given a reply streams, when tokens arrive, then they render without waiting for the end.</li><li>Given a running reply, when I click Stop, then no further tool call starts.</li></ul>
+     <h3>History</h3><ul class="small"><li>Oct 22 08:05 · Ready → In progress (Noor)</li>${i.state==="In review"?"<li>Oct 22 09:00 · In progress → In review</li>":""}${i.comment?`<li>Rejected by you: "${h(i.comment)}"</li>`:""}</ul>
+     <p class="small">Cost so far: 184k tokens · ≈$0.61 · <button class="link" data-go="trace" data-act="closeModal">Trace</button> · Work log (6)</p>
+     ${i.state==="In review"?`<div class="row" style="margin-top:8px"><button class="btn pri" data-act="cardAccept" data-id="${i.id}">Accept</button><button class="btn" data-act="cardReject" data-id="${i.id}">Reject with comment…</button></div>`:""}
+     <hr><button class="btn ghost" data-act="closeModal">Close</button>`,"Work item "+i.id); },
+  cardAccept(el){ const i=S.items.find(x=>x.id===el.dataset.id); i.state="Done"; S.accepted=(S.accepted||7)+1; closeModal(); render(); toast(i.id+" accepted · "+S.accepted+" / 10 this week"); },
+  cardReject(el){ ACT.revReject(el); },
+  fullBacklog(){ S.dashFull=!S.dashFull; render(); },
+  sprintSel(el){ S.dashSprint=+el.value; render(); },
+  apTab(el){ S.apprTab=el.dataset.v; render(); },
+  apFilter(el){ S.apprFilter=el.dataset.v; render(); },
+  apr(el){ const a=S.approvals.find(x=>x.id===el.dataset.id); if (el.disabled) return; a.status=el.dataset.v; render(); toast(`${h(S.agents[a.agent].name)}: ${h(el.dataset.v)}. Logged.`); },
+  deny(el){ const a=S.approvals.find(x=>x.id===el.dataset.id); modal(`<h2>${a.kind==="outward"?"Discard this email?":"Deny the request"}</h2><form data-form="deny" data-id="${a.id}" class="col"><label class="f">Reason for ${h(S.agents[a.agent].name)} (helps it adapt)<textarea id="dnIn"></textarea></label><div class="row"><button class="btn pri">${a.kind==="outward"?"Discard":"Deny"}</button><button type="button" class="btn ghost" data-act="closeModal">Cancel</button></div></form>`,"Deny"); },
+  traceRun(el){ S.traceRun=el.dataset.id; render(); },
+  runNow(){ toast("Running this routine once. The guard stays on for the rest."); },
+  openNote(el){ closeModal(); S.memNote=el.dataset.id; S.memEdit=false; if (S.st.mem!=="graph") S.st.mem="note"; if (S.screen!=="mem") go("mem"); else render(); },
+  newNote(){ toast("Prototype: would create the missing note."); },
+  memEdit(){ S.memEdit=!S.memEdit; render(); },
+  saveNote(){ S.notes[S.memNote].body=$("#noteBody").value; S.notes[S.memNote].source="client (edited in browser)"; S.memEdit=false; render(); toast("Note saved and re-indexed."); },
+  memScope(el){ S.memScope=el.dataset.v; render(); },
+  staleOnly(el){ S.st.mem = el.checked?"stale":"note"; if (el.checked) S.memNote="old-ci"; render(); },
+  stale(el){ delete S.notes["old-ci"].stale; S.st.mem="note"; render(); toast(h(el.dataset.v)+"."); },
+  saveSettings(){ const v=+$("#ckIn").value; if (!(v>=50&&v<=85)){ S.st.settings="error"; render(); $("#ckIn").focus(); return; } S.ckpt=v; S.st.settings="normal"; render(); toast("Saved. Default checkpoint threshold is "+v+" %."); },
+  startTask(el){ const v=el.dataset.v; clearTimers(); closeModal(); reset();
+    if (v==="t1"){ S.screen="fr"; render(); return; }
+    S.setupDone=true; S.st.home="normal";
+    if (v==="t4"){ go("dash",{p:"bench"}); return; }
+    if (v==="t5"){ go("team"); return; }
+    go("home"); }
+};
+
+/* ============================================================
+   Forms
+   ============================================================ */
+const FORMS = {
+  ceo(){ const i=$("#ceoIn"), t=i.value.trim(); if(!t) return; i.value="";
+    if (/idea/i.test(t) && S.intake===0){ S.intake=1; addCeo({who:"me",text:t,meta:"now"}); setTimeout(()=>{ S.intake=2; addCeo({who:"atlas",text:"Got it. Three quick questions so I understand it at a high level:\n1) Who uses it?\n2) Where do the notes come from?\n3) Is \"done\" a draft you edit, or a final document?",c:["2.6k","0.008"]}); },1000); return; }
+    if (S.intake===2){ intakeAnswer(t); return; }
+    addCeo({who:"me",text:t,meta:"now"}); setTimeout(()=>addCeo({who:"atlas",text:"Noted. (Prototype: replies are scripted. Try a suggested message.)",c:["0.5k","0.002"]}),700); },
+  live(){ const i=$("#liveIn"), t=i.value.trim(); if(!t) return;
+    if (S.st.live==="stopped"){ S.run.redirect=t; S.st.live="running"; S.run.steps=Math.min(S.run.steps,5); render(); toast("New instruction sent. Logged to Dev team memory."); return; }
+    toast("Message sent to "+h(S.agents[S.agentId].name)+" (prototype)."); i.value=""; },
+  team(){ const i=$("#teamIn"), t=i.value.trim(); if(!t) return; S.team.push({who:"me",text:t});
+    const m=t.match(/@(\w+)/); const who = m ? Object.keys(S.agents).find(k=>S.agents[k].name.toLowerCase()===m[1].toLowerCase()) : null;
+    S.team.push({sys:`Router → ${who?S.agents[who].name+" (rule: @mention)":"Maya (rule: project lead)"} · 0.3k tokens · ≈$0.0003`});
+    if (who) S.team.push({sys:`Task created: "${t.replace(/@\w+\s*/,"").slice(0,60)}" · owner ${S.agents[who].name} · on the Bench board`});
+    S.team.push({who:who||"maya",text:who?"Got it, it's on my list.":"Noted. I'll fold it into the sprint plan.",c:["0.7k","0.002"]}); render(); },
+  interview(){ const i=$("#intIn"), t=i.value.trim(); if(!t) return; S.interview.answers[S.interview.q]=t; S.interview.q++; render(); $("#intIn")&&$("#intIn").focus(); },
+  review(){ const i=$("#revIn"), t=i.value.trim(); if(!t) return; S.review.notes.push("Client: \""+t+"\""); render(); },
+  addAgent(){ const n=$("#naName").value.trim(); if(!n||n.length>40||Object.values(S.agents).some(a=>a.name.toLowerCase()===n.toLowerCase())){ $("#naErr").textContent="Use a unique name of 1–40 characters."; $("#naName").setAttribute("aria-invalid","true"); $("#naName").focus(); return; }
+    const id="new"+Date.now(); const parent=S.agents[S.selNode]||S.agents.maya;
+    S.agents[id]={name:n,role:$("#naRole").value.trim()||"Agent",team:"Product team",lead:false,model:"Sonnet",auto:"Ask every time",state:"Active",run:"idle",desc:$("#naRole").value.trim()||"New agent.",conn:["bench"],folders:[],ctx:80,task:"Idle"};
+    (S.added=S.added||[]).push(id); S.selNode=id; closeModal(); render(); toast(h(n)+" created under Product team. Open its profile to add connectors and folders."); },
+  revReject(f){ const t=$("#rjIn").value.trim(); if(!t){ $("#rjErr").textContent="Write what should change. It goes back to the agent word for word."; $("#rjIn").focus(); return; }
+    const id=f.dataset.id; S.review.items[id]="Rejected"; S.review.notes.push(id+" rejected: \""+t+"\""); const it=S.items.find(i=>i.id===id); if(it){ it.state="In progress"; it.comment=t; } closeModal(); render(); toast(id+" sent back to its owner with your comment (saved in its memory)."); },
+  propReject(){ const t=$("#prIn").value.trim(); if(!t){ $("#prErr").textContent="A comment is required."; return; } S.rejectComment=t; S.st.proposal="rejected"; S.proposal="rejected"; closeModal(); render(); },
+  deny(f){ const a=S.approvals.find(x=>x.id===f.dataset.id); a.status = a.kind==="outward"?"Discarded":"Denied"; closeModal(); render(); toast(h(S.agents[a.agent].name)+" was told: "+h($("#dnIn")?.value||"no reason given")); }
+};
+
+/* ============================================================
+   Event delegation
+   ============================================================ */
+document.addEventListener("click", ev => {
+  const actEl = ev.target.closest("[data-act]");
+  const goEl = ev.target.closest("[data-go]");
+  if (actEl && actEl.tagName!=="INPUT" && actEl.tagName!=="SELECT" && ACT[actEl.dataset.act]){
+    if (actEl.dataset.act==="closeModalBg"){ ACT.closeModalBg(null, actEl, ev); return; }
+    ACT[actEl.dataset.act](actEl, null, ev);
+  }
+  if (goEl){ ev.preventDefault(); closeModal(); go(goEl.dataset.go, goEl.dataset.p?JSON.parse(goEl.dataset.p):null); }
+});
+document.addEventListener("change", ev => { const el = ev.target.closest("[data-act]"); if (el && (el.tagName==="INPUT"||el.tagName==="SELECT") && el.type!=="range" && el.type!=="text" && ACT[el.dataset.act]) ACT[el.dataset.act](el); });
+document.addEventListener("input", ev => { const el = ev.target;
+  if (el.dataset?.act==="agCkpt") ACT.agCkpt(el);
+  if (el.dataset?.act==="ikName") S.ikNames[el.dataset.id]=el.value; });
+document.addEventListener("submit", ev => { const f = ev.target.closest("[data-form]"); if (f){ ev.preventDefault(); FORMS[f.dataset.form](f); } });
+document.addEventListener("keydown", ev => {
+  if (ev.key==="Escape" && $("#modal").innerHTML) closeModal();
+  if ((ev.key==="Enter"||ev.key===" ") && ev.target.matches("g[role=button]")){ ev.preventDefault(); ACT.openNote(ev.target); }
+});
+reset(); render();
+</script>
+</body>
+</html>
