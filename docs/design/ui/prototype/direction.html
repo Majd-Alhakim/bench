@@ -1,0 +1,1724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bench · UI direction samples v0.1</title>
+<style>
+/* ==========================================================================
+   Bench direction v0.1 · Apple base system × Grok Bot feel × Dots characters
+   Tokens (draft). Final token files ship to docs/design/ui/tokens/ after the
+   client approves this direction.
+   ========================================================================== */
+:root{
+  /* Neutrals (Apple) */
+  --frost:#f5f5f7; --white:#ffffff; --carbon:#1d1d1f; --graphite:#474747;
+  --ash:#6e6e73;            /* secondary text: 5.1:1 on white, 4.7:1 on Frost */
+  --mist:#858585;           /* icon strokes only (3.7:1, UI parts) */
+  --hairline:#d2d2d7; --pebble:#e2e2e5; --ice:#f4f8fb;
+  --bubble:#efeff1;         /* agent bubble (Bench addition between Frost and Pebble) */
+  --row-hover:#ebebef; --row-on:#e3e3e8;
+  /* Action: the one blue */
+  --blue:#0071e3; --blue-hover:#0077ed; --blue-press:#006edb; --link:#0066cc;
+  /* Feedback */
+  --ok-ink:#1e6b34; --ok-tint:#e4f4e8;
+  --warn-fill:#ff9f0a; --warn-ink:#7a4500; --warn-tint:#fff1d6;
+  --err-fill:#e5352b; --err-ink:#b3261e; --err-tint:#fde8e7;
+  /* Type */
+  --font: Inter, "SF Pro Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: Inter, "SF Pro Display", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  /* Shape */
+  --r-pill:980px; --r-card:8px; --r-bubble:18px;
+  /* Motion */
+  --ease:cubic-bezier(.25,.1,.25,1); --ease-out:cubic-bezier(.2,.8,.2,1); --ease-move:cubic-bezier(.4,0,.2,1);
+  --d-press:120ms; --d-badge:160ms; --d-msg:180ms; --d-panel:240ms; --d-handoff:300ms; --d-expand:320ms;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{font:400 15px/1.47 var(--font);letter-spacing:-0.016em;color:var(--carbon);background:var(--frost);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow:hidden}
+button,input,textarea,select{font:inherit;letter-spacing:inherit;color:inherit}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+code,.mono{font-family:var(--mono);font-size:.9em;letter-spacing:0}
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.caption{font-size:12px;line-height:1.33;letter-spacing:-0.022em;color:var(--ash)}
+.list{font-size:14px;line-height:1.43;letter-spacing:-0.016em}
+.muted{color:var(--ash)}
+h1,h2,h3{margin:0;font-weight:600}
+
+/* ---------- Buttons (980px pills) ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 16px;border-radius:var(--r-pill);border:1px solid transparent;background:transparent;font-weight:600;font-size:14px;letter-spacing:-0.016em;cursor:pointer;white-space:nowrap;transition:background-color var(--d-press) var(--ease),border-color var(--d-press) var(--ease),color var(--d-press) var(--ease),transform var(--d-press) var(--ease)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--blue);color:#fff;height:40px;padding:0 20px;font-size:15px}
+.btn.primary:hover{background:var(--blue-hover)}
+.btn.primary:active{background:var(--blue-press)}
+.btn.secondary{background:var(--white);border-color:var(--hairline);color:var(--carbon)}
+.btn.secondary:hover{background:var(--frost)}
+.btn.secondary:active{background:var(--pebble)}
+.btn.outline{border-color:var(--link);color:var(--link);background:var(--white)}
+.btn.outline:hover{background:#f2f7fd}
+.btn.plain{color:var(--carbon)}
+.btn.plain:hover{background:var(--frost)}
+.btn:disabled,.btn[aria-disabled="true"]{background:var(--pebble)!important;border-color:transparent!important;color:#86868b!important;cursor:not-allowed;transform:none}
+.btn svg{width:16px;height:16px;flex:none}
+.icon-btn{width:36px;height:36px;border-radius:var(--r-pill);border:0;background:transparent;color:var(--carbon);display:inline-grid;place-items:center;cursor:pointer;flex:none;transition:background-color var(--d-press) var(--ease),transform var(--d-press) var(--ease)}
+.icon-btn:hover{background:var(--row-hover)}
+.icon-btn:active{transform:scale(.96)}
+.icon-btn.fill{background:var(--pebble)}
+.icon-btn.fill:hover{background:#d8d8dc}
+.icon-btn.primary{background:var(--blue);color:#fff;width:40px;height:40px}
+.icon-btn.primary:hover{background:var(--blue-hover)}
+.icon-btn[aria-pressed="true"]{background:var(--row-on)}
+.icon-btn svg{width:20px;height:20px}
+
+/* ---------- Tags, counts, chips ---------- */
+.tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:var(--r-pill);background:#ececef;color:var(--graphite);font-size:12px;font-weight:600;letter-spacing:-0.01em;line-height:1;white-space:nowrap;transition:background-color var(--d-badge) var(--ease),color var(--d-badge) var(--ease)}
+.tag svg{width:10px;height:10px;flex:none}
+.tag.warn{background:var(--warn-tint);color:var(--warn-ink)}
+.tag.solid{background:var(--carbon);color:#fff}
+.tag.err{background:var(--err-tint);color:var(--err-ink)}
+.tag.ok{background:var(--ok-tint);color:var(--ok-ink)}
+.tag.line{background:transparent;border:1px solid var(--hairline);color:var(--carbon)}
+.count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:var(--r-pill);background:var(--carbon);color:#fff;font-size:12px;font-weight:600;letter-spacing:0;line-height:1}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--hairline);background:var(--white);font-size:12px;color:var(--graphite);white-space:nowrap}
+.chip b{color:var(--carbon);font-weight:600}
+.mention{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 3px;border-radius:var(--r-pill);background:var(--m-tint);color:var(--m-ink);font-weight:600;font-size:14px;vertical-align:-3px;line-height:1}
+.mention .av{--cut:var(--m-tint)}
+
+/* ---------- Avatars and status badges ---------- */
+.avh{display:inline-flex;flex:none}
+.av{position:relative;display:inline-block;width:var(--s);height:var(--s);flex:none}
+.av>svg{width:100%;height:100%;display:block;overflow:visible}
+.av.is-paused>svg{opacity:.45}
+.bdg{position:absolute;right:-1px;bottom:-1px;width:var(--b);height:var(--b);border-radius:50%;background:var(--white);color:var(--carbon);border:1px solid var(--hairline);outline:2px solid var(--cut,#fff);display:grid;place-items:center;transition:background-color var(--d-badge) var(--ease),color var(--d-badge) var(--ease)}
+.bdg svg{width:80%;height:80%}
+.bdg-waiting{background:var(--warn-fill);border-color:var(--warn-fill)}
+.bdg-blocked{background:var(--carbon);border-color:var(--carbon);color:#fff}
+.bdg-error{background:var(--err-fill);border-color:var(--err-fill);color:#fff}
+.g-think circle{animation:dot 1.2s var(--ease) infinite}
+.g-think circle:nth-child(2){animation-delay:.2s}
+.g-think circle:nth-child(3){animation-delay:.4s}
+.g-work .arc{transform-origin:6px 6px;animation:spin 1.6s linear infinite}
+@keyframes dot{0%,100%{opacity:.3}40%{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cluster{position:relative;display:inline-block;width:var(--s);height:var(--s);flex:none;overflow:hidden}
+.cluster>span{position:absolute;display:block;line-height:0}
+
+/* Hero (dimensional render) */
+.hero{width:96px;height:102px;margin:0 auto}
+.hero .xp{opacity:0;transition:opacity var(--d-badge) var(--ease)}
+.hero[data-expr="calm"] .x-calm,.hero[data-expr="focused"] .x-focused,.hero[data-expr="sleepy"] .x-sleepy,.hero[data-expr="surprised"] .x-surprised,.hero[data-expr="curious"] .x-curious{opacity:1}
+.hero .body{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 4.8s ease-in-out infinite}
+.hero[data-status="idle"] .body,.hero[data-status="paused"] .body{animation-duration:6.4s}
+.hero .blink{transform-box:fill-box;transform-origin:50% 50%;animation:blink 6s infinite}
+.hero[data-expr="sleepy"] .blink{animation:none}
+.hero .look{transition:transform var(--d-handoff) var(--ease-move)}
+.hero[data-status="thinking"] .look{animation:ponder 3.6s ease-in-out infinite}
+.hero[data-status="working"] .look{animation:scan 2.8s ease-in-out infinite}
+.hero[data-status="waiting"] .look{transform:translate(4px,0)}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.022)}}
+@keyframes blink{0%,93%,97%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes ponder{0%,100%{transform:translate(-2px,-2px)}50%{transform:translate(2px,-3px)}}
+@keyframes scan{0%,100%{transform:translateX(-1.5px)}50%{transform:translateX(1.5px)}}
+
+/* ---------- Prototype chrome (not part of the UI) ---------- */
+.proto{height:52px;display:flex;align-items:center;gap:16px;padding:0 16px 0 20px;background:var(--white);border-bottom:1px solid var(--hairline);position:relative;z-index:30}
+.proto-id{display:flex;flex-direction:column;line-height:1.2;min-width:220px}
+.proto-id b{font-size:14px}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:var(--r-pill);background:#e8e8ed}
+.seg [role="tab"]{height:30px;padding:0 14px;border:0;border-radius:var(--r-pill);background:transparent;font-size:14px;font-weight:500;color:var(--graphite);cursor:pointer;transition:background-color var(--d-press) var(--ease),color var(--d-press) var(--ease)}
+.seg [role="tab"]:hover{color:var(--carbon)}
+.seg [role="tab"][aria-selected="true"]{background:var(--white);color:var(--carbon);font-weight:600;box-shadow:inset 0 0 0 1px var(--hairline)}
+.proto-r{margin-left:auto;display:flex;align-items:center;gap:14px}
+.demo-lab{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ash)}
+.select{height:32px;border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--frost);padding:0 10px;font-size:14px}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--ash);cursor:pointer}
+.switch input{appearance:none;width:34px;height:20px;border-radius:var(--r-pill);background:var(--pebble);position:relative;cursor:pointer;margin:0;transition:background-color var(--d-badge) var(--ease)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform var(--d-badge) var(--ease)}
+.switch input:checked{background:var(--carbon)}
+.switch input:checked::after{transform:translateX(14px)}
+
+/* ---------- App shell ---------- */
+.app{display:flex;height:calc(100vh - 52px)}
+.app[hidden]{display:none}
+.side{width:288px;flex:none;background:var(--frost);border-right:1px solid var(--hairline);display:flex;flex-direction:column;transition:width var(--d-panel) var(--ease-move);overflow:hidden}
+.side.collapsed{width:72px}
+.side-top{display:flex;align-items:center;gap:8px;padding:12px 14px 8px 18px;height:56px}
+.wordmark{font:600 17px/1 var(--font-display);letter-spacing:-0.02em;flex:1;white-space:nowrap}
+.wordmark small{font-size:12px;font-weight:400;color:var(--ash);letter-spacing:-0.01em}
+.search{margin:0 14px 8px;position:relative}
+.search input{width:100%;height:34px;border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--white);padding:0 10px 0 32px;font-size:14px}
+.search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;color:var(--mist)}
+.side-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 8px 12px}
+.side-sec{display:flex;align-items:center;justify-content:space-between;padding:14px 10px 4px;height:36px}
+.side-sec h2{font-size:12px;font-weight:600;color:var(--ash);letter-spacing:-0.01em;white-space:nowrap}
+.side-links{display:flex;gap:2px}
+.side-links .icon-btn{width:32px;height:32px}
+.side-links .icon-btn svg{width:16px;height:16px}
+.srow{display:flex;align-items:center;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:var(--r-card);background:transparent;text-align:left;cursor:pointer;min-height:40px;transition:background-color var(--d-press) var(--ease)}
+.srow:hover{background:var(--row-hover)}
+.srow[aria-current="page"]{background:var(--row-on)}
+.srow .avh,.srow .ricon{--cut:var(--frost)}
+.srow:hover .avh{--cut:var(--row-hover)}
+.srow[aria-current="page"] .avh{--cut:var(--row-on)}
+.ricon{width:36px;height:36px;display:grid;place-items:center;flex:none;color:var(--graphite)}
+.ricon svg{width:20px;height:20px}
+.s-main{flex:1;min-width:0}
+.s-line{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.s-main{display:block}
+.s-name{display:block;font-size:14px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-line .s-name{flex:1;min-width:0}
+.s-time{font-size:12px;color:var(--ash);flex:none}
+.s-snip{display:block;font-size:14px;line-height:1.35;color:var(--ash);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-snip.typing{color:var(--graphite)}
+.s-snip .tdots{display:inline-flex;gap:2px;margin-left:3px;vertical-align:middle}
+.s-snip .tdots i{width:3px;height:3px;border-radius:50%;background:var(--t-dot,var(--graphite));animation:dot 1.2s var(--ease) infinite}
+.s-snip .tdots i:nth-child(2){animation-delay:.2s}.s-snip .tdots i:nth-child(3){animation-delay:.4s}
+.side-foot{border-top:1px solid var(--hairline);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.me-av{width:32px;height:32px;border-radius:50%;background:var(--carbon);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600;flex:none}
+.side .fade{transition:opacity var(--d-panel) var(--ease)}
+.side.collapsed .fade{opacity:0;pointer-events:none}
+.side.collapsed .search{margin:0 14px 8px}
+.side.collapsed .search input{padding:0;width:44px;color:transparent}
+.side.collapsed .search input::placeholder{color:transparent}
+.side.collapsed .search svg{left:14px}
+.side.collapsed .side-sec{height:14px;padding:6px 10px}
+.side.collapsed .side-sec>*{display:none}
+.side.collapsed .s-main,.side.collapsed .wordmark,.side.collapsed .side-foot .fade,.side.collapsed .new-btn{display:none}
+.side.collapsed .side-top{padding-left:18px}
+.side.collapsed .side-foot{flex-direction:column}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--white)}
+.top{height:52px;flex:none;display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:1px solid var(--hairline);background:var(--white)}
+.crumbs{font-size:14px;color:var(--ash);display:flex;gap:6px;align-items:center;white-space:nowrap}
+.crumbs b{color:var(--carbon);font-weight:600}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:12px}
+.plan{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--hairline);border-radius:var(--r-pill);background:var(--white);cursor:pointer;font-size:12px;color:var(--graphite)}
+.plan:hover{background:var(--frost)}
+.plan b{color:var(--carbon)}
+.bar{position:relative;display:inline-block;width:64px;height:4px;border-radius:var(--r-pill);background:var(--pebble);flex:none}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-pill);background:var(--graphite)}
+.bar .mark{position:absolute;top:-3px;width:1px;height:10px;background:var(--carbon)}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column}
+.screen[hidden]{display:none}
+
+/* ---------- Home ---------- */
+.home.screen{display:block;background:var(--frost);overflow-y:auto}
+.home-wrap{display:block}
+.home-wrap{max-width:1120px;width:100%;margin:0 auto;padding:48px 48px 64px}
+.eyebrow{font-size:14px;color:var(--ash);margin:0 0 4px}
+.display{font:600 40px/1.1 var(--font-display);letter-spacing:-0.015em}
+.sub{font-size:21px;line-height:1.24;font-weight:300;letter-spacing:-0.005em;color:var(--graphite);margin:8px 0 0}
+.ask{margin-top:24px;display:flex;align-items:center;gap:12px;background:var(--white);border-radius:var(--r-card);padding:8px 8px 8px 12px;max-width:720px}
+.ask input{flex:1;border:0;background:transparent;height:36px;font-size:15px}
+.ask input::placeholder{color:var(--ash)}
+.ask:focus-within{outline:2px solid var(--blue);outline-offset:0}
+.atlas-last{max-width:720px;margin:10px 0 0 4px;font-size:14px;color:var(--graphite);display:flex;gap:8px;align-items:center}
+.home-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;margin-top:40px;align-items:start}
+.card{background:var(--white);border-radius:var(--r-card)}
+.card-h{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 8px}
+.card-h h2{font-size:21px;font-weight:600;letter-spacing:-0.01em;display:flex;align-items:center;gap:10px}
+.group-h{display:flex;align-items:center;gap:8px;padding:16px 24px 6px;font-size:12px;font-weight:600;color:var(--ash);letter-spacing:-0.01em}
+.wnm{list-style:none;margin:0;padding:0 0 4px}
+.wnm li{display:flex;gap:14px;align-items:center;padding:14px 24px;position:relative;height:auto}
+.wnm li>.avh{align-self:flex-start;margin-top:2px}
+.wnm li>div{flex:1 1 auto;min-width:0}
+.wnm li>.btn{flex:none}
+.wnm li+li{border-top:1px solid var(--hairline)}
+.wnm .t{font-weight:600;font-size:15px;line-height:1.35}
+.wnm .d{font-size:14px;line-height:1.43;color:var(--ash);margin-top:2px;max-width:46ch}
+.wnm .tags{display:flex;gap:8px;align-items:center;margin-top:8px}
+.wnm li.top{padding-top:16px;padding-bottom:18px}
+.more{padding:2px 24px 8px;font-size:14px;color:var(--ash);margin:0}
+.card-f{padding:8px 24px 20px}
+.roster{list-style:none;margin:0;padding:4px 12px 8px}
+.roster li .srow{padding:10px 12px}
+.roster .avh{--cut:#fff}
+.roster .srow:hover .avh{--cut:var(--row-hover)}
+.r-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+.r-role{font-weight:400;color:var(--ash)}
+.roster .s-main{flex:1;min-width:0}
+@media (max-width:1360px){.home-grid{grid-template-columns:minmax(0,1fr)}}
+.new-agent{display:flex;align-items:center;gap:12px;width:calc(100% - 24px);margin:4px 12px 16px;padding:12px;border:1px dashed var(--hairline);border-radius:var(--r-card);background:transparent;cursor:pointer;text-align:left}
+.new-agent:hover{background:var(--frost)}
+.ghost-shape{width:40px;height:40px;flex:none}
+
+/* ---------- Conversation (shared) ---------- */
+.msgs{display:flex;flex-direction:column;gap:6px;padding:8px 24px 24px}
+.day{align-self:center;font-size:12px;color:var(--ash);margin:8px 0}
+.m{display:flex;flex-direction:column;max-width:100%}
+.m.ag{align-items:flex-start}
+.m.me{align-items:flex-end}
+.bubble{position:relative;max-width:30em;padding:9px 14px;border-radius:var(--r-bubble);font-size:15px;line-height:1.47;background:var(--bubble);overflow-wrap:anywhere}
+.m.me .bubble{background:var(--tint)}
+.m.me .bubble.neutral{background:var(--white);border:1px solid var(--hairline)}
+.bubble p{margin:0}.bubble p+p{margin-top:6px}
+.meta{font-size:12px;color:var(--ash);margin:4px 6px 6px;display:flex;gap:6px;flex-wrap:wrap}
+.thread{font-size:12px;color:var(--ash);margin:6px 8px 4px;max-width:30em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.react{position:absolute;top:-10px;left:-10px;min-width:26px;height:26px;padding:0 4px;border-radius:var(--r-pill);background:var(--white);border:1px solid var(--hairline);display:grid;place-items:center;font-size:13px;line-height:1}
+.m.ag .react,.gm .react{left:auto;right:-10px}
+.react.named{padding:0 8px 0 6px;display:inline-flex;gap:4px;font-size:12px;color:var(--graphite)}
+.check{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.check li{display:grid;grid-template-columns:16px 1fr;gap:8px;align-items:start}
+.check svg{width:16px;height:16px;margin-top:3px;color:var(--ok-ink)}
+.check .arrow{color:var(--ash);margin:0 4px}
+.sys{align-self:center;text-align:center;font-size:12px;line-height:1.5;color:var(--ash);margin:10px 24px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;max-width:44em}
+.sys svg{width:14px;height:14px}
+.sys .avh{vertical-align:middle}
+.pointer{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--hairline);background:var(--white);border-radius:var(--r-pill);height:32px;padding:0 14px 0 6px;font-size:14px;cursor:pointer;margin:4px 0}
+.pointer:hover{background:var(--frost)}
+.pointer svg{width:14px;height:14px;color:var(--ash)}
+.liveline{display:flex;align-items:center;gap:10px;margin:6px 0 2px;font-size:14px;color:var(--graphite)}
+.thinking{display:flex;align-items:center;gap:10px;margin:6px 0 2px;font-size:14px;color:var(--graphite)}
+.tdots3{display:inline-flex;gap:4px;padding:10px 12px;border-radius:var(--r-bubble);background:var(--bubble)}
+.tdots3 i{width:6px;height:6px;border-radius:50%;background:var(--dot,var(--graphite));animation:pulse 1.2s var(--ease) infinite}
+.tdots3 i:nth-child(2){animation-delay:.18s}.tdots3 i:nth-child(3){animation-delay:.36s}
+@keyframes pulse{0%,100%{opacity:.35;transform:translateY(0)}35%{opacity:1;transform:translateY(-2px)}}
+.enter{animation:msgIn var(--d-msg) var(--ease-out) both}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}}
+.composer{flex:none;display:flex;align-items:flex-end;gap:8px;margin:0 24px 20px;padding:6px 6px 6px 8px;background:var(--white);border:1px solid var(--hairline);border-radius:var(--r-card)}
+.composer:focus-within{border-color:var(--blue);outline:1px solid var(--blue)}
+.composer textarea{flex:1;border:0;resize:none;background:transparent;font-size:15px;line-height:1.47;padding:7px 4px;min-height:36px;max-height:120px}
+.composer textarea::placeholder{color:var(--ash)}
+.comp-hint{margin:-12px 28px 14px;font-size:12px;color:var(--ash)}
+
+/* ---------- Agent page ---------- */
+.ahead{flex:none;display:flex;align-items:center;gap:14px;padding:10px 20px;border-bottom:1px solid var(--hairline);min-height:60px}
+.ah-name{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;letter-spacing:-0.02em}
+.ah-meta{display:flex;align-items:center;gap:10px;margin-left:auto;flex:none}
+.ah-id{flex:1;min-width:0}
+.ah-id .caption{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:1400px){.ctx-x{display:none}}
+.appr-h>div{min-width:0}
+.table-scroll{overflow-x:auto}
+.ctx{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--graphite)}
+.split{flex:1;min-height:0;display:grid;grid-template-columns:minmax(400px,1fr) minmax(420px,1.08fr);transition:grid-template-columns var(--d-panel) var(--ease-move)}
+.split.pane-off{grid-template-columns:minmax(400px,1fr) 0}
+.conv{display:flex;flex-direction:column;min-height:0;background:var(--wash);border-right:1px solid var(--hairline)}
+.conv-scroll{flex:1;overflow-y:auto;min-height:0}
+.conv .msgs{max-width:720px;margin:0 auto}
+.conv .avh{--cut:var(--wash)}
+.hero-wrap{position:sticky;top:0;z-index:2;padding:20px 0 14px;text-align:center;background:linear-gradient(var(--wash) 80%,rgba(255,255,255,0))}
+.nametag{display:inline-flex;align-items:center;height:26px;padding:0 12px;border-radius:var(--r-pill);background:var(--white);border:1px solid var(--hairline);color:var(--ink);font-weight:600;font-size:15px;margin-top:6px}
+.statusline{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;font-size:14px;color:var(--graphite);transition:opacity var(--d-badge) var(--ease)}
+.statusline.swap{opacity:0}
+.sl-g{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;background:var(--white);border:1px solid var(--hairline)}
+.sl-g svg{width:12px;height:12px}
+.sl-g.waiting{background:var(--warn-fill);border-color:var(--warn-fill)}
+.sl-g.error{background:var(--err-fill);border-color:var(--err-fill);color:#fff}
+.sl-g.blocked{background:var(--carbon);border-color:var(--carbon);color:#fff}
+/* inline workspace card ("Computer") */
+.wcard{display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:center;width:min(100%,30em);padding:10px;border-radius:var(--r-card);background:var(--white);border:1px solid var(--hairline);margin:6px 0}
+.wthumb{height:84px;border-radius:6px;background:var(--frost);overflow:hidden;position:relative;border:1px solid var(--hairline)}
+.wthumb .mini{font:500 5.5px/8px var(--mono);padding:6px;white-space:pre;color:var(--graphite)}
+.wthumb .mini .a{background:#dff2e5}.wthumb .mini .r{background:#fbe3e3}
+.wtitle{font-size:14px;font-weight:600;line-height:1.35;margin:2px 0 8px}
+.wrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.wrow .btn{height:32px;padding:0 12px;font-size:14px}
+/* workspace pane */
+.ws{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--white);overflow:hidden}
+.ws-inner{display:flex;flex-direction:column;min-height:0;height:100%;transition:opacity var(--d-panel) var(--ease),transform var(--d-panel) var(--ease-move)}
+.pane-off .ws-inner{opacity:0;transform:translateX(24px)}
+.ws-head{flex:none;display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--hairline)}
+.ws-head .seg [role="tab"]{height:32px;font-size:14px;padding:0 12px}
+.ws-panel{flex:1;min-height:0;display:flex;flex-direction:column}
+.ws-panel[hidden]{display:none}
+.ws-title{display:flex;align-items:center;gap:10px;padding:14px 20px 6px}
+.ws-title h3{font-size:15px}
+.files{display:flex;gap:4px;padding:6px 16px 0;border-bottom:1px solid var(--hairline);overflow-x:auto}
+.files button{height:34px;border:0;background:transparent;padding:0 10px;font-size:12px;font-family:var(--mono);letter-spacing:0;color:var(--ash);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.files button[aria-selected="true"]{color:var(--carbon);border-bottom-color:var(--carbon)}
+.files .plus{color:var(--ok-ink)}.files .minus{color:var(--err-ink)}
+.ws-body{flex:1;min-height:0;overflow:auto}
+.diff{font:400 12.5px/20px var(--mono);letter-spacing:0;padding:8px 0 16px;min-width:max-content}
+.dl{display:grid;grid-template-columns:44px 20px 1fr;padding-right:20px}
+.dl .ln{color:var(--ash);text-align:right;padding-right:10px;user-select:none}
+.dl .sg{color:var(--graphite);user-select:none}
+.dl code{font-size:inherit;white-space:pre;color:var(--carbon)}
+.dl-add{background:#e9f6ee}.dl-del{background:#fdeeee}
+.dl-hunk{background:var(--ice);color:var(--ash)}
+.dl-hunk code{color:var(--ash)}
+.term{font:400 12.5px/20px var(--mono);letter-spacing:0;padding:14px 20px;white-space:pre-wrap;color:var(--carbon)}
+.term .pass{color:var(--ok-ink);font-weight:600}.term .run{color:var(--warn-ink);font-weight:600}
+.flist{list-style:none;margin:0;padding:8px 12px}
+.flist li{display:flex;justify-content:space-between;padding:10px 8px;border-bottom:1px solid var(--hairline);font-family:var(--mono);font-size:12.5px;letter-spacing:0}
+.dock{flex:none;padding:12px 16px 16px;background:var(--frost);border-top:1px solid var(--hairline)}
+.appr{background:var(--white);border-radius:var(--r-card);padding:16px}
+.appr-h{display:flex;align-items:center;gap:10px}
+.appr-h .avh{--cut:#fff}
+.appr-t{font-weight:600;font-size:15px}
+.cmd{margin:12px 0 8px;padding:10px 12px;border-radius:var(--r-card);background:var(--frost);font:500 14px/1.4 var(--mono);letter-spacing:0;display:flex;gap:10px;align-items:center}
+.cmd .in{font-family:var(--font);font-size:12px;color:var(--ash);margin-left:auto;letter-spacing:-0.01em}
+.appr p{margin:0 0 12px;font-size:14px;line-height:1.43;color:var(--graphite)}
+.appr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.appr .scope{margin:12px 0 0;font-size:12px;line-height:1.5;color:var(--ash)}
+.appr-done{display:flex;gap:12px;align-items:flex-start}
+.appr-done .ok{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--ok-tint);color:var(--ok-ink);flex:none}
+.appr-done .ok.neutral{background:var(--pebble);color:var(--carbon)}
+.appr-done svg{width:16px;height:16px}
+.routine{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--hairline)}
+.routine .t{font-weight:600;font-size:14px}
+.field{display:flex;flex-direction:column;gap:6px;padding:0 20px 16px}
+.field label{font-size:12px;font-weight:600;color:var(--graphite)}
+.field input,.field textarea{border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--frost);padding:8px 10px;font-size:14px}
+.field input:focus-visible,.field textarea:focus-visible{outline:2px solid var(--blue);outline-offset:0;border-color:transparent;border-radius:var(--r-card)}
+
+/* take-over (full-screen workspace) */
+.takeover{position:fixed;inset:0;z-index:50;background:var(--white);display:flex;flex-direction:column;transition:clip-path var(--d-expand) var(--ease-out)}
+.takeover[hidden]{display:none}
+.to-head{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--hairline)}
+.to-head .avh{--cut:#fff}
+.to-body{flex:1;position:relative;overflow:auto;cursor:none}
+.to-body .diff{font-size:14px;line-height:24px;padding:20px 0}
+.cursor{position:absolute;left:420px;top:180px;pointer-events:none;display:flex;align-items:flex-start;gap:2px;z-index:2}
+.cursor svg{width:18px;height:18px}
+.cursor span{background:var(--carbon);color:#fff;font-size:12px;font-weight:600;padding:2px 8px;border-radius:var(--r-pill);margin-top:14px}
+
+/* ---------- Team chat ---------- */
+.tc-head{flex:none;display:flex;align-items:center;gap:14px;padding:10px 20px;border-bottom:1px solid var(--hairline);min-height:60px}
+.stack{display:flex}
+.stack .avh{--cut:#fff;margin-left:-6px}
+.stack .avh:first-child{margin-left:0}
+.meeting{flex:none;display:flex;align-items:center;gap:16px;margin:12px 20px 0;padding:12px 16px;border-radius:var(--r-card);background:var(--frost)}
+.live-tag{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--r-pill);background:var(--carbon);color:#fff;font-size:12px;font-weight:600}
+.live-tag i{width:6px;height:6px;border-radius:50%;background:#fff}
+.m-t{font-weight:600;font-size:15px}
+.timer{font:600 21px/1 var(--font-display);font-variant-numeric:tabular-nums;letter-spacing:-0.01em;min-width:56px;text-align:right}
+.tbar{width:96px;height:4px;border-radius:var(--r-pill);background:var(--pebble);position:relative;overflow:hidden}
+.tbar i{position:absolute;left:0;top:0;bottom:0;background:var(--carbon);border-radius:var(--r-pill);transition:width 1s linear}
+.tc-split{flex:1;min-height:0;display:grid;grid-template-columns:1fr 280px}
+.tc-conv{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--hairline)}
+.tc-conv .msgs{max-width:760px;width:100%;margin:0 auto}
+.gm{display:grid;grid-template-columns:32px 1fr;gap:10px;margin-top:10px}
+.gm .avh{--cut:#fff;margin-top:22px}
+.gm-who{font-size:14px;font-weight:600;margin:0 0 4px 6px;display:flex;gap:8px;align-items:baseline}
+.gm-who .caption{font-weight:400}
+.gm-body{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.handoff{align-self:center;display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.ho-chip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 6px;border:1px solid var(--hairline);border-radius:var(--r-pill);background:var(--white)}
+.ho-chip .avh{--cut:#fff}
+.ho-track{position:relative;width:64px;height:1px;background:var(--hairline)}
+.ho-dot{position:absolute;top:-9px;left:0;height:18px;padding:0 6px;border-radius:var(--r-pill);background:var(--carbon);color:#fff;font:600 10px/18px var(--font);letter-spacing:0;transform:translateX(26px)}
+.handoff.go .ho-dot{animation:travel var(--d-handoff) var(--ease-move) .45s both}
+@keyframes travel{from{transform:translateX(-6px)}to{transform:translateX(26px)}}
+.side-panel{overflow-y:auto;padding:16px 12px;background:var(--white)}
+.side-panel h3{font-size:12px;color:var(--ash);font-weight:600;padding:0 12px 6px}
+.side-panel .srow{cursor:default}
+.side-panel .avh{--cut:#fff}
+.side-panel .srow:hover .avh{--cut:var(--row-hover)}
+
+/* ---------- Dialog (new agent) ---------- */
+.scrim{position:fixed;inset:0;background:rgba(29,29,31,.30);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);z-index:60;display:grid;place-items:center}
+.scrim[hidden]{display:none}
+/* The resting state is fully opaque. The fade-in is added only on an interactive open (class .anim) and ends at the resting state. */
+.dialog{width:min(560px,calc(100vw - 32px));max-height:calc(100vh - 64px);display:flex;flex-direction:column;background:#fff;opacity:1;transform:none;border-radius:var(--r-card);overflow:hidden;--wash:#fafafa;--tint:#efeff1}
+.dialog.anim{animation:dlgIn var(--d-panel) var(--ease-out) forwards}
+@keyframes dlgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dlg-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--hairline)}
+.dlg-h h2{font-size:17px}
+.dlg-body{flex:1;overflow-y:auto;background:var(--wash);transition:background-color var(--d-expand) var(--ease)}
+.dlg-hero{text-align:center;padding:24px 0 8px}
+.morph{position:relative;width:76px;height:76px;margin:0 auto}
+.morph>*{position:absolute;inset:0;transition:opacity var(--d-expand) var(--ease)}
+.morph .after{opacity:0}
+.morph.done .after{opacity:1}.morph.done .before{opacity:0}
+.dlg-f{display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid var(--hairline)}
+.sugg{display:flex;gap:8px;flex-wrap:wrap;padding:0 24px 12px}
+.sugg button{height:32px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--hairline);background:var(--white);font-size:14px;cursor:pointer}
+.sugg button:hover{background:var(--frost)}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--carbon);color:#fff;font-size:14px;padding:10px 16px;border-radius:var(--r-pill);z-index:80;display:flex;gap:12px;align-items:center;animation:msgIn var(--d-msg) var(--ease-out) both}
+.toast a{color:#9ccbff}
+
+/* ---------- Tokens sheet ---------- */
+.sheet{height:calc(100vh - 52px);overflow-y:auto;background:var(--white)}
+.sheet[hidden]{display:none}
+.sheet-wrap{max-width:1120px;margin:0 auto;padding:56px 48px 96px}
+.sheet section{padding:48px 0;border-top:1px solid var(--hairline)}
+.sheet section:first-of-type{border-top:0;padding-top:24px}
+.sheet h2{font:600 28px/1.18 var(--font-display);letter-spacing:-0.01em}
+.sheet .lede{font-size:17px;font-weight:300;line-height:1.47;color:var(--graphite);max-width:60ch;margin:8px 0 24px}
+.sheet h3{font-size:15px;margin:24px 0 12px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.sw{border:1px solid var(--hairline);border-radius:var(--r-card);overflow:hidden}
+.sw i{display:block;height:56px}
+.sw div{padding:10px 12px;font-size:12px;line-height:1.5}
+.sw b{display:block;font-size:14px}
+table.spec{width:100%;border-collapse:collapse;font-size:14px}
+table.spec th{text-align:left;font-size:12px;color:var(--ash);font-weight:600;padding:8px 12px;border-bottom:1px solid var(--hairline)}
+table.spec td{padding:12px;border-bottom:1px solid var(--hairline);vertical-align:middle}
+table.spec code{font-size:12px}
+.pal-row td:first-child{width:170px}
+.pass-t{font-size:12px;font-weight:600;color:var(--ok-ink)}
+.fail-t{font-size:12px;font-weight:600;color:var(--err-ink)}
+.hex{font-family:var(--mono);font-size:12px;letter-spacing:0;color:var(--graphite)}
+.gallery{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end}
+.gallery figure{margin:0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.gallery figcaption{font-size:12px;color:var(--ash)}
+.gallery figcaption b{display:block;color:var(--carbon);font-size:14px}
+.space-bar{height:12px;background:var(--carbon);border-radius:2px}
+.radius-demo{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.radius-demo div{width:140px;height:64px;border:1px solid var(--hairline);display:grid;place-items:center;font-size:12px;color:var(--graphite);background:var(--frost)}
+pre.vars{background:var(--frost);border-radius:var(--r-card);padding:16px 20px;font:400 12px/1.6 var(--mono);letter-spacing:0;overflow:auto;max-height:360px}
+
+/* ---------- Reduced motion (OS setting, or the demo switch) ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+
+<!-- ======================= Prototype chrome (not part of the UI) ======================= -->
+<header class="proto" aria-label="Prototype controls (not part of the UI)">
+  <div class="proto-id"><b>Bench · UI direction v0.1</b><span class="caption">Hi-fi direction samples, Phase 5 preview. Demo chrome is not UI.</span></div>
+  <div class="seg" role="tablist" aria-label="Sample screens">
+    <button role="tab" id="t-home" aria-controls="p-home" aria-selected="true">Home</button>
+    <button role="tab" id="t-agent" aria-controls="p-agent" aria-selected="false" tabindex="-1">Agent · Noor</button>
+    <button role="tab" id="t-team" aria-controls="p-team" aria-selected="false" tabindex="-1">Team chat</button>
+    <button role="tab" id="t-tokens" aria-controls="p-tokens" aria-selected="false" tabindex="-1">Tokens</button>
+  </div>
+  <div class="proto-r">
+    <label class="demo-lab" id="heroDemo" hidden>Demo: Noor's state
+      <select class="select" id="heroSel">
+        <option value="live">Live demo</option><option value="idle">Idle</option><option value="thinking">Thinking</option>
+        <option value="working">Working</option><option value="waiting">Waiting for you</option><option value="error">Error</option>
+      </select>
+    </label>
+    <label class="switch"><input type="checkbox" id="rmToggle"> Reduce motion</label>
+  </div>
+</header>
+
+<!-- ======================= App ======================= -->
+<div class="app" id="app">
+  <aside class="side" id="side" aria-label="Agents and navigation">
+    <div class="side-top">
+      <button class="icon-btn" id="sideToggle" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar"><span data-ic="sidebar"></span></button>
+      <span class="wordmark">Bench <small>(codename)</small></span>
+      <button class="icon-btn fill new-btn" data-act="newAgent" aria-label="New agent" title="New agent"><span data-ic="plus"></span></button>
+    </div>
+    <div class="search"><span data-ic="search"></span><input type="search" id="sideSearch" placeholder="Search agents and chats" aria-label="Search agents and chats"></div>
+    <div class="side-scroll" id="sideList"></div>
+    <div class="side-foot">
+      <span class="me-av" aria-hidden="true">You</span>
+      <div class="s-main fade"><div class="s-name">You</div><div class="caption">Owner · Bench home on this PC</div></div>
+      <button class="icon-btn" data-act="stub" aria-label="Settings" title="Settings"><span data-ic="gear"></span></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="top">
+      <nav class="crumbs" aria-label="Breadcrumb" id="crumbs"><b>Home</b></nav>
+      <div class="top-r">
+        <button class="plan" data-act="stub" aria-label="Plan usage: 41 percent of the weekly limit used, resets Monday 09:00, headroom OK. Open usage">
+          Week <span class="bar" aria-hidden="true"><i style="width:41%"></i><span class="mark" style="left:70%"></span></span>
+          <span><b>41 %</b> · resets Mon 09:00 · Headroom OK</span>
+        </button>
+        <button class="btn secondary" style="height:32px" data-tab="home" aria-label="8 items need you. Open Home">Needs me <span class="count">8</span></button>
+      </div>
+    </div>
+
+    <!-- ============ HOME ============ -->
+    <section class="screen home" id="p-home" role="tabpanel" aria-labelledby="t-home">
+      <div class="home-wrap">
+        <p class="eyebrow">Thursday, 22 October · Bench, Sprint 2, day 1</p>
+        <h1 class="display">Good morning.</h1>
+        <p class="sub">Eight things need you. Start with Jade: QA-3 is blocked.</p>
+
+        <form class="ask" id="askForm" aria-label="Message Atlas">
+          <span class="avh" data-av="atlas" data-size="28"></span>
+          <input id="askIn" placeholder="Ask Atlas: an idea, a question, a task…" aria-label="Message Atlas, your CEO">
+          <button class="icon-btn fill" aria-label="Send to Atlas"><span data-ic="up"></span></button>
+        </form>
+        <p class="atlas-last"><span class="caption">Atlas, 08:02</span> 1 reply to dana drafted in your voice and held for your ok. nothing sends until you've read it.</p>
+
+        <div class="home-grid">
+          <section class="card" aria-labelledby="needsH">
+            <div class="card-h"><h2 id="needsH">What needs me <span class="count">8</span></h2><span class="caption">Live · 0 tokens</span></div>
+            <div class="group-h">Decide <span class="caption">5</span></div>
+            <ul class="wnm">
+              <li class="top">
+                <span class="avh" data-av="jade" data-size="40"></span>
+                <div><div class="t">Jade's E2E tests failed twice on Windows CI</div>
+                  <div class="d">QA-3 · Bench. Karim couldn't resolve it and suggests 2 options.</div>
+                  <div class="tags"><span class="tag solid">Blocked</span><span class="caption">95 min</span></div></div>
+                <button class="btn primary" data-act="stub">Decide on QA-3</button>
+              </li>
+              <li>
+                <span class="avh" data-av="atlas" data-size="40"></span>
+                <div><div class="t">Email draft: "send it or change it?"</div>
+                  <div class="d">To dana.k@example.com · Re: Interview availability. Held for your ok.</div>
+                  <div class="tags"><span class="tag solid">Outward</span><span class="caption">2 h</span></div></div>
+                <button class="btn secondary" data-act="stub">Review email</button>
+              </li>
+              <li>
+                <span class="avh" data-av="karim" data-size="40"></span>
+                <div><div class="t">Karim wants to merge PR #41 to main</div>
+                  <div class="d">Code review passed; CI green on Windows and Ubuntu.</div>
+                  <div class="tags"><span class="tag line">Reserved</span><span class="caption">40 min</span></div></div>
+                <button class="btn secondary" data-act="stub">Review merge</button>
+              </li>
+              <li>
+                <span class="avh" data-av="noor" data-size="40"></span>
+                <div><div class="t">Noor asks to run npm test in bench</div>
+                  <div class="d">The full suite before she opens the pull request for S1-4.</div>
+                  <div class="tags"><span class="tag">Work request</span><span class="caption">2 min</span></div></div>
+                <button class="btn secondary" data-tab="agent">Review request</button>
+              </li>
+              <li>
+                <span class="avh" data-av="sam" data-size="40"></span>
+                <div><div class="t">Payment needed: Figma seat for Sam</div>
+                  <div class="d">Paid by you outside Bench. Agents never pay.</div>
+                  <div class="tags"><span class="tag line">Payment</span><span class="caption">3 h</span></div></div>
+                <button class="btn secondary" data-act="stub">Review payment</button>
+              </li>
+            </ul>
+            <div id="moreGroups">
+              <div class="group-h">Meet <span class="caption">2</span></div>
+              <p class="more">Maya's Sprint 2 review and Omar's interview, below the top 5.</p>
+              <div class="group-h">For your info <span class="caption">1</span></div>
+              <p class="more">A debate is running in Bench: where does the Stop button live?</p>
+            </div>
+            <div id="allGroups" hidden>
+              <div class="group-h">Meet <span class="caption">2</span></div>
+              <ul class="wnm">
+                <li><span class="avh" data-av="maya" data-size="40"></span><div><div class="t">Maya: "we have something to show you"</div><div class="d">Sprint 2 review: onboarding (S1-2) and the agent runner (S1-3).</div></div><button class="btn secondary" data-act="stub">Join review</button></li>
+                <li><span class="avh" data-av="omar" data-size="40"></span><div><div class="t">Omar, BA lead, wants to meet you</div><div class="d">8 questions about memory filters. Continue at question 3.</div></div><button class="btn secondary" data-act="stub">Continue interview</button></li>
+              </ul>
+              <div class="group-h">For your info <span class="caption">1</span></div>
+              <ul class="wnm"><li><span class="avh" data-av="maya" data-size="40"></span><div><div class="t">Debate running: where does the Stop button live?</div><div class="d">Maya decides when the 5 minutes are up.</div></div><button class="btn secondary" data-tab="team">Watch debate</button></li></ul>
+            </div>
+            <div class="card-f"><button class="btn secondary" id="showAll" aria-expanded="false" aria-controls="allGroups">Show all 8</button></div>
+          </section>
+
+          <section class="card" aria-labelledby="teamH">
+            <div class="card-h"><h2 id="teamH">Team now</h2><a href="#" data-act="stub" class="list">Open Bench › Team</a></div>
+            <div class="group-h">Company</div>
+            <ul class="roster" id="rosterCo"></ul>
+            <div class="group-h">Bench · 7 agents</div>
+            <ul class="roster" id="rosterBench"></ul>
+            <button class="new-agent" data-act="newAgent">
+              <span class="ghost-shape" data-ghost></span>
+              <span><b class="list" style="font-weight:600;display:block">New agent</b><span class="caption">Describe what you need in a chat. Atlas drafts it; nothing is created until you confirm.</span></span>
+            </button>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ AGENT PAGE (Noor) ============ -->
+    <section class="screen" id="p-agent" role="tabpanel" aria-labelledby="t-agent" hidden>
+      <div class="ahead">
+        <span class="avh" id="headAv"></span>
+        <div class="ah-id">
+          <div class="ah-name">Noor <span id="headTag"></span></div>
+          <div class="caption">Developer · Bench › Dev team · Sonnet · Ask every time</div>
+        </div>
+        <div class="ah-meta">
+          <span class="ctx" title="Context used in this session" aria-label="Context 34 percent used, checkpoint at 70 percent">Context <span class="bar" aria-hidden="true"><i style="width:34%"></i><span class="mark" style="left:70%"></span></span> <b>34 %</b><span class="ctx-x"> · checkpoint at 70 %</span></span>
+          <span class="chip">This run <b>28.4k tokens</b> · 0.9 % of week</span>
+          <button class="btn secondary" id="stopBtn"><span data-ic="stop"></span><span>Stop</span></button>
+          <button class="icon-btn" id="paneToggle" aria-pressed="true" aria-controls="wsPane" aria-label="Show Noor's workspace" title="Noor's workspace"><span data-ic="monitor"></span></button>
+        </div>
+      </div>
+      <div class="split" id="split">
+        <div class="conv" id="conv">
+          <div class="conv-scroll" id="convScroll">
+            <div class="hero-wrap">
+              <div class="hero" id="hero" data-status="working" data-expr="focused"></div>
+              <div class="nametag">Noor</div>
+              <div class="statusline" id="heroStatus" aria-live="polite"></div>
+            </div>
+            <div class="msgs" id="nMsgs">
+              <div class="day">Today</div>
+              <div class="m me">
+                <div class="bubble"><span class="react" role="img" aria-label="Noor reacted with a thumbs up: acknowledged">👍</span>Noor, use the existing date library for the timestamps, please. No new dependency.</div>
+                <div class="meta">08:52 · Read</div>
+              </div>
+              <div class="m ag">
+                <div class="bubble"><p>done.</p>
+                  <ul class="check">
+                    <li><span data-ic="check"></span><span><b>date-fns</b><span class="arrow">→</span>swapped in · 41 lines removed</span></li>
+                    <li><span data-ic="check"></span><span><b>formatTime.ts</b><span class="arrow">→</span>now a thin wrapper</span></li>
+                    <li><span data-ic="check"></span><span><b>dependencies</b><span class="arrow">→</span>none added</span></li>
+                  </ul></div>
+                <div class="meta">08:58 · 2.1k tokens · 0.07 % of week · <a href="#" data-act="stub">Trace</a></div>
+              </div>
+              <div class="sys"><span data-ic="memory"></span> Memory updated · Lesson: prefer the date library already in the repo · Noor</div>
+              <div class="m ag">
+                <div class="bubble">stop now sits in the composer and replaces send while i'm running. it's in the diff on the right.</div>
+                <div class="meta">09:04 · 1.8k tokens · 0.06 % of week · <a href="#" data-act="stub">Trace</a></div>
+              </div>
+              <div class="m me">
+                <div class="thread">↳ stop now sits in the composer and replaces send while i'm running…</div>
+                <div class="bubble">Good. Keep it there for now; Maya's debate decides the rest.</div>
+                <div class="meta">09:06 · Read</div>
+              </div>
+              <div class="m ag">
+                <div class="bubble">running the chat tests now. before the pr i'd like the full suite too. that one needs your ok.</div>
+                <div class="meta">09:12 · 1.2k tokens · 0.04 % of week · <a href="#" data-act="stub">Trace</a></div>
+              </div>
+              <div class="wcard" id="wcard" aria-label="Noor's workspace card">
+                <div class="wthumb" aria-hidden="true"><div class="mini" id="miniDiff"></div></div>
+                <div>
+                  <div class="caption">Noor's screen · bench</div>
+                  <div class="wtitle">run the full test suite before opening the pr</div>
+                  <div class="wrow"><span id="wPill"></span>
+                    <button class="btn secondary" id="wOpen">Show in pane</button>
+                    <button class="btn secondary" id="wTake">Take over</button></div>
+                </div>
+              </div>
+              <div class="liveline" id="liveLine"><span class="avh" data-av="noor" data-size="20" data-nobadge></span><span>running <code>pnpm test chat</code> · <span id="tp">8</span> of 12 passed</span></div>
+            </div>
+          </div>
+          <form class="composer" id="nForm" aria-label="Message Noor">
+            <button type="button" class="icon-btn" aria-label="Attach a file" data-act="stub"><span data-ic="plus"></span></button>
+            <textarea id="nIn" rows="1" placeholder="Message Noor · she reads it after the current step" aria-label="Message Noor"></textarea>
+            <button class="icon-btn fill" id="nSend" aria-label="Send to Noor"><span data-ic="up"></span></button>
+          </form>
+        </div>
+
+        <aside class="ws" id="wsPane" aria-label="Noor's workspace">
+          <div class="ws-inner">
+            <div class="ws-head">
+              <div class="seg" role="tablist" aria-label="Workspace views">
+                <button role="tab" aria-selected="true" data-wtab="screen">Screen</button>
+                <button role="tab" aria-selected="false" tabindex="-1" data-wtab="routines">Routines</button>
+                <button role="tab" aria-selected="false" tabindex="-1" data-wtab="settings">Settings</button>
+              </div>
+              <span class="caption" style="margin-left:auto">Live · updated 09:14</span>
+            </div>
+
+            <div class="ws-panel" data-wpanel="screen">
+              <div class="ws-title"><h3>Noor's screen</h3><span class="caption">S1-4 Chat UI: streaming, markdown, stop</span></div>
+              <div class="files" role="tablist" aria-label="Changed files and terminal">
+                <button role="tab" aria-selected="true" data-file="diff">Composer.tsx <span class="plus">+9</span> <span class="minus">−3</span></button>
+                <button role="tab" aria-selected="false" tabindex="-1" data-file="files">3 files changed</button>
+                <button role="tab" aria-selected="false" tabindex="-1" data-file="term">Terminal</button>
+              </div>
+              <div class="ws-body" id="wsBody"></div>
+              <div class="dock" id="dock">
+                <div class="appr" id="appr" role="region" aria-labelledby="apprT">
+                  <div class="appr-h"><span class="avh" id="apprAv"></span>
+                    <div style="flex:1"><div class="appr-t" id="apprT">Noor asks to run a command</div><div class="caption">2 min ago · Atlas sent it to you: it's a new command pattern</div></div>
+                    <span class="tag">Work request</span></div>
+                  <div class="cmd"><span class="muted">$</span> npm test <span class="in">in repo bench</span></div>
+                  <p>Runs the full suite (214 tests, about 3 minutes) before Noor opens the pull request. Stays inside bench/.</p>
+                  <div class="appr-actions">
+                    <button class="btn primary" id="allowOnce">Allow once</button>
+                    <button class="btn outline" id="allowAlways" aria-describedby="scopeNote">Always allow this pattern</button>
+                    <button class="btn plain" id="denyBtn">Deny</button>
+                  </div>
+                  <p class="scope" id="scopeNote">"Always allow" lets Noor run <code>npm test</code> in bench without asking. Other commands and other repos still ask. Revoke it any time in Settings › Permissions or on Noor's page › Autonomy.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="ws-panel" data-wpanel="routines" hidden>
+              <div class="ws-title"><h3>Routines</h3><span class="caption">Run on a schedule; each run shows its cost</span></div>
+              <div class="routine"><span data-ic="clock"></span><div style="flex:1"><div class="t">Morning test sweep</div><div class="caption">Weekdays at 8:00 · last run 08:00, 6.2k tokens</div></div><label class="switch"><input type="checkbox" checked aria-label="Morning test sweep on"> On</label></div>
+              <div class="routine"><span data-ic="clock"></span><div style="flex:1"><div class="t">Dependency check</div><div class="caption">Mondays at 9:00 · deferred when the 30 % guard is on</div></div><label class="switch"><input type="checkbox" aria-label="Dependency check off"> Off</label></div>
+              <div style="padding:16px 20px"><button class="btn secondary" data-act="stub"><span data-ic="plus"></span> New routine</button></div>
+            </div>
+
+            <div class="ws-panel" data-wpanel="settings" hidden>
+              <div class="ws-title"><h3>Settings</h3><span class="caption" id="unsaved">No unsaved changes</span></div>
+              <div style="display:flex;align-items:center;gap:16px;padding:8px 20px 20px"><span class="avh" data-av="noor" data-size="64" data-nobadge></span><button class="btn secondary" data-act="stub">Customize avatar…</button></div>
+              <div class="field"><label for="fName">Name</label><input id="fName" value="Noor"></div>
+              <div class="field"><label for="fTitle">Title (optional)</label><input id="fTitle" value="Developer"></div>
+              <div class="field"><label for="fDesc">Description</label><textarea id="fDesc" rows="3">Developer. Writes code and tests in the repos you point her to.</textarea></div>
+              <div class="field" style="flex-direction:row;align-items:center;justify-content:space-between"><span class="list">Notify me when Noor needs me</span><label class="switch"><input type="checkbox" checked aria-label="Notifications on"> On</label></div>
+              <div style="padding:0 20px 20px"><button class="btn secondary" id="saveSet">Save changes</button></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ TEAM CHAT ============ -->
+    <section class="screen" id="p-team" role="tabpanel" aria-labelledby="t-team" hidden>
+      <div class="tc-head">
+        <span class="avh" data-cluster data-size="36"></span>
+        <div><div class="ah-name">Team chat</div><div class="caption">Bench · 7 members · you're a participant: your messages get replies</div></div>
+        <div class="stack" style="margin-left:auto" aria-label="Present now: Maya, Omar, Karim, Noor">
+          <span class="avh" data-av="maya" data-size="28"></span><span class="avh" data-av="omar" data-size="28"></span><span class="avh" data-av="karim" data-size="28"></span><span class="avh" data-av="noor" data-size="28"></span>
+        </div>
+      </div>
+      <div class="meeting" role="region" aria-label="Live debate">
+        <span class="live-tag"><i aria-hidden="true"></i>Live</span>
+        <div style="flex:1;min-width:0"><div class="m-t">Debate: where does the Stop button live?</div>
+          <div class="caption" id="mCap">Maya decides · with Sam and Noor · 3.2k tokens so far · the chat is archived when it closes, the memo stays</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <span class="timer" id="timer" role="timer" aria-label="Time left">5:00</span>
+          <span class="tbar" aria-hidden="true"><i id="tbar" style="width:100%"></i></span>
+        </div>
+        <button class="btn secondary" data-act="stub">Watch</button>
+        <button class="btn secondary" data-act="stub">Join, you'll decide</button>
+      </div>
+      <div class="tc-split">
+        <div class="tc-conv" style="--tint:#fff">
+          <div class="conv-scroll" id="tScroll">
+            <div class="msgs" id="tMsgs"></div>
+          </div>
+          <form class="composer" id="tForm" aria-label="Message the Bench team">
+            <button type="button" class="icon-btn" aria-label="Attach a file" data-act="stub"><span data-ic="plus"></span></button>
+            <textarea id="tIn" rows="1" aria-label="Message the team" placeholder="Message the team · @name picks who replies">@Karim can Noor pair with Jade on the CI runners after the debate?</textarea>
+            <button class="icon-btn primary" aria-label="Send to the team"><span data-ic="up"></span></button>
+          </form>
+          <p class="comp-hint">@mention someone to pick who replies; otherwise Bench picks. Every reply shows its cost.</p>
+        </div>
+        <aside class="side-panel" aria-label="Members">
+          <h3>In this chat · 7</h3>
+          <ul class="roster" id="tMembers" style="padding:0"></ul>
+        </aside>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ TAKE-OVER (full-screen workspace) ============ -->
+<div class="takeover" id="takeover" role="dialog" aria-modal="true" aria-labelledby="toT" hidden>
+  <div class="to-head">
+    <span class="avh" data-av="noor" data-size="28" data-status="paused"></span>
+    <div style="flex:1"><div class="appr-t" id="toT">You have Noor's workspace</div><div class="caption">Noor is paused while you work. Your edits are logged in the trace and she continues from them.</div></div>
+    <span class="tag">Paused</span>
+    <button class="btn primary" id="toDone">I'm done, continue</button>
+  </div>
+  <div class="files"><span style="height:34px;display:inline-flex;align-items:center;padding:0 10px;font:12px var(--mono);border-bottom:2px solid var(--carbon)">Composer.tsx</span></div>
+  <div class="to-body" id="toBody">
+    <div class="cursor" id="cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3l14 8-6.5 1.6L9.5 19z" fill="#1d1d1f" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/></svg><span>You</span></div>
+    <div id="toDiff"></div>
+  </div>
+</div>
+
+<!-- ============ NEW AGENT DIALOG ============ -->
+<div class="scrim" id="scrim" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgT" id="dlg">
+    <div class="dlg-h"><h2 id="dlgT">New agent</h2><button class="icon-btn" id="dlgX" aria-label="Close"><span data-ic="x"></span></button></div>
+    <div class="dlg-body" id="dlgBody">
+      <div class="dlg-hero">
+        <div class="morph" id="morph"><span class="before"></span><span class="after"></span></div>
+        <div class="nametag" id="dlgName" style="color:var(--graphite)">New agent</div>
+        <div class="caption" style="margin-top:6px" id="dlgSub">Draft · not created yet</div>
+      </div>
+      <div class="msgs" id="dMsgs" style="padding-top:4px">
+        <div class="m ag"><div class="bubble">good to meet you. what do you want me around for?</div></div>
+      </div>
+      <div class="sugg" id="dSugg" role="group" aria-label="Suggested descriptions">
+        <button type="button" data-s="Write release notes from merged PRs every Friday and hold them for me.">Release notes every Friday</button>
+        <button type="button" data-s="Watch my GitHub issues and tell me when one needs me.">Watch my GitHub issues</button>
+      </div>
+    </div>
+    <form class="composer" id="dForm" style="margin:12px 20px" aria-label="Describe the agent">
+      <textarea id="dIn" rows="1" placeholder="Describe what it should do" aria-label="Describe what the agent should do"></textarea>
+      <button class="icon-btn fill" aria-label="Send description"><span data-ic="up"></span></button>
+    </form>
+    <div class="dlg-f">
+      <span class="caption" id="dHint" style="flex:1">Describe the agent first. Atlas drafts it from your words.</span>
+      <button class="btn plain" id="dCancel">Cancel</button>
+      <button class="btn primary" id="dCreate" disabled>Create agent</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOKENS SHEET ============ -->
+<main class="sheet" id="p-tokens" role="tabpanel" aria-labelledby="t-tokens" hidden>
+  <div class="sheet-wrap">
+    <p class="eyebrow">Bench design system · direction v0.1 · light mode (dark is Phase 5b)</p>
+    <h1 class="display">A white room, one blue switch, and a family of characters.</h1>
+    <p class="sub" style="max-width:40ch">Apple carries the structure. The agents carry the colour.</p>
+
+    <section aria-labelledby="c1"><h2 id="c1">Colour</h2>
+      <p class="lede">60 % neutral canvas, 30 % white surfaces and text, 10 % accent. The accent is Apple Blue, used only for the single filled action on a screen and for focus. Agent hues live only in avatars, name tags, mention chips, the client's bubble tint, a faint wash behind the agent's chat, and the agent's thinking dots.</p>
+      <h3>Neutrals and action</h3><div class="swatches" id="swN"></div>
+      <h3>Feedback (always paired with a word)</h3><div class="swatches" id="swF"></div>
+      <h3>Agent palette: 10 soft hues, never on buttons</h3>
+      <div class="table-scroll"><table class="spec" id="palTable"><thead><tr><th>Hue</th><th>Avatar</th><th>Base · light · deep</th><th>Name tag (ink on white)</th><th>Client bubble (Carbon on tint)</th><th>Mention chip (ink on tint)</th><th>Wash</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section aria-labelledby="c2"><h2 id="c2">Type</h2>
+      <p class="lede">One family (Inter, or SF on macOS) plus a monospace for code. Bench body is 15 px, not Apple's 17 px, because this is a dense desktop work app. Tracking follows Apple's negative curve.</p>
+      <table class="spec"><thead><tr><th>Role</th><th>Specimen</th><th>Size / line / weight</th><th>Tracking</th></tr></thead><tbody>
+        <tr><td>Display</td><td><span style="font:600 40px/1.1 var(--font-display);letter-spacing:-0.015em">Good morning.</span></td><td>40 / 1.10 / 600</td><td>−0.015em</td></tr>
+        <tr><td>Title</td><td><span style="font:600 28px/1.18 var(--font-display);letter-spacing:-0.01em">What needs me</span></td><td>28 / 1.18 / 600</td><td>−0.01em</td></tr>
+        <tr><td>Subhead</td><td><span style="font-size:21px;line-height:1.24;font-weight:300;letter-spacing:-0.005em">Eight things need you.</span></td><td>21 / 1.24 / 300</td><td>−0.005em</td></tr>
+        <tr><td>Section</td><td><span style="font-size:17px;font-weight:600;letter-spacing:-0.02em">Noor</span></td><td>17 / 1.30 / 600</td><td>−0.02em</td></tr>
+        <tr><td>Body (Bench)</td><td>Stop now sits in the composer and replaces Send.</td><td>15 / 1.47 / 400</td><td>−0.016em</td></tr>
+        <tr><td>List</td><td class="list">Running tests on S1-4 Chat UI</td><td>14 / 1.43 / 400 · 600</td><td>−0.016em</td></tr>
+        <tr><td>Caption</td><td class="caption">08:58 · 2.1k tokens · 0.07 % of week</td><td>12 / 1.33 / 400 · 600</td><td>−0.022em</td></tr>
+        <tr><td>Code</td><td><code>npm test</code></td><td>12.5–14 / 1.6 / 400</td><td>0</td></tr>
+      </tbody></table>
+      <h3>Voice</h3>
+      <p class="list" style="max-width:62ch;margin:0">Agents write short, lowercase, concrete lines ("done. 41 lines removed."). The interface and system lines use sentence case. Run summaries are scannable checklists: <b>key</b> → result · detail.</p>
+    </section>
+
+    <section aria-labelledby="c3"><h2 id="c3">Space, shape, elevation</h2>
+      <p class="lede">A 4-px scale. Panels pad 16 or 24, elements sit 12 apart, sections 40 to 64. Two radii plus one exception. No shadows on UI; depth comes from surface shifts (Frost → White) and 1-px hairlines.</p>
+      <table class="spec" id="spaceT"><tbody></tbody></table>
+      <h3>Radius</h3>
+      <div class="radius-demo"><div style="border-radius:980px">980 px · buttons, tags, chips</div><div style="border-radius:8px">8 px · cards, inputs, panes</div><div style="border-radius:18px">18 px · chat bubbles (bend)</div></div>
+      <h3>Elevation</h3>
+      <p class="list" style="margin:0;max-width:62ch">None. The only shadow in the product is the soft ground shadow under a hero avatar, which counts as imagery (Apple allows shadow on product imagery only).</p>
+    </section>
+
+    <section aria-labelledby="c4"><h2 id="c4">Status</h2>
+      <p class="lede">One vocabulary, always as a word. The corner badge is a second cue: one glyph per state, readable at 24 px. Filled badges need attention. Only Thinking and Working move, and they stop under reduced motion.</p>
+      <table class="spec" id="statusT"><thead><tr><th>State</th><th>24 px</th><th>40 px</th><th>Text tag</th><th>Glyph</th><th>Hero eyes</th></tr></thead><tbody></tbody></table>
+      <h3>Task pills on inline workspace cards</h3>
+      <div style="display:flex;gap:10px"><span class="tag warn">Action needed</span><span class="tag">Working</span><span class="tag ok">Done</span></div>
+    </section>
+
+    <section aria-labelledby="c5"><h2 id="c5">Characters</h2>
+      <p class="lede">One non-human family: nine soft shapes, eyes only. Two renders from one design: flat in lists and chat, dimensional (gentle gradient, highlight, ground shadow) in the hero position and on the profile. In lists the eyes keep the agent's chosen expression; in the hero they follow the status.</p>
+      <h3>Shapes</h3><div class="gallery" id="gShapes"></div>
+      <h3>Expressions (eyes only)</h3><div class="gallery" id="gExpr"></div>
+      <h3>Hero states (live; blink, breathe and look stop under reduced motion)</h3><div class="gallery" id="gHero"></div>
+      <h3>Sizes</h3><div class="gallery" id="gSizes"></div>
+      <h3>Inline patterns</h3>
+      <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap" id="gInline"></div>
+    </section>
+
+    <section aria-labelledby="c6"><h2 id="c6">Motion: calm and alive</h2>
+      <p class="lede">Fast, small and purposeful. Nothing flashes (no luminance change faster than once per second). Every animation has a reduced-motion fallback, set by the OS or by the switch at the top of this page.</p>
+      <table class="spec"><thead><tr><th>Token</th><th>Spec</th><th>Used for</th><th>Reduced motion</th></tr></thead><tbody>
+        <tr><td><code>--d-press</code></td><td>120 ms · ease · scale .98</td><td>Button press, hover colour</td><td>Colour change only</td></tr>
+        <tr><td><code>--d-badge</code></td><td>160 ms · crossfade</td><td>Status badge, tag and hero eyes changing state</td><td>Instant swap</td></tr>
+        <tr><td><code>--d-msg</code></td><td>180 ms · ease-out · rise 8 px + fade</td><td>New message, system line, toast</td><td>Appears in place</td></tr>
+        <tr><td><code>--d-panel</code></td><td>240 ms · ease-move</td><td>Workspace pane slides in, sidebar collapses to the avatar rail</td><td>Instant</td></tr>
+        <tr><td><code>--d-handoff</code></td><td>300 ms · ease-move</td><td>Task chip travels between two agents</td><td>Chip shown at the destination</td></tr>
+        <tr><td><code>--d-expand</code></td><td>320 ms · ease-out · clip-path</td><td>Inline workspace card expands to full screen (take over) and collapses back; new-agent colour morph</td><td>Instant</td></tr>
+        <tr><td>breathe</td><td>4.8 s loop (6.4 s idle) · scale ≤ 2.2 %</td><td>Hero avatar</td><td>Still</td></tr>
+        <tr><td>blink</td><td>every 6 s · eyes close ~120 ms</td><td>Hero avatar (not when sleepy)</td><td>Eyes open</td></tr>
+        <tr><td>look</td><td>3.6 s (thinking) / 2.8 s (working) · ≤ 3 units</td><td>Hero eyes drift or scan</td><td>Still; the expression still differs</td></tr>
+        <tr><td>typing pulse</td><td>1.2 s · 3 dots, staggered 180 ms, opacity .35–1</td><td>Thinking indicator in the agent's colour, "Typing…" rows</td><td>Static dots + the word</td></tr>
+        <tr><td>badge motion</td><td>dots 1.2 s · arc 1.6 s linear</td><td>Thinking and Working badges only</td><td>Static glyph</td></tr>
+      </tbody></table>
+    </section>
+
+    <section aria-labelledby="c7"><h2 id="c7">CSS variables (draft)</h2>
+      <p class="lede">Ships as <code>docs/design/ui/tokens/</code> (CSS and JSON) once the client approves this direction.</p>
+      <pre class="vars" id="varsPre"></pre>
+    </section>
+  </div>
+</main>
+
+<div id="toastHost" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ============================== helpers ============================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const root = document.documentElement;
+const reduced = () => root.classList.contains("rm") || matchMedia("(prefers-reduced-motion: reduce)").matches;
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/* ============================== data ============================== */
+const PAL = {
+  lavender:  {name:"Lavender",  base:"#8e6cf0", light:"#cbbcff", deep:"#5f3fd0", tint:"#efeaff", wash:"#faf8ff", ink:"#5a3dc8"},
+  periwinkle:{name:"Periwinkle",base:"#6d7cf2", light:"#c3caff", deep:"#4352d0", tint:"#eceeff", wash:"#f8f9ff", ink:"#3c4bc4"},
+  aqua:      {name:"Aqua",      base:"#2db4dc", light:"#a6e6f7", deep:"#0e86b0", tint:"#e3f6fb", wash:"#f6fcfe", ink:"#006b85"},
+  teal:      {name:"Teal",      base:"#1fb5a3", light:"#9ee8dc", deep:"#0c8a7c", tint:"#e1f6f2", wash:"#f5fcfb", ink:"#00756a"},
+  mint:      {name:"Mint",      base:"#3cc47c", light:"#aeedc9", deep:"#1f9658", tint:"#e5f7ec", wash:"#f6fcf8", ink:"#1d7a43"},
+  honey:     {name:"Honey",     base:"#f5b631", light:"#ffe2a0", deep:"#d48a00", tint:"#fff4dc", wash:"#fffcf4", ink:"#8a5a00"},
+  tangerine: {name:"Tangerine", base:"#ff8a3d", light:"#ffc9a3", deep:"#e0601a", tint:"#ffeee2", wash:"#fffaf6", ink:"#b04a00"},
+  coral:     {name:"Coral",     base:"#ff5f73", light:"#ffb8c1", deep:"#e0364f", tint:"#ffe6e9", wash:"#fff8f9", ink:"#c4283f"},
+  orchid:    {name:"Orchid",    base:"#e05cb4", light:"#f6b6e1", deep:"#b8358d", tint:"#fbe7f4", wash:"#fef8fc", ink:"#b0287f"},
+  cocoa:     {name:"Cocoa",     base:"#a66e4e", light:"#dcb59d", deep:"#7d4c31", tint:"#f5ebe4", wash:"#fcf8f5", ink:"#7a4a2e"},
+  neutral:   {name:"Unassigned",base:"#b4b4b9", light:"#dedee2", deep:"#8e8e93", tint:"#efeff1", wash:"#fafafa", ink:"#474747"}
+};
+const SHAPES = {
+  sphere:  {d:'<circle cx="50" cy="52" r="40"/>', eye:[50,52,13], hl:[34,30], bottom:92},
+  droplet: {d:'<path d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/>', eye:[50,66,12], hl:[38,50], bottom:95},
+  cloud:   {d:'<path d="M26 84 C12 84 6 72 10 62 C4 54 8 40 22 40 C22 26 36 18 48 24 C56 12 76 14 80 30 C92 32 98 46 92 56 C98 66 92 84 76 84 Z"/>', eye:[52,60,13], hl:[34,38], bottom:84},
+  hexagon: {d:'<polygon points="50,12 84,31 84,71 50,90 16,71 16,31"/>', round:10, eye:[50,52,13], hl:[34,32], bottom:95},
+  blob:    {d:'<path d="M54 10 C76 12 92 30 88 52 C85 70 92 84 72 90 C54 95 34 92 20 80 C8 68 8 48 16 34 C24 18 36 9 54 10 Z"/>', eye:[50,52,13], hl:[34,28], bottom:93},
+  egg:     {d:'<path d="M50 8 C71 8 86 38 86 60 C86 80 70 94 50 94 C30 94 14 80 14 60 C14 38 29 8 50 8 Z"/>', eye:[50,60,12], hl:[36,32], bottom:94},
+  pill:    {d:'<rect x="6" y="27" width="88" height="48" rx="24"/>', eye:[58,51,11], hl:[26,38], bottom:75},
+  triangle:{d:'<polygon points="50,16 88,82 12,82"/>', round:14, eye:[50,64,10], hl:[42,44], bottom:89},
+  square:  {d:'<rect x="12" y="13" width="76" height="76" rx="22"/>', eye:[50,52,13], hl:[30,30], bottom:89}
+};
+const SHAPE_NAMES = {sphere:"Sphere",droplet:"Droplet",cloud:"Cloud",hexagon:"Hexagon",blob:"Blob",egg:"Egg",pill:"Pill",triangle:"Triangle",square:"Rounded square"};
+const AG = {
+  atlas:{name:"Atlas",role:"CEO",shape:"sphere",pal:"lavender",expr:"calm",status:"idle",act:"Morning status sent",snip:"1 reply to dana drafted and held for your ok",time:"08:02"},
+  iris: {name:"Iris",role:"Personal assistant",shape:"droplet",pal:"aqua",expr:"calm",status:"idle",act:"Weekly plan ready for Monday",snip:"monday's plan is ready when you are",time:"Yesterday"},
+  maya: {name:"Maya",role:"PM · lead",shape:"cloud",pal:"mint",expr:"calm",status:"working",act:"Planning Sprint 2 follow-ups",snip:"review's ready: s1-2 and s1-3",time:"09:12"},
+  omar: {name:"Omar",role:"BA lead",shape:"hexagon",pal:"teal",expr:"focused",status:"thinking",act:"Preparing the memory-filters interview",snip:"8 questions on memory filters, ready",time:"09:10"},
+  lina: {name:"Lina",role:"BA",shape:"egg",pal:"cocoa",expr:"sleepy",status:"idle",act:"Idle since 08:30",snip:"yesterday's notes are in memory",time:"08:30"},
+  sam:  {name:"Sam",role:"UX/UI",shape:"blob",pal:"tangerine",expr:"surprised",status:"working",act:"First-run wireframes, 3 of 4 screens",snip:"3 of 4 first-run screens done",time:"09:08"},
+  karim:{name:"Karim",role:"Tech lead",shape:"square",pal:"periwinkle",expr:"focused",status:"waiting",act:"Merge of PR #41 needs you",snip:"pr #41 is green. the merge needs you",time:"08:34"},
+  noor: {name:"Noor",role:"Developer",shape:"pill",pal:"coral",expr:"curious",status:"working",act:"Running tests on S1-4 Chat UI",snip:"",typing:true,time:"09:14"},
+  jade: {name:"Jade",role:"QA",shape:"triangle",pal:"orchid",expr:"calm",status:"blocked",act:"QA-3: E2E failed twice on Windows CI",snip:"e2e failed twice on windows ci",time:"07:39"}
+};
+const ST = {
+  idle:{label:"Idle",cls:"",desc:"Hollow dot"},
+  thinking:{label:"Thinking",cls:"",desc:"Three dots, fading in turn"},
+  working:{label:"Working",cls:"",desc:"Arc, turning slowly"},
+  waiting:{label:"Waiting for you",cls:"warn",desc:"\"!\" on amber (filled)"},
+  blocked:{label:"Blocked",cls:"solid",desc:"Bar on Carbon (filled)"},
+  paused:{label:"Paused",cls:"",desc:"Two bars; avatar faded"},
+  stopped:{label:"Stopped",cls:"",desc:"Square"},
+  error:{label:"Error",cls:"err",desc:"\"×\" on red (filled)"}
+};
+const EXPR = {idle:"sleepy",thinking:"curious",working:"focused",waiting:"calm",blocked:"calm",paused:"sleepy",stopped:"calm",error:"surprised"};
+
+/* ============================== icons ============================== */
+const IC = {
+  sidebar:'<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M9.5 4.5v15"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',
+  home:'<path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z"/>',
+  shield:'<path d="M12 3.5 19 6v5.5c0 4.4-3 7.7-7 9-4-1.3-7-4.6-7-9V6z"/><path d="m9 12 2.2 2.2L15.5 10"/>',
+  building:'<path d="M5 20V5.5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1V20M15 9.5h3a1 1 0 0 1 1 1V20M3.5 20h17M8.5 8.5h3M8.5 12h3M8.5 15.5h3"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  tree:'<rect x="9" y="3.5" width="6" height="5" rx="1.2"/><rect x="3.5" y="15.5" width="6" height="5" rx="1.2"/><rect x="14.5" y="15.5" width="6" height="5" rx="1.2"/><path d="M12 8.5v3.5M6.5 15.5V12h11v3.5"/>',
+  calendar:'<rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/>',
+  memory:'<circle cx="6.5" cy="7" r="2.5"/><circle cx="17.5" cy="6.5" r="2.5"/><circle cx="12" cy="17.5" r="2.5"/><path d="M9 7h6M8 9l2.8 6.3M16.3 8.8l-3.1 6.4"/>',
+  gauge:'<path d="M4.5 16.5a7.5 7.5 0 1 1 15 0"/><path d="m12 16.5 3.5-4.5"/><path d="M4 19.5h16"/>',
+  trace:'<path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="5" cy="6.5" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17.5" r="1"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M6 18l1.6-1.6M16.4 7.6 18 6"/>',
+  up:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+  stop:'<rect x="6.5" y="6.5" width="11" height="11" rx="2" fill="currentColor" stroke="none"/>',
+  monitor:'<rect x="3.5" y="4.5" width="17" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  clock:'<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  arrowR:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  expand:'<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>'
+};
+function ic(name){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IC[name]||""}</svg>`; }
+
+/* ============================== avatars ============================== */
+function glyph(st){
+  const g = {
+    idle:'<circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+    thinking:'<g class="g-think" fill="currentColor"><circle cx="2.8" cy="6" r="1.2"/><circle cx="6" cy="6" r="1.2"/><circle cx="9.2" cy="6" r="1.2"/></g>',
+    working:'<g class="g-work"><path class="arc" d="M6 2.6a3.4 3.4 0 1 1-3.4 3.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></g>',
+    waiting:'<g fill="currentColor"><rect x="5.2" y="2.3" width="1.6" height="4.9" rx=".8"/><circle cx="6" cy="9.1" r="1"/></g>',
+    blocked:'<rect x="2.8" y="5.1" width="6.4" height="1.8" rx=".9" fill="currentColor"/>',
+    paused:'<g fill="currentColor"><rect x="3.4" y="3.2" width="1.8" height="5.6" rx=".9"/><rect x="6.8" y="3.2" width="1.8" height="5.6" rx=".9"/></g>',
+    stopped:'<rect x="3.5" y="3.5" width="5" height="5" rx="1" fill="currentColor"/>',
+    error:'<path d="M4 4l4 4M8 4l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
+  }[st] || "";
+  return `<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">${g}</svg>`;
+}
+function eyesFor(expr, gap){
+  const L = -gap, R = gap;
+  switch(expr){
+    case "focused": return [L,R].map(x=>`<rect x="${x-4.5}" y="-3.5" width="9" height="7" rx="3.5"/>`).join("");
+    case "sleepy": return [L,R].map(x=>`<path d="M${x-5} -1.5 Q${x} 3.5 ${x+5} -1.5" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>`).join("");
+    case "surprised": return [L,R].map(x=>`<circle cx="${x}" cy="0" r="6"/>`).join("");
+    case "curious": return `<rect x="${L-3.6}" y="-9" width="7.2" height="18" rx="3.6" transform="rotate(-8 ${L} 0)"/><rect x="${R-3.2}" y="-5.5" width="6.4" height="11" rx="3.2" transform="rotate(-8 ${R} 0)"/>`;
+    default: return [L,R].map(x=>`<rect x="${x-3.5}" y="-8" width="7" height="16" rx="3.5" transform="rotate(-14 ${x} 0)"/>`).join("");
+  }
+}
+let GID = 0;
+function avatarSVG(a, o = {}){
+  const P = PAL[a.pal], S = SHAPES[a.shape], id = "av" + (++GID);
+  const [ex, ey, gap] = S.eye;
+  const paint = o.hero ? `url(#${id}g)` : P.base;
+  const strokeAttr = S.round ? ` stroke="${paint}" stroke-width="${S.round}" stroke-linejoin="round"` : "";
+  const body = `<g fill="${paint}"${strokeAttr}>${S.d}</g>`;
+  const exprs = o.hero ? ["calm","focused","sleepy","surprised","curious"] : [o.expr || a.expr];
+  const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"><g class="blink" fill="#fff">${exprs.map(e=>`<g class="xp x-${e}">${eyesFor(e,gap)}</g>`).join("")}</g></g></g>`;
+  if (!o.hero) return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
+  const [hx, hy] = S.hl, gy = Math.min(S.bottom + 5, 101);
+  return `<svg viewBox="0 0 100 106" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="${id}g" cx="40%" cy="32%" r="78%" fx="32%" fy="22%"><stop offset="0" stop-color="${P.light}"/><stop offset=".52" stop-color="${P.base}"/><stop offset="1" stop-color="${P.deep}"/></radialGradient>
+      <clipPath id="${id}c">${S.d}</clipPath>
+      <filter id="${id}b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+      <filter id="${id}s" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="1.8"/></filter>
+    </defs>
+    <ellipse cx="50" cy="${gy}" rx="26" ry="3" fill="#1d1d1f" opacity=".14" filter="url(#${id}s)"/>
+    <g class="body">${body}
+      <g clip-path="url(#${id}c)">
+        <ellipse cx="70" cy="88" rx="34" ry="18" fill="${P.deep}" opacity=".28" filter="url(#${id}b)"/>
+        <ellipse cx="${hx}" cy="${hy}" rx="15" ry="8" transform="rotate(-30 ${hx} ${hy})" fill="#fff" opacity=".5" filter="url(#${id}b)"/>
+        <ellipse cx="${hx-3}" cy="${hy-2}" rx="4.5" ry="2.4" transform="rotate(-30 ${hx-3} ${hy-2})" fill="#fff" opacity=".8"/>
+      </g>${eyes}
+    </g></svg>`;
+}
+function badge(st){ return `<span class="bdg bdg-${st}" aria-hidden="true">${glyph(st)}</span>`; }
+function avatar(id, size, opts = {}){
+  const a = typeof id === "string" ? AG[id] : id;
+  const st = opts.status || a.status;
+  const nb = !!opts.nobadge;
+  const lab = nb ? a.name : `${a.name} · Status: ${ST[st].label}`;
+  const b = Math.max(12, Math.round(size * 0.4));
+  return `<span class="av${!nb && st==="paused" ? " is-paused" : ""}" role="img" aria-label="${esc(lab)}" title="${esc(lab)}" style="--s:${size}px;--b:${b}px">${avatarSVG(a,{expr:opts.expr})}${nb ? "" : badge(st)}</span>`;
+}
+function tag(st){ return `<span class="tag ${ST[st].cls}">${glyph(st)}${ST[st].label}</span>`; }
+function mention(id){ const a = AG[id], P = PAL[a.pal]; return `<span class="mention" style="--m-tint:${P.tint};--m-ink:${P.ink}">${avatar(id,16,{nobadge:true})}${a.name}</span>`; }
+function cluster(size){
+  const s = Math.round(size * 0.56);
+  return `<span class="cluster" role="img" aria-label="Bench team chat" style="--s:${size}px">
+    <span style="position:absolute;left:0;top:0">${avatar("maya",s,{nobadge:true})}</span>
+    <span style="position:absolute;right:0;top:${Math.round(size*0.08)}px">${avatar("karim",s,{nobadge:true})}</span>
+    <span style="position:absolute;left:${Math.round(size*0.22)}px;bottom:0">${avatar("omar",s,{nobadge:true})}</span></span>`;
+}
+function hydrate(scope = document){
+  $$("[data-av]", scope).forEach(el => {
+    el.innerHTML = avatar(el.dataset.av, +el.dataset.size || 32, {status: el.dataset.status, nobadge: el.hasAttribute("data-nobadge")});
+  });
+  $$("[data-cluster]", scope).forEach(el => { el.innerHTML = cluster(+el.dataset.size || 36); });
+  $$("[data-ic]", scope).forEach(el => { el.outerHTML = ic(el.dataset.ic); });
+}
+
+/* ============================== toast ============================== */
+let toastT;
+function toast(html, ms = 6000){
+  const host = $("#toastHost");
+  host.innerHTML = `<div class="toast" role="status">${html}</div>`;
+  clearTimeout(toastT); toastT = setTimeout(() => { host.innerHTML = ""; }, ms);
+}
+
+/* ============================== sidebar ============================== */
+const SIDE_ACTIVE = {home:"home", agent:"noor", team:"teamchat"};
+function srow(key, iconHTML, name, snip, time, label = ""){
+  return `<button class="srow" data-row="${key}" aria-label="${esc(label || name)}">${iconHTML}<span class="s-main"><span class="s-line"><span class="s-name">${name}</span>${time ? `<span class="s-time">${time}</span>` : ""}</span>${snip !== null ? `<span class="s-snip">${snip}</span>` : ""}</span></button>`;
+}
+function agentRow(id){
+  const a = AG[id];
+  const snip = a.typing ? `<span class="s-snip typing" style="--t-dot:${PAL[a.pal].deep}">Typing<span class="tdots" aria-hidden="true"><i></i><i></i><i></i></span></span>` : esc(a.snip);
+  return `<button class="srow" data-row="${id}" data-name="${a.name.toLowerCase()} ${a.role.toLowerCase()}"><span class="avh">${avatar(id,36)}</span><span class="s-main"><span class="s-line"><span class="s-name">${a.name}</span><span class="s-time">${a.time}</span></span>${a.typing ? snip : `<span class="s-snip">${snip}</span>`}</span></button>`;
+}
+function buildSidebar(){
+  const ricon = n => `<span class="ricon">${ic(n)}</span>`;
+  $("#sideList").innerHTML =
+    srow("home", ricon("home"), "Home", null, "") +
+    srow("appr", ricon("shield"), `Approvals`, null, `<span class="count" aria-hidden="true">4</span>`, "Approvals, 4 pending") +
+    `<div class="side-sec"><h2>Company</h2><div class="side-links"><button class="icon-btn" data-act="stub" aria-label="Open the Company page" title="Company page">${ic("building")}</button></div></div>` +
+    agentRow("atlas") + agentRow("iris") +
+    `<div class="side-sec"><h2>Bench</h2><div class="side-links">
+       <button class="icon-btn" data-act="stub" aria-label="Bench dashboard" title="Dashboard">${ic("grid")}</button>
+       <button class="icon-btn" data-act="stub" aria-label="Bench team" title="Team">${ic("tree")}</button>
+       <button class="icon-btn" data-act="stub" aria-label="Bench sessions, 1 live now" title="Sessions · 1 live">${ic("calendar")}</button></div></div>` +
+    `<button class="srow" data-row="teamchat" data-name="team chat bench"><span class="avh">${cluster(36)}</span><span class="s-main"><span class="s-line"><span class="s-name">Team chat</span><span class="s-time">09:11</span></span><span class="s-snip">Maya: follow-ups for Karim and Omar</span></span></button>` +
+    ["maya","omar","karim","noor","sam","jade","lina"].map(agentRow).join("") +
+    `<div id="newRows"></div>` +
+    `<div class="side-sec"><h2>Insight</h2></div>` +
+    srow("mem", ricon("memory"), "Memory", null, "") + srow("usage", ricon("gauge"), "Usage", null, "") + srow("trace", ricon("trace"), "Trace", null, "");
+  $$("#sideList .srow").forEach(b => {
+    const nm = b.querySelector(".s-name"); if (nm) b.setAttribute("title", nm.textContent);
+  });
+}
+function markSide(tab){
+  $$("#sideList .srow").forEach(b => b.removeAttribute("aria-current"));
+  const k = SIDE_ACTIVE[tab]; if (k) { const r = $(`#sideList [data-row="${k}"]`); if (r) r.setAttribute("aria-current","page"); }
+}
+
+/* ============================== tabs ============================== */
+const CRUMBS = {
+  home:'<b>Home</b>',
+  agent:'Bench <span aria-hidden="true">›</span> Team <span aria-hidden="true">›</span> <b>Noor</b>',
+  team:'Bench <span aria-hidden="true">›</span> <b>Team chat</b>'
+};
+let current = "home";
+/* Hash routes: #home #agent #team #tokens #agent-takeover #new-agent. replaceState never fires hashchange, so no loops. */
+function setHash(h){ if (location.hash !== "#" + h) history.replaceState(null, "", "#" + h); }
+function route(){
+  const h = (location.hash || "#home").slice(1);
+  if (h !== "agent-takeover" && N.taken) endTake(true);
+  if (h !== "new-agent" && !$("#scrim").hidden) $("#scrim").hidden = true;
+  if (h === "agent-takeover") { show("agent"); openTakeover(false); return; }
+  if (h === "new-agent") { show("home"); openDialog(false); return; }
+  show(["home","agent","team","tokens"].includes(h) ? h : "home");
+}
+window.addEventListener("hashchange", route);
+function show(tab){
+  current = tab;
+  setHash(tab);
+  $$('.proto [role="tab"]').forEach(t => { const on = t.id === "t-" + tab; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; });
+  const isTokens = tab === "tokens";
+  $("#app").hidden = isTokens; $("#p-tokens").hidden = !isTokens;
+  ["home","agent","team"].forEach(s => { $("#p-" + s).hidden = s !== tab; });
+  $("#heroDemo").hidden = tab !== "agent";
+  if (!isTokens) { $("#crumbs").innerHTML = CRUMBS[tab]; markSide(tab); }
+  if (tab === "agent") startAgent();
+  if (tab === "team") startTeam();
+  if (isTokens) buildTokens();
+}
+$$('.proto [role="tab"]').forEach((t, i, all) => {
+  t.addEventListener("click", () => show(t.id.slice(2)));
+  t.addEventListener("keydown", e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const n = all[(i + (e.key === "ArrowRight" ? 1 : all.length - 1)) % all.length];
+    n.focus(); show(n.id.slice(2));
+  });
+});
+
+/* ============================== home ============================== */
+function rosterRow(id){
+  const a = AG[id];
+  return `<li><button class="srow" data-row="${id}"><span class="avh">${avatar(id,40)}</span><span class="s-main"><span class="s-name">${a.name}<span class="r-role"> · ${a.role}</span></span><span class="s-snip" title="${esc(a.act)}">${esc(a.act)}</span></span><span class="r-side"><span class="s-time">${a.time}</span>${tag(a.status)}</span></button></li>`;
+}
+function buildHome(){
+  $("#rosterCo").innerHTML = ["atlas","iris"].map(rosterRow).join("");
+  $("#rosterBench").innerHTML = ["maya","omar","karim","noor","sam","jade","lina"].map(rosterRow).join("");
+  $$("[data-ghost]").forEach(el => { el.innerHTML = avatar({name:"New agent",shape:"blob",pal:"neutral",expr:"curious",status:"idle"},40,{nobadge:true}); });
+}
+$("#showAll").addEventListener("click", e => {
+  const open = e.currentTarget.getAttribute("aria-expanded") !== "true";
+  e.currentTarget.setAttribute("aria-expanded", open);
+  e.currentTarget.textContent = open ? "Show top 5 only" : "Show all 8";
+  $("#allGroups").hidden = !open; $("#moreGroups").hidden = open;
+});
+$("#askForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("#askIn").value.trim();
+  if (!v) { $("#askIn").focus(); return; }
+  $("#askIn").value = "";
+  toast(`Sent to Atlas · 0.4k tokens · <a href="#" data-act="stub">Open Atlas's chat</a>`, 8000);
+});
+
+/* ---------- new agent, created by conversation ---------- */
+const LUMEN = {name:"Lumen",role:"Release notes",shape:"droplet",pal:"honey",expr:"curious",status:"idle",act:"Drafts release notes on Fridays",snip:"first draft due friday",time:"Now"};
+let dlgReturn = null, dlgDone = false;
+function openDialog(animate){
+  dlgReturn = document.activeElement; dlgDone = false;
+  const dlg = $("#dlg");
+  dlg.classList.remove("anim");
+  if (animate !== false && !reduced()) { void dlg.offsetWidth; dlg.classList.add("anim"); }
+  $("#morph").classList.remove("done");
+  $("#morph .before").innerHTML = avatar({name:"New agent",shape:"droplet",pal:"neutral",expr:"curious",status:"idle"},76,{nobadge:true});
+  $("#morph .after").innerHTML = avatar(LUMEN,76,{nobadge:true});
+  $("#dlgName").textContent = "New agent"; $("#dlgName").style.color = "var(--graphite)";
+  $("#dlgSub").textContent = "Draft · not created yet";
+  $("#dlgBody").style.setProperty("--wash", PAL.neutral.wash);
+  $("#dMsgs").innerHTML = `<div class="m ag"><div class="bubble">good to meet you. what do you want me around for?</div></div>`;
+  $("#dSugg").hidden = false; $("#dIn").value = ""; $("#dForm").hidden = false;
+  $("#dCreate").disabled = true; $("#dCreate").textContent = "Create agent";
+  $("#dHint").textContent = "Describe the agent first. Atlas drafts it from your words.";
+  $("#scrim").hidden = false; $("#dIn").focus();
+  setHash("new-agent");
+}
+function closeDialog(){
+  $("#scrim").hidden = true;
+  if (location.hash === "#new-agent") setHash(current);
+  if (dlgReturn && dlgReturn.focus) dlgReturn.focus();
+}
+function dlgSend(text){
+  if (dlgDone || !text.trim()) return;
+  dlgDone = true; $("#dSugg").hidden = true; $("#dForm").hidden = true;
+  const add = h => { $("#dMsgs").insertAdjacentHTML("beforeend", h); const b = $("#dlgBody"); b.scrollTop = b.scrollHeight; };
+  add(`<div class="m me enter"><div class="bubble" style="background:var(--white);border:1px solid var(--hairline)">${esc(text)}</div></div>`);
+  add(`<div class="thinking enter" id="dThink"><span class="tdots3" style="--dot:${PAL.neutral.deep}" aria-hidden="true"><i></i><i></i><i></i></span>Thinking</div>`);
+  setTimeout(() => {
+    $("#dThink")?.remove();
+    $("#morph").classList.add("done");
+    $("#dlgBody").style.setProperty("--wash", PAL.honey.wash);
+    $("#dlgName").textContent = "Lumen"; $("#dlgName").style.color = PAL.honey.ink;
+    $("#dlgSub").textContent = "Draft by Atlas · nothing is created until you confirm";
+    add(`<div class="sys enter">Renamed to Lumen · Release notes</div>`);
+    add(`<div class="m ag enter"><div class="bubble"><p>got it. here's me:</p><ul class="check">
+      <li>${ic("check")}<span><b>Name</b><span class="arrow">→</span>Lumen · release notes</span></li>
+      <li>${ic("check")}<span><b>Team</b><span class="arrow">→</span>Bench › Dev team</span></li>
+      <li>${ic("check")}<span><b>Can</b><span class="arrow">→</span>read merged prs · write drafts</span></li>
+      <li>${ic("check")}<span><b>Routine</b><span class="arrow">→</span>fridays at 16:00</span></li>
+      </ul><p>drafts are held for your ok. nothing posts until you've read them.</p></div></div>`);
+    $("#dCreate").disabled = false; $("#dCreate").textContent = "Create Lumen";
+    $("#dHint").textContent = "Creating an agent is yours to confirm.";
+  }, reduced() ? 300 : 1400);
+}
+$("#dForm").addEventListener("submit", e => { e.preventDefault(); dlgSend($("#dIn").value); });
+$("#dIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); dlgSend($("#dIn").value); } });
+$("#dSugg").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if (b) dlgSend(b.dataset.s); });
+$("#dlg").addEventListener("animationend", e => { if (e.target === $("#dlg")) $("#dlg").classList.remove("anim"); });
+$("#dCancel").addEventListener("click", closeDialog);
+$("#dlgX").addEventListener("click", closeDialog);
+$("#dCreate").addEventListener("click", () => {
+  AG.lumen = LUMEN;
+  $("#newRows").innerHTML = agentRow("lumen");
+  closeDialog();
+  toast(`Lumen created in Bench › Dev team · <a href="#" data-act="stub">Open Lumen's chat</a>`, 10000);
+});
+$("#scrim").addEventListener("keydown", e => {
+  if (e.key === "Escape") closeDialog();
+  if (e.key === "Tab") { trapFocus(e, $("#dlg")); }
+});
+function trapFocus(e, box){
+  const f = $$('button:not([disabled]),textarea,input,select,a[href]', box).filter(x => x.offsetParent !== null);
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+
+/* ============================== agent page (Noor) ============================== */
+const DIFF = [
+  ["@","","@@ -12,9 +12,18 @@ export function Composer({ onSend, run }: Props) {"],
+  [" ","12",'  const [text, setText] = useState("");'],
+  [" ","13",'  const busy = run.state === "running";'],
+  ["-","14","  return ("],
+  ["-","15",'    <form onSubmit={submit} className="composer">'],
+  ["+","14",'  const stop = () => run.stop({ reason: "client" });'],
+  ["+","15",""],
+  ["+","16","  return ("],
+  ["+","17",'    <form onSubmit={submit} className="composer" aria-busy={busy}>'],
+  [" ","18","      <TextArea value={text} onChange={setText} />"],
+  ["-","19","      <SendButton disabled={!text} />"],
+  ["+","19","      {busy ? ("],
+  ["+","20",'        <StopButton onClick={stop} label="Stop Noor" />'],
+  ["+","21","      ) : ("],
+  ["+","22","        <SendButton disabled={!text} />"],
+  ["+","23","      )}"],
+  [" ","24","    </form>"],
+  [" ","25","  );"],
+  [" ","26","}"]
+];
+function diffHTML(){
+  return `<div class="diff" role="table" aria-label="Changes to Composer.tsx">` + DIFF.map(([t,n,c]) => {
+    const cls = t === "+" ? "dl-add" : t === "-" ? "dl-del" : t === "@" ? "dl-hunk" : "";
+    const sr = t === "+" ? "added" : t === "-" ? "removed" : "";
+    return `<div class="dl ${cls}" role="row"><span class="ln" role="cell">${n}</span><span class="sg" role="cell">${t === "@" ? "" : t === " " ? "" : t}${sr ? `<span class="sr"> ${sr}</span>` : ""}</span><code role="cell">${esc(c)}</code></div>`;
+  }).join("") + `</div>`;
+}
+function miniHTML(){
+  return DIFF.slice(1, 15).map(([t,,c]) => `<div class="${t === "+" ? "a" : t === "-" ? "r" : ""}">${esc((t === " " ? " " : t) + c)}</div>`).join("");
+}
+const N = {status:"working", text:"running tests", pending:true, stopped:false, passed:8, override:null, started:false, taken:false, phase:"chat"};
+let tick = null;
+const DEMO_TEXT = {idle:"pr #44 open, waiting for karim", thinking:"planning the next step", working:"running tests", waiting:"npm test in bench", error:"test runner crashed (out of memory) · retrying once at 09:20"};
+function pill(kind){
+  return {need:'<span class="tag warn">Action needed</span>', work:'<span class="tag">Working</span>', done:'<span class="tag ok">Done</span>'}[kind];
+}
+function paintNoor(status, text){
+  const hero = $("#hero");
+  hero.dataset.status = status; hero.dataset.expr = EXPR[status];
+  const line = $("#heroStatus");
+  const html = `<span class="sl-g ${status}">${glyph(status)}</span><span>${ST[status].label}${text ? " · " + esc(text) : ""}</span>`;
+  if (reduced() || !line.innerHTML) { line.innerHTML = html; }
+  else { line.classList.add("swap"); setTimeout(() => { line.innerHTML = html; line.classList.remove("swap"); }, 140); }
+  $("#headTag").innerHTML = tag(status);
+  $("#headAv").innerHTML = avatar("noor", 32, {status});
+  if ($("#apprAv")) $("#apprAv").innerHTML = avatar("noor", 28, {status});
+  AG.noor.status = status;
+}
+function setNoor(status, text){
+  N.status = status; N.text = text;
+  if (!N.override) paintNoor(status, text);
+}
+function updatePrimary(){
+  const allowLive = !!$("#allowOnce");
+  const idleLike = N.stopped || N.status === "idle";
+  const stop = $("#stopBtn"), send = $("#nSend");
+  stop.classList.toggle("primary", !allowLive && !idleLike);
+  stop.classList.toggle("secondary", allowLive || idleLike);
+  stop.disabled = idleLike;
+  send.classList.toggle("primary", !allowLive && idleLike);
+  send.classList.toggle("fill", !(!allowLive && idleLike));
+}
+function addN(html){
+  $("#nMsgs").insertAdjacentHTML("beforeend", html);
+  const s = $("#convScroll"); s.scrollTop = s.scrollHeight;
+}
+function startAgent(){
+  if (N.started) return;
+  N.started = true;
+  tick = setInterval(() => {
+    if (N.stopped) { clearInterval(tick); return; }
+    N.passed++;
+    $("#tp").textContent = N.passed;
+    renderTerm();
+    if (N.passed >= 12) {
+      clearInterval(tick); tick = null;
+      $("#liveLine")?.remove();
+      N.phase = "chatdone";
+      addN(`<div class="sys enter"><code>pnpm test chat</code> passed 12 of 12 · allowed by your standing grant · 1.4k tokens · <a href="#" data-act="stub">Trace</a></div>`);
+      if (N.pending) setNoor("waiting", "npm test in bench");
+    }
+  }, 2200);
+}
+function renderTerm(){
+  if ($("#wsBody").dataset.view !== "term") return;
+  const lines = [`<span class="muted">~/bench $</span> pnpm test chat`, ""];
+  const names = ["renders Send when idle","renders Stop while running","Stop calls run.stop","Enter sends","Shift+Enter adds a line","streams markdown","formats times with date-fns","relative times in the past","empty input keeps Send disabled","aria-busy while running","focus returns to the input","stops within 2 s"];
+  names.forEach((n, i) => { if (i < N.passed) lines.push(`<span class="pass">PASS</span> composer › ${n}`); else if (i === N.passed) lines.push(`<span class="run">RUNS</span> composer › ${n}`); });
+  lines.push("", `Tests: ${N.passed} passed, 12 total`);
+  if (N.phase === "full" || N.phase === "fulldone") lines.push("", `<span class="muted">~/bench $</span> npm test`, N.phase === "fulldone" ? `<span class="pass">PASS</span> 214 of 214 · 2 min 41 s` : `<span class="run">RUNS</span> full suite…`);
+  $("#wsBody").innerHTML = `<div class="term" aria-live="off">${lines.join("\n")}</div>`;
+}
+function wsView(v){
+  const body = $("#wsBody"); body.dataset.view = v;
+  $$("#wsPane .files [role=tab]").forEach(b => { const on = b.dataset.file === v; b.setAttribute("aria-selected", on); b.tabIndex = on ? 0 : -1; });
+  if (v === "diff") body.innerHTML = diffHTML();
+  else if (v === "files") body.innerHTML = `<ul class="flist"><li><span>src/renderer/chat/Composer.tsx</span><span><span class="plus" style="color:var(--ok-ink)">+9</span> <span style="color:var(--err-ink)">−3</span></span></li><li><span>src/renderer/chat/useStream.ts</span><span><span style="color:var(--ok-ink)">+6</span> <span style="color:var(--err-ink)">−2</span></span></li><li><span>src/shared/formatTime.ts</span><span><span style="color:var(--ok-ink)">+3</span> <span style="color:var(--err-ink)">−41</span></span></li></ul>`;
+  else renderTerm();
+}
+$$("#wsPane .files [role=tab]").forEach(b => b.addEventListener("click", () => wsView(b.dataset.file)));
+$$("[data-wtab]").forEach(b => b.addEventListener("click", () => {
+  $$("[data-wtab]").forEach(x => { const on = x === b; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; });
+  $$("[data-wpanel]").forEach(p => { p.hidden = p.dataset.wpanel !== b.dataset.wtab; });
+}));
+$$("#wsPane .ws-panel[data-wpanel=settings] input, #wsPane .ws-panel[data-wpanel=settings] textarea").forEach(f => f.addEventListener("input", () => { $("#unsaved").textContent = "Unsaved changes (1)"; }));
+$("#saveSet").addEventListener("click", () => { $("#unsaved").textContent = "Saved to agents/noor/agent.md"; toast("Noor's settings saved"); });
+
+function setPane(on){
+  $("#split").classList.toggle("pane-off", !on);
+  $("#paneToggle").setAttribute("aria-pressed", on);
+  $("#paneToggle").setAttribute("aria-label", on ? "Hide Noor's workspace" : "Show Noor's workspace");
+  $("#wsPane").setAttribute("aria-hidden", !on);
+  $("#wsPane").inert = !on;
+}
+$("#paneToggle").addEventListener("click", () => setPane($("#split").classList.contains("pane-off")));
+$("#wOpen").addEventListener("click", () => {
+  setPane(true);
+  $('[data-wtab="screen"]').click();
+  const target = $("#allowOnce") || $("#wsBody");
+  setTimeout(() => target.focus && target.focus(), reduced() ? 0 : 260);
+});
+
+function resolveAppr(kind){
+  if (!N.pending) return;
+  N.pending = false;
+  const map = {
+    once:["Allowed once","Noor is running npm test in bench. Logged in the trace.","ok"],
+    always:["Always allowed: npm test in bench","Noor won't ask for this command in bench again. Revoke in Settings › Permissions or Noor › Autonomy.","ok"],
+    deny:["Denied","Noor won't run npm test. She'll open the pull request with the chat tests only.","neutral"],
+    withdrawn:["Request withdrawn","Noor stopped before running it. Nothing ran.","neutral"]
+  }[kind];
+  $("#appr").innerHTML = `<div class="appr-done" role="status"><span class="ok ${map[2] === "neutral" ? "neutral" : ""}">${ic(kind === "deny" || kind === "withdrawn" ? "x" : "check")}</span><div><div class="appr-t">${map[0]}</div><div class="caption" style="margin-top:2px">${map[1]}</div></div></div>`;
+  $("#pointerBtn")?.remove();
+  if (kind === "withdrawn") { $("#wPill").innerHTML = '<span class="tag">Stopped</span>'; updatePrimary(); return; }
+  addN(`<div class="sys enter">You ${kind === "deny" ? "denied" : "allowed"} <code>npm test</code> in bench${kind === "always" ? " (always, this pattern)" : kind === "once" ? " once" : ""} · 09:15</div>`);
+  if (kind === "deny") {
+    $("#wPill").innerHTML = pill("done");
+    setNoor("working", "writing the pull request");
+    updatePrimary();
+    return;
+  }
+  $("#wPill").innerHTML = pill("work");
+  N.phase = "full";
+  setNoor("working", "running the full test suite");
+  updatePrimary();
+  if ($("#wsBody").dataset.view === "term") renderTerm();
+  setTimeout(() => {
+    if (N.stopped) return;
+    N.phase = "fulldone";
+    if ($("#wsBody").dataset.view === "term") renderTerm();
+    $("#wPill").innerHTML = pill("done");
+    setNoor("working", "wrapping the run");
+    addN(`<div class="liveline enter" id="wrapLine"><span class="avh">${avatar("noor",20,{nobadge:true})}</span><span>wrapping the run</span></div>`);
+    setTimeout(() => {
+      if (N.stopped) return;
+      $("#wrapLine")?.remove();
+      addN(`<div class="m ag enter"><div class="bubble"><p>all green.</p><ul class="check">
+        <li>${ic("check")}<span><b>full suite</b><span class="arrow">→</span>214 of 214 passed · 2 min 41 s</span></li>
+        <li>${ic("check")}<span><b>pull request</b><span class="arrow">→</span>#44 opened · waiting for karim's review</span></li>
+        <li>${ic("check")}<span><b>S1-4</b><span class="arrow">→</span>moved to In review</span></li></ul></div>
+        <div class="meta">09:19 · 3.4k tokens · 0.11 % of week · <a href="#" data-act="stub">Trace</a></div></div>`);
+      setNoor("idle", "pr #44 open, waiting for karim");
+      updatePrimary();
+    }, reduced() ? 600 : 2200);
+  }, 4200);
+}
+$("#allowOnce").addEventListener("click", () => resolveAppr("once"));
+$("#allowAlways").addEventListener("click", () => resolveAppr("always"));
+$("#denyBtn").addEventListener("click", () => resolveAppr("deny"));
+
+$("#stopBtn").addEventListener("click", () => {
+  if (N.stopped || N.status === "idle") return;
+  N.stopped = true;
+  const btn = $("#stopBtn"); btn.disabled = true; btn.lastElementChild.textContent = "Stopping…";
+  if (tick) { clearInterval(tick); tick = null; }
+  setNoor("working", "stopping after the current step");
+  setTimeout(() => {
+    $("#liveLine")?.remove(); $("#wrapLine")?.remove();
+    btn.lastElementChild.textContent = "Stop";
+    setNoor("stopped", "no new step will start");
+    if (N.pending) resolveAppr("withdrawn");
+    else $("#wPill").innerHTML = '<span class="tag">Stopped</span>';
+    $("#nIn").placeholder = "Tell Noor what to change";
+    addN(`<div class="sys enter">You stopped Noor at 09:15 · no further tool call will start · tell her what to change</div>`);
+    updatePrimary();
+    $("#nIn").focus();
+  }, reduced() ? 300 : 1400);
+});
+
+$("#nForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("#nIn").value.trim();
+  if (!v) { $("#nIn").focus(); return; }
+  $("#nIn").value = "";
+  addN(`<div class="m me enter"><div class="bubble">${esc(v)}</div><div class="meta">Now · Delivered</div></div>`);
+  const prev = [N.status, N.text], wasStopped = N.stopped;
+  setNoor("thinking", "reading your message");
+  addN(`<div class="thinking enter" id="nThink"><span class="tdots3" style="--dot:${PAL.coral.deep}" aria-hidden="true"><i></i><i></i><i></i></span>Thinking</div>`);
+  setTimeout(() => {
+    $("#nThink")?.remove();
+    const last = $$("#nMsgs .m.me .bubble").pop();
+    if (last && !last.querySelector(".react")) last.insertAdjacentHTML("afterbegin", '<span class="react" role="img" aria-label="Noor reacted with a thumbs up: acknowledged">👍</span>');
+    if (wasStopped) {
+      N.stopped = false;
+      addN(`<div class="m ag enter"><div class="bubble">understood. starting again with that.</div><div class="meta">Now · 0.6k tokens · 0.02 % of week · <a href="#" data-act="stub">Trace</a></div></div>`);
+      $("#nIn").placeholder = "Message Noor · she reads it after the current step";
+      setNoor("working", "applying your change");
+    } else {
+      addN(`<div class="m ag enter"><div class="bubble">noted. i'll fold that in after this step.</div><div class="meta">Now · 0.5k tokens · 0.02 % of week · <a href="#" data-act="stub">Trace</a></div></div>`);
+      if (N.status === "thinking") setNoor(prev[0], prev[1]);
+    }
+    updatePrimary();
+  }, reduced() ? 400 : 1600);
+});
+$("#nIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#nForm").requestSubmit(); } });
+
+$("#heroSel").addEventListener("change", e => {
+  const v = e.target.value;
+  if (v === "live") { N.override = null; paintNoor(N.status, N.text); }
+  else { N.override = v; paintNoor(v, DEMO_TEXT[v]); }
+});
+
+/* ---------- take over: the inline card expands to full screen ---------- */
+function rectInset(el){
+  const r = el.getBoundingClientRect();
+  return `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 8px)`;
+}
+let preTake = null;
+$("#wTake").addEventListener("click", () => openTakeover(true));
+function openTakeover(animate){
+  if (N.taken) return;
+  N.taken = true;
+  preTake = [N.status, N.text];
+  setNoor("paused", "you have the workspace");
+  const to = $("#takeover");
+  $("#toDiff").innerHTML = diffHTML();
+  to.hidden = false;
+  setHash("agent-takeover");
+  if (animate && !reduced()) {
+    to.style.transition = "none";
+    to.style.clipPath = rectInset($("#wcard"));
+    void to.offsetWidth;
+    to.style.transition = "";
+    to.style.clipPath = "inset(0 0 0 0 round 0px)";
+  } else { to.style.clipPath = "none"; }
+  $("#toDone").focus();
+}
+function endTake(instant){
+  if (!N.taken) return;
+  const to = $("#takeover");
+  const finish = () => {
+    to.hidden = true; to.style.clipPath = "";
+    N.taken = false;
+    if (location.hash === "#agent-takeover") setHash("agent");
+    if (N.pending && !tick) setNoor("waiting", "npm test in bench");
+    else setNoor(preTake[0], preTake[1]);
+    addN(`<div class="sys enter">You edited Composer.tsx in Noor's workspace · she continues from your change</div>`);
+    $("#wTake").focus();
+  };
+  if (instant === true || reduced()) { finish(); return; }
+  to.style.clipPath = rectInset($("#wcard"));
+  setTimeout(finish, 330);
+}
+$("#toDone").addEventListener("click", () => endTake());
+$("#takeover").addEventListener("keydown", e => { if (e.key === "Escape") endTake(); if (e.key === "Tab") trapFocus(e, $("#takeover")); });
+$("#toBody").addEventListener("mousemove", e => {
+  const b = $("#toBody").getBoundingClientRect(), c = $("#cursor");
+  c.style.left = (e.clientX - b.left + $("#toBody").scrollLeft - 4) + "px";
+  c.style.top = (e.clientY - b.top + $("#toBody").scrollTop - 3) + "px";
+});
+
+/* ============================== team chat ============================== */
+const T = {started:false, secs:300, timer:null};
+function gm(id, time, bubbles, cost, extra = ""){
+  const a = AG[id];
+  return `<div class="gm">${`<span class="avh">${avatar(id,32)}</span>`}<div class="gm-body">
+    <div class="gm-who"><span style="color:${PAL[a.pal].ink}">${a.name}</span><span class="caption">${a.role} · ${time}</span></div>
+    ${bubbles.map(b => `<div class="bubble">${b}</div>`).join("")}${extra}
+    <div class="meta">${cost} tokens · <a href="#" data-act="stub">Trace</a></div></div></div>`;
+}
+function buildTeam(){
+  const sysAv = id => `<span class="avh">${avatar(id,16,{nobadge:true})}</span>`;
+  $("#tMsgs").innerHTML = `
+    <div class="sys">4 earlier messages from ${sysAv("atlas")} Atlas and ${sysAv("karim")} Karim · <a href="#" data-act="stub">Show</a></div>
+    <div class="day">Today</div>
+    ${gm("maya","09:02",["morning. sprint 2, day 1.",`s1-4 chat ui is close, s1-3 is in review. ${mention("omar")} where's the interview prep?`],"1.4k")}
+    ${gm("omar","09:03",["prep's done. 8 questions; the client answered 2 already. i'll pick up at 3 today."],"0.9k")}
+    <div class="sys">${ic("memory")} Memory updated · Interview plan: memory filters · Omar</div>
+    <div class="m me" style="margin-top:10px"><div class="bubble neutral">${mention("karim")} is the Windows CI blocker something I need to decide?</div><div class="meta">09:05 · Read</div></div>
+    <div class="sys">Bench picked ${sysAv("karim")} Karim (@mention) · 0.3k tokens</div>
+    ${gm("karim","09:06",['<span class="react named" role="img" aria-label="Maya reacted with a thumbs up">👍 Maya</span>yes. qa-3 failed twice on the windows runners. two ways out: a paid runner, or nightly e2e on my machine. both are in what needs me.'],"2.0k")}
+    <div class="handoff" id="handoff">
+      <span class="ho-chip" aria-hidden="true"><span class="avh">${avatar("maya",24,{nobadge:true})}</span><span class="ho-track"><span class="ho-dot">S1-6</span></span><span class="avh">${avatar("karim",24,{nobadge:true})}</span></span>
+      <span class="sys" style="margin:0">Maya handed S1-6 SQLite persistence to Karim · the Dev team owns storage · 0.2k tokens · <a href="#" data-act="stub">Open task</a></span>
+    </div>
+    ${gm("maya","09:09",["follow-ups:",`${mention("karim")} take s1-6, and the ci call with the client`,`${mention("omar")} interview at 11:00, notes to memory after`,"opening a 5-minute debate on where stop lives. sam, noor and me. i decide."],"1.1k")}
+    <div class="sys">${ic("clock")} Created routine · Morning standup digest · weekdays at 08:30 · Maya</div>
+    <div class="sys">Maya opened a debate: Where does the Stop button live? · decider Maya</div>
+    <div class="thinking" style="margin-left:42px"><span class="tdots3" style="--dot:${PAL.teal.deep}" aria-hidden="true"><i></i><i></i><i></i></span><span><b style="color:${PAL.teal.ink};font-weight:600">Omar</b> · Thinking</span></div>`;
+  const order = ["maya","omar","karim","noor","sam","jade","lina"];
+  $("#tMembers").innerHTML = order.map(id => {
+    const a = AG[id];
+    return `<li><div class="srow"><span class="avh">${avatar(id,32)}</span><span class="s-main"><span class="s-name">${a.name}</span><span class="caption" style="display:block">${a.role}</span></span>${tag(a.status)}</div></li>`;
+  }).join("");
+}
+function fmt(s){ return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+function startTeam(){
+  const h = $("#handoff");
+  if (h) { h.classList.remove("go"); void h.offsetWidth; h.classList.add("go"); }
+  if (T.started) return;
+  T.started = true;
+  T.timer = setInterval(() => {
+    T.secs = Math.max(0, T.secs - 1);
+    $("#timer").textContent = fmt(T.secs);
+    $("#timer").setAttribute("aria-label", `Time left ${fmt(T.secs)}`);
+    $("#tbar").style.width = (T.secs / 300 * 100) + "%";
+    if (T.secs === 0) {
+      clearInterval(T.timer);
+      $("#mCap").textContent = "Time's up · Maya is deciding · the memo will appear here and in Memory";
+    }
+  }, 1000);
+}
+$("#tForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("#tIn").value.trim();
+  if (!v) { $("#tIn").focus(); return; }
+  $("#tIn").value = "";
+  const m = v.match(/@(\w+)/);
+  const who = m && AG[m[1].toLowerCase()] ? m[1].toLowerCase() : "maya";
+  const why = m && AG[m[1].toLowerCase()] ? "(@mention)" : "(project lead)";
+  const body = esc(v).replace(/@(\w+)/g, (s, n) => AG[n.toLowerCase()] ? mention(n.toLowerCase()) : s);
+  $("#tMsgs").insertAdjacentHTML("beforeend", `<div class="m me enter" style="margin-top:10px"><div class="bubble neutral">${body}</div><div class="meta">Now · Delivered</div></div><div class="sys enter">Bench picked <span class="avh">${avatar(who,16,{nobadge:true})}</span> ${AG[who].name} ${why} · 0.3k tokens</div>`);
+  const s = $("#tScroll"); s.scrollTop = s.scrollHeight;
+});
+$("#tIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#tForm").requestSubmit(); } });
+
+/* ============================== tokens sheet ============================== */
+function lum(hex){
+  const c = hex.replace("#", "");
+  const v = [0,2,4].map(i => parseInt(c.substr(i,2),16) / 255).map(x => x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4));
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+function cr(a, b){ const A = lum(a), B = lum(b); return (Math.max(A,B) + 0.05) / (Math.min(A,B) + 0.05); }
+function verdict(r, min = 4.5){ return `<span class="${r >= min ? "pass-t" : "fail-t"}">${r.toFixed(2)}:1 ${r >= 7 ? "AAA" : r >= min ? "AA" : "fail"}</span>`; }
+let tokensBuilt = false;
+function buildTokens(){
+  if (tokensBuilt) return; tokensBuilt = true;
+  /* mode: text = colour on white (4.5) · icon = colour on white (3) · surface = Carbon on it (4.5) · fillw = white glyph on it (3) · fillc = Carbon glyph on it (3) */
+  const sw = (n, hex, role, mode) => {
+    const r = mode === "text" ? [cr(hex,"#ffffff"),4.5,"on white"] : mode === "icon" ? [cr(hex,"#ffffff"),3,"on white (non-text)"]
+            : mode === "surface" ? [cr("#1d1d1f",hex),4.5,"Carbon text on it"] : mode === "fillw" ? [cr("#ffffff",hex),3,"white glyph on it"]
+            : mode === "fillc" ? [cr("#1d1d1f",hex),3,"Carbon glyph on it"] : [cr("#ffffff",hex),4.5,"white text on it"];
+    return `<div class="sw"><i style="background:${hex};border-bottom:1px solid var(--hairline)"></i><div><b>${n}</b><span class="hex">${hex}</span><br>${role}<br>${verdict(r[0], r[1])} <span class="caption">${r[2]}</span></div></div>`;
+  };
+  $("#swN").innerHTML = [
+    ["Frost","#f5f5f7","Canvas (Home, sidebar)","surface"],["White","#ffffff","Content surfaces","surface"],["Carbon","#1d1d1f","Primary text","text"],["Graphite","#474747","Secondary text","text"],
+    ["Ash","#6e6e73","Muted text, meta","text"],["Mist","#858585","Icon strokes","icon"],["Hairline","#d2d2d7","Dividers (decorative)","surface"],["Pebble","#e2e2e5","Disabled, tracks","surface"],
+    ["Bubble","#efeff1","Agent bubble","surface"],["Apple Blue","#0071e3","The one filled action, focus","onfill"],["Link Blue","#0066cc","Links, outlined secondary","text"]
+  ].map(x => sw(...x)).join("");
+  $("#swF").innerHTML = [
+    ["Success ink","#1e6b34","Done, passed (+ word)","text"],["Attention fill","#ff9f0a","Waiting badge (+ word)","fillc"],["Attention ink","#7a4500","Action needed tag text","text"],
+    ["Error fill","#e5352b","Error badge (+ word)","fillw"],["Error ink","#b3261e","Error tag text","text"]
+  ].map(x => sw(...x)).join("");
+  const owners = {lavender:"Atlas",aqua:"Iris",mint:"Maya",teal:"Omar",cocoa:"Lina",tangerine:"Sam",periwinkle:"Karim",coral:"Noor",orchid:"Jade",honey:"Lumen (new)"};
+  $("#palTable tbody").innerHTML = Object.keys(PAL).filter(k => k !== "neutral").map(k => {
+    const P = PAL[k];
+    const ag = Object.values(AG).find(a => a.pal === k) || {name:owners[k],shape:"droplet",pal:k,expr:"calm"};
+    return `<tr class="pal-row"><td><b>${P.name}</b><br><span class="caption">${owners[k]}</span></td>
+      <td>${avatar({...ag,name:ag.name},40,{nobadge:true})}</td>
+      <td><span style="display:inline-flex;gap:4px">${[P.base,P.light,P.deep].map(h => `<i style="display:inline-block;width:22px;height:22px;border-radius:6px;background:${h}" title="${h}"></i>`).join("")}</span><br><span class="hex">${P.base} · ${P.light} · ${P.deep}</span></td>
+      <td><span class="nametag" style="color:${P.ink};margin:0">${owners[k].split(" ")[0]}</span><br><span class="hex">${P.ink}</span> ${verdict(cr(P.ink,"#ffffff"))}</td>
+      <td><span class="bubble" style="display:inline-block;background:${P.tint};padding:6px 12px">Aa looks good</span><br><span class="hex">${P.tint}</span> ${verdict(cr("#1d1d1f",P.tint))}</td>
+      <td><span class="mention" style="--m-tint:${P.tint};--m-ink:${P.ink}">${owners[k].split(" ")[0]}</span><br>${verdict(cr(P.ink,P.tint))}</td>
+      <td><i style="display:inline-block;width:56px;height:28px;border-radius:6px;background:${P.wash};border:1px solid var(--hairline)"></i><br><span class="hex">${P.wash}</span></td></tr>`;
+  }).join("");
+  $("#spaceT tbody").innerHTML = [4,8,12,16,20,24,40,48,56,64].map(n => `<tr><td style="width:120px"><code>--sp-${n}</code></td><td><div class="space-bar" style="width:${n*3}px"></div></td><td class="caption">${n} px${n===12?" · element gap":n===16?" · panel padding (dense)":n===24?" · card / panel padding":n===40?" · section gap (in app)":n===64?" · section gap (sheet)":""}</td></tr>`).join("");
+  const demoA = {...AG.noor};
+  $("#statusT tbody").innerHTML = Object.keys(ST).map(s => `<tr><td><b>${ST[s].label}</b></td><td>${avatar(demoA,24,{status:s})}</td><td>${avatar(demoA,40,{status:s})}</td><td>${tag(s)}</td><td class="caption">${ST[s].desc}</td><td class="caption">${EXPR[s]}</td></tr>`).join("");
+  $("#gShapes").innerHTML = ["atlas","iris","maya","omar","sam","lina","noor","jade","karim"].map(id => { const a = AG[id]; return `<figure>${avatar(id,56,{nobadge:true})}<figcaption><b>${SHAPE_NAMES[a.shape]}</b>${a.name} · ${PAL[a.pal].name}</figcaption></figure>`; }).join("");
+  $("#gExpr").innerHTML = ["calm","focused","sleepy","surprised","curious"].map(e => `<figure>${avatar(AG.omar,56,{nobadge:true,expr:e})}<figcaption><b>${e[0].toUpperCase()+e.slice(1)}</b>${{calm:"default, waiting",focused:"working",sleepy:"idle, paused",surprised:"error",curious:"thinking"}[e]}</figcaption></figure>`).join("");
+  $("#gHero").innerHTML = ["idle","thinking","working","waiting","error"].map(s => `<figure><div class="hero" data-status="${s}" data-expr="${EXPR[s]}" style="width:88px;height:94px">${avatarSVG(AG.noor,{hero:true})}</div><figcaption><b>${ST[s].label}</b>${{idle:"sleepy · slow breathe",thinking:"curious · eyes drift",working:"focused · eyes scan",waiting:"calm · glances at the request",error:"surprised · still breathes"}[s]}</figcaption></figure>`).join("")
+    + `<figure><div class="hero" data-status="working" data-expr="focused" style="width:88px;height:94px">${avatarSVG(AG.maya,{hero:true})}</div><figcaption><b>Cloud</b>Maya, working</figcaption></figure>`
+    + `<figure><div class="hero" data-status="thinking" data-expr="curious" style="width:88px;height:94px">${avatarSVG(AG.omar,{hero:true})}</div><figcaption><b>Hexagon</b>Omar, thinking</figcaption></figure>`;
+  $("#gSizes").innerHTML = [[16,"mention chip"],[24,"inline, system lines"],[32,"chat sender, header"],[36,"sidebar row"],[40,"lists, roster"],[64,"profile, settings"]].map(([s,l]) => `<figure>${avatar("noor",s,{nobadge:s<24})}<figcaption><b>${s} px</b>${l}</figcaption></figure>`).join("")
+    + `<figure><div class="hero" data-status="working" data-expr="focused">${avatarSVG(AG.noor,{hero:true})}</div><figcaption><b>96 px</b>hero (dimensional)</figcaption></figure>`;
+  $("#gInline").innerHTML = `${mention("karim")}
+    <span class="thinking" style="margin:0"><span class="tdots3" style="--dot:${PAL.coral.deep}" aria-hidden="true"><i></i><i></i><i></i></span>Thinking</span>
+    <span class="liveline" style="margin:0"><span class="avh">${avatar("noor",20,{nobadge:true})}</span>wrapping the run</span>
+    <span class="bubble" style="display:inline-block"><ul class="check" style="margin:0"><li>${ic("check")}<span><b>Salesforce</b><span class="arrow">→</span>list pulled · 52 accounts</span></li></ul></span>
+    <span class="cluster-wrap">${cluster(36)}</span>`;
+  $("#varsPre").textContent = `:root{
+  --frost:#f5f5f7; --white:#fff; --carbon:#1d1d1f; --graphite:#474747; --ash:#6e6e73;
+  --mist:#858585; --hairline:#d2d2d7; --pebble:#e2e2e5; --ice:#f4f8fb; --bubble:#efeff1;
+  --blue:#0071e3; --blue-hover:#0077ed; --blue-press:#006edb; --link:#0066cc;
+  --ok-ink:#1e6b34; --ok-tint:#e4f4e8; --warn-fill:#ff9f0a; --warn-ink:#7a4500; --warn-tint:#fff1d6;
+  --err-fill:#e5352b; --err-ink:#b3261e; --err-tint:#fde8e7;
+  --font: Inter, "SF Pro Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  --t-display:600 40px/1.10; --t-title:600 28px/1.18; --t-sub:300 21px/1.24;
+  --t-body:400 15px/1.47; --t-list:400 14px/1.43; --t-caption:400 12px/1.33;
+  --r-pill:980px; --r-card:8px; --r-bubble:18px;
+  --sp: 4 8 12 16 20 24 40 48 56 64;
+  --d-press:120ms; --d-badge:160ms; --d-msg:180ms; --d-panel:240ms; --d-handoff:300ms; --d-expand:320ms;
+  --ease:cubic-bezier(.25,.1,.25,1); --ease-out:cubic-bezier(.2,.8,.2,1); --ease-move:cubic-bezier(.4,0,.2,1);
+}
+/* agent hues: base / light / deep / tint / wash / ink */
+` + Object.keys(PAL).filter(k => k !== "neutral").map(k => { const P = PAL[k]; return `--agent-${k}: ${P.base} ${P.light} ${P.deep} ${P.tint} ${P.wash} ${P.ink};`; }).join("\n");
+}
+
+/* ============================== global wiring ============================== */
+document.addEventListener("click", e => {
+  const tabBtn = e.target.closest("[data-tab]");
+  if (tabBtn) { e.preventDefault(); show(tabBtn.dataset.tab); return; }
+  const na = e.target.closest('[data-act="newAgent"]');
+  if (na) { e.preventDefault(); openDialog(); return; }
+  const row = e.target.closest("#sideList .srow, .roster .srow, #newRows .srow");
+  if (row && row.dataset.row) {
+    const r = row.dataset.row;
+    if (r === "home") return show("home");
+    if (r === "noor") return show("agent");
+    if (r === "teamchat") return show("team");
+    toast("Not part of this direction sample. Home, Noor and the Bench team chat are.");
+    return;
+  }
+  const st = e.target.closest('[data-act="stub"]');
+  if (st) { e.preventDefault(); toast("Not part of this direction sample."); }
+});
+$("#sideToggle").addEventListener("click", e => {
+  const side = $("#side"), col = !side.classList.contains("collapsed");
+  side.classList.toggle("collapsed", col);
+  e.currentTarget.setAttribute("aria-expanded", !col);
+  e.currentTarget.setAttribute("aria-label", col ? "Expand sidebar" : "Collapse sidebar");
+  e.currentTarget.title = col ? "Expand sidebar" : "Collapse sidebar";
+});
+$("#sideSearch").addEventListener("input", e => {
+  const q = e.target.value.trim().toLowerCase();
+  $$("#sideList .srow[data-name]").forEach(r => { r.hidden = q && !r.dataset.name.includes(q); });
+});
+$("#rmToggle").addEventListener("change", e => root.classList.toggle("rm", e.target.checked));
+/* Arrow keys inside the in-app tablists (workspace views, files). The prototype tabs have their own handler. */
+document.addEventListener("keydown", e => {
+  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+  const t = e.target.closest && e.target.closest('[role="tab"]');
+  if (!t || t.closest(".proto")) return;
+  const list = $$('[role="tab"]', t.parentElement);
+  const i = list.indexOf(t);
+  const n = list[(i + (e.key === "ArrowRight" ? 1 : list.length - 1)) % list.length];
+  e.preventDefault(); n.focus(); n.click();
+});
+
+/* ============================== init ============================== */
+buildSidebar();
+buildHome();
+buildTeam();
+hydrate();
+$("#hero").innerHTML = avatarSVG(AG.noor, {hero:true});
+const conv = $("#conv"), PN = PAL.coral;
+conv.style.setProperty("--wash", PN.wash); conv.style.setProperty("--tint", PN.tint); conv.style.setProperty("--ink", PN.ink);
+$("#miniDiff").innerHTML = miniHTML();
+$("#wPill").innerHTML = pill("need");
+$("#wcard").insertAdjacentHTML("beforebegin", `<button class="pointer" id="pointerBtn">${avatar("noor",22,{status:"waiting"})}Waiting for your approval · <code>npm test</code> in bench ${ic("arrowR")}</button>`);
+$("#pointerBtn").addEventListener("click", () => $("#wOpen").click());
+wsView("diff");
+paintNoor("working", "running tests");
+updatePrimary();
+route();
+</script>
+</body>
+</html>
