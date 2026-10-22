@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bench · brand explorations · round 2</title>
+<!-- Fonts: exploration only. Every family below is SIL Open Font License 1.1 (bundle-able in the app). One link per family so one bad request can't take the others down. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap">
+<style>
+:root{
+  --bg:#f2f2f0; --card:#ffffff; --ink:#141416; --ink-2:#4a4b51; --ink-3:#66676d;
+  --hair:rgb(20 20 22 / .08); --hair-2:rgb(20 20 22 / .13);
+  --night:#121316; --chalk:#ecebe6; --night-2:#9d9e98;
+  --r:22px; --r-sm:14px;
+  --sans:"Instrument Sans","Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Mono",Consolas,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:22px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth;scroll-padding-top:72px}
+body{min-width:1200px}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
+.wrap{width:min(1328px,calc(100% - 112px));margin:0 auto}
+.card{background:var(--card);border-radius:var(--r);box-shadow:0 0 0 1px var(--hair)}
+h1,h2,h3{font-weight:600;letter-spacing:-.02em}
+p{max-width:64ch}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:50;background:rgb(242 242 240 / .94);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair)}
+.top .wrap{display:flex;align-items:center;gap:28px;height:56px}
+.top-brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em}
+.top-brand small{font-weight:400;color:var(--ink-3);letter-spacing:0;font-size:13px}
+.top nav{display:flex;gap:4px;margin-left:auto}
+.top nav a{color:var(--ink-2);text-decoration:none;font-size:13px;height:32px;display:inline-flex;align-items:center;padding:0 12px;border-radius:999px;gap:6px}
+.top nav a:hover{background:rgb(20 20 22 / .05);color:var(--ink)}
+.top nav a span{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+
+/* buttons */
+.btn{appearance:none;border:0;font:inherit;font-size:13px;font-weight:600;height:36px;padding:0 16px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px var(--hair-2);transition:background .14s var(--ease),transform .14s var(--ease)}
+.btn:hover{background:#f7f7f5}
+.btn:active{transform:scale(.97)}
+.btn-ink{background:var(--ink);color:#fff;box-shadow:none}
+.btn-ink:hover{background:#2c2c31}
+.btn svg{width:14px;height:14px}
+.btn[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none}
+
+/* hero */
+.hero{padding:56px 0 36px}
+.hero-grid{display:grid;grid-template-columns:1fr 440px;gap:56px;align-items:end}
+.eyebrow{font-family:var(--mono);font-size:12px;line-height:16px;color:var(--ink-3);letter-spacing:.01em}
+.hero h1{font-size:54px;line-height:56px;letter-spacing:-.035em;margin-top:16px;max-width:14ch}
+.hero .lede{font-size:17px;line-height:26px;color:var(--ink-2);margin-top:18px;max-width:56ch}
+.decide{padding:22px 24px}
+.decide h2{font-size:13px;line-height:18px;letter-spacing:0;color:var(--ink-3);font-weight:500}
+.decide ol{list-style:none;margin-top:10px;display:grid}
+.decide li{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:baseline;padding:10px 0;border-top:1px solid var(--hair)}
+.decide li:first-child{border-top:0}
+.decide li i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.decide li a{color:var(--ink);text-decoration:none;font-weight:600}
+.decide li a:hover{text-decoration:underline;text-underline-offset:3px}
+.decide li span{color:var(--ink-3);font-size:13px;text-align:right}
+
+/* recommended set band */
+.set{margin-top:28px;display:grid;grid-template-columns:300px 1fr 1fr;overflow:hidden}
+.set > div{padding:28px;min-height:250px}
+.set-icon{background:linear-gradient(180deg,#e9e8ec,#dcdadf);display:grid;place-items:center;position:relative}
+.set-icon .ic-shadow{filter:drop-shadow(0 18px 24px rgb(30 20 40 / .28)) drop-shadow(0 2px 4px rgb(30 20 40 / .18))}
+.set-cap{position:absolute;left:20px;bottom:16px;font-family:var(--mono);font-size:11px;color:#5a5560}
+.set-mid{border-left:1px solid var(--hair);display:flex;flex-direction:column;justify-content:space-between;gap:22px}
+.set-team{display:flex;align-items:flex-end;gap:10px}
+.set-pal{display:flex;gap:6px;align-items:center}
+.set-pal span{width:34px;height:34px;border-radius:10px;box-shadow:inset 0 0 0 1px rgb(0 0 0 / .08)}
+.set-pal b{font-weight:600;margin-left:8px}
+.set-pal em{font-style:normal;color:var(--ink-3);font-size:13px;margin-left:4px}
+.set-right{border-left:1px solid var(--hair);display:flex;flex-direction:column;gap:14px;justify-content:space-between}
+.set-type{font-size:30px;line-height:34px;letter-spacing:-.03em;font-weight:600}
+.set-type small{display:block;font-size:13px;line-height:18px;letter-spacing:0;font-weight:400;color:var(--ink-3);margin-top:6px}
+.set-note{font-size:13px;line-height:18px;color:var(--ink-3)}
+.lbl{font-family:var(--mono);font-size:11px;line-height:14px;color:var(--ink-3);letter-spacing:.02em}
+
+/* sections */
+.sec{padding:72px 0 8px}
+.sec-h{display:grid;grid-template-columns:72px 1fr 360px;gap:24px;align-items:start;margin-bottom:28px}
+.sec-n{font-family:var(--mono);font-size:13px;color:var(--ink-3);padding-top:10px}
+.sec-h h2{font-size:36px;line-height:40px;letter-spacing:-.03em}
+.sec-h .lede{color:var(--ink-2);margin-top:10px;font-size:15px;line-height:23px}
+.rec{background:var(--ink);color:#f4f4f1;border-radius:var(--r-sm);padding:16px 18px;display:grid;gap:4px}
+.rec .lbl{color:#a5a6a0}
+.rec b{font-size:17px;line-height:22px;font-weight:600;letter-spacing:-.01em}
+.rec span:last-child{font-size:13px;line-height:19px;color:#c9c9c4}
+.pill-rec{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--ink);color:#fff;font-size:11px;font-weight:600;letter-spacing:.01em;vertical-align:middle}
+.pill-base{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:#e4e6ee;color:#2b3045;font-size:11px;font-weight:600;vertical-align:middle}
+.pill-soft{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:#ebebe7;color:var(--ink-2);font-size:11px;font-weight:600;vertical-align:middle}
+
+/* 01 logos */
+.glance{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
+.gl{padding:22px 18px 16px;display:grid;justify-items:start;gap:18px;position:relative}
+.gl-m{width:100%;display:grid;place-items:center;height:76px}
+.gl figcaption{display:grid;gap:2px;width:100%}
+.gl figcaption b{font-weight:600}
+.gl figcaption span{font-size:13px;color:var(--ink-3)}
+.gl .pill-rec{position:absolute;right:14px;top:14px}
+.gl i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--ink-3);position:absolute;left:18px;top:16px}
+.rename{display:flex;align-items:center;gap:36px;padding:16px 22px;margin-bottom:28px}
+.rename .lbl{width:150px}
+.slot{display:inline-flex;align-items:center;gap:9px}
+.slot i{display:block;height:13px;border-radius:4px;background:#dcdcd7}
+.lrow{display:grid;grid-template-columns:268px 1fr;gap:28px;padding:22px;margin-bottom:12px}
+.l-info{display:flex;flex-direction:column;gap:8px;padding:4px 0}
+.l-top{display:flex;align-items:center;gap:10px}
+.l-letter{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+.l-info h3{font-size:22px;line-height:26px}
+.l-kind{font-size:13px;color:var(--ink-3)}
+.l-story{font-size:14px;line-height:21px;color:var(--ink-2)}
+.l-meta{display:grid;grid-template-columns:62px 1fr;gap:6px 10px;font-size:12px;line-height:17px;margin-top:6px;padding-top:12px;border-top:1px solid var(--hair)}
+.l-meta dt{color:var(--ink-3)}
+.l-meta dd{color:var(--ink-2)}
+.l-tiles{display:grid;grid-template-columns:150px 150px 140px 140px 172px 1fr;gap:10px}
+.tile{border-radius:16px;position:relative;display:grid;place-items:center;min-height:200px;padding:18px 12px 34px}
+.tile figcaption{position:absolute;left:12px;bottom:10px;font-family:var(--mono);font-size:10.5px;line-height:14px;color:var(--ink-3)}
+.t-light{background:#fff;box-shadow:inset 0 0 0 1px var(--hair)}
+.t-dark{background:var(--night)}
+.t-dark figcaption{color:var(--night-2)}
+.t-mac{background:linear-gradient(160deg,#e6e4ea,#d4d2da)}
+.t-mac figcaption{color:#55525c}
+.t-mac .ic{filter:drop-shadow(0 10px 14px rgb(30 20 40 / .25)) drop-shadow(0 1px 2px rgb(30 20 40 / .2))}
+.t-win{background:linear-gradient(160deg,#eef1f5,#e2e7ee)}
+.t-win figcaption{color:#4d5560}
+.t-win .ic{filter:drop-shadow(0 4px 8px rgb(20 30 50 / .16))}
+.t-small{background:#f7f7f5;box-shadow:inset 0 0 0 1px var(--hair);align-content:start;gap:14px;padding-top:14px}
+.tab{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 9px;background:#fff;border-radius:9px 9px 0 0;font-size:12px;box-shadow:0 0 0 1px var(--hair)}
+.small-row{display:flex;align-items:center;gap:12px}
+.fav-zoom{width:64px;height:64px;image-rendering:pixelated;border-radius:6px;box-shadow:0 0 0 1px var(--hair)}
+.small-sizes{display:flex;flex-direction:column;align-items:center;gap:6px}
+.t-lock{display:grid;grid-template-rows:1fr 1fr;padding:0;overflow:hidden;box-shadow:inset 0 0 0 1px var(--hair)}
+.t-lock > div{display:grid;place-items:center;width:100%;height:100%}
+.lk-light{background:#fff}
+.lk-dark{background:var(--night)}
+.lk{display:inline-flex;align-items:center;gap:calc(var(--h) * .36);line-height:1}
+.lk svg{display:block}
+.lk-t{font-family:var(--sans);font-weight:600;font-size:calc(var(--h) * .84);letter-spacing:-.035em;transform:translateY(-.04em)}
+
+/* 02 palettes */
+.pal{display:grid;grid-template-columns:1fr 452px;gap:28px;padding:22px;margin-bottom:14px}
+.pal-side{display:flex;flex-direction:column;gap:16px}
+.pal-h{display:flex;flex-direction:column;gap:6px}
+.pal-h h3{font-size:22px;line-height:26px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pal-h p{font-size:14px;line-height:21px;color:var(--ink-2)}
+.pal-h .watch{font-size:12.5px;line-height:18px;color:var(--ink-3)}
+.sws{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.sw{display:grid;gap:4px;font-size:11px;line-height:14px}
+.sw-c{height:40px;border-radius:10px;box-shadow:inset 0 0 0 1px rgb(0 0 0 / .08)}
+.sw b{font-weight:600}
+.sw span{font-family:var(--mono);color:var(--ink-3);font-size:10.5px}
+.sw.big .sw-c{height:40px}
+.crs{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.crs > div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--hair);font-size:12px;line-height:16px;color:var(--ink-2)}
+.crs .pair{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.crs .pair i{width:12px;height:12px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgb(0 0 0 / .1)}
+.cr{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap}
+.cr b{font-weight:600;color:var(--ink)}
+.cr em{font-style:normal;font-family:var(--mono);font-size:10px;color:#1b6b3e}
+.cr.fail em{color:#b3261e}
+.pal-logos{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:8px}
+.pal-logos > div{border-radius:14px;display:grid;place-items:center;height:96px;box-shadow:inset 0 0 0 1px rgb(0 0 0 / .06)}
+
+/* the mini app */
+.app{background:var(--p-canvas);color:var(--p-ink);border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgb(20 20 22 / .10),0 22px 44px -18px rgb(20 20 22 / .22);display:grid;grid-template-rows:38px 1fr;height:100%;min-height:440px;font-family:var(--sans);font-size:13px;line-height:18px}
+.app-bar{display:flex;align-items:center;gap:14px;padding-left:14px;border-bottom:1px solid var(--p-hair);font-size:12px}
+.app-brand{display:flex;align-items:center;gap:7px;font-weight:600;letter-spacing:-.02em;font-size:13px}
+.app-crumb{color:var(--p-text2)}
+.win-ctl{margin-left:auto;display:flex;height:100%;color:var(--p-text2)}
+.win-ctl i{width:44px;display:grid;place-items:center}
+.win-ctl svg{width:10px;height:10px}
+.app-body{display:grid;grid-template-columns:196px 1fr;min-height:0}
+.app-side{padding:12px 10px;display:flex;flex-direction:column;gap:2px}
+.nav{display:flex;align-items:center;justify-content:space-between;height:32px;padding:0 10px;border-radius:10px;color:var(--p-text2)}
+.nav.sel{background:var(--p-surface);color:var(--p-ink);font-weight:600;box-shadow:0 0 0 1px var(--p-hair)}
+.cnt{min-width:20px;height:18px;padding:0 6px;border-radius:9px;background:var(--p-attnT);color:var(--p-attn);font-size:11px;font-weight:600;display:grid;place-items:center}
+.side-h{margin:16px 10px 4px;font-size:12px;color:var(--p-text2)}
+.mem{display:flex;align-items:center;gap:9px;height:32px;padding:0 10px}
+.mem-n{flex:1}
+.mem-s{font-size:11px;color:var(--p-text2)}
+.mem-s.attn{color:var(--p-attn);font-weight:600}
+.new-agent{margin-top:auto;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--p-text2);box-shadow:inset 0 0 0 1px var(--p-hair)}
+.app-main{background:var(--p-surface);border-left:1px solid var(--p-hair);padding:14px 22px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.thread-h{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--p-hair)}
+.thread-h b{font-weight:600;display:block}
+.thread-h span{color:var(--p-text2);font-size:12px}
+.thread-h .tag{margin-left:auto}
+.msg{display:flex;gap:9px;align-items:flex-start}
+.bub{background:var(--p-sunken);padding:8px 12px;border-radius:14px;max-width:34em}
+.meta{font-size:11px;line-height:16px;color:var(--p-text2);margin-top:4px}
+.lnk{color:var(--p-link);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.msg.you{justify-content:flex-end}
+.you-b{background:color-mix(in srgb,var(--a) 18%,var(--p-surface))}
+.tkt{border-radius:16px;padding:12px 14px;box-shadow:0 0 0 1px var(--p-hair),0 4px 14px -6px rgb(0 0 0 / .12);display:grid;gap:8px;background:var(--p-surface)}
+.tkt-top{display:flex;align-items:center;gap:8px}
+.tkt p{max-width:none}
+.tkt code{font-family:var(--mono);font-size:12px;background:var(--p-sunken);padding:1px 5px;border-radius:5px}
+.tkt-act{display:flex;gap:8px;align-items:center}
+.pbtn{height:32px;padding:0 16px;border-radius:999px;background:var(--p-action);color:var(--p-on);font-weight:600;display:inline-flex;align-items:center}
+.sbtn{height:32px;padding:0 14px;border-radius:999px;color:var(--p-ink);display:inline-flex;align-items:center;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--p-ink) 26%,transparent)}
+.tkt-act .meta{margin:0 0 0 auto}
+.tag{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:600}
+.tag svg{width:10px;height:10px}
+.tag.ok{background:var(--p-okT);color:var(--p-ok)}
+.tag.attn{background:var(--p-attnT);color:var(--p-attn)}
+.tag.err{background:var(--p-dangerT);color:var(--p-danger)}
+.tag.plain{background:var(--p-sunken);color:var(--p-text2)}
+.chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:auto}
+.toast-ok{font-size:12px;color:var(--p-text2);margin-left:6px}
+
+/* 03 type */
+.types{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ty{padding:24px 26px;display:grid;gap:18px;align-content:start;position:relative}
+.ty.is-rec{box-shadow:0 0 0 2px var(--ink)}
+.ty-h{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.ty-h h3{font-size:16px;line-height:22px}
+.ty-h p{font-size:13px;line-height:19px;color:var(--ink-3);margin-top:2px}
+.ty-spec{display:grid;gap:10px;padding:18px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.ty-d{font-family:var(--fh);font-weight:var(--hw);font-size:40px;line-height:44px;letter-spacing:-.032em}
+.ty-t{font-family:var(--fh);font-weight:var(--hw);font-size:20px;line-height:26px;letter-spacing:-.014em}
+.ty-b{font-family:var(--fb);font-size:15px;line-height:22px;max-width:52ch;color:#26272b}
+.ty-b strong{font-weight:600}
+.ty-agent{font-family:var(--fb);font-size:15px;line-height:22px;color:#26272b}
+.ty-agent b{font-weight:600;color:#c4283f;margin-right:6px}
+.ty-m{font-family:var(--fb);font-size:12px;line-height:16px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.ty-mono{font-family:var(--fm);font-size:12.5px;line-height:19px;background:#f5f5f3;border-radius:12px;padding:12px 14px;white-space:pre;color:#2a2b30;overflow:hidden}
+.ty-mono span{color:#1b7a45}
+.ty-f{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.ty-wm{display:inline-flex;align-items:center;gap:9px;font-family:var(--fh);font-weight:600;font-size:24px;letter-spacing:-.035em;line-height:1;padding-top:2px}
+.ty-f dl{display:grid;grid-template-columns:52px 1fr;gap:4px 10px;font-size:12px;line-height:17px}
+.ty-f dt{color:var(--ink-3)}
+.ty-f dd{color:var(--ink-2)}
+.scale{margin-top:14px;padding:20px 24px;display:grid;grid-template-columns:150px repeat(6,auto);gap:28px;align-items:baseline;justify-content:start}
+.scale div{display:grid;gap:4px}
+.scale .lbl{white-space:nowrap}
+
+/* 04 sound */
+.snd-bar{display:flex;align-items:center;gap:14px;padding:14px 18px;margin-bottom:12px}
+.snd-bar .vol{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
+.snd-bar input[type=range]{width:140px;accent-color:var(--ink)}
+.snd-bar .status{margin-left:auto;font-size:13px;color:var(--ink-3)}
+.snds{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.snd{padding:20px;display:flex;flex-direction:column;gap:14px}
+.snd-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.snd-h h3{font-size:18px;line-height:24px}
+.snd-h .num{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.scope{width:100%;height:64px;border-radius:12px;background:#f5f5f3;display:block}
+.snd p{font-size:13.5px;line-height:20px;color:var(--ink-2)}
+.snd dl{display:grid;grid-template-columns:68px 1fr;gap:5px 10px;font-size:12px;line-height:17px;padding-top:12px;border-top:1px solid var(--hair)}
+.snd dt{color:var(--ink-3)}
+.snd dd{color:var(--ink-2)}
+.snd .btn{margin-top:auto;align-self:flex-start}
+.snd.optional{background:transparent;box-shadow:inset 0 0 0 1px var(--hair-2)}
+.play-ic{width:14px;height:14px}
+.muted-note{font-size:12px;color:#8a5300;min-height:16px}
+
+footer.foot{padding:64px 0 72px;color:var(--ink-3);font-size:13px}
+
+/* avatars */
+.av{display:inline-block;flex:none;line-height:0}
+.av svg{display:block;width:100%;height:100%;overflow:visible}
+.blinky .blink{animation:blink 5.2s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.12)}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .blinky .blink{animation:none}
+  .btn{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="top-brand"><span id="topMark"></span>bench <small>brand explorations · round 2</small></span>
+    <nav aria-label="Sections">
+      <a href="#logos"><span>01</span>Logos</a>
+      <a href="#palettes"><span>02</span>Colour</a>
+      <a href="#type"><span>03</span>Type</a>
+      <a href="#sound"><span>04</span>Sound</a>
+    </nav>
+    <button class="btn" id="muteTop" type="button" aria-pressed="false"><span class="mute-ic"></span><span class="mute-l">Sound on</span></button>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" aria-labelledby="h1">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Brand explorations · round 2 · 22 Oct 2026 · for your review</p>
+        <h1 id="h1">A face, a colour, a voice and a sound for your team.</h1>
+        <p class="lede">You asked for other logos, a colour that isn’t the blue everyone else uses, real typefaces, and sounds. Every option here survives a rename: “bench” is still a codename, so no mark depends on the word. The slanted eyes stay where they belong, on the agents’ faces, and never become the logo.</p>
+      </div>
+      <aside class="decide card" aria-label="What you choose">
+        <h2>What you choose today</h2>
+        <ol>
+          <li><i>01</i><a href="#logos">Logo</a><span>6 directions · we suggest Seated</span></li>
+          <li><i>02</i><a href="#palettes">Brand colour</a><span>5 non-blue · we suggest Aubergine</span></li>
+          <li><i>03</i><a href="#type">Typeface</a><span>6 pairings · we suggest Instrument Sans</span></li>
+          <li><i>04</i><a href="#sound">Sounds</a><span>Listen to 3 + 1 optional</span></li>
+        </ol>
+      </aside>
+    </div>
+    <div class="set card" aria-label="The recommended set, together">
+      <div class="set-icon"><span class="ic-shadow" id="setIcon"></span><span class="set-cap">App icon · macOS</span></div>
+      <div class="set-mid">
+        <div><p class="lbl">The recommended set</p><div id="setLockup" style="margin-top:14px"></div></div>
+        <div class="set-pal" id="setPal"></div>
+        <div class="set-team" id="setTeam"></div>
+      </div>
+      <div class="set-right">
+        <div><p class="lbl">Type</p><p class="set-type" style="margin-top:10px">What needs you · 3<small>Instrument Sans 600 / 400 · JetBrains Mono for code and numbers in the trace</small></p></div>
+        <div id="setApp"></div>
+        <p class="set-note">Seated mark · Bone + Ink neutrals with an Aubergine action · Instrument Sans · Pear stays Karim’s hue. Each part is chosen in its own section below and can be swapped independently.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 LOGOS -->
+  <section class="sec wrap" id="logos" aria-labelledby="logos-h">
+    <div class="sec-h">
+      <span class="sec-n">01</span>
+      <div>
+        <h2 id="logos-h">Logo directions</h2>
+        <p class="lede">Six genuinely different ideas: a team, a glass box, a set of characters, a trace, a letter and a name. Each is shown on light and dark, as a macOS and a Windows icon, as a real 16 px favicon (with its pixels enlarged), and locked up with “bench”. No slanted eye-pair, no X shapes, no starbursts.</p>
+      </div>
+      <aside class="rec" aria-label="Recommendation"><span class="lbl">Recommended</span><b>A · Seated</b><span>It draws exactly what Bench is (different agents, one team, sitting on one bench), it stays readable at 16 px, and it keeps working under any new name.</span></aside>
+    </div>
+    <div class="glance" id="glance"></div>
+    <div class="rename card"><span class="lbl">Rename test · 3, 5, 8 letters</span><div id="renameSlots" style="display:flex;gap:44px;align-items:center"></div></div>
+    <div id="logoRows"></div>
+  </section>
+
+  <!-- 02 PALETTES -->
+  <section class="sec wrap" id="palettes" aria-labelledby="pal-h">
+    <div class="sec-h">
+      <span class="sec-n">02</span>
+      <div>
+        <h2 id="pal-h">Your brand colour, without the blue</h2>
+        <p class="lede">Five non-blue palettes lead; the current Porcelain + Cobalt sits last as the baseline, because blue is what others use. Each palette is neutrals (canvas, surface, ink, secondary text, hairline) plus one action colour and the feedback colours, applied to the same screen. Every contrast ratio is computed live from the hex values (WCAG 2.2: 4.5:1 text, 3:1 UI parts). Agent hues are unchanged, Karim keeps Pear.</p>
+      </div>
+      <aside class="rec" aria-label="Recommendation"><span class="lbl">Recommended</span><b>Bone + Aubergine</b><span>A colour almost nobody in software owns. It reads as yours, means nothing else in the interface (not done, not needs-you, not error), and stays calm for an all-day app.</span></aside>
+    </div>
+    <div id="palList"></div>
+  </section>
+
+  <!-- 03 TYPE -->
+  <section class="sec wrap" id="type" aria-labelledby="type-h">
+    <div class="sec-h">
+      <span class="sec-n">03</span>
+      <div>
+        <h2 id="type-h">Typefaces</h2>
+        <p class="lede">Six pairings that fit calm, precise and warm, each set with real Bench copy: a headline, the inbox title, an approval, an agent line, usage numbers and a trace. All are SIL Open Font License 1.1, so the app can bundle them and render the same on Windows, macOS and Linux.</p>
+      </div>
+      <aside class="rec" aria-label="Recommendation"><span class="lbl">Recommended</span><b>Instrument Sans + JetBrains Mono</b><span>Precise like a grotesk, warm in its curves, and its 600 weight gives the wordmark a voice without looking like every other dev tool. OFL, both.</span></aside>
+    </div>
+    <div class="types" id="types"></div>
+    <div class="scale card" id="scale" aria-label="Recommended type scale"></div>
+  </section>
+
+  <!-- 04 SOUND -->
+  <section class="sec wrap" id="sound" aria-labelledby="snd-h">
+    <div class="sec-h">
+      <span class="sec-n">04</span>
+      <div>
+        <h2 id="snd-h">Sounds</h2>
+        <p class="lede">Three sounds from one family, synthesised live in your browser (no files): soft, short (under 400 ms), pitched in the same key, and never alarming. A fourth, optional chime greets the first open of the day. In the app they are on by default, with a mute switch in Settings, and the OS’s Focus or Do Not Disturb silences them all.</p>
+      </div>
+      <aside class="rec" aria-label="Recommendation"><span class="lbl">Recommended</span><b>Ship all three, chime off by default</b><span>Needs you, done and handoff carry information. The morning chime is pure delight, so it should be something you turn on, not something you get.</span></aside>
+    </div>
+    <div class="snd-bar card">
+      <button class="btn" id="muteBar" type="button" aria-pressed="false"><span class="mute-ic"></span><span class="mute-l">Sound on</span></button>
+      <label class="vol" for="vol">Volume <input id="vol" type="range" min="0" max="100" value="70"></label>
+      <button class="btn" id="playSeq" type="button"><svg class="play-ic" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2.5v9l7.5-4.5z" fill="currentColor"/></svg>Play a short story: needs you, handoff, done</button>
+      <span class="status" id="sndStatus" role="status" aria-live="polite"></span>
+    </div>
+    <div class="snds" id="snds"></div>
+  </section>
+</main>
+
+<footer class="foot wrap">
+  Exploration page, not a spec. Fonts load from Google Fonts for review only; the app would bundle the chosen files (all SIL OFL 1.1). Rationale and recommendations: EXPLORATIONS.md in this folder.
+</footer>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+let UID = 0;
+
+/* ---------------- colour maths ---------------- */
+const hex2rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+const lin = v => { v /= 255; return v <= .04045 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
+const lum = h => { const [r, g, b] = hex2rgb(h).map(lin); return .2126 * r + .7152 * g + .0722 * b; };
+const cr = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+function crBadge(r, min) {
+  const pass = r >= min;
+  const lvl = !pass ? "fails " + min + ":1" : min === 3 ? "UI 3:1" : r >= 7 ? "AAA" : "AA";
+  return `<span class="cr${pass ? "" : " fail"}"><b class="num">${r.toFixed(2)}</b><em>${lvl}</em></span>`;
+}
+
+/* ---------------- agents (existing style, unchanged) ---------------- */
+const HUE = {
+  coral:{base:"#ff5f73",light:"#ffb8c1",deep:"#e0364f",ink:"#c4283f"},
+  tangerine:{base:"#ff8a3d",light:"#ffc9a3",deep:"#e0601a",ink:"#b04a00"},
+  honey:{base:"#f2ab1d",light:"#ffe2a0",deep:"#cf8600",ink:"#8a5a00"},
+  pear:{base:"#96bf2c",light:"#d6ec9a",deep:"#6c9410",ink:"#4d6a00"},
+  mint:{base:"#3cc47c",light:"#aeedc9",deep:"#1f9658",ink:"#1d7a43"},
+  teal:{base:"#1fb5a3",light:"#9ee8dc",deep:"#0c8a7c",ink:"#00756a"},
+  aqua:{base:"#2db4dc",light:"#a6e6f7",deep:"#0e86b0",ink:"#006b85"},
+  lavender:{base:"#8e6cf0",light:"#cbbcff",deep:"#5f3fd0",ink:"#5a3dc8"},
+  orchid:{base:"#e05cb4",light:"#f6b6e1",deep:"#b8358d",ink:"#b0287f"},
+  cocoa:{base:"#a66e4e",light:"#dcb59d",deep:"#7d4c31",ink:"#7a4a2e"}
+};
+const SHAPES = {
+  sphere:  {d:'<circle cx="50" cy="52" r="40"/>', eye:[50,50,13], hl:[34,30], bottom:92},
+  droplet: {d:'<path d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/>', eye:[50,66,12], hl:[38,50], bottom:95},
+  cloud:   {d:'<path d="M26 84 C12 84 6 72 10 62 C4 54 8 40 22 40 C22 26 36 18 48 24 C56 12 76 14 80 30 C92 32 98 46 92 56 C98 66 92 84 76 84 Z"/>', eye:[52,60,13], hl:[34,38], bottom:84},
+  hexagon: {d:'<polygon points="50,12 84,31 84,71 50,90 16,71 16,31"/>', round:10, eye:[50,52,13], hl:[34,32], bottom:95},
+  blob:    {d:'<path d="M54 10 C76 12 92 30 88 52 C85 70 92 84 72 90 C54 95 34 92 20 80 C8 68 8 48 16 34 C24 18 36 9 54 10 Z"/>', eye:[50,50,13], hl:[34,28], bottom:93},
+  egg:     {d:'<path d="M50 8 C71 8 86 38 86 60 C86 80 70 94 50 94 C30 94 14 80 14 60 C14 38 29 8 50 8 Z"/>', eye:[50,60,12], hl:[36,32], bottom:94},
+  pill:    {d:'<rect x="6" y="27" width="88" height="48" rx="24"/>', eye:[60,51,11], hl:[26,38], bottom:75},
+  triangle:{d:'<polygon points="50,16 88,82 12,82"/>', round:14, eye:[50,64,10], hl:[42,44], bottom:89},
+  square:  {d:'<rect x="12" y="13" width="76" height="76" rx="22"/>', eye:[50,50,13], hl:[30,30], bottom:89}
+};
+const CAST = [
+  {id:"atlas",name:"Atlas",shape:"sphere",hue:"lavender"},
+  {id:"maya",name:"Maya",shape:"cloud",hue:"mint"},
+  {id:"noor",name:"Noor",shape:"pill",hue:"coral"},
+  {id:"karim",name:"Karim",shape:"square",hue:"pear"},
+  {id:"jade",name:"Jade",shape:"triangle",hue:"orchid"},
+  {id:"sam",name:"Sam",shape:"blob",hue:"tangerine"}
+];
+const A = Object.fromEntries(CAST.map(c => [c.id, c]));
+
+function eyes(gap) {
+  return [-gap, gap].map(x => `<rect x="${x - 3.5}" y="-8" width="7" height="16" rx="3.5" transform="rotate(-12 ${x} 0)"/>`).join("");
+}
+function avatarSVG(a, hero) {
+  const P = HUE[a.hue], S = SHAPES[a.shape], id = "a" + (++UID);
+  const [ex, ey, gap] = S.eye;
+  const paint = hero ? `url(#${id}f)` : P.base;
+  const stroke = S.round ? ` stroke="${paint}" stroke-width="${S.round}" stroke-linejoin="round"` : "";
+  const body = `<g fill="${paint}"${stroke}>${S.d}</g>`;
+  const eyeG = `<g transform="translate(${ex} ${ey})"><g class="blink" fill="#fff">${eyes(gap)}</g></g>`;
+  if (!hero) return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">${body}${eyeG}</svg>`;
+  const [hx, hy] = S.hl, gy = Math.min(S.bottom + 5, 101);
+  return `<svg viewBox="0 0 100 106" aria-hidden="true" focusable="false"><defs>
+    <radialGradient id="${id}f" cx="40%" cy="30%" r="80%" fx="32%" fy="20%"><stop offset="0" stop-color="${P.light}"/><stop offset=".5" stop-color="${P.base}"/><stop offset="1" stop-color="${P.deep}"/></radialGradient>
+    <clipPath id="${id}c">${S.d}</clipPath>
+    <filter id="${id}b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+    <filter id="${id}s" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+    <ellipse cx="50" cy="${gy}" rx="26" ry="3" fill="#15171d" opacity=".16" filter="url(#${id}s)"/>
+    ${body}<g clip-path="url(#${id}c)">
+      <ellipse cx="70" cy="90" rx="34" ry="18" fill="${P.deep}" opacity=".3" filter="url(#${id}b)"/>
+      <ellipse cx="${hx}" cy="${hy}" rx="15" ry="8" transform="rotate(-30 ${hx} ${hy})" fill="#fff" opacity=".5" filter="url(#${id}b)"/>
+      <ellipse cx="${hx - 3}" cy="${hy - 2}" rx="4.5" ry="2.4" transform="rotate(-30 ${hx - 3} ${hy - 2})" fill="#fff" opacity=".85"/>
+    </g>${eyeG}</svg>`;
+}
+function av(a, size, hero = false, cls = "") {
+  const h = hero ? size * 1.06 : size;
+  return `<span class="av ${cls}" role="img" aria-label="${a.name}" style="width:${size}px;height:${h}px">${avatarSVG(a, hero)}</span>`;
+}
+function glyph(st) {
+  const g = {
+    done:'<path d="M3.4 6.2l1.8 1.8 3.4-3.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    attn:'<path d="M6 2.6v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="6" cy="9.1" r="1.1" fill="currentColor"/>',
+    err:'<path d="M6 3v3.6M6 9h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+    working:'<path d="M6 2.5a3.5 3.5 0 1 1-3.4 2.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
+  }[st];
+  return `<svg viewBox="0 0 12 12" aria-hidden="true">${g}</svg>`;
+}
+
+/* ---------------- marks ---------------- */
+const SQ = "M50 0 C77 0 89 0 94.5 5.5 C100 11 100 23 100 50 C100 77 100 89 94.5 94.5 C89 100 77 100 50 100 C23 100 11 100 5.5 94.5 C0 89 0 77 0 50 C0 23 0 11 5.5 5.5 C11 0 23 0 50 0Z";
+const WM_PATHS = '<path d="M6 6V74"/><circle cx="26" cy="54" r="20"/><path d="M64 54H104A20 20 0 1 0 98.14 68.14"/><path d="M124 74V48A16 16 0 0 1 156 48V74"/><path d="M210.14 39.86A20 20 0 1 0 210.14 68.14"/><path d="M230 6V74M230 48A16 16 0 0 1 262 48V74"/>';
+const H = { coral:"#ff5f73", honey:"#f2ab1d", mint:"#3cc47c", orchid:"#e05cb4", pear:"#96bf2c" };
+
+const MARKS = [
+  { id:"seated", n:"Seated", kind:"Abstract team mark", rec:true,
+    story:"Three of the team sitting on one bench: three different shapes, one line under them. The codename becomes a picture of the product.",
+    rename:"Safe. It draws a team on a bench, not a word; under a new name it still reads as “a team, seated”.",
+    watch:"Keep the gaps between shapes at 5 units or more, so the three still separate at 16 px.",
+    svg: c => `<g transform="translate(0 -9)">
+      <circle cx="18" cy="62.5" r="13" fill="${c.color ? H.coral : c.fg}"/>
+      <path d="M50 40 L60.5 72 L39.5 72 Z" fill="${c.color ? H.honey : c.fg}" stroke="${c.color ? H.honey : c.fg}" stroke-width="7" stroke-linejoin="round"/>
+      <rect x="69" y="49" width="26" height="26.5" rx="8" fill="${c.color ? H.mint : c.fg}"/>
+      <rect x="4" y="81" width="92" height="8" rx="4" fill="${c.fg}"/></g>`,
+    icon:{bg:["#2c2f38","#15171d"], fg:"#f4f4f1", scale:62} },
+  { id:"window", n:"Glass box", kind:"Window mark",
+    story:"A window with someone inside and the light on. The glass-box promise as a picture: you can always see in.",
+    rename:"Safe. It’s the product’s promise, not its name.",
+    watch:"If the dome grows it reads as a sunrise or a record button; it stays low and small.",
+    svg: c => `<rect x="13" y="13" width="74" height="74" rx="22" fill="none" stroke="${c.fg}" stroke-width="10"/>
+      <path d="M33 82 A17 17 0 0 1 67 82 Z" fill="${c.color ? H.honey : c.fg}"/>`,
+    icon:{bg:["#2c2f38","#15171d"], fg:"#f4f4f1", scale:60} },
+  { id:"quartet", n:"Quartet", kind:"Symbol built from the characters",
+    story:"Four seats, four different characters. The team is the logo, and every agent you create is one of these shapes.",
+    rename:"Safe. It’s made of the agents’ own body shapes.",
+    watch:"A 2 × 2 grid recalls tile logos (Microsoft, Slack-era). The mixed shapes are what keep it ours; never use four squares.",
+    svg: c => `<circle cx="26" cy="26" r="20" fill="${c.color ? H.coral : c.fg}"/>
+      <path d="M74 10 L91 43 L57 43 Z" fill="${c.color ? H.honey : c.fg}" stroke="${c.color ? H.honey : c.fg}" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="7" y="55" width="38" height="38" rx="12" fill="${c.color ? H.mint : c.fg}"/>
+      <path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z" fill="${c.color ? H.orchid : c.fg}"/>`,
+    icon:{bg:["#2c2f38","#15171d"], fg:"#f4f4f1", scale:56} },
+  { id:"trace", n:"Trace", kind:"Trace-line mark",
+    story:"One unbroken line from the first step to the last, with a loop where the work changed hands. Nothing is off the record.",
+    rename:"Safe. It’s the glass box as a gesture.",
+    watch:"Line marks drift towards generic “flow” logos. The over-under crossing is the ownable detail, and it thins out at 16 px.",
+    svg: c => `<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 74 C34 74 52 72 62 58 C72 44 66 26 52 26" stroke="${c.fg}" stroke-width="10"/>
+      <path d="M52 26 C38 26 34 44 46 56 C58 68 76 62 88 40" stroke="${c.bg}" stroke-width="20" stroke-linecap="butt"/>
+      <path d="M52 26 C38 26 34 44 46 56 C58 68 76 62 88 40" stroke="${c.fg}" stroke-width="10"/></g>
+      <circle cx="12" cy="74" r="8" fill="${c.fg}"/><circle cx="88" cy="40" r="8.5" fill="${c.color ? H.coral : c.fg}"/>`,
+    icon:{bg:["#fbfbfa","#e8e8e4"], fg:"#15171d", knock:"#f2f2ef", light:true, scale:62} },
+  { id:"mono", n:"Monogram", kind:"Letter mark",
+    story:"A lowercase b whose counter is a lit window: the bench you can see into.",
+    rename:"Breaks on rename: the letter is the mark. Only pick it if the final name keeps a b.",
+    watch:"Many b monograms exist (Behance, Bitwarden, Beeper). The window counter is the only difference.",
+    svg: c => `<g transform="translate(-1 0)"><rect x="17" y="8" width="17" height="84" rx="8.5" fill="${c.fg}"/>
+      <circle cx="57" cy="62" r="30" fill="${c.fg}"/>
+      <rect x="46" y="51" width="22" height="22" rx="7" fill="${c.color ? H.honey : c.bg}"/></g>`,
+    icon:{bg:["#2c2f38","#15171d"], fg:"#f4f4f1", scale:60} },
+  { id:"word", n:"Wordmark", kind:"Name only, no symbol",
+    story:"No symbol: the name drawn as one monoline, with a light in the b. The quietest option and the most typographic.",
+    rename:"Survives as drawing rules (monoline, round joins, a lit counter); a new name gets redrawn.",
+    watch:"Weak as an app icon: the icon falls back to the b alone, so at icon size it shares the Monogram’s rename risk.",
+    svg: c => `<g transform="translate(24 10)" fill="none" stroke="${c.fg}" stroke-width="11" stroke-linecap="round"><path d="M6 6V74"/><circle cx="26" cy="54" r="20"/></g>
+      <circle cx="50" cy="64" r="6.5" fill="${c.color ? H.coral : c.fg}"/>`,
+    icon:{bg:["#fbfbfa","#e8e8e4"], fg:"#15171d", light:true, scale:64} }
+];
+const M = Object.fromEntries(MARKS.map(m => [m.id, m]));
+
+function markSVG(m, size, fg, bg, color = false, label = true) {
+  const aria = label ? `role="img" aria-label="${m.n} mark"` : `aria-hidden="true"`;
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" ${aria}>${m.svg({fg, bg, color})}</svg>`;
+}
+function appIcon(m, size, plat, ov) {
+  const I = Object.assign({}, m.icon, ov || {});
+  const id = "ic" + (++UID);
+  const shape = plat === "mac" ? `<path d="${SQ}"/>` : `<rect width="100" height="100" rx="10"/>`;
+  const s = plat === "mac" ? I.scale : Math.min(I.scale + 4, 70);
+  const off = (100 - s) / 2;
+  return `<svg class="ic" viewBox="0 0 100 100" width="${size}" height="${size}" role="img" aria-label="${m.n} app icon, ${plat === "mac" ? "macOS" : "Windows"}">
+    <defs>
+      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${I.bg[0]}"/><stop offset="1" stop-color="${I.bg[1]}"/></linearGradient>
+      <linearGradient id="${id}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="${I.light ? ".5" : ".13"}"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <clipPath id="${id}c">${shape}</clipPath>
+    </defs>
+    <g clip-path="url(#${id}c)"><rect width="100" height="100" fill="url(#${id}g)"/><rect width="100" height="100" fill="url(#${id}h)"/>
+      <g fill="none" stroke="${I.light ? "#000" : "#fff"}" stroke-opacity="${I.light ? ".09" : ".12"}" stroke-width="1.4">${shape}</g></g>
+    <g transform="translate(${off} ${off}) scale(${s / 100})">${m.svg({fg: I.fg, bg: I.knock || I.bg[1], color: true})}</g>
+  </svg>`;
+}
+function lockup(m, h, fg, bg) {
+  if (m.id === "word") {
+    const w = h * 286 / 92;
+    return `<svg viewBox="-6 -6 286 92" width="${w}" height="${h}" role="img" aria-label="bench wordmark"><g fill="none" stroke="${fg}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">${WM_PATHS}</g><circle cx="26" cy="54" r="5.5" fill="${H.coral}"/></svg>`;
+  }
+  return `<span class="lk" style="--h:${h}px;color:${fg}">${markSVG(m, h, fg, bg, false, false)}<span class="lk-t">bench</span></span>`;
+}
+
+/* ---------------- 01 logos ---------------- */
+$("#topMark").innerHTML = markSVG(M.seated, 22, "#141416", "#f2f2f0");
+$("#glance").innerHTML = MARKS.map((m, i) => `<figure class="gl card">
+  <i>${String.fromCharCode(65 + i)}</i>${m.rec ? '<span class="pill-rec">Recommended</span>' : ""}
+  <div class="gl-m">${markSVG(m, 64, "#141416", "#ffffff")}</div>
+  <figcaption><b>${m.n}</b><span>${m.kind}</span></figcaption></figure>`).join("");
+$("#renameSlots").innerHTML = [3, 5, 8].map(n => `<span class="slot">${markSVG(M.seated, 26, "#141416", "#ffffff", false, false)}<i style="width:${n * 12}px"></i><span class="lbl">${n}</span></span>`).join("");
+
+$("#logoRows").innerHTML = MARKS.map((m, i) => `<article class="lrow card" aria-label="${m.n}">
+  <div class="l-info">
+    <div class="l-top"><span class="l-letter">${String.fromCharCode(65 + i)}</span>${m.rec ? '<span class="pill-rec">Recommended</span>' : ""}</div>
+    <h3>${m.n}</h3>
+    <p class="l-kind">${m.kind}</p>
+    <p class="l-story">${m.story}</p>
+    <dl class="l-meta"><dt>Rename</dt><dd>${m.rename}</dd><dt>Watch</dt><dd>${m.watch}</dd></dl>
+  </div>
+  <div class="l-tiles">
+    <figure class="tile t-light">${markSVG(m, 80, "#141416", "#ffffff")}<figcaption>On light</figcaption></figure>
+    <figure class="tile t-dark">${markSVG(m, 80, "#ecebe6", "#121316")}<figcaption>On dark</figcaption></figure>
+    <figure class="tile t-mac">${appIcon(m, 92, "mac")}<figcaption>macOS · squircle</figcaption></figure>
+    <figure class="tile t-win">${appIcon(m, 84, "win")}<figcaption>Windows · tile</figcaption></figure>
+    <figure class="tile t-small">
+      <span class="tab">${markSVG(m, 16, "#141416", "#ffffff")}<span>bench</span></span>
+      <div class="small-row"><canvas class="fav-zoom" width="64" height="64" data-mark="${m.id}" role="img" aria-label="${m.n} favicon at 16 pixels, enlarged 4 times"></canvas>
+        <div class="small-sizes">${appIcon(m, 32, "win")}${appIcon(m, 24, "win")}${appIcon(m, 16, "win")}</div></div>
+      <figcaption>16 px favicon · 4× pixels</figcaption></figure>
+    <figure class="tile t-lock"><div class="lk-light">${lockup(m, 30, "#141416", "#ffffff")}</div><div class="lk-dark">${lockup(m, 30, "#ecebe6", "#121316")}</div></figure>
+  </div></article>`).join("");
+
+function drawFavicons() {
+  $$(".fav-zoom").forEach(cv => {
+    const m = M[cv.dataset.mark];
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16">${m.svg({fg:"#141416", bg:"#ffffff", color:false})}</svg>`;
+    const img = new Image();
+    img.onload = () => {
+      const small = document.createElement("canvas");
+      small.width = small.height = 16;
+      const sc = small.getContext("2d");
+      sc.fillStyle = "#ffffff"; sc.fillRect(0, 0, 16, 16);
+      sc.drawImage(img, 0, 0, 16, 16);
+      const bc = cv.getContext("2d");
+      bc.imageSmoothingEnabled = false;
+      bc.drawImage(small, 0, 0, 16, 16, 0, 0, cv.width, cv.height);
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+drawFavicons();
+
+/* page favicon = the recommended mark */
+(() => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${M.seated.svg({fg:"#141416", bg:"#ffffff", color:false})}</svg>`;
+  const l = document.createElement("link"); l.rel = "icon"; l.type = "image/svg+xml";
+  l.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  document.head.appendChild(l);
+})();
+
+/* ---------------- 02 palettes ---------------- */
+const FEED_LIGHT = { ok:"#1b7a45", okT:"#e3f5ea", attn:"#8a5300", attnT:"#fff1d9", danger:"#c0262d", dangerT:"#fdeaea" };
+const PAL = [
+  { id:"aubergine", n:"Bone + Aubergine", rec:true, nonBlue:true,
+    line:"A faintly warm bone with a deep aubergine action. Adult, warm and rare in software: it reads as yours, and it isn’t any feedback colour.",
+    watch:"Lavender and Orchid agents are distant cousins; agent hues never sit on buttons, and aubergine is far darker, so they don’t compete.",
+    c:Object.assign({canvas:"#f4f3f1", surface:"#ffffff", sunken:"#efedf0", ink:"#1b1720", text2:"#635e69", hair:"#e3e0e4", action:"#7a2e73", on:"#ffffff", link:"#7a2e73"}, FEED_LIGHT),
+    icon:["#3a2238","#1b1720"] },
+  { id:"ink", n:"Paper + Ink", nonBlue:true,
+    line:"No brand hue in the chrome: the action is ink itself. The only colour on screen is the team, so the agents are the colour.",
+    watch:"Strongest restraint, weakest “colour of my own”. The primary button leads by contrast and weight, not by hue.",
+    c:Object.assign({canvas:"#f3f3f1", surface:"#ffffff", sunken:"#ececea", ink:"#141416", text2:"#626268", hair:"#e0e0dc", action:"#141416", on:"#ffffff", link:"#141416"}, FEED_LIGHT),
+    icon:["#2e2e33","#141416"] },
+  { id:"spruce", n:"Mist + Spruce", nonBlue:true,
+    line:"A cool green-grey with a deep spruce action. Quiet and natural, like a well-kept workshop.",
+    watch:"Spruce sits next to the “done” green, so done moves to an olive-green and always carries its check and word.",
+    c:{canvas:"#eef2f0", surface:"#fbfdfc", sunken:"#e5ebe8", ink:"#12201c", text2:"#566661", hair:"#d7e0dc", action:"#0b6b5d", on:"#ffffff", link:"#0b6b5d",
+       ok:"#3b7417", okT:"#ecf5e1", attn:"#8a5300", attnT:"#fff1d9", danger:"#b8282e", dangerT:"#fbe9e9"},
+    icon:["#1d3a34","#0f201c"] },
+  { id:"fuchsia", n:"Fog + Fuchsia", nonBlue:true,
+    line:"A neutral fog with a vivid fuchsia action. The most energetic option: confident, modern, impossible to mistake for anyone’s blue.",
+    watch:"Less calm over a long day, and close to Orchid (Jade’s hue). Best if the brand should feel bold rather than quiet.",
+    c:Object.assign({canvas:"#f3f3f4", surface:"#ffffff", sunken:"#ededef", ink:"#17161a", text2:"#626168", hair:"#e1e0e4", action:"#b0127a", on:"#ffffff", link:"#b0127a"}, FEED_LIGHT),
+    icon:["#2e2b33","#17161a"] },
+  { id:"lime", n:"Night + Lime", nonBlue:true, dark:true,
+    line:"Dark-first: near-black with a lime action that reads like a lit cursor. The most distinctive of the set.",
+    watch:"Lime neighbours Pear (Karim) and the done green, and it’s a dark-only idea; the light theme would need a different action.",
+    c:{canvas:"#0e0f11", surface:"#17181b", sunken:"#212226", ink:"#ecebe6", text2:"#a3a39c", hair:"#2b2c31", action:"#cdf25c", on:"#12130a", link:"#cdf25c",
+       ok:"#6fd49b", okT:"#13281c", attn:"#ffc35c", attnT:"#2c2210", danger:"#ff8a8c", dangerT:"#331a1c"},
+    icon:["#26272c","#111214"] },
+  { id:"cobalt", n:"Porcelain + Cobalt", baseline:true,
+    line:"The current system, kept only for comparison. Clean and calm, but blue is what others use (Grok, and most of the category).",
+    watch:"Baseline. Not recommended any more.",
+    c:Object.assign({canvas:"#f3f4f7", surface:"#ffffff", sunken:"#eceef2", ink:"#15171d", text2:"#646976", hair:"#dcdfe5", action:"#2e5bff", on:"#ffffff", link:"#2e5bff"}, FEED_LIGHT),
+    icon:["#2c2f3a","#15171d"] }
+];
+
+function appFrame(p) {
+  const c = p.c;
+  const vars = Object.entries(c).map(([k, v]) => `--p-${k}:${v}`).join(";");
+  const team = [["noor","Working",""],["karim","Idle",""],["maya","Done",""],["jade","Needs you","attn"]];
+  const ctl = `<i><svg viewBox="0 0 10 10"><path d="M1 5h8" stroke="currentColor"/></svg></i><i><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor"/></svg></i><i><svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor"/></svg></i>`;
+  return `<div class="app" style="${vars}" role="img" aria-label="${p.n} applied to the inbox and a chat with Noor">
+    <div class="app-bar"><span class="app-brand">${markSVG(M.seated, 15, c.ink, c.canvas, false, false)}bench</span><span class="app-crumb">bench-app · Noor</span><span class="win-ctl" aria-hidden="true">${ctl}</span></div>
+    <div class="app-body">
+      <aside class="app-side">
+        <div class="nav sel"><span>What needs you</span><span class="cnt num">3</span></div>
+        <div class="nav">Home</div><div class="nav">Projects</div>
+        <div class="side-h">Team</div>
+        ${team.map(([id, st, cl]) => `<div class="mem">${av(A[id], 20)}<span class="mem-n">${A[id].name}</span><span class="mem-s ${cl}">${st}</span></div>`).join("")}
+        <div class="new-agent">+ New agent</div>
+      </aside>
+      <section class="app-main">
+        <div class="thread-h">${av(A.noor, 28)}<div><b>Noor</b><span>Developer · PR #44</span></div><span class="tag plain">${glyph("working")}Working</span></div>
+        <div class="msg">${av(A.noor, 20)}<div><div class="bub">done. swapped in date-fns, 41 lines removed.</div><div class="meta num">09:14 · 0.3 % of your week · <span class="lnk">Look inside</span></div></div></div>
+        <div class="msg you" style="--a:${HUE.coral.base}"><div class="bub you-b">Run the tests before you open the PR.</div></div>
+        <div class="tkt">
+          <div class="tkt-top"><span class="tag attn">${glyph("attn")}Needs you</span><span class="meta" style="margin:0">Noor · just now</span></div>
+          <p>Noor wants to run <code>npm test</code> in bench. About 3 minutes, 0.9 % of your week.</p>
+          <div class="tkt-act"><span class="pbtn">Allow once</span><span class="sbtn">Deny</span><span class="meta">Nothing runs until you allow it</span></div>
+        </div>
+        <div class="chips"><span class="tag ok">${glyph("done")}Done</span><span class="tag attn">${glyph("attn")}Needs you</span><span class="tag err">${glyph("err")}Error</span><span class="toast-ok">All green. PR #44 is ready for your review.</span></div>
+      </section>
+    </div></div>`;
+}
+function palCard(p) {
+  const c = p.c;
+  const sw = (k, label) => `<div class="sw"><span class="sw-c" style="background:${c[k]}"></span><b>${label}</b><span>${c[k]}</span></div>`;
+  const rows = [
+    ["Ink on canvas", c.ink, c.canvas, 4.5], ["Ink on surface", c.ink, c.surface, 4.5],
+    ["Secondary on surface", c.text2, c.surface, 4.5], ["Secondary on canvas", c.text2, c.canvas, 4.5],
+    ["Label on action", c.on, c.action, 4.5], ["Action vs surface", c.action, c.surface, 3],
+    ["Link on surface", c.link, c.surface, 4.5], ["Done on its tint", c.ok, c.okT, 4.5],
+    ["Needs you on tint", c.attn, c.attnT, 4.5], ["Error on its tint", c.danger, c.dangerT, 4.5]
+  ];
+  const tag = p.rec ? '<span class="pill-rec">Recommended</span>' : p.baseline ? '<span class="pill-base">Baseline · blue = what others use</span>' : '<span class="pill-soft">Non-blue</span>';
+  const iconOv = { bg: p.icon, fg: "#f4f4f1" };
+  const lockFg = c.ink, lockBg = c.canvas;
+  return `<article class="pal card" id="pal-${p.id}" aria-label="${p.n}">
+    <div>${appFrame(p)}</div>
+    <div class="pal-side">
+      <div class="pal-h"><h3>${p.n} ${tag}${p.dark ? ' <span class="pill-soft">Dark-first</span>' : ""}</h3><p>${p.line}</p><p class="watch">${p.watch}</p></div>
+      <div class="sws">${sw("canvas","Canvas")}${sw("surface","Surface")}${sw("ink","Ink")}${sw("text2","Secondary")}${sw("hair","Hairline")}</div>
+      <div class="sws">${sw("action","Action")}${sw("ok","Done")}${sw("attn","Needs you")}${sw("danger","Error")}${sw("on","On action")}</div>
+      <div class="crs">${rows.map(([l, f, b, min]) => `<div><span class="pair"><i style="background:${b};box-shadow:inset 0 0 0 3px ${f}"></i>${l}</span>${crBadge(cr(f, b), min)}</div>`).join("")}</div>
+      <div class="pal-logos">
+        <div style="background:${c.canvas}">${lockup(M.seated, 26, lockFg, lockBg)}</div>
+        <div style="background:${c.surface}">${appIcon(M.seated, 60, "mac", iconOv)}</div>
+        <div style="background:${c.surface}">${appIcon(M.window, 60, "mac", iconOv)}</div>
+      </div>
+    </div></article>`;
+}
+$("#palList").innerHTML = PAL.map(palCard).join("");
+
+/* hero set */
+const REC_P = PAL[0];
+$("#setIcon").innerHTML = appIcon(M.seated, 150, "mac", { bg: REC_P.icon, fg: "#f4f4f1" });
+$("#setLockup").innerHTML = lockup(M.seated, 44, "#141416", "#ffffff");
+$("#setPal").innerHTML = ["canvas","surface","ink","action"].map(k => `<span style="background:${REC_P.c[k]}" title="${k} ${REC_P.c[k]}"></span>`).join("") + `<b>Bone + Aubergine</b><em>${REC_P.c.action}</em>`;
+$("#setTeam").innerHTML = ["atlas","maya","noor","karim","jade","sam"].map(id => av(A[id], 46, true, "blinky")).join("");
+$("#setApp").innerHTML = `<div style="--p-action:${REC_P.c.action};--p-on:#fff;--p-ink:${REC_P.c.ink};display:flex;gap:8px;align-items:center;font-size:13px"><span class="pbtn">Allow once</span><span class="sbtn">Deny</span><span style="color:var(--ink-3);font-size:12px">label on action ${cr("#ffffff", REC_P.c.action).toFixed(2)} : 1</span></div>`;
+
+/* ---------------- 03 type ---------------- */
+const TYPE = [
+  { n:"Instrument Sans + JetBrains Mono", rec:true, head:"'Instrument Sans'", body:"'Instrument Sans'", mono:"'JetBrains Mono'", hw:600,
+    mood:"Calm, precise, quietly warm. A grotesk with soft curves and a confident 600.",
+    why:"Distinct from the Inter/Geist default of dev tools; JetBrains Mono is the clearest small mono for the trace.",
+    watch:"Newer family; check the 13 px hinting on Windows before locking it.",
+    lic:"Both SIL OFL 1.1 · Google Fonts" },
+  { n:"Geist + Geist Mono", head:"'Geist'", body:"'Geist'", mono:"'Geist Mono'", hw:600,
+    mood:"Precise and technical. Swiss-clean, made for interfaces.",
+    why:"Excellent at small sizes, matching mono included.",
+    watch:"It’s Vercel’s face and now the default look of AI dev tools: it says “another dev tool”.",
+    lic:"Both SIL OFL 1.1 · Google Fonts" },
+  { n:"Bricolage Grotesque + Figtree + DM Mono", head:"'Bricolage Grotesque'", body:"'Figtree'", mono:"'DM Mono'", hw:700,
+    mood:"The warmest. A characterful display face over a friendly geometric text face.",
+    why:"Most personality per pixel; matches the characters’ playfulness.",
+    watch:"Three families to bundle; the display face can tip from warm into quirky next to cost and delete copy.",
+    lic:"All SIL OFL 1.1 · Google Fonts" },
+  { n:"Atkinson Hyperlegible Next + Mono", head:"'Atkinson Hyperlegible Next'", body:"'Atkinson Hyperlegible Next'", mono:"'Atkinson Hyperlegible Mono'", hw:600,
+    mood:"Candid and humane. Designed for legibility, every letter unmistakable.",
+    why:"A real story for a glass-box product: nothing is ambiguous, not even l, I and 1.",
+    watch:"Its wide, open shapes feel slightly institutional at headline sizes.",
+    lic:"Both SIL OFL 1.1 · Google Fonts" },
+  { n:"Schibsted Grotesk + IBM Plex Mono", head:"'Schibsted Grotesk'", body:"'Schibsted Grotesk'", mono:"'IBM Plex Mono'", hw:700,
+    mood:"Newsroom-precise. Firm, factual, built for numbers and short headlines.",
+    why:"Good with “numbers first” copy; Plex Mono is very readable in long traces.",
+    watch:"A little cool and corporate; warmth must come from the characters.",
+    lic:"Both SIL OFL 1.1 · Google Fonts" },
+  { n:"Inter Tight + Inter + Fragment Mono", head:"'Inter Tight'", body:"'Inter'", mono:"'Fragment Mono'", hw:700,
+    mood:"The safe choice. Neutral, proven, readable everywhere.",
+    why:"Best-tested UI face there is; Fragment Mono adds a little character.",
+    watch:"It’s what v0.2 felt like: “normal, with no clear identity”.",
+    lic:"All SIL OFL 1.1 · Google Fonts" }
+];
+$("#types").innerHTML = TYPE.map(t => {
+  const st = `--fh:${t.head},system-ui,sans-serif;--fb:${t.body},system-ui,sans-serif;--fm:${t.mono},ui-monospace,monospace;--hw:${t.hw}`;
+  return `<article class="ty card${t.rec ? " is-rec" : ""}" style="${st}">
+    <header class="ty-h"><div><h3>${t.n}</h3><p>${t.mood}</p></div>${t.rec ? '<span class="pill-rec">Recommended</span>' : ""}</header>
+    <div class="ty-spec">
+      <p class="ty-d">Your team, in plain sight.</p>
+      <p class="ty-t">What needs you · 3</p>
+      <p class="ty-b">Noor wants to run <strong>npm test</strong> in bench. About 3 minutes, 0.9 % of your week. Nothing runs until you allow it.</p>
+      <p class="ty-agent"><b>Noor</b>done. swapped in date-fns, 41 lines removed.</p>
+      <p class="ty-m">84 % of your week · resets Mon 26 Oct 09:00 · 12,480 tokens · 1/7 runs</p>
+      <div class="ty-mono">$ pnpm test --filter core
+  <span>214 passed</span> · 0 failed · 3.1 s · 0.3k tokens
+  Il1| O0 {} =&gt; rn m</div>
+    </div>
+    <footer class="ty-f"><span class="ty-wm">${markSVG(M.seated, 24, "#141416", "#ffffff", false, false)}bench</span>
+      <dl><dt>Why</dt><dd>${t.why}</dd><dt>Watch</dt><dd>${t.watch}</dd><dt>Licence</dt><dd>${t.lic}</dd></dl></footer>
+  </article>`;
+}).join("");
+const SCALE = [["Meta",12,16,400],["Sub",13,18,400],["Body",15,22,400],["Title",20,26,600],["Headline",28,34,600],["Display",44,48,600]];
+$("#scale").innerHTML = `<div><p class="lbl">Instrument Sans scale</p><p style="font-size:12px;line-height:17px;color:var(--ink-3);margin-top:4px">Same six steps as the system; 400 and 600 only</p></div>` +
+  SCALE.map(([n, s, lh, w]) => `<div><span style="font-size:${s}px;line-height:${lh}px;font-weight:${w};letter-spacing:${s >= 20 ? "-.02em" : "0"}">Aa</span><span class="lbl">${n} ${s}/${lh}</span></div>`).join("");
+
+/* ---------------- 04 sound ---------------- */
+let AC = null, master = null, analyser = null, NB = null;
+let muted = false, volume = .7;
+try { muted = localStorage.getItem("bench-explore-muted") === "1"; } catch (e) { muted = false; }
+
+function audio() {
+  if (!AC) {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return null;
+    AC = new C();
+    master = AC.createGain(); master.gain.value = volume;
+    const comp = AC.createDynamicsCompressor();
+    comp.threshold.value = -20; comp.ratio.value = 3; comp.attack.value = .003; comp.release.value = .12;
+    analyser = AC.createAnalyser(); analyser.fftSize = 1024;
+    master.connect(comp); comp.connect(analyser); analyser.connect(AC.destination);
+  }
+  if (AC.state === "suspended") AC.resume();
+  return AC;
+}
+function tone(t0, freq, dur, o = {}) {
+  const gain = o.gain ?? .16, attack = o.attack ?? .008;
+  const osc = AC.createOscillator(); osc.type = o.type || "sine";
+  osc.frequency.setValueAtTime(freq, t0);
+  if (o.glide) osc.frequency.exponentialRampToValueAtTime(freq * o.glide, t0 + dur * .8);
+  const g = AC.createGain();
+  g.gain.setValueAtTime(.0001, t0);
+  g.gain.exponentialRampToValueAtTime(gain, t0 + attack);
+  g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  osc.connect(g);
+  let out = g;
+  if (o.lp) { const f = AC.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = o.lp; out.connect(f); out = f; }
+  if (o.pan) { const p = AC.createStereoPanner(); p.pan.value = o.pan; out.connect(p); out = p; }
+  out.connect(master);
+  osc.start(t0); osc.stop(t0 + dur + .03);
+}
+function noise() {
+  if (NB) return NB;
+  const len = Math.floor(AC.sampleRate * .5);
+  NB = AC.createBuffer(1, len, AC.sampleRate);
+  const d = NB.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  return NB;
+}
+/* One family: everything sits in D major pentatonic, sine bodies, a soft low-pass, 8 ms attacks. */
+const SOUNDS = {
+  needs: { n:"Needs you", dur:320, spec:"2 notes · A4 → D5, a rising fourth · 320 ms",
+    intent:"A light tap on the shoulder. Rising, like a question, so it asks rather than warns. The only one of the three that wants you to look.",
+    when:"An approval or question lands in What needs you, while the window isn’t focused.", never:"For agents talking to each other, or more than once per item.",
+    play(t) { tone(t, 440, .17, {gain:.17, lp:2600}); tone(t, 880, .09, {gain:.025}); tone(t + .11, 587.33, .21, {gain:.18, lp:2600}); tone(t + .11, 1174.66, .1, {gain:.03}); } },
+  done: { n:"Done", dur:380, spec:"1 rounded note · F♯5 with soft partials · 380 ms",
+    intent:"One rounded note that lands and settles: quietly satisfied. It closes something; it asks nothing of you.",
+    when:"A task or run you started finishes (all green), while you’re elsewhere.", never:"For every step inside a run; only the finish.",
+    play(t) { tone(t, 739.99 * 1.012, .38, {gain:.19, glide:1 / 1.012, lp:3200}); tone(t, 1479.98, .16, {gain:.04}); tone(t, 2219.97, .08, {gain:.014}); } },
+  handoff: { n:"Handoff", dur:290, spec:"Airy pass · filtered breath, left → right, with an E5 → A5 glide · 290 ms",
+    intent:"A brief passing from one hand to the next. It moves across the stereo field, the way the handoff chip travels on screen.",
+    when:"An agent hands work to another agent and you’re watching that project.", never:"In the background for projects you aren’t viewing.",
+    play(t) {
+      const src = AC.createBufferSource(); src.buffer = noise();
+      const bp = AC.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.3;
+      bp.frequency.setValueAtTime(650, t); bp.frequency.exponentialRampToValueAtTime(2600, t + .24);
+      const g = AC.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.2, t + .06); g.gain.exponentialRampToValueAtTime(.0001, t + .28);
+      const p = AC.createStereoPanner(); p.pan.setValueAtTime(-.6, t); p.pan.linearRampToValueAtTime(.6, t + .27);
+      src.connect(bp); bp.connect(g); g.connect(p); p.connect(master);
+      src.start(t); src.stop(t + .3);
+      tone(t + .03, 659.25, .22, {gain:.05, glide:1.335, lp:2400});
+    } },
+  morning: { n:"First open of the day", dur:900, optional:true, spec:"Optional · D5, A5, E6 in stacked fifths · 900 ms",
+    intent:"The studio lights coming on. Open and unhurried, played once, the first time you open Bench each day.",
+    when:"First open after 05:00 local time, if you turned it on.", never:"On every launch, or when Focus or Do Not Disturb is on.",
+    play(t) { [[587.33, 0, .12], [880, .13, .09], [1318.51, .26, .06]].forEach(([f, d, g]) => { tone(t + d, f, .62, {gain:g, lp:3000}); tone(t + d, f * 2, .2, {gain:g * .15}); }); } }
+};
+const ICONS = {
+  needs:'<path d="M7 2v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="7" cy="11" r="1.1" fill="currentColor"/>',
+  done:'<path d="M3 7.3l2.6 2.6L11 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+  handoff:'<path d="M2 7h9M8 4l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  morning:'<path d="M2 10h10M4 10a3 3 0 0 1 6 0M7 3v1.6M3.3 5.3l1 1M10.7 5.3l-1 1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+};
+$("#snds").innerHTML = Object.entries(SOUNDS).map(([k, s]) => `<article class="snd card${s.optional ? " optional" : ""}">
+  <div class="snd-h"><div><h3>${s.n}</h3><span class="num">${s.spec}</span></div><svg viewBox="0 0 14 14" width="18" height="18" aria-hidden="true">${ICONS[k]}</svg></div>
+  <canvas class="scope" data-scope="${k}" aria-hidden="true"></canvas>
+  <p>${s.intent}</p>
+  <dl><dt>Plays when</dt><dd>${s.when}</dd><dt>Never</dt><dd>${s.never}</dd></dl>
+  <p class="muted-note" data-note="${k}"></p>
+  <button class="btn btn-ink" type="button" data-play="${k}" aria-label="Play the ${s.n} sound"><svg class="play-ic" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2.5v9l7.5-4.5z" fill="currentColor"/></svg>Play · ${s.dur} ms</button>
+</article>`).join("");
+
+function sizeScope(cv) {
+  const dpr = window.devicePixelRatio || 1, r = cv.getBoundingClientRect();
+  cv.width = Math.max(1, Math.round(r.width * dpr)); cv.height = Math.max(1, Math.round(r.height * dpr));
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w: r.width, h: r.height };
+}
+function idleScope(cv) {
+  const { ctx, w, h } = sizeScope(cv);
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = "rgba(20,20,22,.18)"; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(12, h / 2); ctx.lineTo(w - 12, h / 2); ctx.stroke();
+}
+$$(".scope").forEach(idleScope);
+let scopeRun = 0;
+function runScope(key, ms) {
+  const cv = $(`.scope[data-scope="${key}"]`);
+  if (!cv || !analyser) return;
+  const { ctx, w, h } = sizeScope(cv);
+  const buf = new Uint8Array(analyser.fftSize);
+  const run = ++scopeRun, end = performance.now() + ms + 160;
+  const frame = () => {
+    analyser.getByteTimeDomainData(buf);
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = "#141416"; ctx.lineWidth = 1.5; ctx.lineJoin = "round";
+    ctx.beginPath();
+    for (let i = 0; i < buf.length; i++) {
+      const x = 12 + (w - 24) * i / (buf.length - 1);
+      const y = h / 2 + (buf[i] - 128) / 128 * (h / 2 - 6) * 2.2;
+      if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+    if (performance.now() < end && run === scopeRun) requestAnimationFrame(frame); else idleScope(cv);
+  };
+  requestAnimationFrame(frame);
+}
+function play(key) {
+  const s = SOUNDS[key];
+  const note = $(`[data-note="${key}"]`);
+  if (muted) { if (note) note.textContent = "Muted. Turn sound on to hear it."; status("Muted: nothing played."); return false; }
+  if (note) note.textContent = "";
+  if (!audio()) { status("This browser has no Web Audio."); return false; }
+  s.play(AC.currentTime + .02);
+  runScope(key, s.dur);
+  status(`Played ${s.n} · ${s.dur} ms`);
+  return true;
+}
+function status(t) { $("#sndStatus").textContent = t; }
+$$("[data-play]").forEach(b => b.addEventListener("click", () => play(b.dataset.play)));
+$("#playSeq").addEventListener("click", () => {
+  if (!play("needs")) return;
+  setTimeout(() => { if (!muted) play("handoff"); }, 900);
+  setTimeout(() => { if (!muted) play("done"); }, 1800);
+  status("Needs you, then handoff, then done");
+});
+$("#vol").addEventListener("input", e => {
+  volume = Number(e.target.value) / 100;
+  if (master && AC) master.gain.setTargetAtTime(muted ? 0 : volume, AC.currentTime, .02);
+});
+const SPEAKER_ON = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5.2h2.2L7.4 2.6v8.8L4.2 8.8H2z" fill="currentColor"/><path d="M9.4 4.8a3 3 0 0 1 0 4.4M11 3.3a5 5 0 0 1 0 7.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
+const SPEAKER_OFF = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 5.2h2.2L7.4 2.6v8.8L4.2 8.8H2z" fill="currentColor"/><path d="M9.5 5.2l3 3.6M12.5 5.2l-3 3.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
+function renderMute() {
+  ["#muteTop", "#muteBar"].forEach(sel => {
+    const b = $(sel);
+    b.setAttribute("aria-pressed", String(muted));
+    $(".mute-ic", b).innerHTML = muted ? SPEAKER_OFF : SPEAKER_ON;
+    $(".mute-l", b).textContent = muted ? "Muted" : "Sound on";
+    b.setAttribute("aria-label", muted ? "Sound is muted. Turn sound on" : "Sound is on. Mute");
+  });
+  if (master && AC) master.gain.setTargetAtTime(muted ? 0 : volume, AC.currentTime, .02);
+  if (!muted) $$("[data-note]").forEach(n => { n.textContent = ""; });
+}
+function toggleMute() {
+  muted = !muted;
+  try { localStorage.setItem("bench-explore-muted", muted ? "1" : "0"); } catch (e) { /* storage may be unavailable on file:// */ }
+  renderMute();
+  status(muted ? "Muted" : "Sound on");
+}
+$("#muteTop").addEventListener("click", toggleMute);
+$("#muteBar").addEventListener("click", toggleMute);
+renderMute();
+let rs = 0;
+addEventListener("resize", () => { clearTimeout(rs); rs = setTimeout(() => $$(".scope").forEach(idleScope), 120); });
+</script>
+</body>
+</html>
