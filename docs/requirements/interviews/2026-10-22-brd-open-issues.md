@@ -107,3 +107,12 @@ This replaces summary-style compaction. PM additions are proposed in the chat.
 > Also I heard that using a memory vault like obsidian or similar apps will make the agents much smarter and cheaper can we discover this option?
 
 → Research launched on Obsidian-style memory vaults (outcome to be recorded in docs/research/).
+
+**Client approval of the PM's four additions (B6-CTX3):** *"yes do that"*
+- Hard checkpoint at 90%.
+- Lessons go to long-term memory.
+- The fresh session confirms its next step.
+- The old session is archived.
+
+**New question from the client:**
+> what does it take to make a system like obsidian that makes out thing better and independent from other apps like obsidian but we gain the same or close effects ?
