@@ -116,3 +116,16 @@ This replaces summary-style compaction. PM additions are proposed in the chat.
 
 **New question from the client:**
 > what does it take to make a system like obsidian that makes out thing better and independent from other apps like obsidian but we gain the same or close effects ?
+
+## Bench Memory scope (B6-MEM, 2026-10-22)
+On the curator and semantic search: *"add them as layers to the plan"*. On the scope question: *"all plus the other two"*.
+
+**Recorded:** Bench Memory is **in the MVP with all six layers**:
+1. Notes on disk: Markdown, frontmatter, `[[links]]`, Obsidian-compatible
+2. Index and search: SQLite full-text search, tags, backlinks
+3. Agent memory tools (MCP): search, read, build_context, recent, write; single writer; source recorded
+4. The client's memory browser: editor, backlinks, graph view, filters, stale flags
+5. Curator: background dedupe, merge, staleness sweep
+6. Local semantic search: on-device embeddings, hybrid with full-text search
+
+Design reference: docs/research/memory-vault.md.
