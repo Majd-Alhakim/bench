@@ -92,3 +92,18 @@
 - The threshold is a per-agent setting, default 80%.
 - The tech lead will verify in the SRS how the Agent SDK's compaction threshold and its `PreCompact` hook support "save, then compact".
 - The tech lead will also measure whether an earlier default saves more usage. Every turn re-sends the whole context, so a smaller context is cheaper on every turn, even with prompt caching.
+
+## Context checkpoint, refined by the client (B6-CTX2, 2026-10-22)
+> okay here is what I am thinking and correct me if I am wrong or missed something. Let the agent run until they reach 80% of context then update the memory and savig it work at natural breakpoint using a fixed format and including things that already we tried and failed or mistakes and its fix, and then this agent is restart as a fresh session uploading the memory of the previous version and continue working. this combines all 4 I believe
+
+**Recorded rule:**
+1. The agent runs until 80% of its context window.
+2. At the next natural breakpoint, it saves its work and writes a **checkpoint in a fixed format**, including **what was tried and failed, and the mistakes made and their fixes**.
+3. It updates its memory.
+4. It **restarts as a fresh session** loaded with that memory and checkpoint, and continues.
+
+This replaces summary-style compaction. PM additions are proposed in the chat.
+
+> Also I heard that using a memory vault like obsidian or similar apps will make the agents much smarter and cheaper can we discover this option?
+
+→ Research launched on Obsidian-style memory vaults (outcome to be recorded in docs/research/).
