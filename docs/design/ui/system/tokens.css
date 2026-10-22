@@ -146,11 +146,12 @@
   /* Visual radii. Where the engine supports corner-shape (Chromium/Electron), the same visual size is drawn
      as a squircle at about 1.6× the number, which is how Apple's continuous corners read. Pills stay round. */
   --corner: round;
-  --r-xs: 6px;     /* tags, checkbox, code chips */
+  /* R3 (client, 2026-10-22): one family: 18 objects, 10 things inside them, pills for controls. Old names kept as aliases. */
+  --r-xs: 10px;    /* tags, checkbox, code chips (inner) */
   --r-sm: 10px;    /* inputs, menu items, small wells */
-  --r-md: 14px;    /* cards, menus, popovers */
+  --r-md: 18px;    /* cards, menus, popovers */
   --r-lg: 18px;    /* bubbles and tickets (decided 18) */
-  --r-xl: 24px;    /* dialogs, panes, sheets */
+  --r-xl: 18px;    /* dialogs, panes, sheets */
   --r-full: 999px; /* buttons, pills, switches, badges */
 
   /* ------------------------------------------------------------------ */
@@ -231,11 +232,11 @@
 @supports (corner-shape: squircle) {
   :root {
     --corner: squircle;
-    --r-xs: 9px;
+    --r-xs: 16px;
     --r-sm: 16px;
-    --r-md: 22px;
+    --r-md: 28px;
     --r-lg: 28px;
-    --r-xl: 38px;
+    --r-xl: 28px;
   }
 }
 

@@ -144,6 +144,8 @@ Every agent ink passes AA on white and on its own tint; Ink text passes AAA on e
 
 ## 6. Shape: one continuous-corner family (P-5)
 
+> **R3 (client-accepted 2026-10-22) overrides the table below:** three values only: **18** for objects (cards, tickets, bubbles, menus, dialogs, panes), **10** for things inside them (inputs, tags, chips, menu items, a bubble's grouped corner), **pill** for controls. `tokens.css` keeps the old token names as aliases mapped to these values.
+
 | Token | Visual radius | Squircle value* | Use |
 |---|---|---|---|
 | `--r-xs` | 6 | 9 | Tags with corners, checkboxes, code chips, skeleton bars |
@@ -260,7 +262,7 @@ Each one is rendered in [components.html](components.html) in every applicable s
 - **States:** default, hover (Text 2 edge), focus (2 px Cobalt inside), filled ("Saved" stamp when it saves itself, D-UI10), error (2 px red edge + cause and fix: "Noor already works on Bench. Pick another name or rename Noor first."), disabled (sunken fill, a lock glyph and why: "Set by the project"), loading ("Checking" with dots, inside the field).
 - **Search:** 32 px, leading icon, shortcut hint at the end.
 - **Select:** the same field with a chevron. The open list (`--elev-3`) shows the cost of each option ("≈ 2.1k / turn") and a reason on disabled options ("Off for routines in this project").
-- **Composer:** `--r-lg` (same family as bubbles), control edge plus `--elev-2`. Resting: Send disabled. With a draft: focus ring, Send in Cobalt, the token estimate under it. While the agent works: Send becomes **Stop** (secondary, in place), and the placeholder says when she'll read it.
+- **Composer:** `--r-lg` (same family as bubbles), control edge plus `--elev-2`. Resting: Send disabled. With a draft: focus ring, Send in Ink (dark, not blue: R1, blue means "your call"), the token estimate under it. While the agent works: Send becomes **Stop** (secondary, in place), and the placeholder says when she'll read it.
 
 ### 11.3 Switches
 - 36 × 22 track, 16 knob. **On is Ink**, not Cobalt (a setting is not the screen's action). The knob moves on `--spring-snappy`.
@@ -474,3 +476,7 @@ Also from BRAND: B-1 direction (A recommended), B-2 app icon (lit window recomme
 | Sizes 12/14/15/17/21/28/40 | 12/13/15/20/28/44 |
 | PAL.periwinkle | `--hue-pear-*` |
 | EXPR idle "sleepy", error "surprised" | idle "calm", error "concerned"; new "pleased", "concerned" |
+
+
+## Addendum (v0.3)
+- **C-29:** the agent's tint on your bubbles appears only in one-to-one chats with that agent; team chats and meeting sessions use the neutral bubble so no agent's colour dominates a shared space.

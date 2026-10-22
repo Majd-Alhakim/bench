@@ -18,7 +18,9 @@ window.addEventListener("error", function (e) {
    Built on the stage-1 brand (BRAND.md) and design system (DESIGN-SYSTEM.md,
    tokens.css), inlined here so the file stays single and offline, plus the UX
    premium spec (state matrix, worst moments, intelligence layer, moments).
-   Built with the recommended options; they are pending client approval.
+   Decided and applied: R1–R11 (UX recommendations), D-UI7–11, P-5 (via R3)
+   and P-6 (Look inside). Built with the recommended options for the brand
+   decisions still open: B-2, P-1, P-2, P-3, P-4, P-7.
    ========================================================================== */
 :root{
   color-scheme:light;
@@ -61,8 +63,12 @@ window.addEventListener("error", function (e) {
   --fs-meta:12px; --lh-meta:16px; --fs-sub:13px; --lh-sub:18px; --fs-body:15px; --lh-body:22px;
   --fs-title:20px; --lh-title:26px; --fs-headline:28px; --lh-headline:34px; --fs-display:44px; --lh-display:48px;
   --measure-chat:34em;
-  /* Shape (P-5): one continuous-corner family */
-  --corner:round; --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px;
+  /* Shape (R3, decided): one continuous-corner family, three values.
+     18 = objects on the canvas (tickets, cards, bubbles, dialogs, menus, toasts) ·
+     10 = things inside them (options, inputs, wells, menu items, the bubble's tail) · pill = controls.
+     The xs/md/xl names stay as aliases so the system's token names still resolve. */
+  --corner:round; --r-in:10px; --r-obj:18px;
+  --r-xs:var(--r-in); --r-sm:var(--r-in); --r-md:var(--r-obj); --r-lg:var(--r-obj); --r-xl:var(--r-obj);
   /* Elevation: tone first, shadow only for what floats */
   --shadow-color:228 16% 10%;
   --elev-1:0 0 0 1px var(--line-subtle);
@@ -78,7 +84,7 @@ window.addEventListener("error", function (e) {
   --spring-gentle:linear(0,.074 5%,.249 10%,.463 15%,.673 20%,.85 25%,.983 30%,1.069 35%,1.114 40%,1.127 45%,1.117 50%,1.068 60%,1.019 70%,.991 80%,.984 90%,1);
   --press-scale:.97; --rise:8px;
 }
-@supports (corner-shape:squircle){:root{--corner:squircle;--r-xs:9px;--r-sm:16px;--r-md:22px;--r-lg:28px;--r-xl:38px}}
+@supports (corner-shape:squircle){:root{--corner:squircle;--r-in:16px;--r-obj:28px}}
 [data-hue="coral"]{--agent-base:var(--hue-coral-base);--agent-light:var(--hue-coral-light);--agent-deep:var(--hue-coral-deep);--agent-ink:var(--hue-coral-ink);--agent-tint:var(--hue-coral-tint);--agent-wash:var(--hue-coral-wash)}
 [data-hue="tangerine"]{--agent-base:var(--hue-tangerine-base);--agent-light:var(--hue-tangerine-light);--agent-deep:var(--hue-tangerine-deep);--agent-ink:var(--hue-tangerine-ink);--agent-tint:var(--hue-tangerine-tint);--agent-wash:var(--hue-tangerine-wash)}
 [data-hue="honey"]{--agent-base:var(--hue-honey-base);--agent-light:var(--hue-honey-light);--agent-deep:var(--hue-honey-deep);--agent-ink:var(--hue-honey-ink);--agent-tint:var(--hue-honey-tint);--agent-wash:var(--hue-honey-wash)}
@@ -100,6 +106,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
 a{color:var(--action-text);text-decoration:none}
 a:hover{text-decoration:underline}
 h1,h2,h3,h4,h5,p,ul,ol,dl,dd,figure{margin:0}
+b,strong,th{font-weight:600}
 ul,ol{padding:0}
 code,.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
 :focus{outline:none}
@@ -204,7 +211,7 @@ code,.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
 .filter[aria-pressed="true"]{background:var(--text-1);color:#fff;box-shadow:none}
 .filter .n{font-weight:400;font-variant-numeric:tabular-nums}
 .filter:disabled{color:var(--text-3);box-shadow:inset 0 0 0 1px var(--porcelain-200);cursor:not-allowed;background:transparent}
-.kbd{display:inline-grid;place-items:center;height:20px;padding:0 6px;border-radius:6px;background:var(--bg-sunken);font:600 11px/1 var(--font-text);color:var(--text-3)}
+.kbd{display:inline-grid;place-items:center;height:20px;padding:0 6px;border-radius:var(--r-xs);corner-shape:var(--corner);background:var(--bg-sunken);font:600 11px/1 var(--font-text);color:var(--text-3)}
 
 /* ---------- switch, segmented, fields ---------- */
 .switch{display:inline-flex;align-items:center;gap:8px;min-height:32px;font-size:12px;color:var(--text-3);cursor:pointer;flex:none}
@@ -319,8 +326,8 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .pg-chev{flex:none;display:grid;place-items:center;width:20px;height:20px;color:var(--text-3);transition:transform var(--dur-move) var(--spring-smooth)}
 .pg-chev svg{width:16px;height:16px}
 .pg[data-open="false"] .pg-chev{transform:rotate(-90deg)}
-.pg-name{flex:none;font-size:15px;font-weight:600;white-space:nowrap}
-.pg-sub{flex:1;min-width:0;font-size:12px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-name{flex:0 1 auto;min-width:0;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-sub{flex:1 1 0;min-width:0;font-size:12px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pg-list{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--dur-move) var(--spring-smooth)}
 .pg[data-open="false"] .pg-list{grid-template-rows:0fr}
 .pg-list>div{overflow:hidden;min-height:0;padding-left:8px}
@@ -338,7 +345,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .topbar{height:48px;flex:none;display:flex;align-items:center;gap:16px;padding:0 16px 0 24px}
 .crumbs{display:flex;align-items:center;gap:2px;min-width:0;font-size:13px;color:var(--text-3);white-space:nowrap;overflow:hidden}
 .crumbs .sep{color:var(--porcelain-500);padding:0 2px}
-.crumbs button{height:24px;padding:0 6px;border-radius:6px;font-size:13px;color:var(--text-2)}
+.crumbs button{height:24px;padding:0 8px;border-radius:999px;font-size:13px;color:var(--text-2)}
 .crumbs button:hover{background:var(--state-hover);color:var(--text-1)}
 .crumbs b{color:var(--text-1);font-weight:600;padding:0 6px}
 .top-r{margin-left:auto;display:flex;align-items:center;gap:4px;flex:none}
@@ -355,7 +362,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .banner.ink{background:var(--bg-inverse);color:var(--text-inverse-2);box-shadow:var(--elev-2)}
 .banner.ink b{color:var(--text-inverse)}
 .banner.ink>svg{color:var(--text-inverse)}
-.banner.ink code{background:rgb(255 255 255 / .1);color:var(--text-inverse);padding:1px 6px;border-radius:6px}
+.banner.ink code{background:rgb(255 255 255 / .1);color:var(--text-inverse);padding:1px 6px;border-radius:var(--r-xs);corner-shape:var(--corner)}
 .banner.thin{padding:6px 8px 6px 14px}
 .banner .count{background:var(--text-inverse);color:var(--text-1)}
 .banner.drop{animation:dropIn var(--dur-move) var(--spring-smooth) both}
@@ -490,7 +497,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .mail .to b{color:var(--text-1);font-weight:400}
 .facts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;margin-top:14px}
 .facts dt{color:var(--text-3);font-size:12px;line-height:22px}
-.cmd{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border-radius:var(--r-sm);corner-shape:var(--corner);background:var(--bg-ground);font:500 15px/22px var(--font-mono);letter-spacing:0;min-width:0}
+.cmd{display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border-radius:var(--r-sm);corner-shape:var(--corner);background:var(--bg-ground);font:400 15px/22px var(--font-mono);letter-spacing:0;min-width:0}
 .cmd .in{margin-left:auto;font:400 12px/16px var(--font-text);color:var(--text-3);white-space:nowrap}
 .cmd .dollar{color:var(--text-3)}
 .cons-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
@@ -515,6 +522,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .pc-top{display:flex;align-items:flex-start;gap:8px}
 .pc-id{flex:1;min-width:0}
 .pc-id h3{font-size:15px;line-height:22px;font-weight:600}
+.pc-id .pc-link{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;font-weight:600}
 .pc-link{text-align:left}
 .pc-link::after{content:"";position:absolute;inset:0;border-radius:inherit}
 .pc-link:focus-visible{outline:none}
@@ -566,7 +574,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 /* ---------- conversation (shared) ---------- */
 .chatroom{display:flex;flex-direction:column;min-height:0;background:var(--agent-wash);transition:background-color var(--dur-scene) ease;--cut:var(--agent-wash)}
 .chat-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
-.msgs{display:flex;flex-direction:column;gap:6px;max-width:740px;margin:0 auto;padding:4px 24px 20px}
+.msgs{display:flex;flex-direction:column;gap:6px;max-width:740px;margin:0 auto;padding:16px 24px 20px}
 .day{align-self:center;margin:8px 0;font-size:12px;color:var(--text-3)}
 .msg{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:start;margin-top:8px}
 .msg .who{display:flex;align-items:baseline;gap:8px;margin:0 0 4px 4px;font-size:13px;line-height:18px}
@@ -623,7 +631,20 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .recovery.resolved-card{box-shadow:var(--elev-1);opacity:.85}
 .long{position:relative;max-height:132px;overflow:hidden}
 .long::after{content:"";position:absolute;inset:auto 0 0 0;height:48px;background:linear-gradient(transparent,var(--bg-surface))}
-.code{font:13px/20px var(--font-mono);background:var(--bg-sunken);border-radius:var(--r-sm);corner-shape:var(--corner);padding:10px 12px;margin-top:6px;white-space:pre;overflow:hidden}
+.code{font:12px/20px var(--font-mono);background:var(--bg-sunken);border-radius:var(--r-sm);corner-shape:var(--corner);padding:10px 12px;margin-top:6px;white-space:pre;overflow:hidden}
+.code.long{max-height:260px}
+.code.long::after{background:linear-gradient(rgb(236 238 242 / 0),var(--bg-sunken))}
+.code.all{max-height:360px;overflow:auto}
+.code{overflow:auto;max-width:100%}
+.code .hl,.term .hl{display:inline-block;min-width:100%;background:var(--danger-tint);color:var(--danger-ink)}
+.code .ln,.term .ln{display:inline-block;min-width:3.5ch;color:var(--text-3);user-select:none}
+.logacts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.suggest{display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;margin:0 16px 12px;padding:14px 16px;background:var(--bg-surface);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:var(--elev-2)}
+.suggest b{display:block;font-weight:600}
+.suggest p{color:var(--text-2);margin-top:2px}
+.suggest .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.suggest .l-ic{color:var(--text-1)}
+.suggest.arrive{animation:rise var(--dur-move) var(--spring-smooth) both}
 .composer{flex:none;display:flex;align-items:flex-end;gap:6px;margin:0 24px;padding:6px;background:var(--bg-surface);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px var(--line-control),var(--elev-2);transition:box-shadow var(--dur-micro) ease}
 .composer:focus-within{box-shadow:inset 0 0 0 2px var(--focus),var(--elev-2)}
 .composer textarea{flex:1;min-width:0;min-height:36px;max-height:120px;padding:7px 4px;border:0;background:transparent;resize:none;font-size:15px;line-height:22px}
@@ -642,7 +663,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .ahead{flex:none;display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 16px 8px 20px;background:var(--bg-surface);box-shadow:inset 0 -1px 0 var(--line-subtle)}
 .ah-id{flex:1;min-width:0}
 .ah-name{display:flex;align-items:center;gap:8px;min-width:0}
-.ah-name h1{font:600 20px/26px var(--font-display);letter-spacing:-.014em;white-space:nowrap}
+.ah-name h1{font:600 20px/26px var(--font-display);letter-spacing:-.014em;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .ah-id .t-meta{display:block;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ah-r{display:flex;align-items:center;gap:12px;flex:none}
 .needlink{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 4px;border-radius:999px;background:var(--attn-tint);color:var(--attn-ink);font-size:12px;font-weight:600}
@@ -657,8 +678,12 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .split{flex:1;min-height:0;display:grid;grid-template-columns:minmax(380px,1fr) minmax(400px,1.08fr);transition:grid-template-columns var(--dur-scene) var(--spring-smooth)}
 .split.wide-pane{grid-template-columns:minmax(340px,.85fr) minmax(500px,1.15fr)}
 .split.pane-off{grid-template-columns:minmax(380px,1fr) 0}
-.hero-wrap{position:sticky;top:0;z-index:3;padding:14px 0 10px;text-align:center;background:linear-gradient(var(--agent-wash) 84%,transparent)}
-.nametag{display:inline-flex;align-items:center;height:26px;margin-top:4px;padding:0 12px;border-radius:999px;background:var(--bg-surface);box-shadow:var(--elev-1);color:var(--agent-ink);font-size:15px;font-weight:600}
+/* The hero is sticky. Its own box is solid wash, so nothing that scrolls under it can show through the
+   ledger line (the v0.3-partial bug); the fade lives below the box, over the messages, not under the text. */
+.hero-wrap{position:sticky;top:0;z-index:3;padding:14px 0 12px;text-align:center;background:var(--agent-wash)}
+.hero-wrap::after{content:"";position:absolute;left:0;right:0;top:100%;height:16px;background:linear-gradient(var(--agent-wash),rgb(255 255 255 / 0));pointer-events:none}
+.hero-wrap .ledger{position:relative;z-index:1}
+.nametag{display:inline-block;max-width:calc(100% - 48px);height:26px;line-height:26px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:top;margin-top:4px;padding:0 12px;border-radius:999px;background:var(--bg-surface);box-shadow:var(--elev-1);color:var(--agent-ink);font-size:15px;font-weight:600}
 .statusline{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;font-size:13px;line-height:18px;color:var(--text-2);transition:opacity var(--dur-short) ease}
 .statusline.swap{opacity:0}
 .statusline .bdg{position:static;width:16px;height:16px;box-shadow:inset 0 0 0 1px var(--line)}
@@ -668,7 +693,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .ledger svg{width:13px;height:13px}
 .wcard{display:grid;grid-template-columns:128px minmax(0,1fr);gap:14px;align-items:center;width:min(calc(100% - 42px),32em);margin:10px 0 0 42px;padding:10px;background:var(--bg-surface);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:var(--elev-1)}
 .wthumb{height:80px;border-radius:var(--r-sm);corner-shape:var(--corner);background:var(--bg-ground);overflow:hidden;box-shadow:inset 0 0 0 1px var(--line-subtle)}
-.wthumb .mini{font:500 5.5px/8px var(--font-mono);padding:6px;white-space:pre;color:var(--text-2)}
+.wthumb .mini{font:400 5.5px/8px var(--font-mono);padding:6px;white-space:pre;color:var(--text-2)}
 .wthumb .mini .a{background:#dff2e5}.wthumb .mini .r{background:#fbe3e3}
 .wcard .wt{font-weight:600;margin:2px 0 8px;line-height:20px}
 .wcard .wrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
@@ -695,7 +720,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .dl .sg{color:var(--text-2);user-select:none}
 .dl code{font-size:inherit;white-space:pre;color:var(--text-1)}
 .dl-add{background:#e9f6ee}.dl-del{background:#fdeeee}
-.dl-hunk{background:var(--action-tint)}.dl-hunk code{color:var(--text-2)}
+.dl-hunk{background:var(--bg-sunken)}.dl-hunk code{color:var(--text-2)}
 .term{font:400 12.5px/20px var(--font-mono);letter-spacing:0;padding:14px 20px;white-space:pre-wrap;color:var(--text-1)}
 .term .pass{color:var(--ok-ink);font-weight:600}.term .run{color:var(--attn-ink);font-weight:600}.term .fail{color:var(--danger-ink);font-weight:600}.term .mut{color:var(--text-3)}
 .flist{list-style:none;padding:8px 12px}
@@ -1011,7 +1036,7 @@ table.spec td{padding:10px 12px 10px 0;box-shadow:inset 0 -1px 0 var(--line-subt
 .gallery figcaption{font-size:12px;line-height:16px;color:var(--text-3)}
 .gallery figcaption b{display:block;color:var(--text-1);font-size:13px;font-weight:600}
 .shape-demo{display:flex;flex-wrap:wrap;gap:16px}
-.shape-demo div{display:grid;place-items:center;width:150px;height:72px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line);font-size:12px;color:var(--text-2);text-align:center;corner-shape:var(--corner)}
+.shape-demo div{display:grid;place-items:center;width:220px;height:84px;padding:8px 12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line);font-size:12px;color:var(--text-2);text-align:center;corner-shape:var(--corner)}
 
 /* ---------- moments: arrivals, birth, picker, first receipt ---------- */
 .arrive{animation:rise var(--dur-short) var(--ease-out) both}
@@ -1101,7 +1126,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
     <button role="tab" id="t-tokens" data-scr="tokens" aria-selected="false" tabindex="-1">System</button>
   </div>
   <label><span class="sr">Jump to a state, worst moment or flow</span><select id="jump"></select></label>
-  <button type="button" class="demo-play" id="playBtn" hidden><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg><span id="playLbl">Play the moment</span></button>
+  <button type="button" class="demo-play" id="playBtn" hidden><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg><span id="playLbl">Play the moment</span></button>
   <label id="heroDemo" hidden><span class="sr">Noor's state (demo)</span><select id="heroSel">
     <option value="live">Noor: live</option><option value="idle">Idle</option><option value="thinking">Thinking</option><option value="working">Working</option>
     <option value="waiting">Needs you</option><option value="blocked">Blocked</option><option value="paused">Paused</option><option value="error">Error</option><option value="done">Done</option>
@@ -1332,7 +1357,7 @@ const AG = {
   lina:{name:"Lina",role:"BA",team:"Bench › Product team",shape:"egg",hue:"cocoa",status:"idle",snip:"yesterday's notes are in memory",time:"08:30",since:"14 Oct",runs:98,notes:27,lessons:3},
   sam:{name:"Sam",role:"UX/UI",team:"Bench › Product team",shape:"blob",hue:"tangerine",status:"working",snip:"3 of 4 first-run screens done",live:"first-run screens, 3 of 4",time:"09:08",since:"14 Oct",runs:173,notes:35,lessons:7},
   karim:{name:"Karim",role:"Tech lead",team:"Bench › Dev team",shape:"square",hue:"pear",status:"waiting",snip:"PR #41 is green. the merge needs you",time:"08:34",since:"14 Oct",runs:351,notes:61,lessons:15},
-  noor:{name:"Noor",role:"Developer",team:"Bench › Dev team",shape:"pill",hue:"coral",status:"working",snip:"pr #44 open, waiting for Karim",live:"running pnpm test chat",time:"09:14",since:"14 Oct",runs:312,notes:46,lessons:12},
+  noor:{name:"Noor",role:"Developer",team:"Bench › Dev team",shape:"pill",hue:"coral",status:"working",snip:"PR #44 open, waiting for Karim",live:"running pnpm test chat",time:"09:14",since:"14 Oct",runs:312,notes:46,lessons:12},
   jade:{name:"Jade",role:"QA",team:"Bench › Dev team",shape:"triangle",hue:"orchid",status:"blocked",snip:"E2E failed twice on Windows CI",time:"07:39",since:"14 Oct",runs:204,notes:33,lessons:8},
   rana:{name:"Rana",role:"PM · lead",team:"InterviewKit",shape:"egg",hue:"honey",status:"working",snip:"sprint 1 wraps today: 5 of 8 done",live:"closing Sprint 1",time:"09:05",since:"19 Oct",runs:88,notes:19,lessons:3},
   yusuf:{name:"Yusuf",role:"BA",team:"InterviewKit",shape:"blob",hue:"aqua",status:"waiting",snip:"6 questions on the interview flow",time:"08:49",since:"19 Oct",runs:41,notes:12,lessons:1},
@@ -1343,8 +1368,11 @@ const AG = {
   mia:{name:"Mia",role:"UX/UI",team:"Field Notes",shape:"pill",hue:"aqua",status:"idle",snip:"ready when Lea is",time:"Now",since:"22 Oct",runs:0,notes:12,lessons:12},
   raf:{name:"Raf",role:"Tech lead",team:"Field Notes",shape:"sphere",hue:"orchid",status:"idle",snip:"ready when Lea is",time:"Now",since:"22 Oct",runs:0,notes:12,lessons:12},
   zoe:{name:"Zoe",role:"Developer",team:"Field Notes",shape:"droplet",hue:"pear",status:"idle",snip:"ready when Lea is",time:"Now",since:"22 Oct",runs:0,notes:12,lessons:12},
-  kai:{name:"Kai",role:"QA",team:"Field Notes",shape:"triangle",hue:"tangerine",status:"idle",snip:"ready when Lea is",time:"Now",since:"22 Oct",runs:0,notes:12,lessons:12}
+  kai:{name:"Kai",role:"QA",team:"Field Notes",shape:"triangle",hue:"tangerine",status:"idle",snip:"ready when Lea is",time:"Now",since:"22 Oct",runs:0,notes:12,lessons:12},
+  /* Only on #long-names: the worst-case name the layout has to survive. */
+  relbot:{name:"Release-notes-and-changelog-bot",role:"Release notes",team:"Company",shape:"triangle",hue:"honey",status:"idle",snip:"this week's changelog draft is ready when you are",time:"Tue",since:"20 Oct",runs:6,notes:9,lessons:1}
 };
+const IK_NAME = "InterviewKit", IK_LONG = "InterviewKit for the Spring Hiring Round 2027";
 const LUMEN = {name:"Lumen",role:"Release notes",team:"Bench › Dev team",shape:"droplet",hue:"honey",status:"idle",snip:"first draft due Friday",time:"Now",since:"22 Oct",runs:0,notes:18,lessons:0};
 const GHOST = {name:"New agent",shape:"droplet",hue:"none",status:"idle"};
 
@@ -1610,7 +1638,7 @@ $("#menu").addEventListener("keydown", e => {
 /* Scenario = the world the screens are in (normal, offline, limit…). Every screen reads it. */
 const S = {scen:"normal", firstTeam:false, firstAsked:false, ringPct:null};
 const SCEN = {
-  normal:{}, "offline-back":{}, forecast:{}, reset:{}, "login-back":{}, guard:{}, first:{},
+  normal:{}, "offline-back":{}, forecast:{}, reset:{}, "login-back":{}, guard:{}, "guard-exempt":{}, first:{}, long:{},
   offline:{paused:["noor","maya","omar","sam","rana","tala"], why:"offline"},
   limit:{paused:["noor","karim","maya"], why:"your week is used up"},
   login:{paused:["noor","karim","maya"], why:"waiting for your Claude login"}
@@ -1642,6 +1670,7 @@ const PV = {solo:"bench", sprintDone:false};
 function sprintLine(P, full){
   if (P.setup) return "Sprint 1 · planning";
   if (S.scen === "first") return "No sprint yet";
+  if (S.scen === "reset" && P.id === "bench") return "Sprint 2 · paused past its end" + (full ? " · Maya proposes Tue 27 Oct" : "");
   return `Sprint ${P.sprint} · day ${P.day} of ${P.days}` + (full ? ` · ends ${P.ends}` : "");
 }
 function teamProj(id){ return PROJ_ORDER.concat(["fn"]).find(p => PROJ[p].team.indexOf(id) >= 0 || (p === "bench" && id === "lumen")) || null; }
@@ -1653,10 +1682,11 @@ const NEEDS0 = [
     d:"Jade's end-to-end tests failed twice on the Windows CI runners, at 07:12 and 07:39. Karim suggests two ways out. Pick one.",
     opts:[{v:"nightly",t:"Nightly E2E on Karim's machine",s:"Free · results each morning instead of on every pull request",rec:true,label:"Use nightly E2E",cons:"free",done:"<b>Nightly E2E chosen.</b> Karim sets it up tonight; first results tomorrow at 07:00."},
           {v:"paid",t:"A paid Windows runner",s:"About 2 h to set up · needs a payment from you",label:"Use a paid runner",cons:"needs a payment",done:"<b>Paid runner chosen.</b> Karim sends you the payment details; nothing is bought until you pay."}],
-    sec:[["secondary","Ask Karim","askkarim"],["tertiary","Later","later"]],foot:"Escalated by Karim at 07:45 after two failed attempts.",look:"qa3"},
+    recBy:"Karim recommends",sec:[["secondary","Ask Karim","askkarim"],["tertiary","Later","later"]],foot:"Escalated by Karim at 07:45 after two failed attempts.",look:"qa3"},
   {k:"email",grp:"decide",av:"atlas",proj:null,tag:{gate:"Outward"},title:"Reply to Dana: send it or change it?",who:"Atlas · Company",age:"since 08:02",start:"the reply to Dana",
     d:"Atlas drafted a reply in your voice. Nothing sends until you press Send.",
     mail:{to:"Dana Kim · dana.k@example.com",from:"You, from your Gmail",sub:"Re: Interview availability",body:"Hi Dana, Tuesday or Wednesday afternoon both work for me. Would 15:00 on Tuesday suit you?<br><br>Best, Majd"},
+    applied:["your sign-off, “Best, Majd”","preference from 16 Oct","signoff"],
     primary:{label:"Send to Dana",cons:"1 email, from you",done:"<b>Sent to Dana at 09:20</b> from your Gmail. An email can't be called back, so there's no Undo.",noUndo:true},
     sec:[["secondary","Edit","stub"],["tertiary","Discard","discard"]],why:"Always allow is off for email to other people: every email needs you.",look:"email"},
   {k:"merge",grp:"decide",av:"karim",proj:"bench",tag:{gate:"Reserved"},title:"Merge PR #41 to main",who:"Karim · S1-3 · Bench",age:"since 08:34",start:"PR #41: it's ready to merge",
@@ -1709,6 +1739,12 @@ const NEED_FIRST = {k:"issue12",grp:"decide",av:"atlas",proj:null,tag:{kind:"Pro
   opts:[{v:"wait",t:"Wait until v0.1 ships",s:"Free · the SmartScreen warning stays for now",rec:true,label:"Wait until v0.1",cons:"free",done:"<b>Noted on issue #12:</b> wait until v0.1. Atlas comments on GitHub as you."},
         {v:"sign",t:"Sign it now",s:"About €70 a year · needs a payment from you",label:"Sign it now",cons:"needs a payment",done:"<b>Noted:</b> sign it now. A payment ticket follows; nothing is bought until you pay."}],
   sec:[["tertiary","Later","later"]],foot:"Your first ticket: it came from Atlas's first look at your issues."};
+/* R11: a pause never moves a sprint's end by itself. Monday after the reset, the lead proposes; you decide. */
+const NEED_SPRINT = {k:"sprint",grp:"decide",av:"maya",proj:"bench",tag:{kind:"Proposal"},title:"Sprint 2 ran out of time while paused. New end date?",who:"Maya · Sprint 2 · Bench",age:"since 09:04",start:"Maya's new end date for Sprint 2",
+  d:"Your week ran out on Sat 24 Oct at 14:05, the day Sprint 2 was due, and the team was paused for 43 hours. The end date didn't move by itself. Maya proposes one.",
+  opts:[{v:"tue",t:"End it on Tue 27 Oct",s:"Keeps all 7 stories · the 3 sprint days, shifted past the pause",rec:true,label:"End Sprint 2 on Tue 27 Oct",cons:"7 stories kept",done:"<b>Sprint 2 now ends Tue 27 Oct.</b> Maya tells the team; nothing else changes."},
+        {v:"close",t:"Close it now, as planned",s:"S1-4 and S1-6 go back to the backlog for Sprint 3",label:"Close Sprint 2 now",cons:"2 stories to the backlog",done:"<b>Sprint 2 is closed.</b> S1-4 and S1-6 go back to the backlog for Sprint 3."}],
+  recBy:"Maya recommends",sec:[["secondary","Ask Maya","stub"]],foot:"A pause never moves a sprint's end date by itself. The lead proposes; you decide."};
 const GRP = {decide:"Decide", meet:"Meet", fyi:"For your info"};
 const NUMW = ["No","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"];
 const H = {variant:"default", done:new Set(), showAll:false, firstTicket:false, picks:{}};
@@ -1722,6 +1758,7 @@ function needsList(){
   if (H.variant === "conflict-resolved") list = list.map(n => n.k === "merge" ? NEED_RESOLVED : n);
   if (S.scen === "forecast") list = list.concat([NEED_FORECAST]);
   if (S.scen === "limit") list = list.concat([NEED_PAUSED]);
+  if (S.scen === "reset") list.splice(1, 0, NEED_SPRINT);
   return list.filter(n => !H.done.has(n.k));
 }
 /* R5: the count means what it says: Decide + Meet. For your info is shown, not counted. */
@@ -1770,7 +1807,7 @@ function buildSidebar(){
   const n = countedNeeds().length, first = S.scen === "first";
   let h = navRow("home", "home", "Home") + navRow("needs", "inbox", "What needs you", n ? `<span class="count attn" data-cnt="all">${n}</span>` : "<span></span>", `What needs you, ${n}`);
   h += `<div class="side-sec"><h2>Company</h2><button type="button" class="btn icon sm" data-act="company" aria-label="Open the Company page" title="Company page">${ic("building")}</button></div>`;
-  h += agentRow("atlas") + (first ? "" : agentRow("iris"));
+  h += agentRow("atlas") + (first ? "" : agentRow("iris")) + (S.scen === "long" ? agentRow("relbot") : "");
   h += `<div class="side-sec"><h2>Projects</h2><button type="button" class="secbtn" data-act="newProject">${ic("plus", 14)}New project</button></div>`;
   if (first && !S.firstTeam) h += `<p class="t-meta ink3" style="padding:2px 10px 8px">No projects yet.</p>`;
   else if (first) h += projGroup("bench");
@@ -1836,7 +1873,7 @@ function ringState(){
     case "limit": return {pct:100, color:"#15171d", html:"<b>Paused</b> until Mon 09:00", title:"Your week is used up. It resets Mon 26 Oct at 09:00."};
     case "forecast": return {pct:84, color:"#f5a20a", html:"<b>84 %</b> of your week · getting close", title:"84 % of your week · at this pace it runs out around Sat 14:00 · resets Mon 09:00"};
     case "reset": return {pct:1, color:"#15171d", html:"<b>1 %</b> of your week", title:"New week · resets Mon 2 Nov at 09:00 · Headroom OK"};
-    case "guard": return {pct:41, color:"#15171d", html:"<b>41 %</b> of your week · guard on", title:"Guard on: keeping 30 % free · resets Mon 26 Oct at 09:00"};
+    case "guard": case "guard-exempt": return {pct:41, color:"#15171d", html:"<b>41 %</b> of your week · guard on", title:"Guard on: keeping 30 % free · resets Mon 26 Oct at 09:00"};
     case "first": { const p = S.ringPct || 0; return {pct:p, color:"#15171d", html:`<b>${p ? "0.04" : "0"} %</b> of your week`, title:"Your Claude week · resets Mon 26 Oct at 09:00"}; }
     default: return {pct:41, color:"#15171d", html:"<b>41 %</b> of your week", title:"41 % of your week used · resets Mon 26 Oct at 09:00 · Headroom OK"};
   }
@@ -1863,7 +1900,7 @@ function renderBanner(){
   else if (sc === "limit") h = `<div class="banner ink${drop}" role="status">${ic("pause", 18)}<span class="bt"><b>Your week is used up.</b> 3 runs paused at a safe point and resume <b>Mon 26 Oct at 09:00</b>, in the order they paused. What needs you, memory and the trace still work.</span><span class="acts"><span class="count num">3 of 3</span><span class="t-meta">runs paused</span><button type="button" class="btn on-ink solid sm" data-go="usage">See paused work</button></span></div>`;
   else if (sc === "login") h = `<div class="banner ink${drop}" role="status">${ic("key", 18)}<span class="bt"><b>Your Claude login has expired.</b> Your agents paused at a safe point; nothing is lost. Run this in a terminal, then come back: <code>claude login</code></span><span class="acts"><button type="button" class="btn on-ink solid sm" data-act="copyLogin">${ic("copy", 14)}Copy command</button><button type="button" class="btn on-ink sm" data-act="checkLogin">Check again</button></span></div>`;
   else if (sc === "forecast") h = `<div class="banner thin${drop}" role="status">${ic("gauge", 18)}<span class="bt"><b>At this pace your week runs out around Sat 14:00.</b> Routines are waiting; your own requests still run.</span><span class="acts"><button type="button" class="btn tertiary sm" data-go="usage">See what's waiting</button></span></div>`;
-  else if (sc === "guard") h = `<div class="banner thin${drop}" role="status">${ic("gauge", 18)}<span class="bt"><b>Keeping 30 % of your week free.</b> At this pace you'd have 24 % left by Monday, so 2 routines wait until there's room or until Mon 26 Oct at 09:00. Your own requests still run.</span><span class="acts"><button type="button" class="btn tertiary sm" data-go="agent-routines">See what's waiting</button></span></div>`;
+  else if (sc === "guard" || sc === "guard-exempt") h = `<div class="banner thin${drop}" role="status">${ic("gauge", 18)}<span class="bt"><b>Keeping 30 % of your week free.</b> At this pace you'd have 24 % left by Monday, so 2 routines wait until there's room or until Mon 26 Oct at 09:00. Your own requests still run.</span><span class="acts"><button type="button" class="btn tertiary sm" data-go="agent-routines">See what's waiting</button></span></div>`;
   host.innerHTML = h;
 }
 function paintCounts(){
@@ -1878,7 +1915,8 @@ function subLine(){
   if (H.variant === "first") return n ? "One thing needs you: Atlas's first look at your issues." : "Your team is ready. Tell Atlas what you're working on.";
   if (S.scen === "reset" && !n) return "You're all caught up.";
   if (!n) return `You're all caught up. The team is working on ${busyCount()} things.`;
-  return `${NUMW[n] || n} ${n === 1 ? "thing needs" : "things need"} you. Start with ${live[0].start}.`;
+  const lead = live.find(x => x.k === H.openKey) || live[0];
+  return `${NUMW[n] || n} ${n === 1 ? "thing needs" : "things need"} you. Start with ${lead.start}.`;
 }
 
 /* ---------- Home ---------- */
@@ -1901,7 +1939,7 @@ function atlasLine(){
   }
 }
 function digestHTML(){
-  if (S.scen === "reset") return `<div class="digest" role="status"><span class="l-ic">${ic("refresh", 18)}</span><div class="grow"><div class="d-t">Good morning. Your week reset at 09:00.</div><p>Noor and Karim picked up where they paused; the standup digest ran at 09:02. Nothing was lost. The sprint end date didn't move by itself: Maya proposes a new one in her standup.</p><div class="wake" aria-label="Resumed in this order: Noor, Karim, Maya">${["noor","karim","maya"].map((id, i) => avatar(id, 24, {status:"working", cls:"wk", hidden:true})).join("")}</div></div><button type="button" class="btn tertiary sm" data-act="dismissDigest">Dismiss</button></div>`;
+  if (S.scen === "reset") return `<div class="digest" role="status"><span class="l-ic">${ic("refresh", 18)}</span><div class="grow"><div class="d-t">Good morning. Your week reset at 09:00.</div><p>Noor and Karim picked up where they paused; the standup digest ran at 09:02. Nothing was lost. Sprint 2's end date didn't move by itself: Maya proposes a new one, below.</p><div class="wake" aria-label="Resumed in this order: Noor, Karim, Maya">${["noor","karim","maya"].map((id, i) => avatar(id, 24, {status:"working", cls:"wk", hidden:true})).join("")}</div></div><button type="button" class="btn tertiary sm" data-act="dismissDigest">Dismiss</button></div>`;
   if (S.scen === "login-back") return `<div class="digest" role="status"><span class="l-ic">${ic("key", 18)}</span><div class="grow"><div class="d-t">You're signed in again.</div><p>Noor, Karim and Maya picked up where they paused, in that order. The 08:30 standup digest ran 12 min late. Nothing was lost, and Bench never saw your password.</p><div class="wake" aria-label="Resumed in this order: Noor, Karim, Maya">${["noor","karim","maya"].map(id => avatar(id, 24, {status:"working", cls:"wk", hidden:true})).join("")}</div></div><button type="button" class="btn tertiary sm" data-act="dismissDigest">Dismiss</button></div>`;
   return "";
 }
@@ -1943,7 +1981,7 @@ function renderNeeds(opts = {}){
   let html = "";
   if (!live.length) {
     if (H.variant === "first") html = `<div class="empty"><b>Nothing needs you yet.</b><p>When an agent needs a decision, a meeting or your OK, it lands here, ranked: blocked work first.</p></div>`;
-    else html = `<div class="empty"><b>You're all caught up.</b><p>The team is working on ${busyCount()} things. New items land here as they come in.</p><button type="button" class="btn secondary" data-act="toProjects">Open your projects</button></div>`;
+    else html = `<div class="empty"><b>You're all caught up.</b><p>The team is working on ${busyCount()} things. New items land here as they come in.</p><button type="button" class="btn secondary lg" data-act="toProjects">Open your projects</button></div>`;
   } else {
     const shown = H.showAll ? live : live.slice(0, 5);
     const groups = [];
@@ -1982,9 +2020,10 @@ function projCard(pid){
   const tg = S.scen === "first" ? `<span class="tag">New</span>` : S.scen === "limit" && pid === "bench" ? `<span class="tag">${glyph("paused")}Paused</span>`
     : n ? `<span class="tag attn"><span data-cnt="${pid}">${n}</span>&nbsp;need${n === 1 ? "s" : ""} you</span>` : `<span class="tag ok">${glyph("done")}All clear</span>`;
   const act = S.scen === "limit" && pid === "bench" ? "6 tasks paused · Sprint 2 ends today; Maya proposes a new end date when work resumes"
+    : S.scen === "reset" && pid === "bench" ? "Noor and Karim picked up where they paused · the end date waits for you"
     : S.scen === "first" ? "Lea plans the first sprint when you ask" : P.activity;
   return `<article class="pcard" data-pid="${pid}">
-    <div class="pc-top"><div class="pc-id"><h3><button type="button" class="pc-link" data-open-proj="${pid}">${esc(P.name)}</button></h3><span class="t-meta">${esc(sprintLine(P, true))}</span></div>${tg}
+    <div class="pc-top"><div class="pc-id"><h3><button type="button" class="pc-link" data-open-proj="${pid}" title="${esc(P.name)}">${esc(P.name)}</button></h3><span class="t-meta">${esc(sprintLine(P, true))}</span></div>${tg}
       <button type="button" class="btn icon sm" data-menu="proj" data-pid="${pid}" aria-haspopup="menu" aria-expanded="false" aria-label="${esc(P.name)} options: open here, in split view or in a new tab" title="Open here, in split view or in a new tab">${ic("more")}</button></div>
     ${progHTML(P)}
     <div class="pc-foot">${stackHTML(P.team.concat(pid === "bench" ? EXTRA : []).slice(0, 7), 24)}<span class="act">${esc(act)}</span></div>
@@ -2009,18 +2048,20 @@ function ticketBody(n, ctx){
   let ev = "";
   if (n.opts) {
     const pick = H.picks[n.k] || (n.opts.find(o => o.rec) || n.opts[0]).v;
-    ev = `<div class="opts" role="radiogroup" aria-label="Your options">${n.opts.map(o => `<label class="opt"><input type="radio" name="opt-${ctx}-${n.k}" value="${o.v}" data-opt="${n.k}"${pick === o.v ? " checked" : ""}><span class="ob"><b>${esc(o.t)}</b><span>${esc(o.s)}</span></span>${o.rec ? `<span class="tag">${n.k === "qa3" ? "Karim recommends" : "Atlas suggests"}</span>` : ""}</label>`).join("")}</div>`;
+    ev = `<div class="opts" role="radiogroup" aria-label="Your options">${n.opts.map(o => `<label class="opt"><input type="radio" name="opt-${ctx}-${n.k}" value="${o.v}" data-opt="${n.k}"${pick === o.v ? " checked" : ""}><span class="ob"><b>${esc(o.t)}</b><span>${esc(o.s)}</span></span>${o.rec ? `<span class="tag">${esc(n.recBy || "Atlas suggests")}</span>` : ""}</label>`).join("")}</div>`;
   } else if (n.mail) ev = `<div class="mail"><div class="to"><span>To</span><b>${esc(n.mail.to)}</b><span>From</span><b>${esc(n.mail.from)}</b><span>Subject</span><b>${esc(n.mail.sub)}</b></div><div>${n.mail.body}</div></div>`;
   else if (n.facts) ev = `<dl class="facts">${n.facts.map(f => `<dt>${esc(f[0])}</dt><dd>${f[1]}</dd>`).join("")}</dl>`;
   else if (n.cmd) ev = `<div class="cmd"><span class="dollar" aria-hidden="true">$</span><span>${esc(n.cmd)}</span><span class="in">${esc(n.where)}</span></div>`;
   const cons = n.cons ? `<div class="cons-row">${n.cons.map((c, i) => estChip(esc(c), i === 2 ? "gauge" : i === 3 ? "folder" : i === 1 ? "clock" : "terminal")).join("")}</div>` : "";
   let acts = "";
-  if (n.primary) {
-    const pl = primaryLabel(n);
-    acts += `<button type="button" class="btn primary lg" data-tka="${n.primary.act || "primary"}"${n.primary.disabled ? ' disabled title="Merge waits until the conflict is resolved"' : ""}>${esc(pl.label)}${pl.cons ? `<span class="cons"> · ${esc(pl.cons)}</span>` : ""}</button>`;
+  /* A ticket with options has a primary too: its label follows the option you pick (C-22). */
+  if (n.primary || n.opts) {
+    const pl = primaryLabel(n), P = n.primary || {};
+    acts += `<button type="button" class="btn primary lg" data-tka="${P.act || "primary"}"${P.disabled ? ' disabled title="Merge waits until the conflict is resolved"' : ""}>${esc(pl.label)}${pl.cons ? `<span class="cons"> · ${esc(pl.cons)}</span>` : ""}</button>`;
   }
   acts += (n.sec || []).map(s => `<button type="button" class="btn ${s[0]} lg" data-tka="${s[2]}">${s[1]}</button>`).join("");
-  return `${n.prov ? `<p class="t-meta ink3" style="margin-bottom:6px">${esc(n.prov)}</p>` : ""}<p class="tk-d">${n.d}</p>${ev}${cons}
+  const applied = n.applied ? `<div style="margin-top:10px">${appliedChip(esc(n.applied[0]), esc(n.applied[1]), n.applied[2])}</div>` : "";
+  return `${n.prov ? `<p class="t-meta ink3" style="margin-bottom:6px">${esc(n.prov)}</p>` : ""}<p class="tk-d">${n.d}</p>${ev}${applied}${cons}
     <div class="tk-acts" data-acts="${n.k}">${acts}</div>
     ${n.why ? `<p class="tk-why">${esc(n.why)}</p>` : ""}
     ${n.foot || n.look ? `<p class="tk-foot">${n.foot ? `<span>${esc(n.foot)}</span>` : ""}${n.look ? lookBtn(n.look) : ""}</p>` : ""}`;
@@ -2108,10 +2149,9 @@ function ticketAct(box, k, act, btn){
   if (act === "stub") { stub(); return; }
   if (act === "primary") {
     if (S.scen === "limit" && n.proj) { resolveTicket(box, k, "primary", `<b>Decided.</b> ${AG[n.av] ? AG[n.av].name : "The team"} starts this on Mon 26 Oct at 09:00, first in line.`, () => undoTicket(k)); return; }
-    let done = n.primary.done;
+    let done = n.primary ? n.primary.done : "<b>Done.</b>";
     if (n.opts) { const pick = H.picks[n.k] || (n.opts.find(o => o.rec) || n.opts[0]).v; done = n.opts.find(o => o.v === pick).done; }
-    if (k === "issue12") { resolveTicket(box, k, "primary", done, () => undoTicket(k)); return; }
-    resolveTicket(box, k, "primary", done, n.primary.noUndo ? null : () => undoTicket(k));
+    resolveTicket(box, k, "primary", done, n.primary && n.primary.noUndo ? null : () => undoTicket(k));
   }
 }
 function openDenyBox(box, k){
@@ -2173,7 +2213,7 @@ function renderNeedsList(animateOpen){
 }
 
 /* ---------- project dashboard and split view (U4, D-UI9) ---------- */
-const KIND = {blocked:'<span class="tag ink">Blocked</span>', review:'<span class="tag action">In review</span>', working:'<span class="tag">Working</span>', waiting:'<span class="tag attn">Needs you</span>'};
+const KIND = {blocked:'<span class="tag ink">Blocked</span>', review:'<span class="tag">In review</span>', working:'<span class="tag">Working</span>', waiting:'<span class="tag attn">Needs you</span>'};
 function bcard(r){ return `<li class="bcard"><span class="bt">${esc(r[1])}</span><span class="bm">${avatar(r[2], 24, {nobadge:true, hidden:true})}<span>${esc(r[0])} · ${esc((AG[r[2]] || LUMEN).name)}</span>${r[3] ? KIND[r[3]] : ""}</span></li>`; }
 function pvHTML(pid, side){
   const P = PROJ[pid], live = countedNeeds().filter(n => n.proj === pid);
@@ -2437,6 +2477,34 @@ function connectorCard(back){
 }
 function limitCard(){ return `<div class="msg">${avatar("noor", 32, {nobadge:true, hidden:true, expr:"sleepy"})}<div class="stackb"><div class="recovery"><div class="why">${ic("pause", 18)}<div><b>Paused at a safe point: your week is used up.</b><p>Noor resumes S1-4 on Mon 26 Oct at 09:00, first in line. Kept: her session, the diff and your pending approval.</p></div></div><div class="acts"><button type="button" class="btn secondary" data-go="usage">See paused work</button></div></div></div></div>`; }
 function awayCard(){ return `<div class="digest" style="margin:12px 0 0 42px" role="status"><span class="l-ic">${ic("refresh", 18)}</span><div class="grow"><div class="d-t">While you were away (18 min)</div><p>Noor's tests finished (12 of 12 passed) and she waited. Karim's draft was saved. Your message to Noor was delivered first, so she picks up with it. Nothing was lost.</p></div></div>`; }
+/* A 500-line log: the message shows the 12 lines that matter, with the count; the rest scrolls inside, or opens in the workspace. */
+const LOGB = ["07:40:31 build done in 36 s","07:40:32 playwright · 12 tests in e2e/","07:40:33 launching Electron (windows-latest)…","07:40:43 waiting for the first window · 10 s","07:40:53 waiting for the first window · 20 s","07:41:03 waiting for the first window · 30 s",
+  "07:41:03 Error: electron.launch: Timeout 30000ms exceeded","07:41:03     at e2e/onboarding.spec.ts:14:28","07:41:03     at runTest (playwright/lib/runner.js:212:7)","07:41:03 the app process exited with code 3221225781","07:41:03 0xC0000135: VCRUNTIME140_1.dll was not found","07:41:04 0 passed · 12 failed · retrying once"];
+const LOG_HL = [407, 411];
+function clock(sec){ return `07:${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; }
+function logLine(i){
+  if (i >= 401 && i <= 412) return LOGB[i - 401];
+  if (i < 401) return `${clock(39 * 60 + 55 + Math.floor(i * 35 / 400))} build · transformed ${["renderer","main","preload","shared","core"][i % 5]}/${["chat","agents","memory","ledger","router","ipc"][i % 6]}/module-${i}.ts`;
+  return `${clock(41 * 60 + 4 + Math.floor((i - 412) * 36 / 88))} retry 2 · ${["launching Electron…","waiting for the first window","collecting the trace","writing junit.xml"][i % 4]}`;
+}
+function logRows(from, to){ const r = []; for (let i = from; i <= to; i++) r.push(`<span${LOG_HL.indexOf(i) >= 0 ? ' class="hl"' : ""}><span class="ln">${i} </span>${esc(logLine(i))}</span>`); return r.join("\n"); }
+function logHTML(all){
+  return `<div class="code${all ? " all" : ""}" id="logBox" role="region" tabindex="0" aria-label="${all ? "CI log, all 500 lines" : "CI log, lines 401 to 412 of 500"}">${all ? logRows(1, 500) : logRows(401, 412)}</div>
+    <div class="logacts"><span class="t-meta ink3">${all ? "All 500 lines · scroll inside" : "Lines 401–412 of 500, around the error"}</span>${all ? "" : '<button type="button" class="btn secondary sm" data-n="showlog">Show all 500 lines</button>'}<button type="button" class="btn tertiary sm" data-n="logpane">Open in Noor's workspace</button></div>`;
+}
+function startSlowTicker(){
+  let s = 14;
+  nTick = setInterval(() => {
+    const t = $("#slowTx");
+    if (N.variant !== "slow" || !t) { clearInterval(nTick); nTick = null; return; }
+    s = Math.min(60, s + 1); slowText(s);
+    if (s >= 60) { clearInterval(nTick); nTick = null; }
+  }, 1000);
+}
+function slowText(s){
+  const t = $("#slowTx"); if (!t) return;
+  t.innerHTML = s < 60 ? `<b>Claude is taking longer than usual (<span class="num">${s}</span> s).</b> Noor is still on it.` : "<b>Still waiting on Claude (1 min).</b> This sometimes happens at busy times. Nothing is lost, and Stop is always here.";
+}
 function noorMsgs(v){
   const m = noorBase();
   switch (v){
@@ -2452,6 +2520,9 @@ function noorMsgs(v){
     case "connector": m.push(connectorCard(false)); break;
     case "connector-back": m.push(connectorCard(true), sysL("<b>GitHub is back.</b> Noor pushed <code>feat/s1-4</code>. Karim and both routines carry on.", "check"), agM("pushed. opening the PR now.", rcpt(["11:20","0.8k tokens","0.03 % of your week"], "n0912"))); break;
     case "limit": m.push(limitCard()); break;
+    case "slow": m.push(ALLOWED_LINE(), meM("Can you also check the Windows path handling in formatTime?", seen("Noor", "09:31")), `<div class="thinking" id="slowLine"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span id="slowTx"><b>Claude is taking longer than usual (<span class="num">14</span> s).</b> Noor is still on it.</span></div>`); break;
+    case "long": m.push(ALLOWED_LINE(), meM("Why did QA-3 fail twice on Windows? Show me the log.", seen("Noor", "09:31")),
+      agM([`<p>it's Jade's CI log from 07:39, 500 lines. the cause is on line 411: the Windows runner is missing <code>VCRUNTIME140_1.dll</code>, so Electron never opens a window. it fails the same way every time, so a retry won't fix it.</p>${logHTML(false)}`, "i've sent Karim line 411. it's his runner image, and it changes the QA-3 options."], rcpt(["09:32","2.4k tokens","0.08 % of your week"], "qa3"))); break;
   }
   return m.join("");
 }
@@ -2467,7 +2538,9 @@ const NOOR_V = {
   "checkpoint-incomplete":{st:"paused", tx:"waiting for Karim to check her checkpoint", appr:"once", ctx:90},
   connector:{st:"blocked", tx:"waiting for GitHub", appr:"once", ctx:52},
   "connector-back":{st:"working", tx:"opening the PR", appr:"once", ctx:53},
-  limit:{st:"paused", tx:"your week is used up · resumes Mon 09:00", appr:null, ctx:36}
+  limit:{st:"paused", tx:"your week is used up · resumes Mon 09:00", appr:null, ctx:36},
+  slow:{st:"thinking", tx:"waiting on Claude", appr:"once", ctx:41},
+  long:{st:"idle", tx:"sent Karim the cause of QA-3", appr:"once", ctx:47}
 };
 function noorHeadHTML(){
   const pending = N.appr === null && !H.done.has("pnpm");
@@ -2502,6 +2575,7 @@ function renderNoor(v){
   updateComposer();
   const s = $("#convScroll"); s.scrollTop = s.scrollHeight;
   if (v === "default" && N.appr === null) startNoorTicker();
+  if (v === "slow") startSlowTicker();
 }
 function startNoorTicker(){
   if (nTick) clearInterval(nTick);
@@ -2688,7 +2762,7 @@ function setPane(on){
 }
 
 /* ---------- routines (U1, CR-006: anything Noor can do, on a schedule) ---------- */
-const RT = {empty:false, list:[
+const RT = {empty:false, suggest:true, list:[
   {id:"sweep",name:"Morning test sweep",when:"Every weekday at 08:00",perm:"edit",next:"Tomorrow 08:00",nextSub:"Fri 23 Oct",last:"Today 08:00",lastSub:"Done · 6.2k tokens",lastK:6.2,est:6.0,perWeek:5,on:true},
   {id:"deps",name:"Dependency check",when:"Every Monday at 09:00",perm:"edit",next:"Mon 26 Oct",nextSub:"09:00",last:"Mon 19 Oct",lastSub:"Done · 8.7k tokens",lastK:8.7,est:9.0,perWeek:1,on:true},
   {id:"prs",name:"Merged PR digest",when:"Every Friday at 16:00",perm:"read",next:"Fri 23 Oct",nextSub:"16:00",last:"—",lastSub:"Never run",lastK:0,est:3.5,perWeek:1,on:false}
@@ -2699,12 +2773,14 @@ const fmtPct = p => (p >= 1 ? p.toFixed(1) : p.toFixed(2)) + " %";
 function permTag(p){ return p === "edit" ? `<span class="tag" title="Runs with Noor's own permissions: she can edit files in bench/. Anything outward or reserved waits for you.">${ic("pencil", 12)}Can edit files</span>` : `<span class="tag" title="Only reads: GitHub and memory">${ic("book", 12)}Read-only</span>`; }
 function routineCap(){ const l = RT.empty ? [] : RT.list; return l.length ? `${l.filter(r => r.on).length} of ${l.length} on` : "No routines yet"; }
 function rtRow(r){
-  const guarded = S.scen === "guard" && r.id === "deps";
+  const guardOn = S.scen === "guard" || S.scen === "guard-exempt";
+  const guarded = guardOn && r.id === "deps" && !r.exempt;
+  const exempt = r.exempt ? `<div class="inline-alert neutral">${ic("check", 16)}<span><b>Runs even when the guard is on.</b> You chose this on 22 Oct · ≈ 0.30 % of your week, once a week. Other routines still wait.</span><button type="button" class="btn tertiary sm" data-act="exemptUndo">Undo</button></div>` : "";
   const lastPct = r.lastK ? ` · ${fmtPct(pctW(r.lastK))}` : "";
   return `<li class="rcard${r.on ? "" : " is-off"}" data-rt="${r.id}">
     <div class="top"><h3>${esc(r.name)}</h3>${permTag(r.perm)}${switchH(`data-rt-tog="${r.id}"`, r.on, r.name)}<button type="button" class="btn icon sm" data-act="stub" aria-label="${esc(r.name)}: run now, edit or delete" title="Run now, edit or delete">${ic("more")}</button></div>
     <div class="when">${esc(r.when)} · Noor</div>
-    ${guarded ? `<div class="inline-alert neutral">${ic("gauge", 16)}<span><b>Waiting for room in your week</b> (guard on: keeping 30 % free). Runs when there's room, or Mon 26 Oct at 09:00.</span><button type="button" class="btn secondary sm" data-act="runNow">Run now<span class="cons"> · ≈ 0.30 % of your week</span></button></div>` : ""}
+    ${guarded ? `<div class="inline-alert neutral">${ic("gauge", 16)}<span><b>Waiting for room in your week</b> (guard on: keeping 30 % free). Runs when there's room, or Mon 26 Oct at 09:00.</span><button type="button" class="btn secondary sm" data-act="runNow">Run now<span class="cons"> · ≈ 0.30 % of your week</span></button></div>` : ""}${exempt}
     <dl class="figs"><div><dt>Next run</dt><dd>${r.on ? esc(guarded ? "When there's room" : r.next) : "—"}<small>${r.on ? esc(guarded ? "or Mon 09:00" : r.nextSub) : "Off since you paused it"}</small></dd></div>
       <div><dt>Last run</dt><dd>${esc(r.last)}<small>${esc(r.lastSub)}${lastPct}</small></dd></div>
       <div><dt>Estimate per run</dt><dd>≈ ${r.est.toFixed(1)}k tokens<small>${fmtPct(pctW(r.est))} of your week</small></dd></div></dl></li>`;
@@ -2719,7 +2795,12 @@ function renderRoutines(){
   $("#rtList").hidden = !list.length;
   $("#rtEmpty").hidden = !!list.length;
   $("#rtEmpty").innerHTML = `<b>No routines yet.</b><p>A routine is anything Noor can do, on a schedule. Describe it in plain words; you see what each run costs before you save.</p><div class="sugg" style="padding:6px 0 0"><button type="button" data-rt-ex="Every weekday at 8, run the tests and fix what lint can fix">Run the tests every weekday at 8</button><button type="button" data-rt-ex="Every Monday at 9, check for outdated dependencies">Check dependencies on Mondays</button></div>`;
-  $("#guardSlot").innerHTML = S.scen === "guard" ? `<div class="banner thin" style="margin:0 16px 8px">${ic("gauge", 18)}<span class="bt"><b>Guard on: keeping 30 % free.</b> 1 routine waits for room in your week.</span></div>` : "";
+  const deps = RT.list.find(r => r.id === "deps");
+  let slot = "";
+  if (S.scen === "guard") slot = `<div class="banner thin" style="margin:0 16px 8px">${ic("gauge", 18)}<span class="bt"><b>Guard on: keeping 30 % free.</b> 1 routine waits for room in your week.</span></div>`;
+  /* R7, decided: Bench suggests an exception after 3 identical choices. A suggestion, never automatic; you can undo it. */
+  else if (S.scen === "guard-exempt" && RT.suggest && !deps.exempt) slot = `<div class="suggest${animate() ? " arrive" : ""}" role="status"><span class="l-ic">${ic("sparkLine", 18)}</span><div><b>You've run Dependency check yourself the last 3 times it waited.</b><p>Let it run even when the guard is on? ≈ 0.30 % of your week, once a week. Other routines still wait, and your 30 % line still holds for them.</p><div class="acts"><button type="button" class="btn primary" data-act="exemptYes">Let it run<span class="cons"> · ≈ 0.30 % a week</span></button><button type="button" class="btn tertiary" data-act="exemptNo">Keep waiting</button></div></div></div>`;
+  $("#guardSlot").innerHTML = slot;
 }
 const DAYS = {monday:"Mon 26 Oct",tuesday:"Tue 27 Oct",wednesday:"Wed 28 Oct",thursday:"Thu 29 Oct",friday:"Fri 23 Oct",saturday:"Sat 24 Oct",sunday:"Sun 25 Oct"};
 function draftRoutine(text){
@@ -2969,6 +3050,15 @@ $("#p-agent").addEventListener("click", e => {
   else if (a === "readckpt") stub("The checkpoint opens in Memory as plain Markdown: 8 sections, 1.2k tokens.");
   else if (a === "reconnect") toast("<b>In Claude Code:</b> run <code>claude mcp</code>, pick GitHub, sign in again. Bench notices by itself.", {icon:"key", ms:9000});
   else if (a === "checkgh") go("connector-back");
+  else if (a === "showlog") { const box = $("#logBox"), acts = box && box.nextElementSibling; if (!box) return; if (acts) acts.remove(); box.outerHTML = logHTML(true); const nb = $("#logBox"); nb.scrollTop = 398 * 20; nb.focus(); }
+  else if (a === "logpane") {
+    setPane(true); wsTab("screen", true);
+    const body = $("#wsBody"); body.dataset.view = "log";
+    $$("#wsPane .files [role=tab]").forEach(b => { b.setAttribute("aria-selected", "false"); b.tabIndex = -1; });
+    body.innerHTML = `<div class="term" aria-label="CI log, 500 lines">${logRows(1, 500)}</div>`;
+    body.scrollTop = 396 * 20;
+    $("#wsCap").textContent = "Jade's CI log · 500 lines · uses no tokens";
+  }
   else if (a === "undoDeny") { N.appr = null; N.userAppr = null; H.done.delete("pnpm"); paintCounts(); buildSidebar(); buildProjects(); renderNoor("default"); toast("Undone. The request is back; nothing ran.", {icon:"undo"}); }
 });
 $("#nIn").addEventListener("input", updateComposer);
@@ -3016,7 +3106,7 @@ const ROOMMSG = {
 };
 function roomMsgs(id){
   const a = AG[id] || LUMEN;
-  if (id === "lumen") return `<div class="day">Today</div>${agM("lumen here. i'm new, but i already know 18 things about how you work from your team's memory. what's first?", rcpt(["now","0.4k tokens","0.01 % of your week"], "atlas"), `<p class="t-meta ink3" style="margin:6px 4px 0">Starts with 18 notes from Bench: your PR style, your sign-off, the repo's date library, and 15 more.</p>`, {who:"lumen"})}<div class="sugg" style="padding:8px 0 0 42px"><button type="button" data-act="stub">Draft this week's release notes</button><button type="button" data-act="stub">Show me what you can do</button></div>`;
+  if (id === "lumen") return `<div class="day">Today</div>${agM("hi. i'm Lumen. i'm new, but i already know 18 things about how you work from your team's memory. what's first?", rcpt(["now","0.4k tokens","0.01 % of your week"], "atlas"), `<p class="t-meta ink3" style="margin:6px 4px 0">Starts with 18 notes from Bench: your PR style, your sign-off, the repo's date library, and 15 more.</p>`, {who:"lumen"})}<div class="sugg" style="padding:8px 0 0 42px"><button type="button" data-act="stub">Draft this week's release notes</button><button type="button" data-act="stub">Show me what you can do</button></div>`;
   const m = ROOMMSG[id] ? ROOMMSG[id]() : agM(esc(a.snip) + ".", rcpt([a.time === "Wed" ? "Wed 16:20" : a.time, "0.9k tokens", "0.03 % of your week"], "atlas"), "", {who:id});
   return `<div class="day">${a.time === "Wed" ? "Wednesday" : "Today"}</div>${m}`;
 }
@@ -3439,8 +3529,8 @@ function renderSheet(){
       <table class="spec"><thead><tr><th>Hue</th><th>Avatar</th><th>Mention</th><th>Ink on white</th><th>Ink on tint</th><th>Ink text on tint</th></tr></thead><tbody>${HUE_ORDER.map(h => { const P = HUE[h], who = Object.keys(AG).find(k => AG[k].hue === h && k !== "lea") || "noor"; return `<tr><td><b>${P.n}</b></td><td>${avatar({name:P.n, shape:AG[who].shape, hue:h}, 32, {nobadge:true})}</td><td><span class="mention" data-hue="${h}">${avatar({name:P.n, shape:AG[who].shape, hue:h}, 16, {nobadge:true, hidden:true})}${AG[who].name}</span></td><td class="num">${aa(cr(P.ink, "#ffffff"))}</td><td class="num">${aa(cr(P.ink, P.tint))}</td><td class="num">${aa(cr("#15171d", P.tint))}</td></tr>`; }).join("")}</tbody></table></section>
     <section><h2>Type</h2><p class="lede">The platform's own grotesk, two weights, six steps far apart, four at most in one view, tabular figures on every number that changes.</p>
       <table class="spec" style="margin-top:12px"><tbody>${steps.map(s => `<tr><td style="width:120px"><b>${s[0]}</b><br><span class="t-meta ink3">${s[1]}</span></td><td><span style="font:${s[4]};letter-spacing:${s[5]}">${s[3]}</span></td><td class="t-meta ink3" style="width:220px">${s[2]}</td></tr>`).join("")}</tbody></table></section>
-    <section><h2>Shape and depth</h2><p class="lede">One continuous-corner family (squircles where the engine draws them), pills for controls. Tone first; a shadow only means it floats.</p>
-      <div class="shape-demo" style="margin-top:16px"><div style="border-radius:var(--r-xs)">xs · tags, code</div><div style="border-radius:var(--r-sm)">sm · inputs, rows</div><div style="border-radius:var(--r-md)">md · cards, menus</div><div style="border-radius:var(--r-lg)">lg · bubbles, tickets</div><div style="border-radius:var(--r-xl)">xl · dialogs, panes</div><div style="border-radius:999px;corner-shape:round">pill · controls</div></div>
+    <section><h2>Shape and depth</h2><p class="lede">One continuous-corner family with three values (R3, decided): 18 for objects on the canvas, 10 for things inside them, pills for controls. Squircles where the engine draws them. Tone first; a shadow only means it floats.</p>
+      <div class="shape-demo" style="margin-top:16px"><div style="border-radius:var(--r-obj)">18 · objects<br>tickets, cards, bubbles, dialogs, menus</div><div style="border-radius:var(--r-in)">10 · inside them<br>options, inputs, wells, menu items</div><div style="border-radius:999px;corner-shape:round">pill · controls<br>buttons, chips, tags</div></div>
       <div class="shape-demo" style="margin-top:16px">${["--elev-1 · resting","--elev-2 · open ticket","--elev-3 · menus, toasts","--elev-4 · dialogs"].map((e, i) => `<div style="background:#fff;box-shadow:var(--elev-${i + 1});border-radius:var(--r-md)">${e}</div>`).join("")}</div></section>
     <section><h2>Status: a word, a badge, and the eyes</h2>
       <table class="spec" style="margin-top:12px"><thead><tr><th>State</th><th>24</th><th>40</th><th>Tag</th><th>Hero eyes</th></tr></thead><tbody>${states.map(s => `<tr><td><b>${ST[s].l}</b></td><td>${avatar("noor", 24, {status:s})}</td><td>${avatar("noor", 40, {status:s})}</td><td>${tagStatus(s)}</td><td style="width:90px">${heroHTML(AG.noor, s).replace('class="hero-av', 'style="width:56px;height:60px;margin:0" class="hero-av')}</td></tr>`).join("")}</tbody></table></section>
@@ -3513,6 +3603,9 @@ const MOMENTS = {
   "agent-first":["the first blink", () => blinkOnce($("#rHeroAv"))],
   "needs-conflict":["Karim resolves it", () => go("needs-conflict-resolved")],
   "connector-revoked":["GitHub is back", () => go("connector-back")],
+  "guard-exempt":["let it run", () => { const b = $('[data-act="exemptYes"]'); if (b) b.click(); }],
+  slow:["a minute later", () => { if (nTick) { clearInterval(nTick); nTick = null; } slowText(60); }],
+  "long-message":["show all 500 lines", () => { const b = $('[data-n="showlog"]'); if (b) b.click(); }],
   "agent-checkpoint":["the fresh start", () => { const h = $("#hero"); if (h) { h.dataset.expr = "sleepy"; setTimeout(() => { h.dataset.expr = "focused"; blinkOnce(h); }, 600); } }]
 };
 
@@ -3520,7 +3613,7 @@ const MOMENTS = {
 const JUMP = [
   ["Screens", [["home","Home · the top ticket open"],["needs","What needs you · the one inbox"],["agent","Noor · chat and workspace"],["agent-routines","Noor › Routines"],["agent-settings","Noor › Settings"],["agent-settings-memory","Noor › Settings › Memory"],["agent-takeover","Noor · take over"],["team","Bench team chat"],["split","Split view"],["project-bench","Bench dashboard"],["project-ik","InterviewKit dashboard"],["room-atlas","Atlas's room · changing rooms"],["memory","Memory · the Ledger"],["usage","Usage"],["trace","Look inside · the trace"],["tokens","System sheet"]]],
   ["Flows and moments", [["first-run","First run · four steps"],["first-run-name","First run · Atlas forms"],["home-first","Home · first use"],["new-agent","New agent · birth"],["agent-first","Lumen's first room"],["new-project","New project"],["project-new","Field Notes is set up"],["agent-green","All green · a lesson applied"],["team-memo","The debate becomes a memo"],["project-sprint-done","Sprint done · the team gathers"],["home-empty","All caught up"]]],
-  ["Worst moments", [["offline","Offline mid-run"],["offline-back","Back online · the digest"],["usage-limit","Weekly limit reached"],["limit-forecast","Limit forecast · Saturday"],["limit-reset","Monday reset"],["login-expired","Claude login expired"],["login-back","Signed in again"],["run-failed","A run failed"],["agent-error-retried","Retried, and learned"],["approval-denied","Approval denied"],["agent-checkpoint","Checkpoint at the 90 % ceiling"],["agent-checkpoint-incomplete","Checkpoint incomplete"],["connector-revoked","Connector revoked"],["connector-back","Connector back"],["needs-conflict","Merge conflict"],["needs-conflict-resolved","Conflict resolved"],["guard","Guard defers a routine"],["agent-routines-empty","No routines yet"]]]
+  ["Worst moments", [["offline","Offline mid-run"],["offline-back","Back online · the digest"],["usage-limit","Weekly limit reached"],["limit-forecast","Limit forecast · Saturday"],["limit-reset","Monday reset · a new sprint end date"],["login-expired","Claude login expired"],["login-back","Signed in again"],["run-failed","A run failed"],["agent-error-retried","Retried, and learned"],["approval-denied","Approval denied"],["agent-checkpoint","Checkpoint at the 90 % ceiling"],["agent-checkpoint-incomplete","Checkpoint incomplete"],["connector-revoked","Connector revoked"],["connector-back","Connector back"],["needs-conflict","Merge conflict"],["needs-conflict-resolved","Conflict resolved"],["guard","Guard defers a routine"],["guard-exempt","Guard · let one routine run"],["slow","Slow response · 14 s"],["long-message","A 500-line log"],["long-names","Very long names"],["agent-routines-empty","No routines yet"]]]
 ];
 function buildJump(){
   $("#jump").innerHTML = '<option value="">Jump to a state or moment</option>' + JUMP.map(g => `<optgroup label="${g[0]}">${g[1].map(o => `<option value="${o[0]}">${esc(o[1])}</option>`).join("")}</optgroup>`).join("");
@@ -3584,7 +3677,7 @@ function nav(h){
   if (h === "home") return homeScreen();
   if (h === "needs") return needsScreen();
   if (h === "agent") return noorScreen(null, "screen", "agent");
-  if (h === "agent-routines") return noorScreen(null, "routines", S.scen === "guard" ? "guard" : "agent-routines");
+  if (h === "agent-routines") return noorScreen(null, "routines", S.scen === "guard" || S.scen === "guard-exempt" ? S.scen : "agent-routines");
   if (h.indexOf("agent-settings") === 0) { SET.sec = h.slice(15) || "profile"; return noorScreen(null, "settings", h); }
   if (h === "team") return teamScreen();
   if (h === "split") return splitScreen();
@@ -3594,15 +3687,23 @@ function nav(h){
   if (h === "memory" || h === "usage" || h === "trace") return insightScreen(h);
   go(h);
 }
-const ALIAS = {"home-ticket-open":"home","limit":"usage-limit","home-limit":"usage-limit","agent-error":"run-failed","needs-denied":"approval-denied","system":"tokens","agent-takeover-open":"agent-takeover"};
-function resetWorld(){ S.scen = "normal"; H.variant = "default"; H.openKey = null; H.showAll = false; PV.sprintDone = false; T.memo = false; }
+const ALIAS = {"home-ticket-open":"home","limit":"usage-limit","home-limit":"usage-limit","agent-error":"run-failed","needs-denied":"approval-denied","system":"tokens","agent-takeover-open":"agent-takeover","agent-slow":"slow","agent-long":"long-message"};
+function resetWorld(){
+  S.scen = "normal"; H.variant = "default"; H.openKey = null; H.showAll = false; PV.sprintDone = false; T.memo = false;
+  RT.suggest = true; RT.list.forEach(r => { r.exempt = false; });
+  PROJ.ik.name = IK_NAME; NEEDS0.find(n => n.k === "yusuf").who = "Yusuf · BA · " + IK_NAME;
+}
 const ROUTES = {
   "home":() => homeScreen(),
   "home-empty":() => { H.variant = "empty"; homeScreen("home-empty"); },
   "home-first":() => { S.scen = "first"; H.variant = "first"; S.firstAsked = false; S.ringPct = null; H.firstTicket = false; H.done.delete("issue12"); homeScreen("home-first"); },
   "usage-limit":() => { S.scen = "limit"; homeScreen("usage-limit"); },
   "limit-forecast":() => { S.scen = "forecast"; homeScreen("limit-forecast"); },
-  "limit-reset":() => { S.scen = "reset"; homeScreen("limit-reset"); },
+  "limit-reset":() => { S.scen = "reset"; H.openKey = "sprint"; homeScreen("limit-reset"); },
+  "long-names":() => { S.scen = "long"; PROJ.ik.name = IK_LONG; NEEDS0.find(n => n.k === "yusuf").who = "Yusuf · BA · " + IK_LONG; SIDE.open.ik = true; homeScreen("long-names"); },
+  "slow":() => noorScreen("slow", "screen", "slow"),
+  "long-message":() => noorScreen("long", "screen", "long-message"),
+  "guard-exempt":() => { S.scen = "guard-exempt"; RT.empty = false; noorScreen(null, "routines", "guard-exempt"); },
   "login-expired":() => { S.scen = "login"; homeScreen("login-expired"); },
   "login-back":() => { S.scen = "login-back"; homeScreen("login-back"); },
   "needs-conflict":() => { H.variant = "conflict"; H.openKey = "merge"; homeScreen("needs-conflict"); },
@@ -3688,6 +3789,12 @@ function doAct(a, el){
     case "undoSetting": if (SET_PREV) { Object.assign(SET, JSON.parse(SET_PREV)); SET.saved = false; SET_PREV = null; setSec(SET.sec, true); $("#wsCap").innerHTML = stampHTML(); toast("Undone. The setting is back to what it was.", {icon:"undo"}); } return;
     case "gotIt": { const h = el.closest(".hintbubble"); if (h) h.remove(); return; }
     case "stubUndo": return toast("Undone. Atlas's decision is reversed and logged in the trace.", {icon:"undo"});
+    case "exemptYes": {
+      const d = RT.list.find(r => r.id === "deps"); d.exempt = true; renderRoutines();
+      return toast("<b>Dependency check now runs even when the guard is on.</b> ≈ 0.30 % of your week, once a week. Next run Mon 26 Oct at 09:00.", {undo:() => { d.exempt = false; renderRoutines(); toast("Undone. Dependency check waits for room again.", {icon:"undo"}); }});
+    }
+    case "exemptUndo": { const d = RT.list.find(r => r.id === "deps"); d.exempt = false; renderRoutines(); return toast("Undone. Dependency check waits for room in your week again.", {icon:"undo"}); }
+    case "exemptNo": RT.suggest = false; renderRoutines(); return toast("Kept waiting. Bench won't suggest this for Dependency check again this month.", {icon:"info"});
     case "pitch": return stub("Pitching to Atlas opens a conversation that ends in a one-page proposal. Not part of this sample.");
   }
 }

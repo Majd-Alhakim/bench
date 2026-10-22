@@ -1,6 +1,79 @@
 # UI Direction: "Apple built a Grok Bot × Dots" (draft for client review)
 
-**Status:** Draft **v0.2** (2026-10-22). v0.1 was the PM synthesis of the client's references; v0.2 applies the client's first round of UI feedback (U1–U8, [interview notes](../../requirements/interviews/2026-10-22-ui-feedback-1.md)). The D-UI decisions in §3 are confirmed with the recommended options, ADR-0001 is accepted, and the name is still deferred ("bench" stays the codename). Input to Phase 5 (UI). The low-fi flows (UX prototype v0.4) stay the structure; this defines the look and feel.
+**Status:** Draft **v0.3** (2026-10-22), for client review. v0.3 rebuilds the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec. **§0 below is the current state**; §1–§5 are kept as the v0.1/v0.2 history. v0.1 was the PM synthesis of the client's references; v0.2 applied the first round of UI feedback (U1–U8, [interview notes](../../requirements/interviews/2026-10-22-ui-feedback-1.md)). ADR-0001 is accepted, and the name is still deferred ("bench" stays the codename). The low-fi flows (UX prototype v0.4) stay the structure; this defines the look and feel.
+
+## 0. Direction v0.3 (current)
+
+**Artifact:** [`prototype/direction.html`](prototype/direction.html), one file, no network. **Brand:** [`brand/BRAND.md`](brand/BRAND.md) and [`brand/brand-board.html`](brand/brand-board.html). **System:** [`system/DESIGN-SYSTEM.md`](system/DESIGN-SYSTEM.md), [`system/tokens.css`](system/tokens.css), [`system/components.html`](system/components.html). **UX spec:** [`../ux/premium/`](../ux/premium/README.md). The 3D office concept was explored and dropped by the client; it is archived and plays no part in v0.3.
+
+### 0.1 Decided (final, applied everywhere in v0.3)
+
+| # | Decision | Where v0.3 shows it |
+|---|---|---|
+| R1 | Blue means "your call"; chat Send is a dark control | One Cobalt button per screen, always a decision (Allow once, Use nightly E2E, Join and decide, Let it run, Create Lumen). Every composer's Send is Ink. "In review" and the diff hunk lost their blue tint |
+| R2 | One inbox | The sidebar has **What needs you** only; "Decided by Atlas" is a filter on it (`#needs`). The workspace approval card is the same ticket, so resolving it anywhere clears it everywhere |
+| R3 | One corner family 18 / 10 / pill | Tokens collapse to `--r-obj` 18 (tickets, cards, bubbles, dialogs, menus, toasts, banners) and `--r-in` 10 (options, inputs, wells, menu items, the bubble's tail), plus pills for controls; continuous corners where the engine draws them. The old xs/md/xl names are aliases. **Follow-up:** `system/tokens.css` and DESIGN-SYSTEM §6 still list five radii and should collapse the same way |
+| R4 | Lowercase agent voice keeps names and code | "PR #44 open", "hi. i'm Lumen", "the Stop button… replaces Send", `VCRUNTIME140_1.dll` |
+| R5 | FYI is not counted | Counts are Decide + Meet everywhere (top bar, sidebar, Home heading, project cards, panes); For your info is listed, not counted |
+| R6 | Atlas approves learned preferences, with Undo and Forget | Home's "Your team learned 7 things this week" (each: Open, Forget, then Undo); Memory notes say "Atlas approved"; "Decided by Atlas" filter |
+| R7 | Suggest a standing grant after 3 identical allows; the same for the guard | The FYI ticket "Always allow `pnpm lint --fix` in bench?" and the new **`#guard-exempt`**: "You've run Dependency check yourself the last 3 times it waited. Let it run?" with Undo on the routine. Never for outward or reserved actions |
+| R8 | ≤ 4 type sizes and 2 weights per view | Weights are 400/600 only (a global `b, strong` rule, the command line and the workspace thumbnail lost 500). Content views use at most 12 · 15 · 20 · 28 (Home) or 12 · 13 · 15 · 20 (agent); the frame (sidebar, top bar, its banner) is a fixed frame with 12/13/15 |
+| R9 | No two agents with the same hue + shape on one screen | All 20 identities in the sample are unique pairs (checked across the sidebar, split view and Field Notes) |
+| R10 | First-run targets: Atlas's first reply < 3 min, a finished task < 5 min | `#first-run` → `#home-first`: the first answer is a real checklist from your GitHub issues and becomes the first ticket |
+| R11 | A paused sprint's end date doesn't move by itself | `#usage-limit` says so on the project card; **`#limit-reset`** now opens Maya's proposal: "Sprint 2 ran out of time while paused. New end date?" (Tue 27 Oct, or close it now) |
+| D-UI7 | Top ticket open by default | Every Home load and every inbox opens the top ticket; its decision is the screen's one blue. **Bug fixed in v0.3:** tickets with options (QA-3, issue #12, the sprint proposal) had no primary button at all, and pressing one would have thrown; now the primary follows the option you pick |
+| D-UI8 | Identity = hue × shape | 10 hues × 9 shapes; the picker dims hues already used in the project |
+| D-UI9 | No OS windows | Every menu says **Open in a new tab** (in-app); split view is in-app |
+| D-UI10 | Settings save as you go | "Saved · applies from Noor's next step · Undo" in the pane header |
+| D-UI11 / CR-006 | A routine can do anything the agent can | Routine badges come from Noor's permissions (Can edit files / Read-only); "Anything outward or reserved waits for you" |
+| P-5 | Continuous corners | Covered by R3 |
+| P-6 | "Look inside" replaces "Trace" | The client kept it: the eyes glyph + "Look inside" on every receipt, run, note and approval |
+
+### 0.2 Still open (brand stage 1), with recommendations
+
+| # | Decision | Options | Recommended, and why |
+|---|---|---|---|
+| B-2 | App icon | The lit window (dark glass, the eyes, the team's colours glowing low) · the flat Ink mark | **Lit window.** One object in a dock of flat tiles; says "a team inside a glass box" without a word; falls back to the flat mark below 32 px |
+| P-1 | Signature neutral | Porcelain + Ink · Apple Frost + Carbon | **Porcelain + Ink.** One shared undertone makes chrome, text and action read as one material; Frost reads as a borrowed Apple template |
+| P-2 | Action colour | Cobalt `#2e5bff` · Apple Blue `#0071e3` | **Cobalt.** Ownable, AA as text and as fill (5.17:1 with white), and it carries R1 ("blue is your call") |
+| P-3 | Typeface | The platform's own face · Inter everywhere | **The platform's own.** Native on each OS; identity comes from the drawn wordmark and the eyes |
+| P-4 | Pear replaces Periwinkle | Yes · keep Periwinkle | **Yes.** A blue-violet agent ink reads like a link next to Cobalt |
+| P-7 | Sound | Silent by default, 3 optional sounds · always silent · sounds on | **Silent by default.** An all-day work app; Focus and Do Not Disturb win |
+
+### 0.3 What changed from v0.2
+
+1. **Brand and system applied everywhere:** Porcelain/Ink/Cobalt, the platform's type with 6 steps and 2 weights, Pear, one continuous corner family, tone-first elevation, springs (`--spring-smooth/snappy/gentle`), the Look (agent faces, the mark and lockup, Look inside, attention glances), silent.
+2. **Every S1 and S2 coherence finding fixed** ([coherence-audit.md](../ux/premium/coherence-audit.md)): C-01 top ticket open · C-02 routine badges from permissions · C-03 "Open in a new tab" · C-04 New project with fields you type into and the consequence on Create · C-05 one ApprovalCard (the Ticket) in inbox, Home and workspace · C-06 one Receipt (`time · tokens · % of your week · Look inside`) · C-07 `pnpm test` throughout (the brand board too) · C-08 counts are Decide + Meet, one inbox · C-09 Team and Sessions on the project group, clickable crumbs · C-10 one corner family · C-11 the Ticket everywhere (compact in panes) · C-12 one status vocabulary · C-13 tag grammar Kind / Gate (outline + lock) / State (filled) · C-14 Ink Send · C-15 de-boxed agent header · C-16 one time format ("since 07:45") · C-17 crumb grammar Project › Page · C-18 Undo on every reversible toast · C-19 "Open Lumen" · C-20 "Balanced" · C-21 guard vocabulary · C-22 verb + object primaries with the consequence · C-23 Join and decide is the debate's blue.
+3. **S3s fixed:** C-24 (R8), C-26 (R4), C-27, C-28, C-30, C-31 (the draft's system line), C-32 (R9), C-34 (control edges 3.4:1), C-35 ("1 needs you" link in the header), C-36 (settings in three groups), C-37 ("uses no tokens" captions), C-38 (Watch / Take over). C-25 (spacing snaps) is mostly done; C-29 (tinted bubbles in 1:1 rooms only) is built, and still needs a line in DESIGN-SYSTEM; C-33 is the PM's render pass.
+4. **Worst moments designed per [worst-moments.md](../ux/premium/worst-moments.md)**, each with cause, what's safe, one next step and the "they caught me" detail, plus the ending (While you were away / You're signed in again / Good morning, your week reset). New in this pass: `#guard-exempt`, `#slow` (status line changes at 10 s and 60 s; Stop never moves), `#long-message` (a 500-line log shows the 12 lines around the error with the count, scrolls inside, or opens in the workspace), `#long-names` (ellipsis in the sidebar, tickets and headers; project names clamp to 2 lines), and Maya's sprint proposal on `#limit-reset`.
+5. **Intelligence layer visible:** Applied chips in replies ("Applied: your PR style… preference from 20 Oct", "keep components under 200 lines") and now on the email ticket ("Applied: your sign-off, “Best, Majd”"); the Ledger under every agent ("Together since 14 Oct · 312 runs · 46 notes · 12 lessons"), ticking when a run or lesson lands; "Your team learned 7 things this week" on Home; learned lines with Undo in chat; lessons saved from a denial and from a retry; new agents and projects start with the team's notes ("Lumen starts knowing 18 things"); Memory exports as plain Markdown.
+6. **Signature moments animated** with springs, each replayable from the demo bar's Play button, all reduced-motion safe (the same state, at rest): the morning open, resolve-and-fold with counts ticking, all caught up, the glance, allow → all green with the Applied glow, birth and the flight to the sidebar, the brief travels, the debate condenses into a memo, Atlas forms on first run, waking in resume order, the team gathers.
+7. **Bug fixed: the agent hero's ledger line.** The sticky hero faded to transparent in its own bottom 16 %, exactly where "Together since…" sits, so scrolled messages showed through under it. The hero is now solid and the fade hangs below it, over the messages.
+8. **Brand board:** the cast row's names now sit 8 px under each character's ground (each shape pulls its caption up by its own empty band), the masthead fills the first screen with the hero centred and the cast directly under it (no dead band at 1440×900), `pnpm test` throughout, and the decisions chapter shows what's open vs decided.
+
+### 0.4 Routes (all v0.2 routes still work)
+
+- **Screens:** `#home` (alias `#home-ticket-open`) · `#home-empty` · `#needs` · `#agent` · `#agent-routines` · `#agent-routines-empty` · `#agent-settings` and `#agent-settings-{model,autonomy,connectors,skills,memory,workspace,notifications,lifecycle}` · `#agent-takeover` · `#team` · `#split` · `#project-bench` · `#project-ik` · `#room-{atlas,iris,maya,omar,lina,sam,karim,jade,rana,yusuf,tala}` · `#memory` · `#usage` · `#trace` · `#tokens` (alias `#system`)
+- **Flows and moments:** `#first-run` · `#first-run-folder` · `#first-run-name` · `#first-run-team` · `#home-first` · `#new-agent` · `#agent-first` · `#new-project` · `#project-new` · `#agent-green` · `#team-memo` · `#project-sprint-done`
+- **Worst moments:** `#offline` · `#offline-back` · `#usage-limit` (aliases `#limit`, `#home-limit`) · `#limit-forecast` · `#limit-reset` · `#login-expired` · `#login-back` · `#run-failed` (alias `#agent-error`) · `#agent-error-retried` · `#approval-denied` (alias `#needs-denied`) · `#agent-checkpoint` · `#agent-checkpoint-incomplete` · `#connector-revoked` · `#connector-back` · `#needs-conflict` · `#needs-conflict-resolved` · `#guard` · `#guard-exempt` · `#slow` (alias `#agent-slow`) · `#long-message` (alias `#agent-long`) · `#long-names`
+
+### 0.5 Premium-craft rubric (v0.3)
+
+| Axis | Level | Evidence |
+|---|---|---|
+| Copy | **Staff** | Second person throughout; consequences on buttons ("Merge PR #41 · 6 files · notifies Karim and Noor", "Let it run · ≈ 0.30 % a week"); recoveries name cause, what's safe and one step; the Monday digest and "Bench never saw your password" answer the next question |
+| Visuals | **Staff** | The Look is the one custom visual language (faces, mark, Look inside, attention); nothing decorative besides the hero render, which is the agent |
+| Color | **Senior** | 60-30-10, one Cobalt decision per screen (R1), amber only for needs you, hues only for agents, every status also in words |
+| Type | **Senior** | 6-step scale, ≤ 4 sizes per content view, weights 400/600, tabular figures on every changing number, tight tracking on 20+ |
+| Structure | **Senior** | One grid and 4-pt spacing by relationship; one corner family; the hierarchy test passes on Home (the open ticket, then the list, then projects) |
+| States and recovery | **Staff** | Every worst moment in the spec is a route with an ending; failures leave a lesson that's reused later (the recovery paradox) |
+| Motion and emotion | **Senior** | Springs with stated physics; 2–3 pinned moments per flow; only characters overshoot; reduced motion keeps the information |
+| Coherence | **Senior** | One Ticket, one Receipt, one recovery card, one status vocabulary, one tag grammar, one corner family across all screens |
+| Intelligence | **Senior** | Learning is visible where it's used (Applied chips, the Ledger, learned lines) and deposits are automatic, with Undo/Forget and Markdown export |
+
+**Blockers left:** none on the rubric. **Not yet done:** the render pass at 1440×900 and 1280×800 (this session had no browser; the PM renders every route with headless Edge next), `tokens.css` and DESIGN-SYSTEM §6 to collapse to the R3 family, and dark mode (mapped in the system, not built: Phase 5b).
+
+---
 
 **Client brief (verbatim):** *"the style and feel of grok bot which I find cool and clean and how everything runs and the animations; also the style of open Ai dots is nice design also; I want ours to be mix of both and imagine that Apple have created its own one with its design system."*
 

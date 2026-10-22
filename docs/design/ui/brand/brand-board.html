@@ -36,6 +36,7 @@ body{font:15px/22px var(--font-text);letter-spacing:-.006em;color:var(--ink);-we
 .wrap{width:min(1200px,calc(100% - 160px));margin-inline:auto}
 .sq{corner-shape:var(--corner)}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+b,strong{font-weight:600}
 :focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-radius:6px}
 
 /* chapters */
@@ -71,7 +72,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .look{transition:transform .64s var(--spring-gentle)}
 
 /* masthead (was .hero, which collided with the .av.hero avatar class and made every hero avatar 900 px tall) */
-.masthead{min-height:min(100vh,860px);padding:24px 0 32px;display:flex;flex-direction:column}
+/* The masthead fills the first screen. The hero grid takes the free height and centres in it, so the space above
+   and below the hero is equal and the cast row sits directly under it: no dead band at 1440×900 or 1280×800. */
+.masthead{min-height:min(100vh,900px);padding:24px 0 28px;display:flex;flex-direction:column}
 .topbar{display:flex;align-items:center;gap:24px;height:48px}
 .topbar .grow{flex:1}
 .lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .36)}
@@ -81,17 +84,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / .2);transition:transform .32s var(--spring-snappy)}
 [aria-checked="true"] .sw{background:var(--ink)}
 [aria-checked="true"] .sw::after{transform:translateX(14px)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:72px;align-items:center;margin-top:40px}
+.hero-grid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:72px;align-items:center;margin:24px 0 16px}
 .masthead h1{font:600 96px/94px var(--font-display);letter-spacing:-.046em;margin-left:-.04em}
 .masthead .lead{font-size:20px;line-height:30px;color:var(--ink-2);max-width:30em;margin-top:28px;letter-spacing:-.012em;text-wrap:pretty}
 .masthead .note{margin-top:16px}
 .icon-fig{display:grid;justify-items:center;gap:20px}
 .icon-fig svg{filter:drop-shadow(0 30px 40px hsl(228 30% 12% / .28)) drop-shadow(0 6px 10px hsl(228 30% 12% / .16))}
 .icon-fig figcaption{text-align:center;max-width:30ch}
-/* The cast row: names sit 8 px under the avatars (one figure = avatar + caption, nothing between). */
-.team{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));margin-top:auto;padding-top:32px;align-items:end}
+/* The cast row: names sit 8 px under each character's ground shadow. Shapes end at different heights inside
+   the 100×106 hero box (a pill ends at 75, a sphere at 92), so each avatar pulls its caption up by its own
+   empty band (--pull, computed per shape). Grounds line up, names line up, and nothing floats. */
+.team{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));padding-top:8px;align-items:end}
 .team figure{display:flex;flex-direction:column;align-items:center;gap:8px}
-.team figure>.av{flex:none}
+.team figure>.av{flex:none;margin-bottom:calc(var(--pull,0px) * -1)}
 .team figcaption{text-align:center;line-height:16px}
 .team figcaption b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
 .team figcaption span{font-size:12px;color:var(--ink-3)}
@@ -387,12 +392,12 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
         <div class="job">
           <div><h3 class="h3">Look inside, anywhere</h3><p class="p">The glass box has one handle. The eyes glyph opens the trace of any message, cost, file or memory note: same glyph, same place, everywhere.</p></div>
           <div class="frag">
-            <div class="row" style="align-items:flex-start"><span id="noorChat"></span><div><div class="bubble">stop now sits in the composer and replaces send while i’m running. it’s in the diff on the right.</div>
+            <div class="row" style="align-items:flex-start"><span id="noorChat"></span><div><div class="bubble">the Stop button now sits in the composer and replaces Send while i’m running. it’s in the diff on the right.</div>
               <div class="msgmeta num"><span>09:04</span><span>·</span><span>1.8k tokens</span><span>·</span><span>0.06 % of your week</span><span class="lookin"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 6.1)" fill="currentColor"/><rect x="8.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 6.1)" fill="currentColor"/></svg>Look inside</span></div></div></div>
             <ul class="pop num">
               <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2.5h5l3 3v8H4z"/><path d="M9 2.5v3h3"/></svg><span>Read Composer.tsx</span><span>0.4k</span></li>
               <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13l1-3 7-7 2 2-7 7z"/></svg><span>Edited 3 files · +9 −3</span><span>0.9k</span></li>
-              <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4l3 3-3 3M8 11h5"/></svg><span>Ran npm test · 214 passed</span><span>0.3k</span></li>
+              <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4l3 3-3 3M8 11h5"/></svg><span>Ran pnpm test · 214 passed</span><span>0.3k</span></li>
               <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 7h4M6 10h2"/></svg><span>Wrote a lesson to memory</span><span>0.2k</span></li>
             </ul>
           </div>
@@ -400,7 +405,7 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
         <div class="job">
           <div><h3 class="h3">Attention, not alarms</h3><p class="p">When an agent needs you, its eyes go to the thing to decide. No red dot, no ping: the amber tag and the words carry the meaning, the eyes carry the feeling.</p></div>
           <div class="frag" style="background:var(--porcelain)">
-            <div class="tkt"><span id="noorGlance" class="glance"></span><div class="t"><b>Noor asks to run npm test</b><span class="row" style="gap:6px;margin-top:2px"><span class="tag attn">Needs you</span><span class="cap num">≈ 0.9 % of your week</span></span></div><span class="btn primary">Allow once</span></div>
+            <div class="tkt"><span id="noorGlance" class="glance"></span><div class="t"><b>Noor asks to run pnpm test</b><span class="row" style="gap:6px;margin-top:2px"><span class="tag attn">Needs you</span><span class="cap num">≈ 0.9 % of your week</span></span></div><span class="btn primary">Allow once</span></div>
           </div>
         </div>
         <div class="job">
@@ -538,7 +543,7 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
       <div class="ladder" id="ladder"></div>
       <div class="numerals">
         <div class="card"><span class="meta">Tabular figures</span><p class="num" style="font-size:20px;line-height:28px;margin-top:6px">28.4k tokens<br>0.9 % of your week<br>11.1k tokens</p></div>
-        <div class="card"><span class="meta">Monospace, commands only</span><p style="font:13px/20px var(--font-mono);margin-top:6px">$ npm test<br>214 passed · 3 m 02 s</p></div>
+        <div class="card"><span class="meta">Monospace, commands only</span><p style="font:13px/20px var(--font-mono);margin-top:6px">$ pnpm test<br>214 passed · 2 min 41 s</p></div>
       </div>
     </div>
   </div>
@@ -630,20 +635,25 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
 <section class="ch ink">
   <div class="wrap">
     <div class="ch-head">
-      <h2 class="ch-title">What you decide.</h2>
-      <p class="ch-lead">Each one is a proposal on top of the base you already approved. The recommended option is what this board shows.</p>
+      <h2 class="ch-title">What you still decide.</h2>
+      <p class="ch-lead">Six choices are open. Each is a proposal on top of the base you approved, and the recommended option is what this board and direction v0.3 show.</p>
     </div>
     <div class="decisions">
-      <div class="dec"><b>Direction</b><span class="cap">A · In plain sight (the Look), B · The Thread, or C · Daylight Studio</span><span class="rec">Recommended: A</span></div>
+      <div class="dec"><b>B-2 · App icon</b><span class="cap">The lit window (dark glass, the eyes, the team’s colours glowing low), or the flat Ink mark</span><span class="rec">Recommended: the lit window</span></div>
       <div class="dec"><b>P-1 · Signature neutral</b><span class="cap">Porcelain and Ink (faint blue undertone) instead of Apple Frost and Carbon</span><span class="rec">Recommended: Porcelain and Ink</span></div>
-      <div class="dec"><b>P-2 · Action colour</b><span class="cap">Cobalt #2e5bff instead of Apple Blue #0071e3; still one blue per screen</span><span class="rec">Recommended: Cobalt</span></div>
+      <div class="dec"><b>P-2 · Action colour</b><span class="cap">Cobalt #2e5bff instead of Apple Blue #0071e3; still one blue per screen, and blue means your call</span><span class="rec">Recommended: Cobalt</span></div>
       <div class="dec"><b>P-3 · Typeface</b><span class="cap">The platform’s own face (SF Pro, Segoe UI Variable), or bundle one face everywhere (Inter)</span><span class="rec">Recommended: the platform’s own face</span></div>
       <div class="dec"><b>P-4 · Pear replaces Periwinkle</b><span class="cap">Keeps blue for actions only; Karim moves to Pear</span><span class="rec">Recommended: yes</span></div>
-      <div class="dec"><b>P-5 · Continuous corners</b><span class="cap">Squircle corners everywhere the engine draws them; bubbles still read as 18 px</span><span class="rec">Recommended: yes</span></div>
-      <div class="dec"><b>P-6 · “Look inside”</b><span class="cap">The eyes glyph replaces the word “Trace” on every message, cost and file</span><span class="rec">Recommended: yes</span></div>
       <div class="dec"><b>P-7 · Sound</b><span class="cap">Silent by default; three optional soft sounds (needs you, done, handoff)</span><span class="rec">Recommended: silent by default</span></div>
     </div>
-    <div class="foot"><span class="lockup" style="--h:24px" id="footLockup"></span><span class="cap">Stage 1 of 2. Next: the hi-fi prototype rebuilt on this system, with the UX spec.</span></div>
+    <h3 class="h3" style="margin-top:56px">Already decided</h3>
+    <div class="decisions" style="margin-top:16px">
+      <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>Direction · the Look</b><span class="cap">A · In plain sight. The office concept was explored and dropped; the Look is the active direction.</span></div>
+      <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>P-5 · One corner family</b><span class="cap">Decided through R3: 18 for objects, 10 for things inside them, pills for controls; continuous corners.</span></div>
+      <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>P-6 · “Look inside”</b><span class="cap">You kept it: the eyes glyph and “Look inside” open the trace everywhere.</span></div>
+      <div class="dec" style="background:transparent;box-shadow:inset 0 0 0 1px var(--ink-line)"><b>R1–R11 and D-UI7–11</b><span class="cap">Blue is your call, one inbox, FYI not counted, Atlas approves learned notes with Undo, the top ticket opens, routines can do anything the agent can.</span></div>
+    </div>
+    <div class="foot"><span class="lockup" style="--h:24px" id="footLockup"></span><span class="cap">Stage 2: direction v0.3, the hi-fi prototype on this system (prototype/direction.html).</span></div>
   </div>
 </section>
 
@@ -803,7 +813,7 @@ const $ = s => document.querySelector(s);
 
 /* ---------- build ---------- */
 document.querySelectorAll(".lockup").forEach(el=>lockup(el, !!el.closest(".ink,.on-ink")));
-$("#heroIcon").innerHTML = iconSVG(300);
+$("#heroIcon").innerHTML = iconSVG(340);
 $("#iconBig").innerHTML = iconSVG(380);
 $("#iconDock").innerHTML = iconSVG(52);
 $("#iconTask").innerHTML = iconSVG(28);
@@ -821,7 +831,9 @@ $("#construct").innerHTML = `<svg viewBox="-8 -10 336 100" width="100%" aria-lab
   <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="7" fill="#2e5bff"><text x="282" y="3.5">ascender</text><text x="282" y="31.5">x-height</text><text x="282" y="81.5">baseline</text></g></svg>`;
 
 /* hero team, eyes follow the pointer */
-$("#team").innerHTML = CAST.map((c,i)=>`<figure>${avatar(c,84,{hero:true,cls:"breathe",bd:(i*0.53).toFixed(2)+"s"})}<figcaption><b>${c.name}</b><span>${c.role}</span></figcaption></figure>`).join("");
+const CAST_SIZE = 100;
+const pullFor = shape => { const S = SHAPES[shape], ground = Math.min(S.bottom + 5, 101) + 3; return ((106 - ground) / 106 * CAST_SIZE * 1.06).toFixed(1) + "px"; };
+$("#team").innerHTML = CAST.map((c,i)=>`<figure style="--pull:${pullFor(c.shape)}">${avatar(c,CAST_SIZE,{hero:true,cls:"breathe",bd:(i*0.53).toFixed(2)+"s"})}<figcaption><b>${c.name}</b><span>${c.role}</span></figcaption></figure>`).join("");
 const looks=[...document.querySelectorAll("#team .look")];
 let raf=0;
 addEventListener("pointermove",e=>{
@@ -889,7 +901,7 @@ const ok='<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-widt
 const no='<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l6 6M10 4l-6 6"/></svg>';
 const pairs=[
   [`<span class="h3" style="font-size:20px">What needs you <span class="tag attn num">3</span></span>`,`<span class="h3" style="font-size:20px;color:var(--ink-2)">Pending items (3)</span>`],
-  [`<span>Noor wants to run <b>npm test</b> in bench. About 3 minutes, 0.9 % of your week.</span><span class="row"><span class="btn primary">Allow once</span><span class="btn secondary">Deny</span></span>`,`<span>Permission request: tool execution (Bash). Approve?</span><span class="row"><span class="btn secondary">Yes</span><span class="btn secondary">No</span></span>`],
+  [`<span>Noor wants to run <b>pnpm test</b> in bench. About 3 minutes, 0.9 % of your week.</span><span class="row"><span class="btn primary">Allow once</span><span class="btn secondary">Deny</span></span>`,`<span>Permission request: tool execution (Bash). Approve?</span><span class="row"><span class="btn secondary">Yes</span><span class="btn secondary">No</span></span>`],
   [`<span><b>Paused: your weekly limit is reached.</b> 2 of 2 runs paused. They resume Mon 26 Oct at 09:00, and nothing is lost.</span>`,`<span>Error 429: rate limit exceeded. Something went wrong.</span>`],
   [`<span class="bubble" style="display:block">done. swapped in date-fns, 41 lines removed. tests are green.</span>`,`<span class="bubble" style="display:block">Great news! 🎉 I have successfully completed the task you requested!</span>`],
   [`<span class="sysline">${avatar(A.atlas,16)}Atlas drafted Lumen. Nothing is created until you press Create.</span>`,`<span class="sysline">Agent created successfully!</span>`],
