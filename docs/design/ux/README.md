@@ -2,9 +2,9 @@
 
 | Status | Version | Owner | Approver | Upstream |
 |---|---|---|---|---|
-| Draft (lean mode, early prototype) | 0.1 | UX Designer | Client | BRD v1.0 (baselined at G1, 2026-10-22). PRD not yet written: it runs in parallel (STATUS), so this package traces to BRD use cases (UC-xx) and rules (BR-xx). Re-check against the PRD when it lands |
+| Draft (lean mode, prototype after guide audit) | 0.2 | UX Designer | Client | BRD v1.0 (baselined at G1, 2026-10-22). PRD not yet written: it runs in parallel (STATUS), so this package traces to BRD use cases (UC-xx) and rules (BR-xx). Re-check against the PRD when it lands. v0.2 applies [`guide-audit.md`](guide-audit.md) (32 Must-fix findings) and the client's decisions D1–D6 (`docs/requirements/interviews/2026-10-22-ux-audit-decisions.md`) |
 
-**Prototype:** [`prototype/index.html`](prototype/index.html). One file, greyscale, no network. Open it in any browser by double-clicking it. Every screen has an annotation bar (purpose, primary action, UC IDs, states) with buttons that switch the screen between its states (normal, empty, loading, error and so on).
+**Prototype:** [`prototype/index.html`](prototype/index.html) (v0.2). One file, greyscale, no network. Open it in any browser by double-clicking it. Every screen has an annotation bar (purpose, primary action, UC IDs, states, and notes on stubs) with buttons that switch the screen between its states (normal, empty, loading, error and so on). Demo-only controls live in the annotation bar, or in boxes marked "Demo controls (not part of the UI)", never in the UI itself.
 
 **Out of scope here:** colour, type, brand, icons, avatars, motion and the final name. Those belong to Phase 5 (UI). The greyscale is deliberate.
 
@@ -32,14 +32,14 @@
 | RQ | Finding | Source | Insight |
 |---|---|---|---|
 | RQ1 | Bench runs on the client's own `claude login`; Bench must never show its own Claude login. "Setup friction (Claude Code must be installed and logged in)" is a named Bench weakness | BR-54, ADR-0002, competitive brief §4 | **Detect, don't ask.** First run opens by checking Claude Code and the login on its own. If something is missing, show the exact command to run and a "Check again" button, never a login form |
-| RQ1 | Grok Bot wins on friction: naming a bot and adding it to a group takes no effort. The parity bar is "create a bot in under 30 seconds" | Competitive brief §3, §6 | First run has **4 short steps** and every one has a default. The day-1 template is one click, with an editable preview. "CEO only" is equally prominent (BR-04: never pre-installed) |
+| RQ1 | Grok Bot wins on friction: naming a bot and adding it to a group takes no effort. The parity bar is "create a bot in under 30 seconds" | Competitive brief §3, §6 | First run has **4 short steps**. The day-1 template is one click, with an editable preview. "CEO only" is equally prominent (BR-04: never pre-installed). **D1:** the team step starts with nothing selected and Gmail is an opt-in tick box (one extra click, no dark pattern) |
 | RQ1 | The CEO is "the main one that I always speak to" | B2-Q9 | First run **ends in the CEO chat** with a suggested first message. The first useful result is a CEO reply to a real request |
 | RQ2 | "Whenever I ask them … they answer … the latest updates and what needs me." "What needs me" is a live list with no LLM call; the status has a fixed format (Done / In progress / Blocked / Needs you) | B2-Q11, B3-Q13, BR-25, BR-26, BR-36 | **Home = "What needs me" + the CEO chat.** The list renders instantly (0 tokens) and the CEO status loads next to it. The list never waits for the status |
 | RQ3 | The client's scenario relies on agents calling him: "The BA wants to meet you", "We have something to show you" | B4-Q3, UC-29 | **Notifications are the connective tissue.** Every "needs me" item has one verb button that opens the exact place to act (session, proposal, approval, card). The founder never has to remember where something lives (Nielsen #6: recognition over recall) |
 | RQ3 | "At any moment, I can enter any agent and see what it's doing. I can stop it and tell it to change things." Also: "a way to view this process … It's updated, and I can see it" | B4-Q3, UC-27, UC-26 | Every agent name in the app is a link to its live view, and the live view has **Stop** always visible. The dashboard is one fixed layout per project (B5-#1) |
-| RQ4 | Approvals: allow once / always / deny (Grok Bot parity). Approvals are kept out of group chats. Outward actions always need the client; there are no standing email rules; 4 reserved actions | Competitive brief §6, BR-15, BR-58, B6-#7 | **One approval inbox.** Chats show only a pointer line ("waiting for your approval → open"). Outward actions carry a text tag ("OUTWARD: leaves your machine"). "Always allow" is **shown but disabled, with the reason**, so the rule is learnable (Nielsen #5: error prevention) |
+| RQ4 | Approvals: allow once / always / deny (Grok Bot parity). Approvals are kept out of group chats. Outward actions always need the client; there are no standing email rules; 4 reserved actions | Competitive brief §6, BR-15, BR-58, B6-#7 | **One approval inbox.** Chats show only a pointer line ("waiting for your approval → open"). Outward actions carry a text tag ("OUTWARD: leaves your machine"). "Always allow" is **shown but disabled, with the reason**, so the rule is learnable (Nielsen #5: error prevention). **D3:** where "Always allow" is allowed, it grants one command pattern in one repo for one agent, says so on the button and the card, and says where to revoke it (Settings › Permissions or the agent's Autonomy tab) |
 | RQ4 | The Deputy approves most work requests for the client, and every Deputy decision is logged | BR-14, BR-21 | The inbox has a **"Decided by Atlas"** tab, so hand-off stays auditable without the founder approving everything |
-| RQ5 | Grok Bot users report surprise bills. The client wants ≥ 30 % of the weekly limit kept free and no per-agent caps | Competitive brief §2, B4-Q4, B6-#4 | **The plan meter is always in the top bar** (one number + bar). Each message shows its cost in small text. A banner appears only when the 30 % guard turns on or the limit is hit. No per-agent warnings anywhere |
+| RQ5 | Grok Bot users report surprise bills. The client wants ≥ 30 % of the weekly limit kept free and no per-agent caps | Competitive brief §2, B4-Q4, B6-#4 | **The plan meter is always in the top bar** ("Week 41 % · resets Mon 09:00 · Headroom OK"). **D4:** each message shows its cost as tokens and % of the weekly limit; no dollar figure anywhere in the client's views. A banner appears only when the 30 % guard turns on or the limit is hit. **D5:** at the limit, Bench says when work resumes and never nudges toward an API key; API key mode is mentioned only in Settings. No per-agent warnings anywhere |
 | RQ6 | Debate: 5 minutes at most, the higher one in the hierarchy decides, the decision is saved and "the group chat is deleted". Transcript archived and hidden | B5-#2, B5-C2, BR-59, BR-60 | Show the **timer and the decider at the top** from the first second. On close, show the memo and say plainly where the chat went ("archived in the trace, hidden from chats"). Otherwise the vanishing chat looks like data loss (Nielsen #1: visibility of system status) |
 | RQ7 | "I can do all of this like a tree"; "each node … one point of contact"; one home node per agent; loans instead of guests | B2-Q9, B2-Q11, B6-#12, B7-#31 | The **org tree is the main map** of the organisation. Leads are marked in text ("LEAD"). Loan copies sit in the borrowing team with a dashed outline and "on loan from …" |
 | RQ8 | The client asked for Obsidian-like effects "independent from other apps": editor, backlinks, graph, filters, stale flags | B6-MEM, UC-44 | A **three-pane memory browser** (scopes and filters / note / backlinks), with a graph toggle. Every decision memo, checkpoint and agent links into it |
@@ -75,7 +75,7 @@ One primary persona: the only user (lean mode). Grounded in interviews B1–B7; 
 | 2. Fix setup (only if needed) | Runs `claude login` in a terminal | Mild annoyance | Leaving the app; not knowing when it's done | A copyable command and "Check again". Not-installed and not-signed-in are separate states with separate instructions |
 | 3. Home folder | Accepts the default folder | "Where do my files go?" | Hidden storage | The path is shown with "agents, memory and projects are plain files here" (VIS: files on your machine) |
 | 4. Create the CEO | Names it, keeps Sonnet | Ownership: "this is my CEO" | Too many fields | 2 fields (name, model) with defaults; everything else is editable later |
-| 5. Team | Picks "Product + Dev" or "CEO only", reviews the preview, removes or edits roles | "Is this my team or a fixed preset?" | A template that feels imposed (BR-04) | Both options are equal buttons. The preview is a table where each role can be removed; a connector missing from the inventory shows a hint (UC-06 E1). Gmail offer for the CEO |
+| 5. Team | Picks "Product + Dev" or "CEO only", reviews the preview, removes or edits roles | "Is this my team or a fixed preset?" | A template that feels imposed (BR-04) | Both options are equal choices and **neither is pre-selected** (D1); Finish stays disabled with the reason "Choose how to start your team first". The preview shows Keep / Name / Role / Team, with model, connectors and autonomy behind a per-row "Details". A connector missing from the inventory shows a visible hint (UC-06 E1). Gmail for the CEO is an **unticked**, optional box. Finish shows "Creating Atlas and 6 agents…"; a write failure says nothing was created and offers Try again or another folder |
 | 6. First useful result | Lands in the CEO chat; sends the suggested first message ("Here's an idea…") or asks for status | "It works, and it knows my team" | An empty, silent screen | A welcome line from the CEO, suggested first messages, and an empty "What needs me" that explains what will show up there |
 
 **Target:** first useful result (a CEO reply) in under 3 minutes when Claude Code is already signed in `[ASSUMPTION – a target for the client to confirm]`.
@@ -88,10 +88,10 @@ One primary persona: the only user (lean mode). Grounded in interviews B1–B7; 
 | Proposal (3) | Proposal page | Reads the one-pager; approves, edits or rejects | "Is this what I meant?" | A long document | One page, three sections (problem / what to build / what the team does). Approve and Reject are the only primary actions; Reject requires a comment |
 | Project setup (3, UC-43) | Project preview | Checks the team copies and their suggested names; confirms "Create project" | "Two confirmations?" | The second confirmation may feel redundant | The preview is the second step on the same screen, with a clear "Nothing is created until you confirm" (open question Q3) |
 | Meet the BA (4–6) | What needs me → BA interview session | Clicks "The BA wants to meet you"; answers batches of questions | Engaged, like this project's interviews | Losing their place if interrupted | Progress "Question 3 of 8"; "Pause and continue later"; verbatim answers kept |
-| Documents and plan (7–8) | Dashboard | Glances at the backlog filling up | "Things are moving" | No signal that anything is happening | Dashboard team row shows working / idle per agent; the top-5 backlog updates live |
-| Build (9–10) | Dashboard, team chat, agent live view, approvals | Watches, drops into the team chat, stops and redirects a developer, approves a command | In control | Approval fatigue; not knowing who to talk to | Approvals in one inbox with a Deputy log; "Stop" always visible in the live view; team chat shows router lines with cost |
+| Documents and plan (7–8) | Dashboard | Glances at the backlog filling up | "Things are moving" | No signal that anything is happening | Dashboard team row shows each agent's status as a text tag (Idle, Thinking, Working, Waiting for you, Blocked, Paused, Stopped, Error); the top-5 backlog updates live |
+| Build (9–10) | Dashboard, team chat, agent live view, approvals | Watches, drops into the team chat, stops and redirects a developer, approves a command | In control | Approval fatigue; not knowing who to talk to | Approvals in one inbox with a Deputy log; "Stop" always visible in the live view; an agent waiting on an approval shows "Waiting for you" with a link to it; team chat shows plain system lines ("Bench asked Karim to reply…") with cost |
 | Contested point (12) | Debate session | Watches a 5-minute debate or joins and decides | Curious, slightly impatient | Debates eating tokens and time | Timer plus running cost; decider named up front; memo on close |
-| Review (11–12) | What needs me → review session | Tests, gives feedback, accepts or rejects each item | "Is it what I asked for?" | Feedback getting lost | The BA's notes are visible live in the session; each feedback item becomes a task, shown on close |
+| Review (11–12) | What needs me → review session | Tests, gives feedback, accepts or rejects each item | "Is it what I asked for?" | Feedback getting lost; closing too early | The BA's notes are visible live in the session; the current item is highlighted with its Accept as the one primary. Close review sits after the items; with items left, a confirm lists them and says they stay In review (D6). Closing ends on the dashboard with a summary: accepted, sent back, not reviewed, new tasks [view], notes [open] |
 | Repeat / done (13) | Dashboard, usage | Sees sprint 2 start on the same dashboard; checks headroom | Confidence | Running out of weekly limit | The top-bar meter; the 30 % guard banner only when it matters |
 
 **Daily loop (inside stage "Build"):** open Bench → "What needs me" (instant) and the CEO's status → resolve approvals → open one project dashboard → maybe drop into a chat or an agent → leave. Bench stays in the tray (BR-76).
@@ -105,7 +105,7 @@ One primary persona: the only user (lean mode). Grounded in interviews B1–B7; 
 A persistent left sidebar with 8 destinations, a top bar with the plan meter and the "needs me" count, and contextual links everywhere (every agent name opens its profile or live view; every cost opens the trace).
 
 ```
-Top bar:  [Bench]                          [Plan: week 41 % used ▮▮▮▯▯▯]  [Needs me: 6]
+Top bar:  [Bench]        [Week ▮▮▮▯▯▯ 41 % · resets Mon 09:00 · Headroom OK]  [Needs me: 8]
 Sidebar:
   Home ............ CEO chat + What needs me + morning status        (UC-08, UC-25, UC-29)
   Approvals (n) ... inbox · Decided by Atlas (Deputy log)             (UC-23, UC-22 A1)
@@ -124,6 +124,9 @@ Sidebar:
 - **Projects** are nodes under the CEO in the org tree (AS-6) and also have their own sidebar entry, because the dashboard is a daily destination.
 - **Proposals** are not a nav item. They live in "What needs me" while awaiting the client, and in the project's documents once approved.
 - **Direct chats** are reached from the org tree, an agent card, the dashboard team row or a task card. A "Recent chats" list under Org `[ASSUMPTION]` keeps the sidebar short.
+- **Breadcrumbs** sit top-left on every screen below the sidebar level (agent live chat, agent profile, sessions, proposal). The first crumb is the screen you came from (e.g. "Bench · Dashboard › Noor · Live chat"), so back is always one click on the left.
+- **Work items** open in a side drawer over the dashboard, not a modal. Modals are kept for decisions that must block (delete, close a review with items left, reject with a comment, escalation).
+- **Agent status vocabulary** is one set, shown as a text tag everywhere (org node, dashboard team row, live chat header, profile, card drawer): **Idle · Thinking · Working · Waiting for you · Blocked · Paused · Stopped · Error**. Lifecycle (Draft, Paused, Archived) is shown separately.
 
 ### 4.2 Objects and how they relate
 
@@ -170,18 +173,19 @@ flowchart TD
   B -->|installed, not signed in| E2[Error: run 'claude login' + copy + Check again] --> B
   B -->|ANTHROPIC_API_KEY found| W1[Warning: Bench strips it; uses your login] --> C
   B -->|found + signed in| C[Choose Bench home folder]
-  C -->|folder not writable| E3[Error: pick another folder] --> C
+  C -->|folder not writable| E3[Field error: cause + 'Use C:\Users\you\Bench'] --> C
   C --> D[Create the CEO: name + model]
   D -->|name empty/too long| E4[Field error] --> D
-  D --> T{Team}
-  T -->|CEO only| H
-  T -->|Product + Dev| P[Template preview: edit / remove roles]
-  P -->|connector missing| E5[Role shown without it + hint] --> P
-  P --> G{Gmail in inventory?}
-  G -->|yes| G1[Offer: connect Gmail to CEO] --> H
-  G -->|no / skip| H
-  P -->|write fails| E6[Error: nothing created, retry] --> P
-  H[Home: CEO welcome + suggested first messages<br/>empty WNM: 'Nothing needs you yet']
+  D --> T{Team: nothing pre-selected D1<br/>Finish disabled with reason}
+  T -->|CEO only| GM
+  T -->|Product + Dev| P[Template preview: Keep / Name / Role / Team<br/>Details per row]
+  P -->|connector missing| E5[Role shown without it + visible hint] --> P
+  P --> GM{Gmail in inventory?}
+  GM -->|yes| G1[Optional box, unticked D1] --> F
+  GM -->|no| F
+  F[Finish] --> CR[Loading: 'Creating Atlas and 6 agents…']
+  CR -->|write fails| E6[Error: nothing created, choices kept<br/>Try again / Choose another folder] --> F
+  CR -->|ok| H[Home: CEO welcome + suggested first messages<br/>empty WNM: 'Nothing needs you yet' + 'Pick a suggested message'<br/>toast with 'Open Org tree']
 ```
 
 ### F2. Idea → proposal → project (UC-12, UC-43, UC-29)
@@ -198,10 +202,10 @@ flowchart TD
   P -->|Edit text| P
   P -->|Park| K[Parked; can reopen]
   P -->|Approve| V[Project preview: team copies + suggested names]
-  V -->|name clash / empty| E2[Field error] --> V
+  V -->|name clash / empty| E2[Inline field error under the name, aria-invalid:<br/>'Maya is already used by your PM. Pick another name'] --> V
   V -->|Cancel| A2[Proposal stays Approved, not sent]
   V -->|Create project| X{Create}
-  X -->|file write fails| E3[Error: rolled back, retry] --> V
+  X -->|file write fails| E3[Error: rolled back, proposal stays approved<br/>Try again / Choose another Bench folder] --> V
   X -->|ok| Y[Project Active: dashboard empty state<br/>'No sprint started'; PM has 'take over proposal']
   Y --> Z[Later in WNM: 'The BA wants to meet you']
 ```
@@ -217,7 +221,7 @@ flowchart TD
   C -->|contested point| DB[Debate inside session, F7]
   B -->|client pauses| PZ[Paused; resumes at next unanswered question]
   D -->|done| N[Notes written: verbatim + summary; PM told]
-  N --> CL[Session closes: chat leaves views,<br/>transcript archived; notes linked from dashboard]
+  N --> CL[Session closes → Bench dashboard with a close summary:<br/>answered / open questions, notes link, chat archived in Trace]
   B -->|usage limit| L[Saved; resumes after reset]
 ```
 
@@ -227,17 +231,20 @@ flowchart TD
 flowchart TD
   A[Open Bench / tray] --> B[WNM list renders instantly, 0 tokens]
   A --> S[CEO status: loading 'Collecting team summaries…']
-  S -->|ok| S1[Done / In progress / Blocked / Needs you, links]
+  S -->|ok| S1[Done / In review / In progress / Blocked / Needs you, links]
   S -->|usage limit| S2[Cached summaries with their age]
-  B -->|empty| B0[Empty: 'Nothing needs you. Team is working on 6 items']
-  B --> I{Item type}
+  B -->|first use| B1[Empty: 'Nothing needs you yet' + 'Pick a suggested message']
+  B -->|cleared| B0[Empty: 'All clear. The team is working on 6 items' + 'Open Bench dashboard']
+  B --> O[Rank D2: blocked > outward/reserved > other approvals > meetings > proposals > FYI; ties by age<br/>Groups Decide / Meet / For your info; top 5 + 'Show all'<br/>Top item's verb = the only primary]
+  O --> I{Item type}
   I -->|approval| AP[Approval inbox, F5]
   I -->|meeting request| MS[Session, F3/F7]
   I -->|proposal| PR[Proposal, F2]
   I -->|email draft| EM['Send it or change it?']
   I -->|blocked / escalation| ES[Escalation card: history, options]
-  I -->|payment need| PY[Pay outside Bench → Mark done]
-  I -->|guard on| U[Usage, F9]
+  I -->|payment need| PY[Review payment → pay outside Bench → Mark done]
+  I -->|FYI: guard on| U[Usage, F9]
+  I -->|FYI: debate running| DW[Watch debate, F7]
 ```
 
 ### F5. Resolve an approval (UC-23, UC-22, BR-15, BR-57, BR-58)
@@ -250,24 +257,28 @@ flowchart TD
   B -->|payment| PY[Not approvable: WNM payment item]
   C --> O{Client choice}
   O -->|Allow once| X[Runs; agent told; logged]
-  O -->|Always allow| G[Grant created] --> X
-  O -->|Always on outward email| N[Disabled with reason: no standing email rules]
+  O -->|Always allow this command in repo D3| G[Grant: one agent, one command pattern, one repo<br/>card states the scope + 'Revoke in Settings › Permissions or Agent › Autonomy'] --> X
+  O -->|Always on outward / reserved| N[Disabled with reason: no standing rules]
   O -->|Edit then allow| X
   O -->|Deny + reason| Y[Agent adapts]
-  X -->|fails after approval| F[Error on card; counts as failed attempt]
-  A2[Inbox with nothing pending] --> E[Empty: 'Nothing waiting for you'; link to Deputy log]
+  X -->|fails after approval| F[Plain cause + 'Noor will close it and try again; nothing for you to do'<br/>Retry now / Open Noor; raw error under Details]
+  A2[Inbox with nothing pending] --> E[Empty: 'Nothing is waiting for you' + 'See what Atlas decided']
+  A3[Filter with no match] --> NR[No results: 'No payment requests. 3 others are waiting' + Show all]
+  G --> RV[Settings › Permissions: Revoke, applies immediately]
 ```
 
 ### F6. Watch, stop, redirect an agent (UC-27, UC-09)
 
 ```mermaid
 flowchart TD
-  A[Click any agent name] --> B[Agent live chat<br/>loading: 'Connecting to run…']
-  B -->|idle| B0[Empty: 'Idle. Give Noor a task']
-  B -->|running| R[Live: task, step, tool calls, files, tokens, context %]
-  R -->|Stop| S[Stopping at next safe point…]
-  S -->|ok| ST[Stopped]
-  S -->|shell cmd can't be undone| E1[Says so; agent reports what it did] --> ST
+  A[Click any agent name] --> B[Agent live chat<br/>loading: 'Connecting to Noor's run…']
+  B -->|Idle| B0[Empty: 'Idle. Give Noor a task']
+  B -->|Waiting for you| WA[Pointer: 'Noor asks to run rm -rf node_modules/.vite in bench'<br/>primary: Open approval; Stop still available] --> F5[Approvals, F5]
+  WA -->|Stop| S
+  B -->|Working| R[Live: task, step, tool calls, files, tokens + % of week, context %]
+  R -->|Stop| S[Stopping: waiting for 'pnpm lint --fix' to finish<br/>usually under a minute; no new step will start]
+  S -->|ok| ST[Stopped: 'No further tool call will start. Tell Noor what to change']
+  S -->|shell cmd already ran| E1[Stopped, but the command changed 2 files and can't be undone;<br/>Noor lists what it changed] --> ST
   ST -->|new instruction| R2[Running with redirect; logged to team memory]
   ST -->|Cancel task| C[Task Cancelled; lead informed]
   B -->|archived agent| E2[History read-only, no composer]
@@ -279,19 +290,22 @@ flowchart TD
 flowchart TD
   A[Point contested in chat / review / task] --> B[Debate opens: topic, participants,<br/>decider named, timer 5:00, cost 0]
   B --> C[Participants argue; cost per message]
-  C -->|agree early| M[Memo: decision, attendees, rationale]
+  C -->|decider declares agreement early| M[Memo: decision, attendees, rationale]
   C -->|5:00 reached or 100k token cap| D[Decider decides] --> M
-  C -->|client joins| CJ[Client is highest rank → client decides] --> M
+  C -->|client presses 'Join, you'll be the decider'| CJ[Client is highest rank → 'Declare the decision now'] --> M
   C -->|usage limit| P[Timer paused; resumes after reset] --> C
   C -->|client cancels| K[Memo: cancelled + positions]
   D -->|major decision| W[Recommendation → WNM for client confirm]
   M --> CL[Close: chat removed from views; transcript archived;<br/>memo saved to node memory, linked from origin]
   R[WNM: 'We have something to show you'] --> RS[Review session: PM presents, BA takes notes live]
-  RS --> AC{Per item}
+  RS --> AC{Per item; current item highlighted}
   AC -->|Accept| DN[Done; weekly accepted count +1]
   AC -->|Reject + comment| RJ[Back to same agent; comment in its memory]
   RS -->|build won't start| E1[PM records; Dev lead task]
-  RS --> CL2[Close: notes + new tasks shown, chat archived]
+  RS -->|Close review, all reviewed| CL2
+  RS -->|Close review, items left D6| CF[Confirm lists the items:<br/>'They stay In review; Maya will ask again'] -->|Close review| CL2
+  CF -->|Keep reviewing| RS
+  CL2[Dashboard close summary: accepted / sent back / not reviewed,<br/>new tasks view, notes open, chat archived in Trace]
 ```
 
 ### F8. Project dashboard (UC-26, UC-16)
@@ -299,7 +313,7 @@ flowchart TD
 ```mermaid
 flowchart TD
   A[Open project] --> L[Loading skeleton]
-  L -->|ok| D[Team row · Top 5 backlog · Sprint To Do / In Progress / Done]
+  L -->|ok| D[Needs you on this project: verbs, first one primary<br/>Team row with status tags · Top 5 backlog · Sprint To Do / In Progress / Done]
   L -->|can't refresh| E[Last loaded state + time + warning]
   D -->|no sprint yet| N[Empty sprint: 'No sprint started'; backlog shown]
   D -->|no backlog| N2[Empty: 'Maya is preparing the backlog']
@@ -319,9 +333,10 @@ flowchart TD
   F -->|< 30 %| G[Guard ON: routines + daily refresh deferred<br/>banner + WNM item]
   G -->|Run now on one item| G1[Runs once; guard stays on]
   G -->|forecast recovers / weekly reset| OK2[Guard off; deferred work runs; client told]
-  F -->|limit reached| L[All agents stop at safe point; banner with reset time; paused list]
+  F -->|limit reached| L[All agents stop at safe point; status Paused;<br/>banner with resume time 14:00; paused list in resume order<br/>no API-key nudge D5]
   L -->|reset| RS[Work resumes in pause order; client told]
-  A -->|usage data unreadable| E[Meter: 'Ledger only' note; guard uses ledger]
+  A -->|usage data unreadable| E[Meter: 'Ledger only' note; guard uses ledger; Check again]
+  A -->|first week, no runs| N0[Empty: 'No usage this week yet' + Talk to Atlas]
 ```
 
 ### F10. Org editing and agent loan (UC-01, UC-02, UC-03, UC-47)
@@ -335,7 +350,7 @@ flowchart TD
   AA --> SV[Save = client action; agent Active]
   N --> LC[Lifecycle: Pause / Archive / Duplicate / Delete typed confirm]
   LC -->|pause/archive| T[Open tasks return to lead]
-  N --> LN[Request loan of agent for team X]
+  N --> LN[Request loan from 'More actions'; status shown inline in the side panel]
   LN --> R[Requested] -->|owning lead declines| DC[Declined + reason]
   R -->|approves| CP[Checkpoint, save only<br/>incomplete → wait] --> CA[Copy active, dashed, 'on loan from …']
   CA -->|Done / end early| MB[Merge-back to original] -->|merge fails| E2[Retry; not deleted]
@@ -350,20 +365,20 @@ flowchart TD
 
 | # | Screen | Purpose | Primary action | Use cases | States in the prototype |
 |---|---|---|---|---|---|
-| 1 | First run (4 steps) | Get from install to a working CEO | Continue | UC-06, UC-08 E1, BR-54 | checking, found, not installed, not signed in, API key warning; template preview; Gmail offer |
-| 2 | Home | Morning status, what needs me, talk to the CEO | Act on the top "needs me" item / send to CEO | UC-08, UC-12, UC-25, UC-29 | normal, empty (first day), status loading, usage limit (cached) |
-| 3 | Org tree and editor | See and change the organisation | Add agent | UC-01–UC-07, UC-43, UC-47 | normal, CEO only (empty), loading, error (rolled back); loan stepper |
-| 4 | Agent profile | See and change everything about one agent | Save changes | UC-02–UC-04, UC-21, UC-22, UC-32, UC-35, BR-66 | normal, draft (from CEO), paused, archived (read-only), delete confirm |
-| 5 | Agent live chat | Watch, stop and redirect an agent | Stop / Send instruction | UC-09, UC-27, UC-28 | running, stopping, stopped, idle (empty), archived |
+| 1 | First run (4 steps) | Get from install to a working CEO | Continue (one per step); Finish once a team start is chosen | UC-06, UC-08 E1, BR-04, BR-54 | checking, found, not installed, not signed in, API key warning, folder not writable, creating, couldn't create; nothing pre-selected; template preview (4 columns + Details); Gmail opt-in |
+| 2 | Home | Morning status, what needs me, talk to the CEO | The top "needs me" item's verb (only primary, large); Send when the list is empty | UC-08, UC-12, UC-25, UC-29 | normal (grouped Decide / Meet / For your info, top 5 + Show all), first use, cleared, status loading, usage limit (cached) |
+| 3 | Org tree and editor | See and change the organisation | Add agent | UC-01–UC-07, UC-43, UC-47 | normal, CEO only (empty), loading, error (rolled back); loan inline in the side panel; edit actions under "More actions" |
+| 4 | Agent profile | See and change everything about one agent | Save changes (Draft: Save and create) | UC-02–UC-04, UC-21, UC-22, UC-32, UC-35, BR-66 | 6 tabs; active, draft, paused, archived (read-only), save failed; unsaved-changes count and leave guard; standing grants with Revoke; delete confirm |
+| 5 | Agent live chat | Watch, stop and redirect an agent | Working: Stop · Waiting for you: Open approval · Stopped: Send instruction | UC-09, UC-27, UC-28 | connecting, working, waiting for you, stopping (slow), stopped, stopped (command can't be undone), idle (empty), archived |
 | 6 | Project team chat | Watch and steer the project team | Send / assign with @mention | UC-10, UC-13, UC-11 A5 | participant, observer, empty, error |
-| 7 | Meeting session | Interview, review or 5-minute debate | Answer / Accept-Reject / Agree | UC-11, UC-24, UC-30, UC-31 | debate running, decider decides, memo; interview; review; paused |
-| 8 | Proposal one-pager | Confirm the CEO understood the idea | Approve (→ project preview) | UC-12, UC-43 | awaiting, rejected (revising), approved → preview, created, error |
-| 9 | Project dashboard | Where the project is right now | Open card / Full backlog | UC-26, UC-16, UC-24 | normal, no sprint, loading, stale data, new project (empty) |
-| 10 | Approval inbox | Decide what agents may do | Allow once | UC-23, UC-22 A1, BR-15, BR-57, BR-58, BR-64 | normal, empty, Deputy log, action failed |
-| 11 | Trace and cost | See every step and its cost | Expand a step | UC-28, UC-07, BR-38, BR-60 | normal, archived transcript, past retention, loading |
-| 12 | Usage meter | Keep ≥ 30 % weekly headroom | Run now / Open runs | UC-40, UC-41, UC-42 | OK, guard on, limit reached, ledger only |
-| 13 | Memory browser | Read and edit what agents remember | Save note | UC-21, UC-44, UC-45, UC-46 | note, graph, stale flag, search, index rebuilding |
-| 14 | Settings | Set the checkpoint threshold and system behaviour | Save | BR-66, BR-38, BR-52, BR-76, UC-32 | normal, out-of-range error |
+| 7 | Meeting session | Interview, review or 5-minute debate | Debate: Join (you'll be the decider) → Review memo and close · Interview: Answer · Review: Accept the current item → Close review | UC-11, UC-24, UC-30, UC-31 | debate running, decider declared agreement, time's up, memo; interview; review (+ close confirm with items left); paused |
+| 8 | Proposal one-pager | Confirm the CEO understood the idea | Approve (→ project preview → Create project) | UC-12, UC-43 | awaiting, rejected (revising), approved → preview (inline name errors), created, error (Try again / Choose another folder) |
+| 9 | Project dashboard | Where the project is right now | First verb in "Needs you on this project" | UC-26, UC-16, UC-24 | normal, no sprint, loading, stale data, new project (empty); close summaries after a review or interview; work item drawer |
+| 10 | Approval inbox | Decide what agents may do | The first card's main action | UC-23, UC-22 A1, BR-15, BR-57, BR-58, BR-64 | normal, empty, filter with no results, Deputy log, action failed (plain cause + Retry now); scoped "Always allow" (D3) |
+| 11 | Trace and cost | See every step and its cost | Expand a step | UC-28, UC-07, BR-38, BR-60 | normal, no runs yet, loading, can't read, past retention, archived transcript; working Files only / Commands only filters with no-results |
+| 12 | Usage meter | Keep ≥ 30 % weekly headroom | Run now / Open runs | UC-40, UC-41, UC-42 | OK, first week (no data), guard on, limit reached (resume time, no API nudge), ledger only (Check again); costs in tokens and % of week |
+| 13 | Memory browser | Read and edit what agents remember | Edit → Save note | UC-21, UC-44, UC-45, UC-46 | note, no notes yet, graph (text labels for open and stale), stale flag (Delete confirm + Undo), search no-results (Clear search / Show all scopes), index rebuilding; list grouped by recency, 10 + Show all |
+| 14 | Settings | Set the checkpoint threshold and system behaviour | Save settings (one for the page) | BR-66, BR-38, BR-52, BR-76, UC-32 | normal, out-of-range error, unsaved-changes indicator; Permissions (grants, Revoke); API key mode (the only place it is mentioned) |
 
 **What the prototype does not decide:** visual hierarchy beyond greyscale weight, iconography, motion, the layout grid or the final copy tone. Phase 5 decides those.
 
@@ -372,15 +387,17 @@ flowchart TD
 ## 7. UX principles
 
 1. **What needs me comes first, and it's instant.** The live list never waits for an LLM (BR-36). Every item has one verb that takes you exactly where to act.
-2. **One obvious next step per screen.** One primary button per screen and per card (Krug). Secondary actions are text links.
-3. **Never hide what an agent did.** Every message has a cost and a "Trace" link; every agent name opens its live view; system services show as labelled lines (BR-38, BR-39).
+2. **One obvious next step per screen.** Exactly one primary (filled) button per screen (Krug, D2). In lists of cards, only the current or first card's action is filled. Selected toggles and filters use an outline with a check mark, never the primary fill. Modals and drawers have their own single primary.
+3. **Never hide what an agent did.** Every message has a cost and a "Trace" link; every agent name opens its live view; system services show as plain, labelled lines ("Bench asked Karim to reply", "Digest updated"); their technical names stay in the Trace and Settings (BR-38, BR-39).
 4. **Stop is always one click away.** On any running agent, live view and session (UC-27, UC-11 E4).
 5. **Explain a rule where it applies.** Disabled options stay visible with the reason ("Always allow is off for emails to other people: every email needs you"). Rules become learnable, not mysterious (BR-15, BR-58).
 6. **Nothing vanishes silently.** When a session closes, say what was kept (the memo), where the chat went (the archive) and where to find it (BR-60).
-7. **Cost is visible, not loud.** A meter in the top bar and small costs on messages; banners only for the 30 % guard and the limit (B6-#4).
+7. **Cost is visible, not loud.** A meter in the top bar with its reset time, and small costs on messages in tokens and % of the weekly limit, never in dollars (D4); banners only for the 30 % guard and the limit, and the limit banner gives the resume time without nudging toward paid API use (D5, B6-#4).
 8. **Defaults for everything, files underneath.** Every setting has a default; every agent, memo and note can be opened as a file (VIS principle 2).
 9. **Same place, changing content.** The project dashboard keeps one layout across sprints (B5-#1); the founder learns it once.
-10. **Business words, not system words.** CEO, lead, team, loan, freelancer, meeting; not "subagent", "session id" or "MCP" outside the details.
+10. **Business words, not system words.** CEO, lead, team, loan, freelancer, meeting; not "subagent", "session id", "MCP", "Router" or raw error codes outside the details.
+11. **One status vocabulary, always as text.** Idle · Thinking · Working · Waiting for you · Blocked · Paused · Stopped · Error, on every screen that shows an agent. "Waiting for you" always links to the request.
+12. **Endings say what happened and link to it.** A toast or summary that reports something created carries its link and stays at least 8 s (10 s with an action); closing a review or interview ends on a dashboard summary, not a toast.
 
 ---
 
@@ -390,17 +407,30 @@ The client tries these tasks on the prototype, thinking aloud or noting where th
 
 | # | Task (as given to the client) | Covers | Success criteria |
 |---|---|---|---|
-| T1 | "You've just installed Bench. Get to the point where you can talk to your CEO with your day-1 team, but without QA for now." | F1, UC-06 | Reaches the CEO chat in ≤ 6 clicks without help; removes QA in the template preview; can say where Bench stores its files. **Fail if** they look for a login form or are unsure the CEO uses their Claude login |
+| T1 | "You've just installed Bench. Get to the point where you can talk to your CEO with your day-1 team, but without QA for now." | F1, UC-06 | Reaches the CEO chat in ≤ 6 clicks without help (Continue, Continue, Create Atlas, pick the template, untick QA, Finish); picks the team start themselves, since nothing is pre-selected; leaves Gmail off or ticks it knowingly; can say where Bench stores its files. **Fail if** they look for a login form, are unsure the CEO uses their Claude login, or think Gmail was connected without them choosing it |
 | T2 | "Tell the CEO about a new idea and get it to the point where a team is working on it." | F2, UC-12, UC-43 | Finds the proposal from "What needs me"; approves; understands that "Create project" is a second step; ends on the new project's dashboard. **Fail if** they think approving alone created the project, or can't find the proposal |
-| T3 | "It's the morning. What needs you today? Deal with the most important item, and make sure no email goes out to a client without you." | F4, F5, UC-25, UC-23 | Names at least 3 "needs me" items within 30 s of opening; resolves an approval; spots the OUTWARD tag on the email and explains why "Always allow" is disabled |
-| T4 | "Noor, the developer, is going the wrong way. Make her stop and use the existing date library instead. Then find out what her last run cost." | F6, UC-27, UC-28 | Reaches Noor's live view in ≤ 2 clicks from the dashboard; stops; redirects; opens the trace and reads the run's cost. **Fail if** they can't tell whether she stopped |
-| T5 | "Your team disagrees on a design point. Let them debate and find out what was decided afterwards, and where the chat went." | F7, UC-11, UC-44 | Sees the timer and who decides; after the close, can find the decision memo in Memory and says the chat was archived in the trace. **Fail if** they think the conversation was lost |
+| T3 | "It's the morning. What needs you today? Deal with the most important item, and make sure no email goes out to a client without you." | F4, F5, UC-25, UC-23 | Names at least 3 "needs me" items within 30 s of opening; handles the top Decide item (the blocked QA-3, the only filled button) or explains why it ranks first; spots the OUTWARD tag on the email and explains why "Always allow" is disabled; says what "Always allow" on Noor's request would cover (that command, in repo bench) and where to revoke it. **Fail if** they think "Always allow" on Noor's request allows any shell command |
+| T4 | "Noor, the developer, is going the wrong way. Make her stop and use the existing date library instead. Then find out what her last run cost." | F6, UC-27, UC-28 | Reaches Noor's live view in ≤ 2 clicks from the dashboard; stops; reads "Stopped" on the status tag; redirects; opens the trace and reads the run's cost in tokens and % of the week. **Fail if** they can't tell whether she stopped, or read the cost as a bill |
+| T5 | "Your team disagrees on a design point. Let them debate and find out what was decided afterwards, and where the chat went." | F7, UC-11, UC-44 | Sees the timer and who decides; joins as decider or lets time run out (annotation state "Debate: time's up" skips the wait); after the close, can find the decision memo in Memory and says the chat was archived in the trace. **Fail if** they think the conversation was lost |
 
-**Observations and changes:** to be filled in after the client's walkthrough (Phase 4 review, before G4).
+**Observations and changes:** client walkthrough observations to be filled in after the Phase 4 review (before G4). Changes so far are logged below.
+
+### Changes log
+
+| Version | Date | Source | Changes |
+|---|---|---|---|
+| 0.1 | 2026-10-22 | First prototype | 14 screens, 10 flows, validation tasks T1–T5 |
+| 0.2 | 2026-10-22 | [`guide-audit.md`](guide-audit.md) (32 Must-fix-before-G4 findings, all fixed; 8 Phase-5 findings handed to UI) and client decisions D1–D6 | **D1** first run: nothing pre-selected, Finish disabled with a reason until a team start is chosen, Gmail unticked and optional. **D2** What needs me ranked blocked → outward/reserved → other approvals → meetings → proposals → FYI (ties by age), grouped Decide / Meet / For your info, top 5 + Show all; the top verb is the only primary on Home (composer Send is secondary unless the list is empty). **D3** "Always allow this command in bench" grants one agent one command pattern in one repo, states the scope on the card, links to Settings › Permissions and the agent's Autonomy tab, where it can be revoked. **D4** all costs in tokens and % of the weekly limit; dollar figures removed from the client's views. **D5** limit banners show the resume time and no API-key nudge; API key mode appears only in Settings. **D6** a review can close with items unreviewed after a confirm that lists them; they stay In review and are listed in the review notes. **Also:** one agent status vocabulary as text tags everywhere, with "Waiting for you" linking to the request (Noor's live view links to her pending approval); a distinct selected style for toggles and filters (outline + check mark); exactly one primary per screen; breadcrumbs on drill-down screens; review and interview end on a dashboard close summary with links; toasts carry links and stay longer; Approvals failure in plain language with Retry now and Details; filter no-results; inline name errors on the project preview; first-run folder, creating and write-failure states; live chat connecting, waiting, slow-stop and can't-undo states; debate primary is "Join (you'll be the decider)" and demo controls moved to the annotation bar; Org panel actions under "More actions" and loans inline; dashboard "Needs you on this project" strip; work items in a drawer; empty, no-results and error states for Trace, Usage and Memory; agent profile in 6 tabs with an unsaved-changes count and leave guard; plain system lines in chats; memory delete with confirm and Undo; graph labels for open and stale; memory list grouped by recency with Show all; one Save on Settings; dead affordances removed or marked as stubs in the annotation |
 
 ---
 
 ## 9. Open questions and decisions needed (for the client)
+
+**Resolved:** D1–D6 from the guide audit (2026-10-22, all recommended options), applied in v0.2. Q1–Q10 below are still open.
+
+**New for the client (raised by v0.2):**
+- **Q11. Dollar price on the payment request.** D4 removes dollar figures from the client's views. The Figma seat request still shows "about $15/month (Figma's price, paid by you outside Bench)", because the client can't decide on a purchase without the price. Keep this one exception for third-party purchases, or drop the price? Prototype default: keep it.
+- **Q12. Where non-outward work requests and payments rank in What needs me.** D2 names blocked, outward/reserved approvals, meetings, proposals and FYI. The prototype puts ordinary work requests and payment requests right after outward/reserved approvals (still in Decide). It also shows groups in the order Decide, Meet, For your info, so a proposal (Decide) appears above meetings on screen even though it ranks below them; the rank decides the top item and which 5 show. Confirm both.
 
 | # | Question | Why it matters | Prototype default |
 |---|---|---|---|
