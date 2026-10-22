@@ -79,3 +79,16 @@
 - If the "assistant" is a *permanent* agent, creating it still needs the client (C3). The CEO may hire a *freelancer* assistant on its own.
 
 **All other §10 items:** the BA's proposed defaults are accepted for now and carried into the PRD/SRS. The client will correct them against the prototype.
+
+## Addendum: context checkpoint (B6-CTX, 2026-10-22)
+> something that all the agents should do is when they reach 80% of there context limit (out of 1M) they should to save their work and update their memory file and then auto compact, and that would help in saving usage limit
+
+**Recorded:** every agent, at **80% of its context window**:
+1. saves its work in progress
+2. updates its memory (private, plus a team work-log entry)
+3. auto-compacts
+
+**PM notes:**
+- The threshold is a per-agent setting, default 80%.
+- The tech lead will verify in the SRS how the Agent SDK's compaction threshold and its `PreCompact` hook support "save, then compact".
+- The tech lead will also measure whether an earlier default saves more usage. Every turn re-sends the whole context, so a smaller context is cheaper on every turn, even with prompt caching.
