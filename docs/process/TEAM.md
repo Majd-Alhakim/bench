@@ -7,6 +7,7 @@ The client (founder) talks to the **Product Manager**: the main Claude session i
 | **Client** | the founder | Their goals, users, taste | Answers, approvals, UAT verdicts | — |
 | **Product Manager** | main session (`product-manager` for drafting) | Value, scope, priorities, the whole flow | PRD, backlog, sprint plans, release notes, status | Approve its own gates |
 | **Business Analyst** | `business-analyst` | Complete, unambiguous requirements; fit to need | Interview questions, BRD, use cases, acceptance criteria, UAT scripts | Design UI or write code |
+| **Reverse Engineer** | `reverse-engineer` | How competitors and reference products really work; evidence over hype | Teardowns, finding ledgers, Steal/Avoid/Beat, proposed BRD items (`competitor-teardown` skill) | Decompile or intercept third-party products; change the BRD itself |
 | **UX Designer** | `ux-designer` | Users: simple, smooth, intuitive; evidence from research | Personas, journeys, IA, flows, wireframes, low-fi prototype, usability notes | Choose colors or brand |
 | **UI Designer** | `ui-designer` | Beauty, brand, emotion, consistency | Naming options, brand, design system, avatars, motion, hi-fi prototype | Change flows without UX |
 | **Tech Lead** | `tech-lead` | Feasibility, architecture, quality, security | SRS (with BA), ADRs, task breakdown, code review | Add scope |

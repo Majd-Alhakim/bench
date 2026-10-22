@@ -20,6 +20,7 @@ How this project moves from idea to shipped product. It follows the classic BA �
 |---|---|---|---|---|---|
 | 0 | **Problem & validation** | PM + BA | Problem statement, target users, competitors, feasibility spikes | `/discovery` | G0: "This is the problem, worth solving" |
 | 1 | **Requirements gathering** | Business Analyst | Interview notes → **BRD** (roles, definitions, use cases) | `/discovery`, `/brd` | G1: BRD approved |
+| 1b | **Competitor teardown** (before the BRD is baselined) | Reverse Engineer | Teardowns of competitors and reference products (public evidence only, REA method) → Steal/Avoid/Beat → **proposed** BRD items for the client | `/teardown` | Feeds G1: the client accepts or rejects the proposed items |
 | 2 | **Product definition** | Product Manager | **PRD** (goals, scope, MVP cut, metrics, release plan) | `/prd` | G2: PRD approved |
 | 3 | **Specification** | Tech Lead + BA | **SRS**: functional (FR) + non-functional (NFR) requirements, traceability to use cases; ADRs | `/specs` | G3: Specs approved |
 | 4 | **UX design** | UX Designer | Personas, journeys, information architecture, user flows, **wireframes / clickable prototype** | `/design-ux` | G4: Flows and wireframes approved |
