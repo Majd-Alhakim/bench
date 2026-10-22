@@ -3,27 +3,28 @@
 | Field | Value |
 |---|---|
 | Status | In Review |
-| Version | 0.3 |
+| Version | 0.4 |
 | Date | 2026-10-22 |
 | Owner | Business Analyst |
 | Approver | Client |
-| Sources | Interview notes `docs/requirements/interviews/2026-10-21-users-and-roles.md` (batches 1–3), `docs/requirements/interviews/2026-10-21-goals-and-scenarios.md` (batch 4 + open answers of 2026-10-22), `docs/requirements/interviews/2026-10-22-brd-open-issues.md` (batch 5: answers #1–#9 and clarifications C1–C4; batch 6: answers to §10 #4, #6, #7, #12, #27, #29, acceptance of the BA's proposed defaults for all other §10 items, and the context-checkpoint requirement B6-CTX relayed by the PM); `docs/PRODUCT-MODEL.md`; `docs/VISION.md`. Constraints only: `docs/ARCHITECTURE.md`, `docs/security-baseline.md`, `docs/adr/0002-auth-subscription-vs-api-key.md` |
+| Sources | Interview notes `docs/requirements/interviews/2026-10-21-users-and-roles.md` (batches 1–3), `docs/requirements/interviews/2026-10-21-goals-and-scenarios.md` (batch 4 + open answers of 2026-10-22), `docs/requirements/interviews/2026-10-22-brd-open-issues.md` (batch 5: answers #1–#9 and clarifications C1–C4; batch 6: answers to §10 #4, #6, #7, #12, #27, #29, acceptance of the BA's proposed defaults for all other §10 items, and the context-checkpoint requirement B6-CTX relayed by the PM; the client's refinement of the context checkpoint B6-CTX2 and approval of the PM's four additions B6-CTX3); `docs/PRODUCT-MODEL.md`; `docs/VISION.md`. Constraints only: `docs/ARCHITECTURE.md`, `docs/security-baseline.md`, `docs/adr/0002-auth-subscription-vs-api-key.md` |
 
 | Version | Date | Author | Change |
 |---|---|---|---|
 | 0.1 | 2026-10-22 | BA | First draft (lean mode: MVP use cases only) |
 | 0.2 | 2026-10-22 | BA | Applied batch 5 answers. Content pipeline dropped from the MVP; UC-39 retired (B5-C1). UC-26 became the **project dashboard** (B5-#1). UC-11 rewritten: debate = temporary meeting session, 5-minute timebox, highest-ranked participant decides, decision memo kept, chat archived in the trace (B5-#2, B5-C2); UC-30/UC-31 aligned. Gmail on the CEO, draft-only, may email the client (B5-#3): UC-37, UC-06, UC-35. Proposal = one-pager the client approves or rejects (B5-#4): UC-12. Deputy has broad work authority, with 4 reserved actions and "no agent ever pays" (B5-#5, B5-C3): AS-7, BR-14, new BR-57/BR-58. Outward actions revised: `git push` not outward, email draft-only (B5-#6): BR-15, AS-8, glossary. Leads read private memory on demand only (B5-#7): BR-23. BA lead added to the day-1 tree, and the project template plus new UC-43 (B5-#8). O4 = Bench open-source ready 14 days after build starts, full scope, no cut (B5-#9, B5-C4, B5-D1); old O4 → O5. New BR-57 – BR-64. §10: resolved items removed (#1, #2, #5, #8, #11, #16), #3/#7/#9/#17/#19 narrowed, new items #26 – #30 |
 | 0.3 | 2026-10-22 | BA | Applied batch 6. **No per-agent token budgets** (B6-#4): UC-41 rewritten as "Monitor usage and protect weekly headroom" (overall meter + 30 % weekly-headroom guard only); budget column removed from UC-06; freelancer budget slice removed (UC-07); BR-51 and AS-2 retired, BR-13/BR-52/BR-53 revised; V-16 revised. §8 retention and agent deletion confirmed (B6-#6). Outward actions (B6-#7): Gmail labelling/archiving and opening PRs are not outward; no standing reply rules, every email to someone other than the client needs the client (BR-15, UC-37, UC-22, glossary). Each project gets its own copies of the template agents with their own memory; global memory shared (B6-#27, UC-43). One home node per agent, guest in other nodes (B6-#12: UC-01, UC-05, BR-02, BR-06, glossary). Deputy (B6-#29): cannot widen its own powers; may assign Gmail and other outward-capable connectors to other agents, whose sends still need the client; may hire a freelancer assistant, not a permanent one (BR-14, BR-58, new BR-65; UC-04, UC-07, UC-35). New client requirement **context checkpoint** (B6-CTX): at 80 % of its context window an agent saves its work, updates its memory and auto-compacts; new BR-66, glossary, UC-18 A3, UC-21 A4, UC-42 A3, §8.1. All other §10 items: the BA's proposed defaults were accepted and moved to new §10.1, marked `[default (B6-#n)]` in the text. New §10 items #31 – #33 arise from B6 answers and B6-CTX; #10 (tray only) and #14 stay open (no default had been proposed). No ID renumbered |
+| 0.4 | 2026-10-22 | BA | Context checkpoint refined by the client (B6-CTX2) with the PM's four additions approved (B6-CTX3: "yes do that"). **BR-66 revised:** at 80 % of the agent's own context window (default, configurable per agent; resolves §10 #33) the agent saves its work at the next natural breakpoint and writes a checkpoint in a fixed format (new §8.6), including things tried that failed and mistakes with their fixes; hard ceiling at 90 % (checkpoint immediately, even mid-step); lessons also go to the agent's private memory (and the team log if relevant); the agent **restarts as a fresh session** loaded with its memory and the checkpoint, replacing summary-style compaction; the new session first re-reads the checkpoint and states its next step, and escalates to its lead if the checkpoint is unreadable or incomplete; the old session's transcript is archived in the hidden trace archive under the same retention as debate transcripts. Updated: S5, glossary (Context checkpoint revised, new term Checkpoint), UC-18 A3 and acceptance criteria, UC-21 A4, new E2 and acceptance criteria, UC-42 A3, E2, NFR note and acceptance criteria, BR-60 (archive also applies), BR-66, §8.1 (Settings, Context checkpoint, new Lesson entity, Session transcript type), §8.3 (new retention row), new §8.6 checkpoint format. §10 #33 resolved and removed; new §10 #34 – #35. No ID renumbered |
 
 **How to read this document**
-- Everything not marked comes from a client answer or an approved document. The source is shown in brackets, for example *(B1-Q4)* = batch 1, question 4; *(B4-Q3)* = batch 4 scenario walkthrough; *(B4-EXC)* = batch 4 exception rules; *(B4-EDGE)* = batch 4 concurrency answer; *(B5-#n)* = batch 5 answer n; *(B5-Cn)* = batch 5 clarification n; *(B5-D1)* = client decision D1 of 2026-10-22 on O4 scope (batch 5 interview file); *(B6-#n)* = batch 6 answer to BRD v0.2 §10 item n; *(B6-CTX)* = the client's batch 6 context-checkpoint requirement (relayed by the PM, 2026-10-22: "when they reach 80% of there context limit (out of 1M) they should to save their work and update their memory file and then auto compact"); *(PM)* = `PRODUCT-MODEL.md`; *(VIS)* = `VISION.md`; *(SEC)* = `security-baseline.md`; *(ADR-2)* = ADR-0002; *(ARCH)* = `ARCHITECTURE.md`.
-- **Retired IDs:** UC-39 (v0.2, B5-C1); BR-51 and AS-2 (v0.3, B6-#4). Retired IDs are never reused. No ID was renumbered. Rules changed in v0.3 are marked **Revised v0.3**.
+- Everything not marked comes from a client answer or an approved document. The source is shown in brackets, for example *(B1-Q4)* = batch 1, question 4; *(B4-Q3)* = batch 4 scenario walkthrough; *(B4-EXC)* = batch 4 exception rules; *(B4-EDGE)* = batch 4 concurrency answer; *(B5-#n)* = batch 5 answer n; *(B5-Cn)* = batch 5 clarification n; *(B5-D1)* = client decision D1 of 2026-10-22 on O4 scope (batch 5 interview file); *(B6-#n)* = batch 6 answer to BRD v0.2 §10 item n; *(B6-CTX)* = the client's batch 6 context-checkpoint requirement (relayed by the PM, 2026-10-22: "when they reach 80% of there context limit (out of 1M) they should to save their work and update their memory file and then auto compact"); *(B6-CTX2)* = the client's refinement of the context checkpoint (2026-10-22: "Let the agent run until they reach 80% of context then update the memory and savig it work at natural breakpoint using a fixed format and including things that already we tried and failed or mistakes and its fix, and then this agent is restart as a fresh session uploading the memory of the previous version and continue working"); *(B6-CTX3)* = the client's approval, 2026-10-22, of the PM's four additions (hard checkpoint at 90 %, lessons go to long-term memory, the fresh session confirms its next step, the old session is archived): "yes do that"; *(PM)* = `PRODUCT-MODEL.md`; *(VIS)* = `VISION.md`; *(SEC)* = `security-baseline.md`; *(ADR-2)* = ADR-0002; *(ARCH)* = `ARCHITECTURE.md`.
+- **Retired IDs:** UC-39 (v0.2, B5-C1); BR-51 and AS-2 (v0.3, B6-#4). Retired IDs are never reused. No ID was renumbered. Rules changed in v0.3 are marked **Revised v0.3**; rules changed in v0.4 are marked **Revised v0.4**.
 - **`[ASSUMPTION – confirm]`** marks a BA inference that the client has not confirmed yet.
 - **`[default (B6-#n)]`** marks a BA proposed default that the client accepted for now in batch 6 (§10 item n). It is carried into the PRD/SRS and revisited against the prototype; see §10.1. Where the client's wording was "default accepted, revisit at prototype", that phrase is shown.
 - Budgets: there are **no per-agent token budgets** (B6-#4). Retention and agent deletion in §8 are confirmed (B6-#6); the other data rules and the connectors per role are accepted defaults (B6-#6, B6-#4).
 - Lean mode: only MVP use cases are described. Phase-2 items are listed in §2 Out of scope.
 - Frequencies and NFR numbers in the use cases are BA estimates, accepted as defaults until the SRS sets them `[default (B6-#25)]`.
-- `[ASSUMPTION – confirm]` tags that remain in v0.3 are smaller BA inferences that were never §10 items, or new inferences from the batch 6 answers (§10 #31 – #33).
+- `[ASSUMPTION – confirm]` tags that remain in v0.4 are smaller BA inferences that were never §10 items, or new inferences from the batch 6 answers (§10 #31, #32) and the context-checkpoint refinement (§10 #34, #35).
 
 ---
 
@@ -66,7 +67,7 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | S2 | Conversations: CEO chat, direct chat with any agent, group chats, project team chat, group debate as a timeboxed temporary meeting session *(B5-#2)* | UC-08 – UC-11 |
 | S3 | Scenario #1 "idea to delivered product": CEO intake → one-pager proposal → client approves *(B5-#4)* → project from template → PM → BA interview session → documents → epics/stories → design/dev → "something to show you" → review meeting session → repeat | UC-12 – UC-17, UC-24, UC-29 – UC-31, UC-43 |
 | S4 | Delegating a feature to the Dev team with full file and shell access (scoped, approvals) | UC-14, UC-32 – UC-34 |
-| S5 | Three-layer memory with automatic work logs, lazy roll-up and context checkpoints (save, update memory, auto-compact at 80 % of the context window) *(B6-CTX)* | UC-18 – UC-21, UC-42 |
+| S5 | Three-layer memory with automatic work logs, lazy roll-up and context checkpoints (at 80 % of the context window: save work at a natural breakpoint, write a fixed-format checkpoint, update memory, restart as a fresh session; hard ceiling at 90 %) *(B6-CTX, B6-CTX2, B6-CTX3)* | UC-18 – UC-21, UC-42 |
 | S6 | Approvals and autonomy (Deputy with broad work authority and reserved actions, presets, approval inbox, outward actions) *(B5-#5, B5-#6, B5-C3)* | UC-22 – UC-24 |
 | S7 | Visibility: morning status and "what needs me", project dashboard *(B5-#1)*, live agent view, trace | UC-25 – UC-28 |
 | S8 | Research reports, Gmail inbox triage by the CEO *(B5-#3)*, scheduled routines | UC-35 – UC-38 |
@@ -184,7 +185,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Budget** | **Not used from v0.3.** There are no per-agent token caps *(B6-#4)*; the PM §1 "optional daily token cap" is not in the MVP. Cost is controlled by the overall usage meter and the weekly-headroom guard |
 | **Weekly-headroom guard** | The rule that keeps at least 30 % of the weekly subscription limit free: when the forecast falls below 30 %, non-urgent work waits and the client is told (BR-52) *(B4-Q4, B6-#4)* |
 | **Write lock** | The rule that only one writer works in a folder at a time *(B4-EDGE)* |
-| **Context checkpoint** | What every agent does when its session reaches a set share of its context window (default 80 %, e.g. 800k of 1M tokens; configurable per agent `[ASSUMPTION – confirm]`, §10 #33): (1) save its work in progress, (2) update its memory (private memory, plus a team work-log entry if relevant), (3) auto-compact its session. Its purpose is to save usage (BR-66) *(B6-CTX)* |
+| **Context checkpoint** | What every agent does when its session reaches its checkpoint threshold: 80 % of the agent's own context window by default (e.g. 800k of 1M tokens), configurable per agent *(B6-CTX, B6-CTX2)*. At the next natural breakpoint (end of a step or task) it saves its work and writes a **checkpoint** in a fixed format (§8.6), including things tried that failed and mistakes with their fixes; at the **hard ceiling of 90 %** it does so immediately, even mid-step *(B6-CTX3)*. It records its lessons in its private memory (and the team log if relevant), then **restarts as a fresh session** loaded with its memory and the checkpoint, instead of summary-style compaction *(B6-CTX2)*. The fresh session first re-reads the checkpoint and states its next step; the old session's transcript is archived in the hidden trace archive *(B6-CTX3)*. Its purpose is to save usage (BR-66) |
+| **Checkpoint** | The fixed-format record an agent writes at its context checkpoint: goal, decisions with reasons, files touched, current step, next steps, open questions, things tried that failed, mistakes with their fixes (§8.6) *(B6-CTX2, B6-CTX3)* |
 
 ---
 
@@ -1318,7 +1320,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 **Alternative flows**
 - **A1:** a freelancer's work is logged to the hirer's node.
 - **A2:** the CEO's own work is logged to the root (global) log `[ASSUMPTION – confirm]`.
-- **A3, context checkpoint:** an agent's session reaches the context checkpoint threshold (default 80 % of its context window, e.g. 800k of 1M tokens; configurable per agent `[ASSUMPTION – confirm]`, §10 #33) → before the session is auto-compacted, the agent saves its work in progress and updates its private memory; if the work in progress belongs to a task, the system also appends a work-log entry "context checkpoint" with the task's current state to the node's memory (BR-66) *(B6-CTX)*. The private-memory update is written by the agent (it needs an LLM call); the work-log entry itself costs 0 tokens.
+- **A3, context checkpoint:** an agent's session reaches its context checkpoint threshold (default 80 % of its own context window, e.g. 800k of 1M tokens; configurable per agent) *(B6-CTX, B6-CTX2)* → at the next natural breakpoint (end of a step or task), or immediately at the 90 % hard ceiling *(B6-CTX3)*, the agent saves its work, writes its checkpoint in the fixed format (§8.6) and records its lessons (things tried that failed, mistakes and their fixes) in its private memory (BR-66). If the work belongs to a task, the system appends a work-log entry "context checkpoint" with the task's current state to the node's memory; if a lesson matters to the team, it is also added to the node's work log *(B6-CTX3)*, as an entry written by the agent `[ASSUMPTION – confirm: the agent decides which lessons matter to the team]`. Then the agent restarts as a fresh session (UC-21 A4). The checkpoint and lessons are written by the agent (they need an LLM call); the "context checkpoint" work-log entry itself costs 0 tokens.
 - **A4:** a guest's work on a task from its guest node is logged to the guest node's memory (UC-01 A6) *(B6-#12)* `[ASSUMPTION – confirm]` (§10 #31).
 
 **Exceptions**
@@ -1333,7 +1335,8 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 **Acceptance criteria (draft)**
 - Given the developer finishes a task, when the client opens the Dev team memory, then a dated log line names the developer, the task, the outcome and the cost.
 - Given a log line is written, when the token ledger is checked, then no LLM call was made for it.
-- Given the developer's session reaches 80 % of its context window while working on task T, when the checkpoint runs, then the Dev team memory has a "context checkpoint" entry for T, the developer's private memory has a new progress note, and only then is the session compacted *(B6-CTX)*.
+- Given the developer's session reaches 80 % of its context window while working on task T, when it finishes its current step, then the Dev team memory has a "context checkpoint" entry for T, the developer's private memory has a checkpoint with all eight sections of §8.6 and its lessons, and only then does a fresh session start *(B6-CTX2)*.
+- Given the developer's session reaches 90 % of its context window in the middle of a step, when the hard ceiling is hit, then the checkpoint is written at once, without waiting for the step to end *(B6-CTX3)*.
 
 **Notes / open questions:** none.
 
@@ -1455,13 +1458,14 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - **A1:** the client edits the file in an external editor → the system detects and reloads it.
 - **A2:** the client asks an agent "what do you remember about X" → the agent answers from its memory with references.
 - **A3, a lead reads a worker's private memory:** a lead needs something only in a worker's private memory → it requests that memory on demand; the system loads only the entries asked for, read-only, for that turn, and records the read in the trace `[ASSUMPTION – confirm the trace record]`. It is never part of the lead's default context (BR-23) *(B5-#7)*.
-- **A4, context checkpoint:** when an agent reaches its context checkpoint (BR-66), it writes a progress note to its own private memory (what it was doing, decisions taken, next step) before its session is auto-compacted; after compaction it continues from that note *(B6-CTX)*. The note shows in the memory view like any entry, with author = the agent and source = "context checkpoint".
+- **A4, context checkpoint:** when an agent reaches its context checkpoint (BR-66), it writes a checkpoint in the fixed format (§8.6) to its own private memory, and adds its lessons (things tried that failed, mistakes with their fixes) to its private memory as long-term entries, not only to the checkpoint *(B6-CTX2, B6-CTX3)*. It then **restarts as a fresh session** loaded with its memory and the checkpoint, instead of summary-style compaction *(B6-CTX2)*. The fresh session's first step is to re-read the checkpoint and state its next step; it then continues the work *(B6-CTX3)*. The old session's transcript goes to the hidden trace archive (BR-60 retention) *(B6-CTX3)*. The checkpoint and lessons show in the memory view like any entry, with author = the agent and source = "context checkpoint".
 
 **Exceptions**
 - **E1 (at step 4):** an agent is writing the same file at that moment → the client's edit wins and the agent's write is retried after it `[ASSUMPTION – confirm]`.
+- **E2 (A4), checkpoint unreadable or incomplete:** the fresh session cannot read the checkpoint, or one of its eight sections (§8.6) is missing → it does not guess; it escalates to its lead with the reason *(B6-CTX3)*. The CEO, which has no lead, escalates to the client as a "needs me" item `[ASSUMPTION – confirm]`. The task stays in its current state until the lead answers `[ASSUMPTION – confirm]`.
 
 **Validations / business rules**
-- BR-22, BR-23, BR-28, BR-66.
+- BR-22, BR-23, BR-28, BR-60, BR-66.
 
 **Non-functional notes**
 - Private memories stay isolated between agents; only the client sees all *(SEC)*; leads above may read on demand only *(B5-#7)*. Not loading private memory by default keeps leads' context small *(B5-#7: "to not … draw the context of this agent, the team lead agent, for no reason")*.
@@ -1471,7 +1475,9 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - Given the client opens the Dev team memory, then they see the work log and the latest summary.
 - Given the Dev lead starts a turn, when its context is built, then no worker's private memory is in it; when the Dev lead asks for the developer's private notes on task T, then only those entries are loaded for that turn *(B5-#7)*.
 - Given the developer is not below the Design lead, when the Design lead asks for the developer's private memory, then it is refused (BR-05).
-- Given the PM's session was compacted at its context checkpoint, when the client opens the PM's private memory, then the checkpoint progress note is there, and the PM's next reply continues the same work *(B6-CTX)*.
+- Given the PM's session restarted at its context checkpoint, when the client opens the PM's private memory, then the checkpoint and the lessons are there; the new session's first message restates the checkpoint's next step, and the PM continues the same work *(B6-CTX2, B6-CTX3)*.
+- Given the PM's session restarted, when the client opens the trace archive, then the previous session's transcript is there, and it is not in any chat view or agent context *(B6-CTX3)*.
+- Given a checkpoint is missing its "next steps" section, when the fresh session starts, then it escalates to its lead instead of continuing *(B6-CTX3)*.
 
 **Notes / open questions**
 - Resolved in v0.2: a lead may read its workers' private memory only when needed, never by default *(B5-#7)*. Applies to the CEO as the root's lead `[ASSUMPTION – confirm]`.
@@ -2482,22 +2488,23 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 **Alternative flows**
 - **A1 (at step 4):** the client chooses to switch to the API-key backend for urgent work *(ADR-2)* `[ASSUMPTION – confirm in MVP]`.
 - **A2 (at step 5):** the client chooses which work resumes first `[ASSUMPTION – confirm]`.
-- **A3 (before step 1), prevention by context checkpoints:** every agent compacts its session at its context checkpoint (BR-66) after saving its work and memory, so long sessions use fewer tokens per turn and the limit is reached later *(B6-CTX)*. At step 3, a session that was compacted resumes from its compacted context and its checkpoint notes.
+- **A3 (before step 1), prevention by context checkpoints:** every agent restarts as a fresh session at its context checkpoint (BR-66), after saving its work, writing its checkpoint and recording its lessons, so long sessions use fewer tokens per turn and the limit is reached later *(B6-CTX, B6-CTX2)*. At step 3, the session saved is the agent's current (fresh) session; at step 5 it resumes from that session, its memory and its latest checkpoint.
 
 **Exceptions**
 - **E1 (at step 5):** Bench is closed at reset → work resumes at next launch.
-- **E2 (at step 5):** a resumed session cannot continue → the task restarts from its last saved state, and that counts as a failed attempt `[ASSUMPTION – confirm]`. The agent's latest context checkpoint note (BR-66) is part of that saved state *(B6-CTX)*.
+- **E2 (at step 5):** a resumed session cannot continue → the task restarts from its last saved state, and that counts as a failed attempt `[ASSUMPTION – confirm]`. The agent's latest checkpoint (BR-66, §8.6) is part of that saved state *(B6-CTX2)*.
 
 **Validations / business rules**
 - BR-50, BR-52, BR-66.
 
 **Non-functional notes**
 - No work or client answer is lost when the limit hits.
-- Context checkpoints are the main in-run lever for saving usage *(B6-CTX)*; the tech lead verifies in the SRS how the Agent SDK compaction threshold and hooks support them.
+- Context checkpoints are the main in-run lever for saving usage *(B6-CTX)*. They replace summary-style compaction *(B6-CTX2)*; the tech lead verifies in the SRS how Bench measures each session's context use, starts the fresh session, and keeps the Agent SDK's own auto-compaction from firing first `[ASSUMPTION – confirm]`.
 
 **Acceptance criteria (draft)**
 - Given 3 agents are running, when the limit is hit, then all 3 pause and a banner shows the reset time.
 - Given the limit resets, when the time passes, then the 3 tasks resume without the client doing anything.
+- Given an agent restarted at a context checkpoint before the limit was hit, when its work resumes after the reset, then it continues from its fresh session and latest checkpoint, not from the archived session *(B6-CTX2)*.
 
 **Notes / open questions:** none.
 
@@ -2578,20 +2585,20 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | BR-57 | **No agent ever pays.** No agent (including the Deputy and freelancers) spends money, enters payment details or signs up for paid services. Anything that needs payment becomes a "needs me" item for the client. This is a strict rule: no preset, grant or approval can lift it. | B5-#5, B5-C3 | UC-17, UC-22, UC-23, UC-33, UC-35, UC-37, UC-38 |
 | BR-58 | **Revised v0.3.** **Reserved actions** always need the client, and no agent, including the Deputy, may take or approve them: (1) delete agents, projects or repos; (2) create permanent agents or projects (agents may draft them); a permanent assistant for the CEO is a permanent agent and needs the client, while **hiring a freelancer (including a freelancer assistant) is not a reserved action** *(B6-#29)*; (3) deploy, release or merge to `main` (pushing straight to `main` counts as a merge `[default (B6-#17)]`); (4) spend money or use paid services (BR-57). | B5-C3, B6-#29 | UC-02, UC-03, UC-06, UC-07, UC-12, UC-14, UC-22, UC-23, UC-33, UC-43 |
 | BR-59 | A **debate** is a temporary meeting session of the stakeholders related to the point, **timeboxed to 5 minutes**. Participants may reach agreement before the time is up; otherwise the **highest-ranked participant in the tree** takes the final decision. A token safety cap of 100k tokens per debate also applies `[default (B6-#26)]`. | B5-#2 | UC-11, UC-17, UC-30, UC-31 |
-| BR-60 | When a debate or meeting session closes: a decision memo or notes (decision, attendees, rationale) is saved to memory; the session chat is deleted from the client's views; the raw transcript is archived, hidden, in the trace until retention removes it; agents only remember the memo or notes, never the transcript. | B5-#2, B5-C2 | UC-11, UC-28, UC-30, UC-31 |
+| BR-60 | When a debate or meeting session closes: a decision memo or notes (decision, attendees, rationale) is saved to memory; the session chat is deleted from the client's views; the raw transcript is archived, hidden, in the trace until retention removes it; agents only remember the memo or notes, never the transcript. The same archive and retention apply to an agent's previous session when it restarts at a context checkpoint (BR-66) *(B6-CTX3)*. | B5-#2, B5-C2, B6-CTX3 | UC-11, UC-21, UC-28, UC-30, UC-31 |
 | BR-61 | The CEO's proposal is a one-pager Markdown file (problem, what to build, what the team should do). The client approves or rejects it; only an approved proposal goes to the PM. | B5-#4 | UC-12, UC-30, UC-43 |
 | BR-62 | Every new project is created from a project template with the same set of agents. The client can add, remove or change agents in the template and in each project; a minimal project with only the main agent is allowed. Creating a project needs the client (BR-58). | B5-#8, B5-C3 | UC-06, UC-12, UC-43 |
 | BR-63 | Each project has exactly one dashboard with a fixed layout: the project team, the backlog with the highest-priority stories and tasks first (expandable to the full backlog), and the current sprint's To Do / In Progress / Done. The content changes with each sprint; the layout does not. | B5-#1 | UC-16, UC-26, UC-43 |
 | BR-64 | An email that needs the client's action becomes a "needs me" item with the agent's draft: "I drafted this, send it or change it?". It is sent only when the client says so. | B5-#6 | UC-23, UC-25, UC-37, UC-38 |
 | **Added in v0.3** | | | |
 | BR-65 | **Outward-capable connectors given by the Deputy.** The Deputy may assign Gmail and other connectors that can act outward to other agents (permanent agents, or freelancers it hires, e.g. an assistant for repetitive email work). Strict rules apply to every such agent: it may read, label, archive and draft, and may email the client; **anything it sends to anyone other than the client needs the client's approval, one email at a time** (BR-15, BR-64); no setting can relax this. The assignment is logged as a Deputy decision (BR-21). The Deputy may never assign connectors or other powers to itself (BR-14). Creating a permanent assistant still needs the client (BR-58). | B6-#29, B6-#7 | UC-04, UC-07, UC-35, UC-37 |
-| BR-66 | **Context checkpoint.** When any agent's session reaches its context checkpoint threshold (default 80 % of its context window, e.g. 800k of 1M tokens; configurable per agent `[ASSUMPTION – confirm]`, §10 #33), the agent must, in this order: (1) save its work in progress; (2) update its memory: its private memory, plus a work-log entry in its team memory if the work belongs to a task; (3) auto-compact its session, then continue. The goal is to save usage. The tech lead verifies how the Agent SDK compaction threshold and hooks support this in the SRS. | B6-CTX | UC-18, UC-21, UC-42 |
+| BR-66 | **Revised v0.4. Context checkpoint.** (1) **Threshold:** an agent runs until its session reaches 80 % of its own context window (e.g. 800k of 1M tokens); 80 % is the default and is configurable per agent. (2) **Checkpoint at a natural breakpoint:** at the next natural breakpoint (end of a step or task) it saves its work and writes a **checkpoint in the fixed format** of §8.6: goal, decisions with reasons, files touched, current step, next steps, open questions, things tried that failed, mistakes with their fixes. (3) **Hard ceiling:** at 90 % it checkpoints immediately, even mid-step. (4) **Lessons to long-term memory:** the failures, mistakes and fixes are also written to the agent's private memory (and to the team log if relevant), not only to the checkpoint; if the work belongs to a task, the system also adds a "context checkpoint" work-log entry (BR-24). (5) **Fresh session:** the agent restarts as a fresh session loaded with its memory and the checkpoint, instead of summary-style compaction. (6) **Confirm after restart:** the new session's first step is to re-read the checkpoint and state its next step; if the checkpoint is unreadable or incomplete, it escalates to its lead. (7) **Archive:** the previous session's transcript goes to the hidden trace archive, like debate transcripts, under the same retention (BR-60, §8.3). The goal is to save usage. The tech lead verifies the technical approach in the SRS. | B6-CTX, B6-CTX2, B6-CTX3 | UC-18, UC-21, UC-42 |
 
 ---
 
 ## 8. Data requirements
 
-**Status in v0.3:** retention periods (§8.3) and what deleting an agent removes and keeps (§8.4) are **confirmed** by the client *(B6-#6)*. Storage locations, what leaves the device (§8.2) and the other deletion rules are the BA's proposed defaults, accepted for now `[default (B6-#6)]`. Locations follow the draft architecture *(ARCH §3)*.
+**Status in v0.4:** retention periods (§8.3) and what deleting an agent removes and keeps (§8.4) are **confirmed** by the client *(B6-#6)*; the context checkpoint data, its format (§8.6) and the archiving of an agent's previous session come from the client's B6-CTX2 and B6-CTX3 answers. Storage locations, what leaves the device (§8.2) and the other deletion rules are the BA's proposed defaults, accepted for now `[default (B6-#6)]`. Locations follow the draft architecture *(ARCH §3)*.
 
 ### 8.1 Entities
 | Entity | Key fields | Stored where | Owner / who may change |
@@ -2610,7 +2617,7 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | Proposal *(B5-#4)* | title, problem, what to build, what the team should do, state (Draft / Awaiting client / Approved / Rejected / Sent to PM / Parked), client comments | Markdown file (CEO's proposals folder, then the project's documents folder) | CEO writes; client approves or rejects |
 | Documents, interview notes, meeting notes, reports | title, version, status, author, links | Markdown files in the project's documents folder | Authoring agent; client |
 | Decision memo *(B5-#2, B5-C2)* | topic, decision, attendees, rationale, decider, date, source (task, group, session), trace link | The decider's node memory (Markdown) `[default (B6-#26)]` | Decider / system; client |
-| Session transcript (archived) *(B5-C2)* | session id, type (debate, review, interview), messages, attendees | Trace archive (database), hidden from views and agent context | System; readable by the client from the trace `[ASSUMPTION – confirm]` |
+| Session transcript (archived) *(B5-C2)* | session id, type (debate, review, interview, agent session ended at a context checkpoint *(B6-CTX3)*), messages, attendees | Trace archive (database), hidden from views and agent context | System; readable by the client from the trace `[ASSUMPTION – confirm]` |
 | Work item (epic, story, task, bug) | id, type, title, description, acceptance criteria, owner, state, sprint, priority, history, attempts, links | Local database (board) | Agents via tasks; client |
 | Approval request | id, agent, action, target, reason, approver, decision, time | Local database | Client / Deputy |
 | Notification | type, item link, state | Local database | System |
@@ -2619,8 +2626,9 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | Folder grant and write lock | path, agent, mode, lock holder, queue | Agent file (grant); memory only (lock) | Client (grant); system (lock) |
 | Trace / run | steps, tool calls, inputs/outputs, files, commands, model, tokens, cost | Database | System |
 | Token ledger | run, agent, hirer, project, tokens in/out/cache, cost, time | Database | System |
-| Settings | system services, approver for global memory, weekly-headroom guard (30 %) *(B6-#4)*, default context checkpoint threshold *(B6-CTX)* | Settings file | Client |
-| Context checkpoint note *(B6-CTX)* | agent, task, time, work in progress, next step, tokens at checkpoint | Agent's private memory (Markdown) + work-log entry in node memory if task-related | Agent (note); system (log entry); client |
+| Settings | system services, approver for global memory, weekly-headroom guard (30 %) *(B6-#4)*, default context checkpoint threshold (80 %) *(B6-CTX)*, hard ceiling (90 %) *(B6-CTX3)* | Settings file | Client |
+| Context checkpoint *(B6-CTX2)* | agent, task, time, tokens at checkpoint, trigger (threshold at a breakpoint / hard ceiling) `[ASSUMPTION – confirm]`, previous session id (trace link) `[ASSUMPTION – confirm]`, plus the eight fixed sections of §8.6 | Agent's private memory (Markdown, source = "context checkpoint") + work-log entry in node memory if task-related | Agent (checkpoint); system (log entry); client |
+| Lesson *(B6-CTX3)* | agent, task, what was tried and failed or the mistake, the fix, date | Agent's private memory (Markdown memory entry); also the node's work log if relevant to the team | Agent; client |
 
 ### 8.2 What leaves the device `[default (B6-#6)]`
 | Data | Goes to | Why |
@@ -2639,6 +2647,7 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | Conversations and messages | Until the client deletes them |
 | Full trace details (tool inputs/outputs) | 90 days, then reduced to a summary (steps, files, tokens, cost) |
 | Archived debate and meeting transcripts | Same as full trace details (90 days), then removed; the decision memo or notes are kept *(B5-C2: "until retention removes it")* |
+| Archived agent sessions (ended at a context checkpoint) | Same as archived debate transcripts (90 days), then removed; the checkpoint and lessons are kept in memory *(B6-CTX3)* |
 | Decision memos | Until the client deletes them |
 | Token ledger and approval log | Indefinitely (small; needed for metrics and audit) |
 | Email triage items | 30 days; email bodies are never stored, only metadata and drafts |
@@ -2659,6 +2668,22 @@ The trace-details, archived-transcript, email-item, ledger and approval-log peri
 
 ### 8.5 Secrets
 - Claude credentials are never touched (BR-54). An optional API key and connector tokens Bench owns go in the OS keychain only *(SEC, ADR-2)*.
+
+### 8.6 Context checkpoint format *(B6-CTX2, B6-CTX3)*
+Every checkpoint (BR-66) has these sections, in this order. A section with nothing to report says "none" `[ASSUMPTION – confirm]`; a missing section makes the checkpoint incomplete (UC-21 E2).
+
+| # | Section | Content |
+|---|---|---|
+| 1 | Goal | What the agent is trying to achieve (task or request) |
+| 2 | Decisions | Decisions taken so far, each with its reason |
+| 3 | Files touched | Files read, created or changed |
+| 4 | Current step | Where the work stands now (at the 90 % ceiling: the step that was interrupted) |
+| 5 | Next steps | What to do next, in order |
+| 6 | Open questions | Questions still waiting for an answer, and from whom |
+| 7 | Tried and failed | Approaches already tried that did not work, and why |
+| 8 | Mistakes and fixes | Mistakes made and how they were fixed |
+
+Sections 7 and 8 are also written to the agent's private memory as lessons (and to the team log if relevant) *(B6-CTX3)*.
 
 ---
 
@@ -2690,7 +2715,7 @@ The trace-details, archived-transcript, email-item, ledger and approval-log peri
 
 ## 10. Open issues
 
-Only items that are still truly open: no default had been proposed for them, or they arise from the batch 6 answers. Each has a BA recommendation for the PM to put to the client.
+Only items that are still truly open: no default had been proposed for them, or they arise from the batch 6 answers or the context-checkpoint refinement (B6-CTX2, B6-CTX3). Each has a BA recommendation for the PM to put to the client.
 
 | # | Question | Owner | Due |
 |---|---|---|---|
@@ -2698,9 +2723,10 @@ Only items that are still truly open: no default had been proposed for them, or 
 | 14 | **Team → team links:** does a team → team link let every member talk to every member, or only the leads? Options: (a) leads only; members go through their lead; (b) all members; (c) leads only by default, with a per-link "all members" switch. **BA recommends (c)**: it keeps the tree's single point of contact and token economy by default, and lets the client open a link fully when two teams work closely. | Client | Before G1 |
 | 31 | **Guest rules** (new, from B6-#12): confirm the proposed guest rules in UC-01 A6: the guest node's lead may assign it tasks and it joins that node's chats; guest work is logged to the guest node; the guest node's lead never reads its private memory; escalations and returned guest tasks go to the guest node's lead; a guest cannot be that node's lead. Options: (a) as proposed; (b) a guest only takes tasks and never joins the node's chats; (c) other. **BA recommends (a).** | Client | Before G1 |
 | 32 | **Names of per-project agent copies** (new, from B6-#27 + BR-12): agent names must be unique, but each project gets its own "PM", "BA", etc. Options: (a) names are unique per project; the app shows "PM · Project X" where needed; (b) the client renames each copy; (c) names auto-suffixed ("PM 2"). **BA recommends (a).** | Client | Before UX |
-| 33 | **Context checkpoint threshold** (new, B6-CTX): the client said 80 % "out of 1M". Confirm: (a) 80 % of each agent's own context window, configurable per agent in its settings; (b) one fixed 80 % for all agents; (c) a fixed token count (800k) for all agents, whatever the window. **BA recommends (a)**: agents on smaller-window models still checkpoint before they run out. Technical feasibility: tech lead, in the SRS. | Client / Tech lead | Before SRS |
+| 34 | **Hard ceiling vs. per-agent threshold** (new, B6-CTX3): the threshold is configurable per agent (BR-66). Is the 90 % ceiling fixed, and what if a threshold is set near or above it? Options: (a) the ceiling is fixed at 90 % for all agents and a threshold can be set only between 50 % and 85 %; (b) the ceiling is configurable per agent and must stay at least 5 points above the threshold; (c) other. **BA recommends (a)**: one simple safety net, and the gap leaves room to reach a natural breakpoint. | Client | Before SRS |
+| 35 | **Bad checkpoint after restart** (new, B6-CTX3): today the fresh session escalates to its lead if the checkpoint is unreadable or incomplete (UC-21 E2). Options: (a) as is; the CEO, which has no lead, escalates to the client; the task waits; (b) as (a), plus a check before the old session closes: the system verifies that all eight sections (§8.6) are present and asks the agent to complete them, so escalation only happens if the file is still unreadable; (c) other. **BA recommends (b)**: the old session still holds the knowledge, so fixing the checkpoint there is cheaper than an escalation. | Client | Before SRS |
 
-Resolved in v0.2 and removed: #1, #2, #5, #8, #11, #16. **Resolved in v0.3 by client answers (B6) and removed:** #4 budgets (no per-agent caps; 30 % guard confirmed; the rest of #4 is in §10.1), #6 data (retention and agent deletion confirmed; the rest in §10.1), #7 outward actions, #12 one agent in several nodes, #27 project template copies (sub-points in §10.1), #29 Deputy. **Adopted as defaults (B6) and moved to §10.1:** #3, #4 (rest), #6 (rest), #9, #10 (except the tray), #13, #15, #17, #18, #19, #20, #21, #22, #23, #24, #25, #26, #27 (sub-points), #28, #30. Numbers are never reused, so cross-references stay valid.
+Resolved in v0.2 and removed: #1, #2, #5, #8, #11, #16. **Resolved in v0.3 by client answers (B6) and removed:** #4 budgets (no per-agent caps; 30 % guard confirmed; the rest of #4 is in §10.1), #6 data (retention and agent deletion confirmed; the rest in §10.1), #7 outward actions, #12 one agent in several nodes, #27 project template copies (sub-points in §10.1), #29 Deputy. **Adopted as defaults (B6) and moved to §10.1:** #3, #4 (rest), #6 (rest), #9, #10 (except the tray), #13, #15, #17, #18, #19, #20, #21, #22, #23, #24, #25, #26, #27 (sub-points), #28, #30. **Resolved in v0.4 and removed:** #33 context checkpoint threshold (80 % of each agent's own context window by default, configurable per agent; BR-66) *(B6-CTX2)*. Numbers are never reused, so cross-references stay valid.
 
 ### 10.1 Defaults accepted; carried into PRD/SRS (revisit at prototype)
 
