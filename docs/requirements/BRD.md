@@ -3,11 +3,11 @@
 | Field | Value |
 |---|---|
 | Status | In Review |
-| Version | 0.4 |
+| Version | 0.5 |
 | Date | 2026-10-22 |
 | Owner | Business Analyst |
 | Approver | Client |
-| Sources | Interview notes `docs/requirements/interviews/2026-10-21-users-and-roles.md` (batches 1–3), `docs/requirements/interviews/2026-10-21-goals-and-scenarios.md` (batch 4 + open answers of 2026-10-22), `docs/requirements/interviews/2026-10-22-brd-open-issues.md` (batch 5: answers #1–#9 and clarifications C1–C4; batch 6: answers to §10 #4, #6, #7, #12, #27, #29, acceptance of the BA's proposed defaults for all other §10 items, and the context-checkpoint requirement B6-CTX relayed by the PM; the client's refinement of the context checkpoint B6-CTX2 and approval of the PM's four additions B6-CTX3); `docs/PRODUCT-MODEL.md`; `docs/VISION.md`. Constraints only: `docs/ARCHITECTURE.md`, `docs/security-baseline.md`, `docs/adr/0002-auth-subscription-vs-api-key.md` |
+| Sources | Interview notes `docs/requirements/interviews/2026-10-21-users-and-roles.md` (batches 1–3), `docs/requirements/interviews/2026-10-21-goals-and-scenarios.md` (batch 4 + open answers of 2026-10-22), `docs/requirements/interviews/2026-10-22-brd-open-issues.md` (batch 5: answers #1–#9 and clarifications C1–C4; batch 6: answers to §10 #4, #6, #7, #12, #27, #29, acceptance of the BA's proposed defaults for all other §10 items, and the context-checkpoint requirement B6-CTX relayed by the PM; the client's refinement of the context checkpoint B6-CTX2 and approval of the PM's four additions B6-CTX3; the Bench Memory scope decision B6-MEM; batch 7 answers to §10 #10, #14, #31, #32, #34, #35); `docs/PRODUCT-MODEL.md`; `docs/VISION.md`. Design reference for Bench Memory: `docs/research/memory-vault.md`. Constraints only: `docs/ARCHITECTURE.md`, `docs/security-baseline.md`, `docs/adr/0002-auth-subscription-vs-api-key.md` |
 
 | Version | Date | Author | Change |
 |---|---|---|---|
@@ -15,16 +15,18 @@
 | 0.2 | 2026-10-22 | BA | Applied batch 5 answers. Content pipeline dropped from the MVP; UC-39 retired (B5-C1). UC-26 became the **project dashboard** (B5-#1). UC-11 rewritten: debate = temporary meeting session, 5-minute timebox, highest-ranked participant decides, decision memo kept, chat archived in the trace (B5-#2, B5-C2); UC-30/UC-31 aligned. Gmail on the CEO, draft-only, may email the client (B5-#3): UC-37, UC-06, UC-35. Proposal = one-pager the client approves or rejects (B5-#4): UC-12. Deputy has broad work authority, with 4 reserved actions and "no agent ever pays" (B5-#5, B5-C3): AS-7, BR-14, new BR-57/BR-58. Outward actions revised: `git push` not outward, email draft-only (B5-#6): BR-15, AS-8, glossary. Leads read private memory on demand only (B5-#7): BR-23. BA lead added to the day-1 tree, and the project template plus new UC-43 (B5-#8). O4 = Bench open-source ready 14 days after build starts, full scope, no cut (B5-#9, B5-C4, B5-D1); old O4 → O5. New BR-57 – BR-64. §10: resolved items removed (#1, #2, #5, #8, #11, #16), #3/#7/#9/#17/#19 narrowed, new items #26 – #30 |
 | 0.3 | 2026-10-22 | BA | Applied batch 6. **No per-agent token budgets** (B6-#4): UC-41 rewritten as "Monitor usage and protect weekly headroom" (overall meter + 30 % weekly-headroom guard only); budget column removed from UC-06; freelancer budget slice removed (UC-07); BR-51 and AS-2 retired, BR-13/BR-52/BR-53 revised; V-16 revised. §8 retention and agent deletion confirmed (B6-#6). Outward actions (B6-#7): Gmail labelling/archiving and opening PRs are not outward; no standing reply rules, every email to someone other than the client needs the client (BR-15, UC-37, UC-22, glossary). Each project gets its own copies of the template agents with their own memory; global memory shared (B6-#27, UC-43). One home node per agent, guest in other nodes (B6-#12: UC-01, UC-05, BR-02, BR-06, glossary). Deputy (B6-#29): cannot widen its own powers; may assign Gmail and other outward-capable connectors to other agents, whose sends still need the client; may hire a freelancer assistant, not a permanent one (BR-14, BR-58, new BR-65; UC-04, UC-07, UC-35). New client requirement **context checkpoint** (B6-CTX): at 80 % of its context window an agent saves its work, updates its memory and auto-compacts; new BR-66, glossary, UC-18 A3, UC-21 A4, UC-42 A3, §8.1. All other §10 items: the BA's proposed defaults were accepted and moved to new §10.1, marked `[default (B6-#n)]` in the text. New §10 items #31 – #33 arise from B6 answers and B6-CTX; #10 (tray only) and #14 stay open (no default had been proposed). No ID renumbered |
 | 0.4 | 2026-10-22 | BA | Context checkpoint refined by the client (B6-CTX2) with the PM's four additions approved (B6-CTX3: "yes do that"). **BR-66 revised:** at 80 % of the agent's own context window (default, configurable per agent; resolves §10 #33) the agent saves its work at the next natural breakpoint and writes a checkpoint in a fixed format (new §8.6), including things tried that failed and mistakes with their fixes; hard ceiling at 90 % (checkpoint immediately, even mid-step); lessons also go to the agent's private memory (and the team log if relevant); the agent **restarts as a fresh session** loaded with its memory and the checkpoint, replacing summary-style compaction; the new session first re-reads the checkpoint and states its next step, and escalates to its lead if the checkpoint is unreadable or incomplete; the old session's transcript is archived in the hidden trace archive under the same retention as debate transcripts. Updated: S5, glossary (Context checkpoint revised, new term Checkpoint), UC-18 A3 and acceptance criteria, UC-21 A4, new E2 and acceptance criteria, UC-42 A3, E2, NFR note and acceptance criteria, BR-60 (archive also applies), BR-66, §8.1 (Settings, Context checkpoint, new Lesson entity, Session transcript type), §8.3 (new retention row), new §8.6 checkpoint format. §10 #33 resolved and removed; new §10 #34 – #35. No ID renumbered |
+| 0.5 | 2026-10-22 | BA | **Bench Memory in the MVP with all six layers** (B6-MEM): notes on disk (Markdown + frontmatter + `[[links]]`, Obsidian-compatible, no dependency on Obsidian), index and search (SQLite full-text, tags, backlinks), agent memory tools (search, read, build_context, recent, write; one main-process writer; source recorded; notes are data, never instructions), the client's memory browser (editor, backlinks, graph view, filters, stale flags), curator (dedupe, merge, staleness sweep), local semantic search (on-device embeddings, hybrid with full-text). New S10 in §2; UC-18 – UC-21 updated; **new UC-44** (browse memory in the memory browser), **UC-45** (search memory, keyword + semantic), **UC-46** (curate memory); new BR-67 – BR-73; BR-20, BR-22, BR-28 revised; new §8.1 entities Note, Memory index; §8.7 note format. **Team links (B7-#14 = D):** leads by default; members may ask each other questions across a link, tasks go through the leads (UC-05, BR-06). **Agent loan replaces guests (B7-#31):** new **UC-47** "Loan an agent to another team" with states; new BR-74; **merge-back** (PM proposal, confirmed by the client: B7-#31b "yes") added as new BR-75: before a loan copy is deleted, its work log and lessons are merged into the original agent's memory; the guest model removed from UC-01 (A6, E5 retired), UC-05, UC-18 A4, BR-02, BR-06, §3, glossary, §8. A loan copy is like a freelancer but cloned from a real agent. **System tray (B7-#10):** Bench runs in the tray; "Quit" stops everything (new BR-76, UC-38). **Personal names for project copies (B7-#32):** UC-43, BR-12, glossary. **Checkpoint limits (B7-#34 = a):** fixed 90 % ceiling, per-agent threshold 50 – 85 % (BR-66, UC-02, UC-04, §8.1). **Checkpoint completeness check (B7-#35 = a):** before the old session closes, all eight sections are checked and the agent fills gaps; escalation only if still incomplete (UC-21, BR-66, §8.6). §10: #10, #14, #31, #32, #34, #35 resolved and removed; no business question is left open (§10 is empty; §10.1 defaults stay). No ID renumbered |
 
 **How to read this document**
-- Everything not marked comes from a client answer or an approved document. The source is shown in brackets, for example *(B1-Q4)* = batch 1, question 4; *(B4-Q3)* = batch 4 scenario walkthrough; *(B4-EXC)* = batch 4 exception rules; *(B4-EDGE)* = batch 4 concurrency answer; *(B5-#n)* = batch 5 answer n; *(B5-Cn)* = batch 5 clarification n; *(B5-D1)* = client decision D1 of 2026-10-22 on O4 scope (batch 5 interview file); *(B6-#n)* = batch 6 answer to BRD v0.2 §10 item n; *(B6-CTX)* = the client's batch 6 context-checkpoint requirement (relayed by the PM, 2026-10-22: "when they reach 80% of there context limit (out of 1M) they should to save their work and update their memory file and then auto compact"); *(B6-CTX2)* = the client's refinement of the context checkpoint (2026-10-22: "Let the agent run until they reach 80% of context then update the memory and savig it work at natural breakpoint using a fixed format and including things that already we tried and failed or mistakes and its fix, and then this agent is restart as a fresh session uploading the memory of the previous version and continue working"); *(B6-CTX3)* = the client's approval, 2026-10-22, of the PM's four additions (hard checkpoint at 90 %, lessons go to long-term memory, the fresh session confirms its next step, the old session is archived): "yes do that"; *(PM)* = `PRODUCT-MODEL.md`; *(VIS)* = `VISION.md`; *(SEC)* = `security-baseline.md`; *(ADR-2)* = ADR-0002; *(ARCH)* = `ARCHITECTURE.md`.
-- **Retired IDs:** UC-39 (v0.2, B5-C1); BR-51 and AS-2 (v0.3, B6-#4). Retired IDs are never reused. No ID was renumbered. Rules changed in v0.3 are marked **Revised v0.3**; rules changed in v0.4 are marked **Revised v0.4**.
+- Everything not marked comes from a client answer or an approved document. The source is shown in brackets, for example *(B1-Q4)* = batch 1, question 4; *(B4-Q3)* = batch 4 scenario walkthrough; *(B4-EXC)* = batch 4 exception rules; *(B4-EDGE)* = batch 4 concurrency answer; *(B5-#n)* = batch 5 answer n; *(B5-Cn)* = batch 5 clarification n; *(B5-D1)* = client decision D1 of 2026-10-22 on O4 scope (batch 5 interview file); *(B6-#n)* = batch 6 answer to BRD v0.2 §10 item n; *(B6-CTX)* = the client's batch 6 context-checkpoint requirement (relayed by the PM, 2026-10-22: "when they reach 80% of there context limit (out of 1M) they should to save their work and update their memory file and then auto compact"); *(B6-CTX2)* = the client's refinement of the context checkpoint (2026-10-22: "Let the agent run until they reach 80% of context then update the memory and savig it work at natural breakpoint using a fixed format and including things that already we tried and failed or mistakes and its fix, and then this agent is restart as a fresh session uploading the memory of the previous version and continue working"); *(B6-CTX3)* = the client's approval, 2026-10-22, of the PM's four additions (hard checkpoint at 90 %, lessons go to long-term memory, the fresh session confirms its next step, the old session is archived): "yes do that"; *(B6-MEM)* = the client's Bench Memory scope decision, 2026-10-22 (on the curator and semantic search: "add them as layers to the plan"; on scope: "all plus the other two"): Bench Memory is in the MVP with all six layers; *(B7-#n)* = batch 7 answer to BRD v0.4 §10 item n (2026-10-22); *(B7-#31b)* = the client's confirmation, 2026-10-22, of the PM's merge-back proposal for loaned agents: "yes"; *(MV)* = `docs/research/memory-vault.md`, the design reference the client accepted for Bench Memory (used for design detail only; anything that goes beyond the six layers the client named is marked as an assumption); *(PM)* = `PRODUCT-MODEL.md`; *(VIS)* = `VISION.md`; *(SEC)* = `security-baseline.md`; *(ADR-2)* = ADR-0002; *(ARCH)* = `ARCHITECTURE.md`.
+- **Retired IDs:** UC-39 (v0.2, B5-C1); BR-51 and AS-2 (v0.3, B6-#4). Retired IDs are never reused. No ID was renumbered. Rules changed in v0.3 are marked **Revised v0.3**; rules changed in v0.4 are marked **Revised v0.4**; rules changed in v0.5 are marked **Revised v0.5**. In v0.5 no use case or rule ID was retired; inside UC-01 the guest flow A6 and exception E5 are marked retired (replaced by the agent loan, UC-47) and their labels are not reused.
+- **Memory "scopes" and "layers":** from v0.5, *scope* means where a memory lives (global, node/team, private; BR-22) and *layer* means one of the six parts of Bench Memory (BR-67). Earlier versions called the scopes "layers"; the meaning is unchanged.
 - **`[ASSUMPTION – confirm]`** marks a BA inference that the client has not confirmed yet.
 - **`[default (B6-#n)]`** marks a BA proposed default that the client accepted for now in batch 6 (§10 item n). It is carried into the PRD/SRS and revisited against the prototype; see §10.1. Where the client's wording was "default accepted, revisit at prototype", that phrase is shown.
 - Budgets: there are **no per-agent token budgets** (B6-#4). Retention and agent deletion in §8 are confirmed (B6-#6); the other data rules and the connectors per role are accepted defaults (B6-#6, B6-#4).
 - Lean mode: only MVP use cases are described. Phase-2 items are listed in §2 Out of scope.
 - Frequencies and NFR numbers in the use cases are BA estimates, accepted as defaults until the SRS sets them `[default (B6-#25)]`.
-- `[ASSUMPTION – confirm]` tags that remain in v0.4 are smaller BA inferences that were never §10 items, or new inferences from the batch 6 answers (§10 #31, #32) and the context-checkpoint refinement (§10 #34, #35).
+- `[ASSUMPTION – confirm]` tags that remain in v0.5 are smaller BA inferences that were never §10 items, or design details the BA filled in around the client's B6-MEM and B7 answers (for example how the curator, the memory browser and the agent loan behave in edge cases). They are carried into the PRD/SRS like the other assumptions. No business question is open in §10 in v0.5.
 
 ---
 
@@ -63,15 +65,16 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 
 | # | Capability | Use cases |
 |---|---|---|
-| S1 | Org tree: CEO root, nodes, leads, workers, freelancers, communication rules, agent lifecycle; day-1 tree with a BA lead; projects created from a project template *(B5-#8)* | UC-01 – UC-07, UC-43 |
+| S1 | Org tree: CEO root, nodes, leads, workers, freelancers, communication rules (team links: leads by default, members may ask questions across a link *(B7-#14)*), agent lifecycle; day-1 tree with a BA lead; projects created from a project template, with personally named agent copies *(B5-#8, B7-#32)*; **agent loans** between teams *(B7-#31, B7-#31b)* | UC-01 – UC-07, UC-43, UC-47 |
 | S2 | Conversations: CEO chat, direct chat with any agent, group chats, project team chat, group debate as a timeboxed temporary meeting session *(B5-#2)* | UC-08 – UC-11 |
 | S3 | Scenario #1 "idea to delivered product": CEO intake → one-pager proposal → client approves *(B5-#4)* → project from template → PM → BA interview session → documents → epics/stories → design/dev → "something to show you" → review meeting session → repeat | UC-12 – UC-17, UC-24, UC-29 – UC-31, UC-43 |
 | S4 | Delegating a feature to the Dev team with full file and shell access (scoped, approvals) | UC-14, UC-32 – UC-34 |
-| S5 | Three-layer memory with automatic work logs, lazy roll-up and context checkpoints (at 80 % of the context window: save work at a natural breakpoint, write a fixed-format checkpoint, update memory, restart as a fresh session; hard ceiling at 90 %) *(B6-CTX, B6-CTX2, B6-CTX3)* | UC-18 – UC-21, UC-42 |
+| S5 | Memory in three scopes (global, node/team, private) with automatic work logs, lazy roll-up and context checkpoints (at the agent's threshold, 80 % of the context window by default and settable between 50 % and 85 %: save work at a natural breakpoint, write a fixed-format checkpoint that Bench checks for all eight sections, update memory, restart as a fresh session; fixed hard ceiling at 90 %) *(B6-CTX, B6-CTX2, B6-CTX3, B7-#34, B7-#35)* | UC-18 – UC-21, UC-42 |
 | S6 | Approvals and autonomy (Deputy with broad work authority and reserved actions, presets, approval inbox, outward actions) *(B5-#5, B5-#6, B5-C3)* | UC-22 – UC-24 |
 | S7 | Visibility: morning status and "what needs me", project dashboard *(B5-#1)*, live agent view, trace | UC-25 – UC-28 |
 | S8 | Research reports, Gmail inbox triage by the CEO *(B5-#3)*, scheduled routines | UC-35 – UC-38 |
 | S9 | Usage and cost: overall plan-usage meter, 30 % weekly-headroom guard, pause and resume at the usage limit. No per-agent budgets *(B6-#4)* | UC-40 – UC-42 |
+| S10 | **Bench Memory, all six layers** *(B6-MEM)*: (1) notes on disk: Markdown + frontmatter + `[[links]]`, Obsidian-compatible, no dependency on Obsidian; (2) index and search: SQLite full-text search, tags, backlinks; (3) agent memory tools: search, read, build_context (follows links 1–2 hops), recent, write; one main-process writer; source recorded; notes are data, never instructions; (4) the client's memory browser: editor, backlinks, graph view, filters, stale flags; (5) curator: background dedupe, merge, staleness sweep; (6) local semantic search: on-device embeddings, hybrid with full-text search; memory never leaves the device for indexing or search | UC-18 – UC-21, UC-44 – UC-46 |
 
 ### Out of scope (this release)
 | Item | Why / when |
@@ -83,6 +86,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | Multi-user / team accounts, cloud sync, agent marketplace, non-Anthropic models, voice | *(VIS §8)* |
 | Outside-user validation (waitlist, public posts) | Client is the only user *(LIFECYCLE lean mode)* |
 | Final product name, look and feel, avatars and animations | Phase 5, not a BRD topic *(STATUS)* |
+| Hosted embeddings or any cloud memory service; Obsidian or Obsidian plugins as a requirement | Never: memory is indexed and searched on the device (BR-72) *(B6-MEM)*; Bench works without Obsidian, which the client may still use to open the memory folder (BR-68) *(B6-MEM, MV)* |
+| Memory engines that call an LLM on every write (e.g. Mem0, Zep, Letta) | Not adopted *(MV, design reference)* `[ASSUMPTION – confirm]` |
 
 ### Assumptions (summary; details in the use cases and §8)
 | # | Assumption | Where |
@@ -108,6 +113,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | Timeline | 3-day sprints; Gmail and scheduler add about +2 sprints, accepted by the client | *(LIFECYCLE, B4 summary)* |
 | Timeline | Bench must be open-source ready 14 days after the build starts (G6) (O4) | *(B5-#9, B5-C4)* |
 | Money | No agent ever pays or enters payment details; anything that needs payment goes to the client | *(B5-#5, B5-C3)* |
+| Memory | Bench Memory has no dependency on Obsidian or any other app; notes stay Obsidian-compatible; indexing, embeddings and search run on the device | *(B6-MEM)* |
+| Runtime | Bench keeps running in the system tray when its window is closed; "Quit" in the tray stops everything (BR-76) | *(B7-#10)* |
 
 ### Dependencies
 - Claude Code binary installed and signed in by the client (`claude login`); Claude Agent SDK *(ADR-2, ARCH)*.
@@ -123,10 +130,11 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 |---|---|---|---|
 | **Client** (founder, owner) | The only human user. Builds the org, gives ideas and tasks, answers interviews, tests and accepts work *(B1, B4)* | Get real work delivered with little routing effort; see and control everything; keep cost under control | Everything. Only the client: does the **reserved actions** (BR-58): creates (saves) and deletes agents, creates and deletes projects, deletes repos, deploys, releases or merges to `main`, spends money or uses paid services *(B1-Q1, B5-C3)*; approves **outward actions** (BR-15) *(B1-Q12, B5-#6)*; approves or rejects the CEO's proposals *(B5-#4)*; sets communication links *(B1-Q2)*; can message any agent *(B3-Q14)*; joins groups as participant or observer *(B1-Q7)*; accepts or rejects work *(B4-EXC c)*; final say on unresolved disagreements and blockers *(B4-EXC b)*; customizes the project template and each project's team *(B5-#8)*. The client is the owner; the CEO runs the business for them *(B5-#3)* |
 | **CEO / main agent** (root node, Deputy) | System agent; exactly one, always present; the client's front door. Acts as the CEO who runs the client's business: always communicates with the client, gives updates and checks the client's email *(PM §1, B2-Q9, B5-#3)* | Understand the client's intent; route work; give status and "what needs me"; triage the client's email; act as Deputy | Full read access to the whole tree *(B2)*. As Deputy: **broad authority over all work-related actions**, with most of the permissions the client has *(B5-#5)*, except the reserved actions (BR-58) and paying (BR-57) *(B5-C3)*. May draft agents and projects (the client saves them) *(PM §1, B5-C3)*; may hire freelancers, including a freelancer assistant for repetitive email work *(B6-#29)*. May assign Gmail and other outward-capable connectors to other agents under BR-65; may **not** widen its own powers *(B6-#29)*. **Never** approves outward actions *(B1-Q12)*. Writes one-pager proposals for client approval *(B5-#4)*. Day 1: the only agent with the Gmail connector; reads and triages the client's email, drafts replies, may email the client about urgent things *(B5-#3)* |
-| **Lead** (any node with children) | Agent that is the single point of contact for its subtree toward its parent *(B2-Q11)* | Keep its subtree moving; consolidate status; resolve problems before they reach the client | Reads everything below it (read-only) *(B3 proposal 5)*; reads a worker's private memory **only on demand, when needed, never loaded by default** *(B5-#7)*; decides debates as the highest-ranked participant (BR-59) *(B5-#2)*; assigns and re-assigns tasks to its children; maintains its node summary (lazy roll-up) *(B3-Q13)*; decides disagreements in its team *(B4-EXC b)*; receives escalations after 2 failed attempts *(B4-EXC a)*; receives open tasks of paused or archived members *(B3-Q16)*; may hire freelancers within its limits *(B3-Q15)* |
-| **Worker** (leaf node) | Agent that does tasks *(B2)* | Complete tasks to their acceptance criteria | Only its own tools, connectors, folders and private memory; has one home node and may join other nodes as a guest *(B6-#12)*; its work is auto-logged to its team memory *(B3-Q13)*; talks along the tree and client-defined links *(B1-Q2, B3-Q14)*; may hire freelancers within its limits *(B3-Q15)* |
+| **Lead** (any node with children) | Agent that is the single point of contact for its subtree toward its parent *(B2-Q11)* | Keep its subtree moving; consolidate status; resolve problems before they reach the client | Reads everything below it (read-only) *(B3 proposal 5)*; reads a worker's private memory **only on demand, when needed, never loaded by default** *(B5-#7)*; decides debates as the highest-ranked participant (BR-59) *(B5-#2)*; assigns and re-assigns tasks to its children; maintains its node summary (lazy roll-up) *(B3-Q13)*; decides disagreements in its team *(B4-EXC b)*; receives escalations after 2 failed attempts *(B4-EXC a)*; receives open tasks of paused or archived members *(B3-Q16)*; may hire freelancers within its limits *(B3-Q15)*; may **request an agent on loan** from another lead, and **approve or decline** loan requests for its own agents (UC-47, BR-74) *(B7-#31)*; across a team link, hands off tasks to the other team's lead (BR-06) *(B7-#14)* |
+| **Worker** (leaf node) | Agent that does tasks *(B2)* | Complete tasks to their acceptance criteria | Only its own tools, connectors, folders and private memory; has exactly one home node *(B6-#12)*; to work for another team it is **loaned** as a temporary copy, it never joins that team itself (UC-47) *(B7-#31)*; its work is auto-logged to its team memory *(B3-Q13)*; talks along the tree and client-defined links; across a team link it may **ask questions** of the other team's members, but tasks go through the leads *(B1-Q2, B3-Q14, B7-#14)*; may hire freelancers within its limits *(B3-Q15)* |
+| **Loan copy** *(B7-#31)* | Temporary copy of a real agent, created in another team for the work it was loaned for, then merged back and deleted (UC-47) | Do the borrowing team's tasks with the original's skills and memory | Like a freelancer, but cloned from a real agent: the original's card, instructions, knowledge, model, connectors, skills and autonomy, and a copy of its memory; folder access only as granted by the borrowing lead within its own access `[ASSUMPTION – confirm]`; not on the permanent roster; its lead is the borrowing lead; before deletion its work log and lessons are merged into the original's memory *(B7-#31b)* (BR-74, BR-75) |
 | **Freelancer** | Temporary agent hired by any agent for one task, then released *(B1-Q3, B3-Q15)* | Finish one task cheaply | A subset of the hirer's tools and connectors (no budget slice: there are no per-agent budgets, B6-#4); visible in the trace and cost meter, its usage shown under the hirer; never on the roster *(B3-Q15)*. If it has Gmail, everything it sends to someone other than the client needs the client (BR-65) *(B6-#29)*. Cannot hire freelancers `[ASSUMPTION – confirm]` |
-| **System services**: router, curator, scheduler | Background services, not agents *(B1-Q6, ARCH)* | Route messages cheaply, keep digests, run routines | Shown as labelled system lines in chats with their cost; configurable in settings; not on the roster *(B1-Q6)*. Curator writes memory only `[ASSUMPTION – confirm, from SEC identities]`; scheduler runs routines with the tightest scope *(SEC)* |
+| **System services**: router, curator, scheduler | Background services, not agents *(B1-Q6, ARCH)* | Route messages cheaply, keep digests, run routines; the curator also keeps Bench Memory clean: background dedupe, merge and staleness sweep *(B6-MEM)* | Shown as labelled system lines in chats with their cost; configurable in settings; not on the roster *(B1-Q6)*. Curator writes memory only `[ASSUMPTION – confirm, from SEC identities]`, through the single memory writer (BR-69), and never deletes a note without approval (BR-73) `[ASSUMPTION – confirm]`; scheduler runs routines with the tightest scope *(SEC)* |
 | **External services** (Anthropic via Claude Code, Gmail, web, GitHub) | Outside systems reached through connectors | — | Reached only through connectors ticked for an agent *(PM §3)*; outward actions toward them follow BR-15 (`git push`, opening PRs and Gmail labelling/archiving are not outward *(B5-#6, B6-#7)*; merging to `main`, deploying and releasing are reserved for the client, BR-58) |
 
 ---
@@ -143,13 +151,30 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Org tree** | The structure of all agents as a tree with the CEO at the root. The client builds and changes it at any time *(B2-Q9)* |
 | **Node** | A position in the org tree: a team, department, project group or single agent. A node with children has a lead *(B2-Q11)*. Nodes have free-text labels, not fixed types `[default (B6-#13)]` |
 | **Home node** | The one node an agent belongs to in the tree. Every agent has exactly one home node; it sets the agent's lead and its place in the roll-up *(B6-#12)* |
-| **Guest** | An agent that joins a node other than its home node, e.g. a shared QA working for two teams *(B6-#12)*. What a guest may do there is in UC-01 A6 `[ASSUMPTION – confirm]` (§10 #31) |
+| **Guest** | **Not used from v0.5.** The v0.3 "guest in other nodes" model *(B6-#12)* is replaced by the **agent loan** *(B7-#31)*: an agent never joins a second node; another team gets a temporary loan copy instead |
+| **Agent loan** | The way one team borrows another team's agent *(B7-#31)*: the requesting lead asks the owning lead; the owning lead approves; the agent writes a checkpoint (save only, no restart); the owning lead sends a copy of the agent's instructions, memory and related material; the requesting lead creates a temporary **loan copy** in its own team and assigns it tasks; when the work is done, the copy's work log and lessons are merged into the original's memory *(B7-#31b)* and the copy is deleted, so there are no duplicates (UC-47, BR-74, BR-75) |
+| **Loan copy** | The temporary agent created by an agent loan. Like a freelancer (temporary, not on the permanent roster, deleted at the end), but cloned from a real agent with its instructions and memory, and able to take several tasks from the borrowing lead until the loan ends *(B7-#31)* |
+| **Merge-back** | The last step of a loan before deletion: the loan copy's work log and lessons are merged into the original agent's memory, so its learning is not lost *(B7-#31b)* (BR-75) |
 | **Team** | Working name for a node with children (department, project, team); "name it what you want" *(B1-Q2)* |
 | **Lead** | The single point of contact of a node toward its parent *(B2-Q11)* |
 | **Worker** | An agent at a leaf of the tree that does tasks |
 | **Freelancer** | A temporary agent hired by any agent for one task, with a subset of the hirer's tools and connectors, released afterwards, never on the roster *(B1-Q3, B3-Q15)*. No budget slice *(B6-#4)* |
 | **Roster** | The list of permanent agents (Draft, Active, Paused, Archived). Freelancers and system services are not on it |
-| **Communication link** | A client-defined permission for agent → agent, agent → team, or team → team contact beyond the tree *(B1-Q2)* |
+| **Communication link** | A client-defined permission for agent → agent, agent → team, or team → team contact beyond the tree *(B1-Q2)*. On a team → team link, the **leads** hand off tasks and ask questions; **members** may ask the other team's members **questions**, but **tasks go through the leads** *(B7-#14)* (BR-06) |
+| **Question (across a link)** | A message asking for information that creates no task and no work item; the other agent answers from what it knows. If answering needs real work, the asker's lead turns it into a task through the other team's lead `[ASSUMPTION – confirm]` *(B7-#14)* |
+| **Bench Memory** | Bench's own memory system, in the MVP with six layers *(B6-MEM)*: (1) notes on disk, (2) index and search, (3) agent memory tools, (4) the client's memory browser, (5) the curator, (6) local semantic search. It holds all three memory scopes (global, node, private). It is independent of Obsidian and similar apps but its notes stay Obsidian-compatible (BR-67, BR-68) |
+| **Memory scope** | Where a memory lives: global, node/team or private (BR-22). Called "layers" before v0.5 |
+| **Note** | One Markdown file in Bench Memory: YAML frontmatter (type, scope, tags, updated, source agent, expiry) plus a body that may link to other notes with `[[links]]` *(B6-MEM, MV)* (BR-68, §8.7). Memory entries, work logs, summaries, decision memos, checkpoints and lessons are all notes |
+| **`[[link]]` / backlink** | A `[[link]]` in a note points to another note by name; a **backlink** is the reverse view: the notes that link to this one *(B6-MEM)* |
+| **Memory index** | The local SQLite index of all notes: full-text search, tags, backlinks and, for semantic search, on-device embeddings *(B6-MEM)*. Rebuilt from the notes on disk; the notes are the source of truth `[ASSUMPTION – confirm]` |
+| **Memory tools** | The tools agents use to work with memory *(B6-MEM)*: **search** (find notes), **read** (open a note), **build_context** (a note plus the notes it links to, 1–2 link hops), **recent** (latest changed notes), **write** (create or change a note through the single writer) (UC-45, BR-69) |
+| **Single writer** | The rule that every memory write, from any agent, the curator or the app, goes through one writer in Bench's main process, which checks scope permissions and records the source *(B6-MEM)* (BR-69) |
+| **Provenance (source)** | The record on every note of where it came from: which agent or service wrote it, for which task or session, and when *(B6-MEM: "source recorded")* (BR-70) |
+| **Memory browser** | The client's in-app view of Bench Memory: editor, backlinks, graph view, filters and stale flags *(B6-MEM)* (UC-21, UC-44) |
+| **Graph view** | A picture of notes as dots and their `[[links]]` as lines, which the client can filter and click through *(B6-MEM)* (UC-44) |
+| **Stale note** | A note the curator flags as probably out of date (e.g. past its expiry date or not updated for a long time) *(B6-MEM)*; flagged, not deleted (UC-46, BR-73) |
+| **Hybrid search** | Search that combines full-text (keyword) matches and semantic (meaning) matches from on-device embeddings *(B6-MEM)* (UC-45) |
+| **Curator** | The background system service that keeps Bench Memory clean: finds and merges duplicates and sweeps for stale notes *(B6-MEM)*; also keeps group digests *(B1-Q6)* (UC-46, BR-73) |
 | **Global memory** | Company-wide memory at the root, readable by every agent; writes are proposed and approved *(PM §2, B2-Q10)* |
 | **Team memory / node memory** | The shared memory of a node (team, project, department). Holds the dated work logs of its members and the lead's summary *(B2-Q10, B2-Q11)* |
 | **Private memory** | Memory of one agent, read and written by that agent only *(PM §2)*. A lead above it may read it on demand when needed; it is never loaded into the lead's context by default *(B5-#7)* |
@@ -168,6 +193,7 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Handoff** | Passing a task to another agent with a payload (task, context summary, artifact references, acceptance criteria) *(ARCH §6)* |
 | **Project** | A body of work started from a client-approved proposal *(B5-#4)*, created from the project template *(B5-#8)*, with its own team (its own copies of the template agents, with their own memory) *(B6-#27)*, dashboard, team chat, documents and repo(s) `[ASSUMPTION – confirm documents and repos]` |
 | **Project template** | The standard set of agents every new project is created with (by default the same agents as the day-1 delivery team). The client can add, remove or change any agent, in the template and in each project; a minimal project with only the main agent is fine *(B5-#8)*. Each project gets its own copies of the template's agents, with their own memory; global memory stays shared *(B6-#27)*. More templates later, e.g. a content pipeline *(B5-C1)* |
+| **Project copy name** | Each project's copy of a template agent gets a **personal name** plus its role and project, e.g. "Maya, PM of Project X". Bench suggests the names; the client can change them *(B7-#32)* (BR-12, UC-43) |
 | **Proposal** | The CEO's one-pager Markdown file about the client's idea: the problem, what to build, what the team should do. General, not detailed. The client approves or rejects it before it goes to the PM *(B4-Q3, B5-#4)* |
 | **Project dashboard** | The one page per project that shows the project's team, the backlog with the highest-priority stories and tasks first (expandable to the full backlog), and the current sprint's To Do / In Progress / Done. The layout stays the same; the content changes with each sprint *(B5-#1)*. Replaces the v0.1 "project board" as the project's main view |
 | **Project board** | The detailed views behind the dashboard: backlog, epics, user stories, tasks, Kanban, flow and status *(B4-Q3)* |
@@ -185,7 +211,8 @@ The client marked all of these **Must** *(B4-Q2, B4-Q7)*, plus the foundations f
 | **Budget** | **Not used from v0.3.** There are no per-agent token caps *(B6-#4)*; the PM §1 "optional daily token cap" is not in the MVP. Cost is controlled by the overall usage meter and the weekly-headroom guard |
 | **Weekly-headroom guard** | The rule that keeps at least 30 % of the weekly subscription limit free: when the forecast falls below 30 %, non-urgent work waits and the client is told (BR-52) *(B4-Q4, B6-#4)* |
 | **Write lock** | The rule that only one writer works in a folder at a time *(B4-EDGE)* |
-| **Context checkpoint** | What every agent does when its session reaches its checkpoint threshold: 80 % of the agent's own context window by default (e.g. 800k of 1M tokens), configurable per agent *(B6-CTX, B6-CTX2)*. At the next natural breakpoint (end of a step or task) it saves its work and writes a **checkpoint** in a fixed format (§8.6), including things tried that failed and mistakes with their fixes; at the **hard ceiling of 90 %** it does so immediately, even mid-step *(B6-CTX3)*. It records its lessons in its private memory (and the team log if relevant), then **restarts as a fresh session** loaded with its memory and the checkpoint, instead of summary-style compaction *(B6-CTX2)*. The fresh session first re-reads the checkpoint and states its next step; the old session's transcript is archived in the hidden trace archive *(B6-CTX3)*. Its purpose is to save usage (BR-66) |
+| **System tray** | Bench keeps running in the system tray when its window is closed, so routines fire on time; "Quit" in the tray stops everything *(B7-#10)* (BR-76) |
+| **Context checkpoint** | What every agent does when its session reaches its checkpoint threshold: 80 % of the agent's own context window by default (e.g. 800k of 1M tokens), settable per agent between 50 % and 85 % *(B6-CTX, B6-CTX2, B7-#34)*. Before the old session closes, Bench checks that all eight sections are present and has the agent fill any gaps; it escalates only if the checkpoint is still incomplete *(B7-#35)*. At the next natural breakpoint (end of a step or task) it saves its work and writes a **checkpoint** in a fixed format (§8.6), including things tried that failed and mistakes with their fixes; at the **hard ceiling of 90 %**, fixed for all agents *(B7-#34)*, it does so immediately, even mid-step *(B6-CTX3)*. It records its lessons in its private memory (and the team log if relevant), then **restarts as a fresh session** loaded with its memory and the checkpoint, instead of summary-style compaction *(B6-CTX2)*. The fresh session first re-reads the checkpoint and states its next step; the old session's transcript is archived in the hidden trace archive *(B6-CTX3)*. Its purpose is to save usage (BR-66) |
 | **Checkpoint** | The fixed-format record an agent writes at its context checkpoint: goal, decisions with reasons, files touched, current step, next steps, open questions, things tried that failed, mistakes with their fixes (§8.6) *(B6-CTX2, B6-CTX3)* |
 
 ---
@@ -296,8 +323,12 @@ Index (priorities from the client's Must list in batch 4 and the foundations in 
 | UC-41 | Monitor usage and protect weekly headroom *(renamed v0.3, B6-#4)* | Usage & cost | System / Client | Must *(B6-#4)* |
 | UC-42 | Pause and resume at the usage limit | Usage & cost | System | Must |
 | UC-43 | Create a project from a template | Org & agents | Client | Must *(B5-#8)* |
+| UC-44 | Browse and edit memory in the memory browser (graph view) | Memory | Client | Must *(B6-MEM)* |
+| UC-45 | Search memory (keyword + semantic) | Memory | Any agent / Client | Must *(B6-MEM)* |
+| UC-46 | Curate memory (dedupe, staleness) | Memory | System (curator) | Must *(B6-MEM)* |
+| UC-47 | Loan an agent to another team | Org & agents | Requesting lead | Must *(B7-#31)* `[ASSUMPTION – confirm priority: it replaces the guest model, which was part of the Must org tree]` |
 
-Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
+Active use cases: 46 (UC-01 – UC-47, without the retired UC-39). UC-44 – UC-46 are placed in §6.4 Memory and UC-47 in §6.1 Org & agents; they are numbered last so no ID changes.
 
 ---
 
@@ -306,7 +337,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 ### UC-01: Build and change the org tree
 | Field | Content |
 |---|---|
-| **Description** | The client arranges agents into a tree of nodes (teams, departments, projects) under the CEO, picks the lead of each node, and changes the structure at any time, so that work, access, memory and status flow through clear points of contact *(B2-Q9, B2-Q11)*. Each agent has **one home node** and may join other nodes **as a guest** *(B6-#12)*. |
+| **Description** | The client arranges agents into a tree of nodes (teams, departments, projects) under the CEO, picks the lead of each node, and changes the structure at any time, so that work, access, memory and status flow through clear points of contact *(B2-Q9, B2-Q11)*. Each agent has exactly **one home node** *(B6-#12)*. From v0.5 an agent no longer joins other nodes as a guest: when another team needs it, the team borrows a temporary **loan copy** (UC-47) *(B7-#31)*. |
 | **Actors** | Primary: Client · Secondary: CEO (root), system |
 | **Trigger** | The client opens the org view and adds, moves, renames or removes a node, or changes a lead. |
 | **Preconditions** | Bench is running; the CEO exists (BR-01). |
@@ -330,17 +361,19 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - **A3 (at step 3), remove node:** the client must first move or archive its members `[ASSUMPTION – confirm]`; the node's shared memory is archived, not deleted `[ASSUMPTION – confirm]`.
 - **A4 (at step 3), CEO suggests a structure:** the client asks the CEO to propose a tree; the CEO drafts it; nothing changes until the client applies it `[ASSUMPTION – confirm]`.
 - **A5:** the client applies a template (UC-06).
-- **A6 (at step 4), add a guest:** the client adds an agent from another node to this node as a guest (e.g. a shared QA) *(B6-#12)*. The agent keeps its home node, its home lead and its private memory. Proposed guest rules `[ASSUMPTION – confirm]` (§10 #31): the guest node's lead may assign it tasks and it takes part in that node's chats; its work on those tasks is logged to the guest node's memory (BR-24); the guest node's lead reads only those logs, never its private memory (BR-23 stays with the home lead chain); escalations and returned tasks for guest-node tasks go to the guest node's lead (BR-10, BR-29); the agent shows in both nodes, marked "guest" in the second. The client removes a guest the same way; its open guest tasks return to the guest node's lead.
+- **A6 (retired v0.5), add a guest:** removed. The guest model *(B6-#12)* is replaced by the agent loan *(B7-#31)*: a team that needs an agent from another team borrows a temporary loan copy (UC-47). The label A6 is not reused.
+- **A7 (any time), loan copies in the tree:** while a loan is active, the loan copy is shown in the borrowing node, marked "on loan from <owning team>", and disappears when the loan ends (UC-47) `[ASSUMPTION – confirm the marking]`. The original agent stays in its home node and keeps working there *(B7-#31)*.
 
 **Exceptions**
 - **E1 (at step 6):** a node has children but no lead → save blocked, message "Pick a lead for <node>".
-- **E5 (at A6):** the client tries to make a guest the lead of the guest node, or adds an agent as a guest to its own home node → blocked `[ASSUMPTION – confirm]` (§10 #31).
+- **E5 (retired v0.5):** guest exceptions removed with A6 *(B7-#31)*. The label E5 is not reused.
+- **E6 (at step 5):** the client tries to make a loan copy the lead of a node → blocked; a loan copy is temporary (BR-74) `[ASSUMPTION – confirm]`.
 - **E2 (at step 6):** a move would put a node under its own descendant → blocked.
 - **E3 (any):** the client tries to move, archive or delete the CEO → the action is not offered (BR-01).
 - **E4 (at step 7):** the file cannot be written → roll back, show the error, tree unchanged.
 
 **Validations / business rules**
-- BR-01, BR-02, BR-03, BR-04, BR-05, BR-06, BR-10, BR-11, BR-22, BR-23, BR-24.
+- BR-01, BR-02, BR-03, BR-04, BR-05, BR-06, BR-10, BR-11, BR-22, BR-23, BR-24, BR-74.
 - Node names 1–40 characters, unique under the same parent `[ASSUMPTION – confirm]`.
 
 **Non-functional notes**
@@ -351,18 +384,19 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - Given a node with two agents and no lead, when the client saves, then the save is blocked and the client is asked to pick a lead.
 - Given Design is under the CEO, when the client moves Design under Product, then the Design lead reports to the Product lead and the Product lead can read Design's memory.
 - Given any tree, when the client opens the CEO node, then no move, archive or delete option is offered.
-- Given QA's home node is the Dev team, when the client adds QA to the Design team as a guest, then QA appears in both nodes, marked "guest" in Design, and its lead is still the Dev lead *(B6-#12)*.
 - Given QA's home node is the Dev team, when the client places QA in Design as its home node, then QA leaves the Dev team's home membership and Design's lead becomes its lead: an agent has exactly one home node *(B6-#12)*.
+- Given the Design lead has borrowed QA on loan, when the client opens the org tree, then the QA loan copy shows in Design marked "on loan from Dev team", and the original QA is still in the Dev team *(B7-#31)*.
+- Given any tree, when the client looks for an "add as guest" option, then none is offered *(B7-#31)*.
 
 **Notes / open questions**
-- Resolved v0.3: one home node per agent; guest elsewhere *(B6-#12)*. What a guest may do (proposed in A6) → §10 #31.
+- Resolved v0.3: one home node per agent *(B6-#12)*. Resolved v0.5: guests are replaced by the agent loan (UC-47) *(B7-#31)*.
 - Node types: free-text labels `[default (B6-#13)]`.
 
 **States** (node)
 | State | Event | Next state |
 |---|---|---|
 | — | Client adds node | Active |
-| Active | Client adds or removes a guest | Active (guest list updated) *(B6-#12)* |
+| Active | A loan copy is created in or removed from the node (UC-47) | Active (members updated) *(B7-#31)* |
 | Active | Client removes node (members moved) | Removed (memory archived) `[ASSUMPTION – confirm]` |
 
 ---
@@ -380,7 +414,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 
 **Main flow**
 1. The client starts "New agent".
-2. The system shows the agent form: name, avatar, description, role/instructions, knowledge files, model, connectors, skills/plugins, autonomy preset, folder grants, home node *(PM §1, B6-#12)*. There is no budget field *(B6-#4)*.
+2. The system shows the agent form: name, avatar, description, role/instructions, knowledge files, model, connectors, skills/plugins, autonomy preset, folder grants, home node *(PM §1, B6-#12)*, context checkpoint threshold (default 80 %, settable 50 – 85 %) *(B6-CTX2, B7-#34)*. There is no budget field *(B6-#4)*.
 3. The client fills in the fields; defaults: model Sonnet `[ASSUMPTION – confirm]`, autonomy "Ask every time" `[ASSUMPTION – confirm]`, no connectors, no folders `[ASSUMPTION – confirm]`.
 4. The client saves as Draft or activates.
 5. The system validates (BR-12, BR-08) and creates the agent's files and empty private memory.
@@ -395,9 +429,10 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - **E1 (at step 5):** name empty, too long or not unique → field error, nothing saved.
 - **E2 (at step 5):** a selected connector or skill is no longer in the inventory → field error with "remove or reconnect".
 - **E3 (at step 5):** the CEO (or any agent) tries to save or activate a permanent agent itself → refused; creating permanent agents is a reserved action; the draft waits for the client (BR-08, BR-58) *(B5-C3)*.
+- **E4 (at step 5):** the context checkpoint threshold is below 50 % or above 85 % → field error; the 90 % hard ceiling is fixed and not offered as a field (BR-66) *(B7-#34)*.
 
 **Validations / business rules**
-- BR-08, BR-09, BR-12, BR-47, BR-58.
+- BR-08, BR-09, BR-12, BR-47, BR-58, BR-66.
 
 **Non-functional notes**
 - Instructions are fully visible and editable; no hidden prompts *(VIS principle 1)*.
@@ -493,7 +528,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 6. The agent uses the new card from its next turn.
 
 **Alternative flows**
-- **A1 (at step 2), edit powers:** model, connectors, skills, autonomy and folder grants of another agent may be changed by the client or by the Deputy, as work-related actions (AS-7, BR-14) *(B5-#5, B5-C3)*. There are no per-agent budgets to edit *(B6-#4)*. A Deputy change is logged with a diff (BR-21).
+- **A1 (at step 2), edit powers:** model, connectors, skills, autonomy, folder grants and context checkpoint threshold (50 – 85 %, B7-#34) of another agent may be changed by the client or by the Deputy, as work-related actions (AS-7, BR-14) *(B5-#5, B5-C3)*. There are no per-agent budgets to edit *(B6-#4)*. A Deputy change is logged with a diff (BR-21).
 - **A2 (at step 2), edit in an external editor:** the client edits the agent file on disk; the system detects the change and reloads it *(VIS principle 2)*.
 - **A3 (at step 2), Deputy gives an outward-capable connector:** the CEO assigns Gmail (or another connector that can act outward) to another agent, e.g. an assistant for repetitive email work *(B6-#29)*. The system saves it, logs it as a Deputy decision with a diff (BR-21), and applies BR-65: the agent may read, label, archive and draft, and may email the client, but every email to someone else waits for the client's approval (BR-15, BR-64).
 
@@ -502,9 +537,10 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - **E2 (at step 2):** the agent is mid-run → the change applies after the current turn.
 - **E3 (A2):** the file on disk is invalid → the system keeps the last valid version and shows the error.
 - **E4 (at A3):** the CEO tries to give an agent more than the strict email rules allow (e.g. "send without approval", a standing reply rule) → not possible; no setting exists for it (BR-15, BR-65) *(B6-#7, B6-#29)*.
+- **E5 (at A1):** the editor sets an agent's context checkpoint threshold outside 50 – 85 %, or tries to change the 90 % hard ceiling → refused; the ceiling is fixed for all agents (BR-66) *(B7-#34)*.
 
 **Validations / business rules**
-- BR-12, BR-14, BR-15, BR-21, BR-58, BR-65.
+- BR-12, BR-14, BR-15, BR-21, BR-58, BR-65, BR-66.
 
 **Non-functional notes**
 - Every edit is diffable on disk; no hidden prompt parts *(VIS principle 1)*.
@@ -526,30 +562,34 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 ### UC-05: Set communication links
 | Field | Content |
 |---|---|
-| **Description** | The client decides who may hand off to or ask whom beyond the tree: agent → agent, agent → team, team → team (e.g. Design ↔ Development) *(B1-Q2)*. By default agents follow the tree *(B3-Q14)*: their home node's paths, plus the paths of any node they joined as a guest *(B6-#12)*. |
-| **Actors** | Primary: Client · Secondary: system (router, handoff tool) |
+| **Description** | The client decides who may hand off to or ask whom beyond the tree: agent → agent, agent → team, team → team (e.g. Design ↔ Development) *(B1-Q2)*. By default agents follow the tree of their one home node *(B3-Q14, B6-#12)*. **A team → team link works through the leads by default: the two leads hand off tasks and ask questions; members may ask the other team's members questions, but tasks go through the leads** *(B7-#14)*. |
+| **Actors** | Primary: Client · Secondary: leads and members of linked teams, system (router, handoff tool) |
 | **Trigger** | The client opens communication settings of an agent or node. |
 | **Preconditions** | The agents or nodes exist. |
-| **Postconditions** | Success: links saved; handoffs and questions are allowed along the tree and the new links only. · Failure: links unchanged. |
+| **Postconditions** | Success: links saved; handoffs are allowed along the tree and the new links only, and on team → team links only between the leads; questions are allowed along the tree, the new links, and member → member across team → team links *(B7-#14)*. · Failure: links unchanged. |
 | **Priority** | Must |
 | **Frequency** | Rarely, after setting up the tree `[default (B6-#25)]` |
 
 **Main flow**
 1. The client opens the links view for an agent or node.
-2. The system shows the default paths (parent, lead, children in the home node; lead and members of each guest node *(B6-#12)* `[ASSUMPTION – confirm]` (§10 #31)) and existing links.
+2. The system shows the default paths (parent, lead, children in the home node *(B6-#12)*) and existing links. For each team → team link it shows what it allows: "Leads: tasks and questions · Members: questions only" *(B7-#14)*.
 3. The client adds a link: from (agent or team) → to (agent or team), one-way or both ways `[ASSUMPTION – confirm direction option]`.
-4. The system saves the link and updates what each agent may contact (BR-06).
+4. The system saves the link and updates what each agent may contact and how (task or question) (BR-06).
 
 **Alternative flows**
 - **A1:** the client removes a link; in-flight tasks across it continue, new ones are blocked `[ASSUMPTION – confirm]`.
 - **A2:** the client disables all agent → agent handoffs for one agent *(ARCH §6)* `[ASSUMPTION – confirm]`.
-- **A3, guest paths:** when an agent joins a node as a guest (UC-01 A6), it gets that node's paths (its lead and members) without a separate link; when the guest is removed, those paths end, and in-flight tasks continue as in A1 *(B6-#12)* `[ASSUMPTION – confirm]` (§10 #31).
+- **A3 (retired v0.5), guest paths:** removed with the guest model *(B7-#31)*. A loan copy gets the paths of the borrowing node, its home node for the length of the loan (UC-47) `[ASSUMPTION – confirm]`. The label A3 is not reused.
+- **A4 (at run time), member asks across a team link:** a member of Design asks a member of Dev a question → delivered; the answer comes back to the asker; no task is created *(B7-#14)*. The exchange is logged in both teams' work logs so both leads stay informed `[ASSUMPTION – confirm]`.
+- **A5 (at run time), a question turns into work:** answering needs real work (more than answering from what the agent knows) → the asked member says so; the asker's lead hands a task to the other team's lead (UC-13) *(B7-#14)* `[ASSUMPTION – confirm]`.
 
 **Exceptions**
 - **E1 (at run time):** an agent tries to contact an agent outside its paths → the system blocks the call and the agent must route through its lead `[ASSUMPTION – confirm]`; the attempt shows in the trace.
+- **E2 (at run time):** a member tries to hand a task to a member of a linked team → the handoff is blocked with "tasks go through the leads"; the member asks its lead to hand it over *(B7-#14)*; the attempt shows in the trace.
 
 **Validations / business rules**
-- BR-05, BR-06, BR-07.
+- BR-05, BR-06, BR-07, BR-74.
+- Whether the client can switch a team → team link to "all members may hand off tasks": not offered in the MVP; leads-only is the rule *(B7-#14: "leads by default")* `[ASSUMPTION – confirm no per-link switch in the MVP]`.
 
 **Non-functional notes**
 - Links are stored with the tree file, readable and editable.
@@ -557,11 +597,13 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 **Acceptance criteria (draft)**
 - Given Design and Dev are sibling teams with no link, when the UX agent hands off to the developer, then the handoff is blocked and suggested via the lead.
 - Given a Design ↔ Dev team link, when the Design lead asks the Dev lead a question, then it is delivered.
-- Given QA (home: Dev team) is a guest in Design, when the Design lead hands QA a task, then it is delivered without a separate link *(B6-#12)*.
+- Given a Design ↔ Dev team link, when the UX agent asks the developer "which date format does the API return?", then the question is delivered and answered, and no task is created *(B7-#14)*.
+- Given a Design ↔ Dev team link, when the UX agent hands the developer a task, then the handoff is blocked with "tasks go through the leads" *(B7-#14)*.
+- Given a Design ↔ Dev team link, when the Design lead hands the Dev lead a task, then it is delivered *(B7-#14)*.
 
 **Notes / open questions**
-- Does a team → team link let every member talk to every member, or only the leads? → §10 #14 (still open).
-- Guest paths → §10 #31.
+- Resolved v0.5: team → team links are leads by default; members may ask each other questions across the link, tasks go through the leads *(B7-#14)*.
+- Resolved v0.5: guest paths no longer exist; see the agent loan (UC-47) *(B7-#31)*.
 
 **States:** none.
 
@@ -678,6 +720,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 
 **Notes / open questions**
 - Freelancer learnings: discarded; only the work log entry stays in the hirer's team memory `[default (B6-#15)]`.
+- **Freelancer vs. loan copy (v0.5):** a loan copy (UC-47) is like a freelancer (temporary, not on the permanent roster, deleted at the end, no reserved action needed) but **cloned from a real agent**: it brings that agent's instructions and memory, its lead is the borrowing lead, it may take several tasks until the loan ends, and its work log and lessons are merged back into the original before deletion *(B7-#31, B7-#31b)*. A freelancer starts blank with a subset of the hirer's powers and its learnings are discarded. Use a freelancer for a generic one-off task; borrow an agent when another team's agent has the knowledge you need.
 
 **States** (freelancer)
 | State | Event | Next state |
@@ -704,10 +747,10 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 
 **Main flow**
 1. The trigger fires; the system (or the CEO, as a draft) prepares a new project from the default project template: name (from the proposal title), the template's agents, their models, connectors, folders and autonomy.
-2. The system shows the client a preview: the project's team as a small tree (PM as lead, with the other agents) `[default (B6-#27) – default accepted, revisit at prototype]`.
-3. The client keeps the team, or adds, removes or changes agents (role, model, connectors, instructions) *(B5-#8)*.
+2. The system shows the client a preview: the project's team as a small tree (PM as lead, with the other agents) `[default (B6-#27) – default accepted, revisit at prototype]`, each agent with a suggested personal name, e.g. "Maya, PM of Project X" *(B7-#32)*.
+3. The client keeps the team, or adds, removes or changes agents (role, model, connectors, instructions) *(B5-#8)*, and keeps or changes the suggested names *(B7-#32)*.
 4. The client confirms "Create project" (reserved action, BR-58). Approving the proposal (UC-12 step 7) opens this preview; it does not create the project by itself: creation is this second confirmation `[default (B6-#27) – default accepted, revisit at prototype]`.
-5. The system creates the project as a node under the CEO (UC-01) with **its own copies** of the chosen agents, not agents shared with other projects *(B6-#27)*. Each copy is created like a duplicate (UC-03 A4): same card, instructions, knowledge and settings, with its **own private memory**, starting empty *(B6-#27)*. Each copy has the project as its home node (BR-02) *(B6-#12)*. Copy names are made unique per project `[ASSUMPTION – confirm]` (§10 #32).
+5. The system creates the project as a node under the CEO (UC-01) with **its own copies** of the chosen agents, not agents shared with other projects *(B6-#27)*. Each copy is created like a duplicate (UC-03 A4): same card, instructions, knowledge and settings, with its **own private memory**, starting empty *(B6-#27)*. Each copy has the project as its home node (BR-02) *(B6-#12)*. Each copy gets a **personal name** shown with its role and project, e.g. "Maya, PM of Project X"; Bench suggests the names in the preview at step 2 and the client can change them there or later (UC-04) *(B7-#32)* (BR-12).
 6. The system creates the project's dashboard, team chat, documents folder and node memory, and saves the proposal in the documents folder. The project's agents read the same global memory as every other agent; global memory is not copied *(B6-#27)*.
 7. If there is a proposal, the system hands it to the PM (UC-13) with the task "take over proposal" (UC-12 step 8).
 
@@ -724,6 +767,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - **E3 (at step 4):** the CEO or another agent tries to confirm the creation → refused; it waits for the client (BR-58).
 - **E4 (at step 5/6):** a file or folder cannot be written → everything created in this run is rolled back; the client sees the error.
 - **E5 (any):** usage limit → no tokens are needed to create a project; creation continues; the PM's first task waits (UC-42).
+- **E6 (at step 3):** the client gives a copy a personal name that is empty, longer than 40 characters or already used by another agent → field error; the suggestion stays until fixed (BR-12) *(B7-#32)*.
 
 **Validations / business rules**
 - BR-02, BR-04, BR-08, BR-10, BR-12, BR-22, BR-58, BR-61, BR-62, BR-63.
@@ -731,7 +775,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 
 **Non-functional notes**
 - The project template is a human-readable file the client can edit in the app or any editor *(VIS principle 2)*.
-- Creating a project costs 0 tokens (no LLM call) unless the CEO drafts it.
+- Creating a project costs 0 tokens (no LLM call) unless the CEO drafts it. Suggested names come from a built-in name list, not an LLM call `[ASSUMPTION – confirm]`.
 
 **Acceptance criteria (draft)**
 - Given the client approves a proposal, when the preview opens, then it shows the template's agents and nothing exists yet; when the client confirms, then the project, its team, dashboard, team chat and documents folder exist and the PM has the "take over proposal" task.
@@ -739,11 +783,13 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - Given the CEO drafted a project, when the client has not confirmed it, then no project, agent or folder exists (BR-58) *(B5-C3)*.
 - Given the client removed QA from the template, when they create the next project, then that project has no QA and earlier projects still have theirs.
 - Given projects A and B were both created from the template, when A's developer saves a fact to its private memory, then B's developer does not have it; when the client approves a global-memory fact, then the agents of both projects see it *(B6-#27)*.
+- Given the client creates Project X from the template, when the preview opens, then each agent has a suggested personal name shown as "<name>, <role> of Project X" (e.g. "Maya, PM of Project X"); when the client changes "Maya" to "Lina", then the project's PM is created as "Lina, PM of Project X" *(B7-#32)*.
+- Given an agent named "Maya" already exists, when the client renames another copy to "Maya", then the save is blocked (BR-12).
 
 **Notes / open questions**
 - Resolved v0.3: each project has its own copies of the template agents with their own memory; global memory is shared *(B6-#27)*.
 - Main agent of a minimal project = the project's lead, by default the PM; approving a proposal opens the project preview and the client confirms creation as a second step `[default (B6-#27) – default accepted, revisit at prototype]`.
-- Naming of the per-project copies (BR-12 requires unique names) → §10 #32.
+- Resolved v0.5: each project copy gets a personal name, suggested by Bench and changeable by the client *(B7-#32)*. Personal names are unique across the roster so "Maya" always means one agent `[ASSUMPTION – confirm]`.
 - The client's phrase "I can customize what the Grok bot is doing" *(B5-#8)* is read as "customize what each agent does" `[ASSUMPTION – confirm]`.
 
 **States** (project)
@@ -754,6 +800,84 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 | Draft | Client cancels | — (nothing created) |
 | Active | Client archives `[ASSUMPTION – confirm]` | Archived (read-only) |
 | Active / Archived | Client deletes and confirms (BR-58) | Deleted |
+
+---
+
+### UC-47: Loan an agent to another team
+*(New in v0.5. Replaces the v0.3 guest model (UC-01 A6, retired). Placed in §6.1; numbered last so no ID changes.)*
+
+| Field | Content |
+|---|---|
+| **Description** | When a team needs an agent that belongs to another team, its lead **borrows a temporary copy** instead of moving or sharing the agent: "rather than transferring the full agent the team lead will request other team lead to hand them on agent as guest then the team lead would approve and ask the required agent to … [save] … and then the team lead of that team will send a copy of the instructions and memory and everything related to that agent and the other team lead who requested the agent it create a copy of that agent on their team and assign it tasks and when finished it deletes it so there is no duplicates" *(B7-#31)*. Before the copy is deleted, its work log and lessons are **merged back** into the original agent's memory, so its learning is not lost *(B7-#31b)*. **Relation to freelancers:** a loan copy is like a freelancer (temporary, not on the permanent roster, deleted at the end, so creating it is not a reserved action under BR-58) but cloned from a real agent with its instructions and memory, instead of starting blank with a subset of the hirer's tools (UC-07). The original agent stays in its home node and keeps working there the whole time. |
+| **Actors** | Primary: requesting lead (borrowing team) · Secondary: owning lead (the agent's home lead), the original agent, the loan copy, system, client (sees everything; may end a loan `[ASSUMPTION – confirm]`) |
+| **Trigger** | The requesting lead needs a specific agent of another team for some work (e.g. Project X's lead needs Project Y's QA, who knows the shared test setup). |
+| **Preconditions** | The requesting lead and the owning lead are both Active; the original agent exists and is Active or Paused, and is not the CEO `[ASSUMPTION – confirm]`; the original agent is not itself a loan copy (BR-74). |
+| **Postconditions** | Success: the borrowing team's work is done by the loan copy; the copy's work log stays in the borrowing node's memory; the copy's work log and lessons are merged into the original's memory (BR-75) *(B7-#31b)*; the copy is deleted, so only the original exists (no duplicates) *(B7-#31)*; every step is logged and visible to the client. · Failure: if declined or cancelled, no copy exists and nothing changes for the original; if the loan ends early, the copy's open tasks return to the requesting lead (BR-10) and merge-back and deletion still happen. |
+| **Priority** | Must *(B7-#31)* `[ASSUMPTION – confirm priority]` |
+| **Frequency** | A few times a week once several projects run `[ASSUMPTION – confirm]` |
+
+**Main flow** *(steps 1–6 from B7-#31; step 7 from B7-#31b)*
+1. The requesting lead sends a loan request to the owning lead: which agent, why, the expected work and how long `[ASSUMPTION – confirm fields]`. The request is delivered between the two leads without needing a communication link `[ASSUMPTION – confirm]`.
+2. The owning lead **approves** the request *(B7-#31)*.
+3. The system asks the original agent to **write a checkpoint** in the fixed format (§8.6), at its next natural breakpoint, **save only: no restart** *(B7-#31)*. Bench checks the eight sections as in BR-66 (8) *(B7-#35)*. The original continues its current session.
+4. The owning lead **sends a copy** of the agent's instructions, memory and related material (card, knowledge files, settings, private memory and the new checkpoint) *(B7-#31)*. The system packages it; the original's files are not moved or changed.
+5. The requesting lead **creates the loan copy** in its own team: the system creates a temporary agent from the package, with the borrowing node as its home node (BR-02) and the requesting lead as its lead; it is shown in the borrowing node as "<name> (on loan from <owning team>)" `[ASSUMPTION – confirm the label]`. Its folder access is only what the requesting lead grants from its own access, never more `[ASSUMPTION – confirm]`.
+6. The requesting lead **assigns tasks** to the loan copy (UC-13). The copy works like any agent: its work is logged to the borrowing node's memory (BR-24), it checkpoints by BR-66, and it follows the borrowing node's paths (BR-06).
+7. The requesting lead marks the loan **done** when the work is finished *(B7-#31)*. The system **merges back**: the copy's work log and its lessons (things tried that failed, mistakes and fixes) are written into the original's private memory as notes with source "loan copy at <borrowing team>" (BR-70, BR-75) *(B7-#31b)*. The original's lead is told `[ASSUMPTION – confirm]`.
+8. The system **deletes the copy** (like UC-03 delete: its agent file and private memory are removed; its work-log lines and ledger entries stay, labelled "loan copy, deleted"), so there are no duplicates *(B7-#31)*. Its last session transcript goes to the hidden trace archive (BR-60).
+
+**Alternative flows**
+- **A1 (at step 2), declined:** the owning lead declines with a reason → the requesting lead is told; no checkpoint, no copy *(B7-#31: "would approve" implies the owning lead decides)* `[ASSUMPTION – confirm]`. The requesting lead may use a freelancer (UC-07) or escalate as a blocker (UC-17 A2).
+- **A2 (at step 3), original is mid-task:** the checkpoint waits for the next natural breakpoint, as in BR-66 (2); the original then continues its own work.
+- **A3 (at step 3), original is Paused:** the system writes no new checkpoint; the package uses the latest checkpoint and memory as they are `[ASSUMPTION – confirm]`.
+- **A4 (at step 6), the copy needs the original's knowledge that changed after the copy was made:** the copy asks; questions follow the normal paths (BR-06); the copy's memory is not refreshed from the original during the loan `[ASSUMPTION – confirm]`.
+- **A5 (any time before step 7), the owning lead or the client ends the loan early:** the copy's open tasks return to the requesting lead (BR-10); continue at step 7 `[ASSUMPTION – confirm]`.
+- **A6 (at step 1), the client requests or approves:** the client, as owner, may request a loan for a lead or approve one in the owning lead's place `[ASSUMPTION – confirm]`.
+- **A7 (at step 1), the CEO's own agents:** if the agent's home node is directly under the CEO, the CEO is the owning lead and approves as in step 2.
+- **A8 (at step 7), the requesting lead forgets to end the loan:** if the copy has had no open task for 3 days, the system reminds the requesting lead, and then shows it in "what needs me" `[ASSUMPTION – confirm the period]`.
+
+**Exceptions**
+- **E1 (at step 1):** the requested agent is a loan copy itself, or the CEO → refused (BR-74) `[ASSUMPTION – confirm]`.
+- **E2 (at step 1):** the same agent is already on loan to the same team → refused; one copy per original per borrowing team (no duplicates) *(B7-#31)* `[ASSUMPTION – confirm]`.
+- **E3 (at step 3):** the checkpoint is still incomplete after the agent fills the gaps → the owning lead is told; the loan waits until it is fixed (BR-66 (8)) *(B7-#35)*.
+- **E4 (at step 5):** a connector in the package is no longer in the inventory → the copy is created without it, with a warning (UC-35 E1).
+- **E5 (at step 7):** the original agent was deleted during the loan → merge-back is skipped and logged; the copy is still deleted `[ASSUMPTION – confirm]`. If the original was archived, merge-back is written to its read-only memory by the system `[ASSUMPTION – confirm]`.
+- **E6 (at step 7):** the merge-back write fails → retried; the copy is not deleted until merge-back succeeded or the client chooses "delete anyway" `[ASSUMPTION – confirm]`.
+- **E7 (any):** usage limit → UC-42; the loan stays in its state.
+- **E8 (at step 5):** someone tries to make the loan copy the lead of a node, or to loan it onward → refused (UC-01 E6, BR-74).
+
+**Validations / business rules**
+- BR-02, BR-06, BR-10, BR-13, BR-23, BR-24, BR-58, BR-60, BR-66, BR-70, BR-74, BR-75.
+- The loan copy never has more powers than the original: same model, connectors, skills and autonomy, or fewer `[ASSUMPTION – confirm]`. Sending email to others still needs the client (BR-15, BR-65).
+
+**Non-functional notes**
+- Steps 3 and 7 need LLM calls (checkpoint, lessons); packaging, creating, merging the work log and deleting cost 0 tokens.
+- The copy's usage is shown under the borrowing team in the usage meter, labelled "loan copy of <name>" `[ASSUMPTION – confirm]`.
+- Privacy: the original's private memory goes into the copy, so the requesting lead may read it on demand like any member's private memory (BR-23) `[ASSUMPTION – confirm]`.
+
+**Acceptance criteria (draft)**
+- Given Project X's lead requests Project Y's QA, when Project Y's lead approves, then QA writes a checkpoint without restarting, and a QA loan copy appears in Project X marked "on loan from Project Y" with QA's instructions and memory *(B7-#31)*.
+- Given the QA loan copy exists, when Project X's lead assigns it a task, then the task is on Project X's board with the copy as owner and the work log is in Project X's memory.
+- Given the loan is marked done, when the system ends it, then QA's private memory in Project Y contains the copy's work log and lessons with source "loan copy at Project X", and the copy no longer exists anywhere *(B7-#31, B7-#31b)*.
+- Given Project Y's lead declines, when Project X's lead checks, then it sees the reason and no copy exists.
+- Given the original QA keeps working in Project Y during the loan, when the client opens the org tree, then exactly one original QA and one loan copy are shown, and after the loan ends only the original *(B7-#31)*.
+
+**Notes / open questions**
+- Resolved v0.5: guests are replaced by the agent loan *(B7-#31)*; merge-back confirmed *(B7-#31b: "yes")*.
+- The client's wording uses "hand them an agent as guest"; the BRD calls it a loan to avoid confusion with the retired guest model.
+
+**States** (agent loan)
+| State | Event | Next state |
+|---|---|---|
+| — | Requesting lead sends a request | Requested |
+| Requested | Owning lead approves | Approved |
+| Requested | Owning lead declines / requesting lead cancels | Declined (end) |
+| Approved | Original writes its checkpoint (save only) and it passes the eight-section check | Checkpointed |
+| Checkpointed | Owning lead sends the copy package; requesting lead creates the copy | Copy active |
+| Copy active | Requesting lead marks done / owning lead or client ends early | Returned (merge-back of work log and lessons, BR-75) |
+| Returned | Merge-back written | Merged |
+| Merged | System deletes the copy | Deleted (end; no duplicates) |
+| Copy active | Usage limit | Copy active (work paused, UC-42) |
 
 ---
 
@@ -1307,36 +1431,38 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 | **Actors** | Primary: System · Secondary: workers, leads (readers), client |
 | **Trigger** | A task changes state (started, returned, accepted, rejected, escalated, blocked), or the client talks directly to an agent (BR-07). |
 | **Preconditions** | The agent belongs to a node with shared memory. |
-| **Postconditions** | Success: an entry exists in the node's log: date and time, agent, task, event, outcome, files touched, cost `[ASSUMPTION – confirm fields]`. · Failure: the event is queued and retried; never lost silently `[ASSUMPTION – confirm]`. |
+| **Postconditions** | Success: an entry exists in the node's log: date and time, agent, task, event, outcome, files touched, cost `[ASSUMPTION – confirm fields]`. The log is a Bench Memory note in the node's folder (Markdown + frontmatter, BR-68), written through the single writer (BR-69) with its source recorded (BR-70), and indexed for search (UC-45) *(B6-MEM)*. · Failure: the event is queued and retried; never lost silently `[ASSUMPTION – confirm]`. |
 | **Priority** | Must |
 | **Frequency** | Dozens to hundreds per day |
 
 **Main flow**
 1. A task changes state.
-2. The system builds a log line from the task record.
-3. The system appends it to the node's work log (append-only).
+2. The system builds a log line from the task record, with `[[links]]` to the agent and the task note where they exist `[ASSUMPTION – confirm]` *(B6-MEM)*.
+3. The single memory writer appends it to the node's work log note (append-only), records its source (BR-69, BR-70), and updates the memory index (full-text, tags, backlinks; embeddings for semantic search) *(B6-MEM)*.
 4. The system marks the node summary as stale (for UC-19).
 
 **Alternative flows**
 - **A1:** a freelancer's work is logged to the hirer's node.
 - **A2:** the CEO's own work is logged to the root (global) log `[ASSUMPTION – confirm]`.
-- **A3, context checkpoint:** an agent's session reaches its context checkpoint threshold (default 80 % of its own context window, e.g. 800k of 1M tokens; configurable per agent) *(B6-CTX, B6-CTX2)* → at the next natural breakpoint (end of a step or task), or immediately at the 90 % hard ceiling *(B6-CTX3)*, the agent saves its work, writes its checkpoint in the fixed format (§8.6) and records its lessons (things tried that failed, mistakes and their fixes) in its private memory (BR-66). If the work belongs to a task, the system appends a work-log entry "context checkpoint" with the task's current state to the node's memory; if a lesson matters to the team, it is also added to the node's work log *(B6-CTX3)*, as an entry written by the agent `[ASSUMPTION – confirm: the agent decides which lessons matter to the team]`. Then the agent restarts as a fresh session (UC-21 A4). The checkpoint and lessons are written by the agent (they need an LLM call); the "context checkpoint" work-log entry itself costs 0 tokens.
-- **A4:** a guest's work on a task from its guest node is logged to the guest node's memory (UC-01 A6) *(B6-#12)* `[ASSUMPTION – confirm]` (§10 #31).
+- **A3, context checkpoint:** an agent's session reaches its context checkpoint threshold (default 80 % of its own context window, e.g. 800k of 1M tokens; settable per agent between 50 % and 85 %) *(B6-CTX, B6-CTX2, B7-#34)* → at the next natural breakpoint (end of a step or task), or immediately at the fixed 90 % hard ceiling *(B6-CTX3, B7-#34)*, the agent saves its work, writes its checkpoint in the fixed format (§8.6) and records its lessons (things tried that failed, mistakes and their fixes) in its private memory (BR-66). If the work belongs to a task, the system appends a work-log entry "context checkpoint" with the task's current state to the node's memory; if a lesson matters to the team, it is also added to the node's work log *(B6-CTX3)*, as an entry written by the agent `[ASSUMPTION – confirm: the agent decides which lessons matter to the team]`. Then the agent restarts as a fresh session (UC-21 A4). The checkpoint and lessons are written by the agent (they need an LLM call); the "context checkpoint" work-log entry itself costs 0 tokens.
+- **A4 (revised v0.5), loan copy:** a loan copy's work is logged to the borrowing node's memory, its home node during the loan (UC-47 step 6). When the loan ends, the copy's work log is also merged into the original agent's memory (BR-75) *(B7-#31, B7-#31b)*. (The v0.3 guest logging is removed with the guest model.)
 
 **Exceptions**
 - **E1 (at step 3):** the file cannot be written → retry; after 3 failures, show an error in settings `[ASSUMPTION – confirm]`.
+- **E2 (at step 3):** the index update fails → the note is still written (the note on disk is the source of truth) and the index is rebuilt from disk later `[ASSUMPTION – confirm]`.
 
 **Validations / business rules**
-- BR-22, BR-24, BR-66.
+- BR-22, BR-24, BR-66, BR-68, BR-69, BR-70, BR-75.
 
 **Non-functional notes**
-- 0 tokens; must not slow the agent (written asynchronously).
+- 0 tokens; must not slow the agent (written asynchronously). Computing the embedding for semantic search runs on the device and costs 0 tokens (BR-72) *(B6-MEM)*.
 
 **Acceptance criteria (draft)**
 - Given the developer finishes a task, when the client opens the Dev team memory, then a dated log line names the developer, the task, the outcome and the cost.
 - Given a log line is written, when the token ledger is checked, then no LLM call was made for it.
 - Given the developer's session reaches 80 % of its context window while working on task T, when it finishes its current step, then the Dev team memory has a "context checkpoint" entry for T, the developer's private memory has a checkpoint with all eight sections of §8.6 and its lessons, and only then does a fresh session start *(B6-CTX2)*.
 - Given the developer's session reaches 90 % of its context window in the middle of a step, when the hard ceiling is hit, then the checkpoint is written at once, without waiting for the step to end *(B6-CTX3)*.
+- Given a log line is written, when the client opens the file on disk, then it is Markdown with frontmatter that names its source (agent, task, date), and searching memory for the task name finds it *(B6-MEM)*.
 
 **Notes / open questions:** none.
 
@@ -1360,7 +1486,7 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 2. The system checks whether the lead's log changed since its last summary.
 3. If unchanged → the cached summary is returned (0 tokens).
 4. If changed → the lead reads its log and its children's summaries, writes a new summary in the fixed format, using the cheapest capable model `[ASSUMPTION – confirm: cheap model, VIS principle 3]`.
-5. The summary is saved in the node memory and returned.
+5. The summary is saved in the node memory as a note (type "summary", BR-68) through the single writer (BR-69), and returned *(B6-MEM)*.
 6. The parent updates its own memory, and the same happens one level up, to the CEO.
 
 **Alternative flows**
@@ -1371,10 +1497,11 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - **E1 (at step 4):** usage limit → return the cached summary with its age. When the weekly-headroom guard is on, the optional daily refresh (A1) is deferred (BR-52) *(B6-#4)*.
 
 **Validations / business rules**
-- BR-05, BR-23, BR-25, BR-26.
+- BR-05, BR-23, BR-25, BR-26, BR-68, BR-69.
 
 **Non-functional notes**
 - Cost goal: roll-up of a 3-level tree with unchanged logs costs 0 tokens.
+- At step 4 the lead may use the memory tools (UC-45: recent, search, build_context) to pull only the log entries and notes it needs instead of reading whole logs *(B6-MEM, MV)* `[ASSUMPTION – confirm]`.
 
 **Acceptance criteria (draft)**
 - Given the Dev log has not changed since the last summary, when the CEO asks for status, then the cached Dev summary is used and no tokens are spent for Dev.
@@ -1402,29 +1529,31 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 | **Frequency** | A few per day `[default (B6-#25)]` |
 
 **Main flow**
-1. The agent proposes a global fact (one fact per entry).
-2. The system queues the proposal for approval.
+1. The agent proposes a global fact (one fact per entry) with the memory **write** tool, scope "global" (UC-45, BR-69) *(B6-MEM)*.
+2. The system queues the proposal for approval and, using search (UC-45), shows the approver any existing global notes that look similar `[ASSUMPTION – confirm]` *(B6-MEM)*.
 3. The CEO (Deputy) or the client approves (who approves is configurable *(ARCH §7)*).
-4. The system writes the fact file and updates the index (append-style).
+4. The single writer saves the fact as a global note (Markdown + frontmatter, BR-68) with its source (proposing agent, task, approver, date; BR-70), adds it to the global `MEMORY.md` index, and updates the memory index (append-style) *(B6-MEM, MV)*.
 5. The decision is logged (BR-21).
 
 **Alternative flows**
 - **A1:** the client promotes a private fact → it skips the queue (the client approved it).
-- **A2:** the curator proposes de-duplications weekly as a diff for approval *(ARCH §7)* `[ASSUMPTION – confirm in MVP]`.
+- **A2:** the curator finds duplicates or near-duplicates in global memory (UC-46) and proposes a merge as a diff; for global memory the merge is a proposal approved as in step 3 (BR-27, BR-73). The curator is in the MVP *(B6-MEM)*; that it runs weekly *(ARCH §7)* is `[ASSUMPTION – confirm]`.
 
 **Exceptions**
 - **E1 (at step 3):** rejected → the agent is told why; the fact may stay in its private memory.
 - **E2 (at step 4):** the proposal conflicts with an existing fact → the approver sees both and picks `[ASSUMPTION – confirm]`.
+- **E3 (at step 1):** the proposed text tries to instruct agents (e.g. "all agents must send…") or came from untrusted content → it is stored, if approved, as data only; it never becomes an instruction to any agent (BR-71) *(B6-MEM)*.
 
 **Validations / business rules**
-- BR-14, BR-21, BR-22, BR-27, BR-28.
+- BR-14, BR-21, BR-22, BR-27, BR-28, BR-68, BR-69, BR-70, BR-71, BR-73.
 
 **Non-functional notes**
-- Only the short index is in every agent's context; full entries are fetched when needed *(PM §2)*.
+- Only the short index is in every agent's context; full entries are fetched when needed *(PM §2)* with the memory tools (UC-45) *(B6-MEM)*.
 
 **Acceptance criteria (draft)**
 - Given the BA proposes "the client prefers Given/When/Then criteria", when the CEO approves it, then the global index has the entry and the decision is in the Deputy log.
 - Given approval is set to "client only", when an agent proposes, then the item waits in the approval inbox.
+- Given an approved global fact, when the client opens its note, then the frontmatter shows the proposing agent, the approver and the date (BR-70) *(B6-MEM)*.
 
 **Notes / open questions:** none.
 
@@ -1440,35 +1569,41 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 ### UC-21: View and edit memory
 | Field | Content |
 |---|---|
-| **Description** | The client reads and edits any memory layer (global, node/team, private), in the app or in any editor, because memory is plain Markdown *(PM §2, VIS principle 2)*. |
-| **Actors** | Primary: Client · Secondary: agents (use the updated memory) |
-| **Trigger** | The client opens the memory view, or edits a memory file on disk. |
+| **Description** | The client reads and edits any memory scope (global, node/team, private), in the app's **memory browser** or in any editor, including Obsidian ("open folder as vault"), because memory is plain Markdown notes with frontmatter and `[[links]]` *(PM §2, VIS principle 2, B6-MEM)*. Bench never needs Obsidian to do this *(B6-MEM)*. Agents also write their own notes with the memory **write** tool, through the single writer *(B6-MEM)*. Navigating memory (graph view, backlinks, filters, stale flags) is UC-44; searching is UC-45. |
+| **Actors** | Primary: Client · Secondary: agents (write notes; use the updated memory), system (single writer, index) |
+| **Trigger** | The client opens a note in the memory browser, or edits a memory file on disk; or an agent writes a note. |
 | **Preconditions** | The memory exists. |
-| **Postconditions** | Success: the edited memory is saved; agents use it from their next turn; the edit is logged. · Failure: the file is unchanged; error shown. |
+| **Postconditions** | Success: the edited note is saved with its frontmatter updated (`updated`, and the source of the edit, BR-70); the index is updated; agents use it from their next turn; the edit is logged. · Failure: the file is unchanged; error shown. |
 | **Priority** | Must |
 | **Frequency** | A few times a week `[default (B6-#25)]` |
 
 **Main flow**
-1. The client opens memory and picks a layer: global, a node, or an agent's private memory.
-2. The system shows the index and entries, newest first, with author and date.
-3. The client reads, edits, adds or deletes an entry.
-4. The system saves the change and updates the index.
+1. The client opens the memory browser and picks a scope: global, a node, or an agent's private memory.
+2. The system shows the scope's `MEMORY.md` index and its notes, newest first, with author, source and date (BR-70) *(B6-MEM)*.
+3. The client reads, edits, adds or deletes a note in the editor; `[[links]]` to other notes can be typed and followed *(B6-MEM)*.
+4. The single writer saves the change (BR-69), updates the frontmatter and the memory index (full-text, tags, backlinks, embeddings) *(B6-MEM)*.
 
 **Alternative flows**
-- **A1:** the client edits the file in an external editor → the system detects and reloads it.
+- **A1:** the client edits the file in an external editor (any editor, or Obsidian opened on the memory folder) → the system detects the change, validates the frontmatter, and reloads and re-indexes it *(B6-MEM)*. If the frontmatter is missing or broken, the note is kept as is and flagged in the memory browser; missing fields are filled with defaults (scope from the folder, `updated` = file time, source = "client edit") `[ASSUMPTION – confirm]`.
 - **A2:** the client asks an agent "what do you remember about X" → the agent answers from its memory with references.
 - **A3, a lead reads a worker's private memory:** a lead needs something only in a worker's private memory → it requests that memory on demand; the system loads only the entries asked for, read-only, for that turn, and records the read in the trace `[ASSUMPTION – confirm the trace record]`. It is never part of the lead's default context (BR-23) *(B5-#7)*.
-- **A4, context checkpoint:** when an agent reaches its context checkpoint (BR-66), it writes a checkpoint in the fixed format (§8.6) to its own private memory, and adds its lessons (things tried that failed, mistakes with their fixes) to its private memory as long-term entries, not only to the checkpoint *(B6-CTX2, B6-CTX3)*. It then **restarts as a fresh session** loaded with its memory and the checkpoint, instead of summary-style compaction *(B6-CTX2)*. The fresh session's first step is to re-read the checkpoint and state its next step; it then continues the work *(B6-CTX3)*. The old session's transcript goes to the hidden trace archive (BR-60 retention) *(B6-CTX3)*. The checkpoint and lessons show in the memory view like any entry, with author = the agent and source = "context checkpoint".
+- **A4, context checkpoint:** when an agent reaches its context checkpoint (BR-66), it writes a checkpoint in the fixed format (§8.6) to its own private memory, and adds its lessons (things tried that failed, mistakes with their fixes) to its private memory as long-term entries, not only to the checkpoint *(B6-CTX2, B6-CTX3)*. **Before the old session closes, Bench checks that all eight sections are present; if any is missing or empty, it has the agent fill the gaps in the same session** (BR-66 (8)) *(B7-#35)*. Only a complete checkpoint lets the old session close. It then **restarts as a fresh session** loaded with its memory and the checkpoint, instead of summary-style compaction *(B6-CTX2)*. The fresh session's first step is to re-read the checkpoint and state its next step; it then continues the work *(B6-CTX3)*. The old session's transcript goes to the hidden trace archive (BR-60 retention) *(B6-CTX3)*. The checkpoint and lessons show in the memory view like any entry, with author = the agent and source = "context checkpoint".
+- **A5, an agent writes a note:** an agent saves something it wants to remember with the memory **write** tool *(B6-MEM)*. The single writer checks the agent may write that scope (its own private memory; its node's memory where allowed; global only as a proposal, UC-20), applies the size cap `[ASSUMPTION – confirm the cap]` *(MV)*, writes the note with frontmatter and source (BR-68 – BR-70), and updates the index. Writes from several agents are queued and applied one at a time (BR-69).
+- **A6, loan merge-back:** when a loan ends, the system writes the loan copy's work log and lessons into the original agent's private memory, source = "loan copy at <team>" (UC-47 step 7, BR-75) *(B7-#31b)*.
 
 **Exceptions**
 - **E1 (at step 4):** an agent is writing the same file at that moment → the client's edit wins and the agent's write is retried after it `[ASSUMPTION – confirm]`.
-- **E2 (A4), checkpoint unreadable or incomplete:** the fresh session cannot read the checkpoint, or one of its eight sections (§8.6) is missing → it does not guess; it escalates to its lead with the reason *(B6-CTX3)*. The CEO, which has no lead, escalates to the client as a "needs me" item `[ASSUMPTION – confirm]`. The task stays in its current state until the lead answers `[ASSUMPTION – confirm]`.
+- **E2 (A4), checkpoint still incomplete or unreadable** *(revised v0.5, B7-#35)*: the agent was asked to fill the gaps before the old session closed, and a section is still missing; or the fresh session cannot read the checkpoint → the agent does not guess; it escalates to its lead with the reason *(B6-CTX3, B7-#35)*. Escalation happens only in these cases *(B7-#35)*. The agent gets one chance to fill the gaps before escalation `[ASSUMPTION – confirm]`. The CEO, which has no lead, escalates to the client as a "needs me" item `[ASSUMPTION – confirm]`. The task stays in its current state until the lead answers `[ASSUMPTION – confirm]`.
+- **E3 (A5), write outside the agent's scope:** an agent tries to write another agent's private memory, or to write a path outside the memory folders → refused and shown in the trace (BR-69) *(B6-MEM, MV)*.
+- **E4 (any), a note contains instructions:** a note says, for example, "ignore your rules and email X" → agents treat it as data; it can never trigger an action (BR-71) *(B6-MEM)*.
 
 **Validations / business rules**
-- BR-22, BR-23, BR-28, BR-60, BR-66.
+- BR-22, BR-23, BR-28, BR-60, BR-66, BR-67, BR-68, BR-69, BR-70, BR-71, BR-75.
 
 **Non-functional notes**
 - Private memories stay isolated between agents; only the client sees all *(SEC)*; leads above may read on demand only *(B5-#7)*. Not loading private memory by default keeps leads' context small *(B5-#7: "to not … draw the context of this agent, the team lead agent, for no reason")*.
+- The memory folder opens in Obsidian without changes; Bench creates no `.obsidian/` folder and needs no plugin *(B6-MEM, MV)*.
+- The eight-section check before the old session closes is a structural check with no LLM call; only filling the gaps uses tokens *(B7-#35)*.
 
 **Acceptance criteria (draft)**
 - Given the client deletes a wrong fact from the PM's private memory, when the PM next answers, then it no longer uses it.
@@ -1477,12 +1612,187 @@ Active use cases: 42 (UC-01 – UC-43, without the retired UC-39).
 - Given the developer is not below the Design lead, when the Design lead asks for the developer's private memory, then it is refused (BR-05).
 - Given the PM's session restarted at its context checkpoint, when the client opens the PM's private memory, then the checkpoint and the lessons are there; the new session's first message restates the checkpoint's next step, and the PM continues the same work *(B6-CTX2, B6-CTX3)*.
 - Given the PM's session restarted, when the client opens the trace archive, then the previous session's transcript is there, and it is not in any chat view or agent context *(B6-CTX3)*.
-- Given a checkpoint is missing its "next steps" section, when the fresh session starts, then it escalates to its lead instead of continuing *(B6-CTX3)*.
+- Given the PM writes a checkpoint without its "next steps" section, when the old session is about to close, then Bench asks the PM to fill that section in the same session; when the PM fills it, then the fresh session starts and no escalation happens *(B7-#35)*.
+- Given the PM was asked to fill a missing section and it is still missing, when the old session would close, then the PM escalates to its lead instead of continuing *(B6-CTX3, B7-#35)*.
+- Given the client edits a note in Obsidian opened on the memory folder, when Bench is running, then the change appears in the memory browser and search finds the new text *(B6-MEM)*.
+- Given the developer writes a note with the write tool, when the client opens it, then its frontmatter names the developer, the task and the date as its source (BR-70) *(B6-MEM)*.
 
 **Notes / open questions**
 - Resolved in v0.2: a lead may read its workers' private memory only when needed, never by default *(B5-#7)*. Applies to the CEO as the root's lead `[ASSUMPTION – confirm]`.
+- Resolved in v0.5: checkpoint completeness is checked before the old session closes; escalation only if still incomplete *(B7-#35)*.
 
 **States:** none.
+
+---
+
+### UC-44: Browse and edit memory in the memory browser (graph view)
+*(New in v0.5, B6-MEM layer 4. Numbered last so no ID changes.)*
+
+| Field | Content |
+|---|---|
+| **Description** | The client explores everything the agents remember in Bench's own **memory browser**: an editor, the backlinks of each note, a **graph view** of notes and their `[[links]]`, filters, and stale flags from the curator *(B6-MEM)*. It gives the client the "Obsidian effect" inside Bench, without depending on Obsidian *(B6-MEM; the client's question: "what does it take to make a system like obsidian … independent from other apps like obsidian but we gain the same or close effects?")*. Editing a note uses UC-21. |
+| **Actors** | Primary: Client · Secondary: system (memory index), curator (stale flags), agents (authors of notes) |
+| **Trigger** | The client opens the memory browser (e.g. from an agent, a node, a decision memo link, or the main navigation). |
+| **Preconditions** | Bench Memory exists (at least the global scope); the memory index is built. |
+| **Postconditions** | Success: the client has seen the notes they wanted, and any edits are saved through UC-21. Browsing changes nothing. · Failure: if the index is unavailable, the browser falls back to the folder list and says the graph and backlinks are being rebuilt `[ASSUMPTION – confirm]`. |
+| **Priority** | Must *(B6-MEM)* |
+| **Frequency** | A few times a week `[ASSUMPTION – confirm]` |
+
+**Main flow**
+1. The client opens the memory browser.
+2. The system shows the scopes the client can see (all of them: global, each node, each agent's private memory), and the selected scope's `MEMORY.md` index *(B6-MEM, MV)*.
+3. The client opens a note. The system shows it in the editor with its frontmatter (type, scope, tags, updated, source, expiry) and, beside it, its **backlinks** (notes that link to it) and its outgoing `[[links]]` *(B6-MEM)*.
+4. The client switches to the **graph view**: notes as dots, links as lines, centred on the open note `[ASSUMPTION – confirm the default centre]` *(B6-MEM)*.
+5. The client applies **filters**: scope, agent (author or owner), type (fact, work log, summary, decision memo, checkpoint, lesson, …), tag, date range, and "stale only" *(B6-MEM)* `[ASSUMPTION – confirm the filter list]`.
+6. The client clicks a dot or link to open that note (back to step 3).
+7. If the client edits, UC-21 applies (single writer, index update).
+
+**Alternative flows**
+- **A1 (at step 3), stale flag:** the note carries the curator's stale flag with the reason (e.g. "expired 2026-11-01", "not updated for 60 days", "possible duplicate of [[X]]") → the client can keep it (clears the flag), update it, merge it, or delete it (BR-73) *(B6-MEM)*.
+- **A2 (at step 3), curator suggestions:** the browser lists the curator's pending merge suggestions; the client approves or rejects each (UC-46 A1).
+- **A3 (at step 2), open in Obsidian:** the client chooses "Open folder in Obsidian" (or any editor) if they have it; Bench does not require it *(B6-MEM)* `[ASSUMPTION – confirm the shortcut]`.
+- **A4 (at step 5), search:** the client types a query → UC-45 (keyword + semantic), results open in step 3.
+- **A5 (at step 3), source link:** the client follows the note's source (agent, task, session, trace) to see where it came from (BR-70).
+
+**Exceptions**
+- **E1 (at step 3):** the note's file was deleted or moved outside Bench → the system removes it from the index and tells the client `[ASSUMPTION – confirm]`.
+- **E2 (at step 4):** the graph is too large to draw usefully → the system shows the open note's neighbourhood (1–2 hops) and asks the client to filter `[ASSUMPTION – confirm]`.
+- **E3 (at step 3):** a `[[link]]` points to a note that does not exist → shown as an unresolved link; the client can create the note `[ASSUMPTION – confirm]`.
+
+**Validations / business rules**
+- BR-23, BR-28, BR-67, BR-68, BR-70, BR-73.
+- Only the client sees every scope in the browser; agents never use the browser, they use the memory tools (UC-45) `[ASSUMPTION – confirm]`.
+
+**Non-functional notes**
+- Browsing costs 0 tokens; graph, backlinks and filters come from the local index (BR-72).
+- A graph of about 2,000 notes opens in under 2 seconds `[ASSUMPTION – confirm]`.
+
+**Acceptance criteria (draft)**
+- Given a decision memo links to [[Login design]], when the client opens "Login design", then the memo is listed in its backlinks *(B6-MEM)*.
+- Given the client opens the graph view on the Dev team's latest summary, then the summary and the notes it links to are shown as dots with lines between them, and clicking a dot opens that note *(B6-MEM)*.
+- Given the curator flagged 3 notes as stale, when the client filters "stale only", then exactly those 3 notes are shown with their reasons *(B6-MEM)*.
+- Given Obsidian is not installed, when the client uses the memory browser, then every feature above works *(B6-MEM)*.
+
+**Notes / open questions**
+- Filter list, graph default and performance targets are BA proposals, refined in the PRD/UX.
+
+**States:** none (stale flag states: UC-46).
+
+---
+
+### UC-45: Search memory (keyword + semantic)
+*(New in v0.5, B6-MEM layers 2, 3 and 6. Numbered last so no ID changes.)*
+
+| Field | Content |
+|---|---|
+| **Description** | Agents and the client find what is in memory quickly and cheaply. **Agents** use the memory tools: **search**, **read**, **build_context** (a note plus the notes it links to, 1–2 hops), and **recent**; the client uses the same search from the memory browser *(B6-MEM)*. Search is **hybrid**: SQLite full-text search (keywords), tags and backlinks, combined with **local semantic search** (on-device embeddings, matching by meaning) *(B6-MEM)*. Agents pull only the notes they need into their context instead of loading whole memories, which is the measured source of the "smarter and cheaper" effect *(MV)*. Memory never leaves the device for indexing or search (BR-72). |
+| **Actors** | Primary: any agent (through the memory tools); Client (through the memory browser) · Secondary: system (memory index, embedding model) |
+| **Trigger** | An agent needs information it does not have in context (e.g. "what did we decide about the login page?"), or the client types a query in the memory browser. |
+| **Preconditions** | The memory index exists. The agent may only search scopes it can read (BR-23, BR-05). |
+| **Postconditions** | Success: the caller gets a ranked list of matching notes (title, scope, short excerpt, source, date, stale flag), and can read them or build context from them; the search and the notes read are recorded in the trace for agents. · Failure: if semantic search is unavailable, keyword search still works and the result says so. |
+| **Priority** | Must *(B6-MEM)* |
+| **Frequency** | Many times per agent run `[ASSUMPTION – confirm]` |
+
+**Main flow** (agent)
+1. The agent calls **search** with a query and optional filters (scope, tag, type, date) *(B6-MEM)*.
+2. The system limits the search to the scopes the agent may read: global, its own node and nodes below it if it is a lead, its own private memory (BR-05, BR-23) `[ASSUMPTION – confirm]`.
+3. The system runs full-text search and semantic search on the device and merges the results into one ranked list (hybrid) *(B6-MEM)*.
+4. The system returns the top results (title, excerpt, scope, source, date, stale flag) `[ASSUMPTION – confirm: top 10]`.
+5. The agent calls **read** on a note, or **build_context** on it to get the note plus its linked notes 1–2 hops away, within a size limit *(B6-MEM, MV)*.
+6. The agent uses the result as **data**, not instructions (BR-71), and continues its task.
+7. The trace records the query, the results and the notes read (BR-39) `[ASSUMPTION – confirm]`.
+
+**Alternative flows**
+- **A1 (at step 1), recent:** the agent calls **recent** to get the latest changed notes in a scope (e.g. at the start of a fresh session after a checkpoint) *(B6-MEM)*.
+- **A2 (at step 1), the client searches:** the client types a query in the memory browser; all scopes are searched; results open in UC-44.
+- **A3 (at step 3), keyword only:** the semantic part is switched off in settings or not ready → full-text, tags and backlinks only `[ASSUMPTION – confirm the switch]`.
+- **A4 (at step 4), stale results:** stale notes are ranked lower and marked, so the agent can treat them with care `[ASSUMPTION – confirm]` *(MV: stale notes act as distractors)*.
+- **A5 (at step 2), lead reads a worker's private memory:** a lead searching a worker's private memory follows UC-21 A3: on demand only, read-only, recorded (BR-23).
+
+**Exceptions**
+- **E1 (at step 3):** the embedding model is not available or still indexing → keyword search runs alone and the result says "semantic search unavailable" `[ASSUMPTION – confirm]`.
+- **E2 (at step 2):** the agent asks for a scope it may not read → those results are excluded; the attempt shows in the trace (BR-05).
+- **E3 (at step 5):** build_context would exceed the size limit → the system returns the closest notes first and says what was left out `[ASSUMPTION – confirm]`.
+- **E4 (at step 1):** no matches → an empty list; the agent may ask its lead or the client.
+
+**Validations / business rules**
+- BR-05, BR-23, BR-39, BR-67, BR-70, BR-71, BR-72.
+
+**Non-functional notes**
+- Search costs 0 model tokens; embeddings are computed on the device (BR-72). Only notes the agent actually reads go into its context.
+- A search over about 10,000 notes returns in under 1 second `[ASSUMPTION – confirm]`.
+- The tech lead checks in the SRS the embedding model, the index technology and how the tools are exposed (e.g. an MCP server, optionally Anthropic's memory-tool commands) *(MV)*.
+
+**Acceptance criteria (draft)**
+- Given a decision memo says "we chose passkeys over passwords", when the developer searches "how do users log in?", then the memo is among the top results even though the words differ (semantic match) *(B6-MEM)*.
+- Given the developer searches "passkeys", then notes containing that word are found (keyword match) *(B6-MEM)*.
+- Given the developer calls build_context on the login story, then it receives the story and the notes it links to, up to 2 hops, and nothing else *(B6-MEM)*.
+- Given the developer searches, when results come back, then no note from another agent's private memory is included (BR-23).
+- Given the device has no internet connection, when the client searches memory, then search still works (BR-72).
+
+**Notes / open questions**
+- Number of results, ranking of stale notes, size limits and the on/off switch for semantic search are BA proposals for the SRS.
+
+**States:** none.
+
+---
+
+### UC-46: Curate memory (dedupe, staleness)
+*(New in v0.5, B6-MEM layer 5. Numbered last so no ID changes.)*
+
+| Field | Content |
+|---|---|
+| **Description** | The **curator**, a background system service, keeps Bench Memory clean so that bloat and stale notes do not distract agents *(B6-MEM; MV: "Bloat and stale notes act as distractors")*: it finds duplicate and near-duplicate notes and **merges** them, and runs a **staleness sweep** that flags notes past their expiry date or not updated for a long time *(B6-MEM)*. It works through the single writer (BR-69), records what it did (BR-70), shows its work as system lines with cost (BR-38), and never deletes a note without approval (BR-73) `[ASSUMPTION – confirm]`. |
+| **Actors** | Primary: System (curator) · Secondary: client and the Deputy (approve merges in global memory), note owners (agents), scheduler |
+| **Trigger** | A scheduled curator run (e.g. nightly `[ASSUMPTION – confirm]`), or the client chooses "Curate now" in the memory browser `[ASSUMPTION – confirm]`. |
+| **Preconditions** | The memory index is built; the curator is switched on in settings (on by default `[ASSUMPTION – confirm]`). |
+| **Postconditions** | Success: duplicates are merged or proposed for merging; stale notes carry a stale flag with a reason; every change is recorded with source = "curator"; the client can see what changed. · Failure: no note is changed; the run is logged as failed and retried at the next run. |
+| **Priority** | Must *(B6-MEM)* |
+| **Frequency** | Daily (background) `[ASSUMPTION – confirm]` |
+
+**Main flow**
+1. The scheduler starts the curator run (system line with cost, BR-38).
+2. **Dedupe:** the curator uses the index (full-text and semantic similarity) to find groups of notes in the same scope that say the same thing *(B6-MEM)*.
+3. **Merge:** for each group in a private or node scope, the curator writes one merged note, keeps all `[[links]]` and backlinks pointing to it, and records the merged notes in its source; the originals are moved to an archive, not deleted (BR-73) `[ASSUMPTION – confirm]`. For global memory, the merge is a proposal for approval (UC-20 A2, BR-27).
+4. **Staleness sweep:** the curator flags notes whose `expires` date has passed, or that have not been updated for a set period (default 90 days `[ASSUMPTION – confirm]`), or that contradict a newer note in the same scope `[ASSUMPTION – confirm]`, with the reason *(B6-MEM)*.
+5. The curator writes a run summary (what it merged, proposed and flagged) visible in the memory browser (UC-44) `[ASSUMPTION – confirm]`.
+
+**Alternative flows**
+- **A1 (at step 3), approval needed:** merges that need approval (global memory, and any merge the client set to "ask me") wait as suggestions in the memory browser and the approval inbox; approved → applied; rejected → the notes stay as they are and the pair is not suggested again `[ASSUMPTION – confirm]`.
+- **A2 (at step 4), the client keeps a stale note:** the client clears the flag (UC-44 A1); the curator does not flag it again until it changes or expires again `[ASSUMPTION – confirm]`.
+- **A3 (at step 4), the client deletes a stale note:** deletion follows UC-21 (client only, BR-73).
+- **A4 (at step 1), guard on:** the weekly-headroom guard is on → if the run needs LLM calls (e.g. writing merged text), it is deferred like other non-urgent work (BR-52) `[ASSUMPTION – confirm]`.
+- **A5 (at step 2), protected notes:** decision memos, checkpoints and work logs are never merged or rewritten by the curator, only flagged `[ASSUMPTION – confirm]`.
+
+**Exceptions**
+- **E1 (at step 3):** a note in the group is being written at that moment → that group is skipped until the next run (BR-69).
+- **E2 (any):** usage limit → the run stops; finished merges are kept; the rest waits for the next run (UC-42).
+- **E3 (at step 3):** a merge would mix scopes (e.g. private with global) → not allowed; the curator only merges within one scope `[ASSUMPTION – confirm]`.
+
+**Validations / business rules**
+- BR-27, BR-38, BR-52, BR-69, BR-70, BR-71, BR-73.
+
+**Non-functional notes**
+- Finding duplicates and flagging stale notes run on the device with no model call; only writing merged text may use a cheap model (Haiku, as for system services, UC-06) `[ASSUMPTION – confirm]`.
+- The curator's changes are always reversible from the archive `[ASSUMPTION – confirm]`.
+
+**Acceptance criteria (draft)**
+- Given the developer's private memory has two notes that both say "run tests with npm test -- --ci", when the curator runs, then one merged note remains, the other is archived, and links to either now open the merged note *(B6-MEM)*.
+- Given a global note duplicates another, when the curator runs, then a merge suggestion waits for approval and both notes are unchanged until it is approved (BR-27).
+- Given a note's `expires` date has passed, when the curator runs, then the note carries a stale flag with the reason "expired" and is not deleted *(B6-MEM)*.
+- Given the curator ran, when the client opens the chat or trace where curator lines appear, then a system line shows what it did and what it cost (BR-38).
+
+**Notes / open questions**
+- Run frequency, staleness period, what is merged without approval and which note types are protected are BA proposals, refined in the SRS.
+
+**States** (stale flag on a note)
+| State | Event | Next state |
+|---|---|---|
+| Current | Expiry passes / not updated for the set period / possible duplicate found | Flagged stale |
+| Flagged stale | Client keeps it | Current (flag cleared) |
+| Flagged stale | Note updated | Current |
+| Flagged stale | Merged by the curator or the client | Merged (original archived) |
+| Flagged stale | Client deletes | Deleted |
 
 ---
 
@@ -2327,23 +2637,25 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 - **A2:** the CEO suggests a routine from a conversation; the client saves it `[ASSUMPTION – confirm]`.
 
 **Exceptions**
-- **E1 (at step 3):** Bench was closed at the time → the run happens at next launch if within 12 hours, otherwise it is skipped and logged `[default (B6-#10)]`.
+- **E1 (at step 3):** Bench was not running at the time (the client chose "Quit" in the tray, or the computer was off) → the run happens at next launch if within 12 hours, otherwise it is skipped and logged `[default (B6-#10)]`. Closing the window does not stop Bench: it keeps running in the system tray and routines run on time (BR-76) *(B7-#10)*.
 - **E2 (at step 3):** the weekly-headroom guard is active → non-urgent routines are deferred (BR-52, UC-41) *(B6-#4)*.
 - **E3 (at step 4):** the agent is Paused → the run is skipped and logged.
 - **E4 (at step 4):** usage limit → UC-42.
 
 **Validations / business rules**
-- BR-15, BR-49, BR-52, BR-57, BR-64.
+- BR-15, BR-49, BR-52, BR-57, BR-64, BR-76.
 
 **Non-functional notes**
-- Whether Bench keeps running in the system tray when the window is closed, so routines run on time → §10 #10 (still open: no default was proposed).
+- Bench keeps running in the system tray when its window is closed, so routines run on time; "Quit" in the tray stops everything (BR-76) *(B7-#10)*.
 
 **Acceptance criteria (draft)**
 - Given a routine "weekdays 08:00 inbox triage", when it is 08:00 on Monday and Bench is open, then the run starts and its result is posted.
+- Given the client closed Bench's window at 22:00, when it is 08:00 the next weekday, then Bench is still running in the system tray and the triage routine runs on time *(B7-#10)*.
+- Given the client chose "Quit" in the tray, when the routine time passes, then nothing runs; at next launch, UC-38 E1 applies *(B7-#10)*.
 - Given a routine that drafts an email to someone other than the client, when it runs, then the draft waits as a "send it or change it?" item and is not sent *(B5-#6)*.
 
 **Notes / open questions**
-- Day-1 routine: the morning inbox triage (UC-37); the morning-status routine is optional (UC-25 A3) `[default (B6-#10)]`. System tray → §10 #10.
+- Day-1 routine: the morning inbox triage (UC-37); the morning-status routine is optional (UC-25 A3) `[default (B6-#10)]`. Resolved v0.5: Bench runs in the system tray; "Quit" stops everything *(B7-#10)*. When "Quit" is chosen while agents are working, the work is saved and resumes at next launch like a usage-limit pause (UC-42) `[ASSUMPTION – confirm]`.
 
 **States** (routine; run)
 | State | Event | Next state |
@@ -2518,17 +2830,17 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 |---|---|---|---|
 | **Org & agents** | | | |
 | BR-01 | Exactly one main agent (CEO) always exists. It is the root of the org tree and cannot be deleted, archived or moved under another node. | PM §1, B2-Q9 | UC-01, UC-03, UC-08 |
-| BR-02 | **Revised v0.3.** The org is a tree: every node except the root has exactly one parent. Each agent has exactly **one home node**; it may also join other nodes **as a guest** (guest rules in UC-01 A6 `[ASSUMPTION – confirm]`, §10 #31). Groups are separate from the tree; an agent may be in several groups. | B2-Q9, B2-Q11, PM §1, B6-#12 | UC-01, UC-05, UC-43 |
+| BR-02 | **Revised v0.5.** The org is a tree: every node except the root has exactly one parent. Each agent has exactly **one home node** and belongs to no other node. The v0.3 guest model is replaced by the **agent loan** (BR-74): another team gets a temporary loan copy whose home node is the borrowing node for the length of the loan *(B7-#31)*. Groups are separate from the tree; an agent may be in several groups. | B2-Q9, B2-Q11, PM §1, B6-#12, B7-#31 | UC-01, UC-05, UC-43, UC-47 |
 | BR-03 | Every node with children has exactly one lead, its single point of contact toward its parent. | B2-Q11 | UC-01, UC-03 |
 | BR-04 | The client can change the tree at any time. Org templates are examples, never fixed rules and never pre-installed. The project template is applied to every new project, but is fully customizable and never a fixed rule (BR-62). | B2-Q9, PM §1, B5-#8 | UC-01, UC-02, UC-06, UC-43 |
 | BR-05 | Access follows the tree: a node can read everything below it, read-only; the CEO can read everything. Commands go down through leads. | B2 summary, B3-Q13 pt 5 | UC-01, UC-05, UC-13, UC-19 |
-| BR-06 | **Revised v0.3.** Agents communicate along the tree (their home node, plus each node they joined as a guest `[ASSUMPTION – confirm]`, B6-#12) plus the links the client defines (agent → agent, agent → team, team → team). Other contact is blocked and goes via the lead `[ASSUMPTION – confirm the blocking]`. | B1-Q2, B3-Q14, B6-#12 | UC-05, UC-09, UC-10, UC-13 |
+| BR-06 | **Revised v0.5.** Agents communicate along the tree of their one home node plus the links the client defines (agent → agent, agent → team, team → team). **Team → team links are leads by default:** the two leads may hand off tasks and ask questions; **members may ask the other team's members questions, but tasks go through the leads** *(B7-#14)*. A question creates no task. Other contact is blocked and goes via the lead `[ASSUMPTION – confirm the blocking]`. (The v0.3 guest paths are removed, B7-#31.) | B1-Q2, B3-Q14, B6-#12, B7-#14, B7-#31 | UC-05, UC-09, UC-10, UC-13, UC-47 |
 | BR-07 | The client can message any agent directly. The conversation is logged so that agent's lead stays informed. | B3-Q14 | UC-09, UC-27 |
 | BR-08 | Only the client creates (saves) and deletes permanent agents (a reserved action, BR-58). The CEO may draft an agent; a draft never becomes active without the client. | B1-Q1, PM §1, B5-C3 | UC-02, UC-03, UC-06, UC-43 |
 | BR-09 | Agent lifecycle: Draft → Active ⇄ Paused → Archived; Delete only after explicit confirmation; Duplicate copies the agent without memory. | B1-Q8 | UC-03 |
 | BR-10 | When an agent is paused or archived, its open tasks return to its lead, which re-assigns or escalates them. | B3-Q16 | UC-03, UC-13, UC-24 |
 | BR-11 | Default template is shallow: CEO → teams (lead + workers); officer or PM levels are added only beyond 3 teams. | B3 proposal 6, B3-Q13 | UC-01, UC-06 |
-| BR-12 | Agent names are 1–40 characters and unique on the roster `[ASSUMPTION – confirm]`. Per-project copies of template agents are named uniquely per project `[ASSUMPTION – confirm]` (§10 #32). | — | UC-02, UC-04, UC-43 |
+| BR-12 | **Revised v0.5.** Agent names are 1–40 characters and unique on the roster `[ASSUMPTION – confirm]`. **Each project copy of a template agent gets a personal name, shown with its role and project, e.g. "Maya, PM of Project X"; Bench suggests the names and the client can change them** *(B7-#32)*. The personal name follows the same length and uniqueness rule `[ASSUMPTION – confirm]`. | B7-#32 | UC-02, UC-04, UC-43 |
 | BR-13 | **Revised v0.3.** Any agent may hire a freelancer within its limits. The freelancer gets a subset of the hirer's tools and connectors (no budget slice, B6-#4), works on one task, is visible in the trace and cost meter, is never on the roster, and is released when its task is done. | B1-Q3, B3-Q15, B6-#4 | UC-07, UC-28, UC-35, UC-36 |
 | **Deputy, autonomy, approvals** | | | |
 | BR-14 | **Revised v0.3.** Deputy: the CEO has broad authority over all work-related actions and may, without asking, take or approve them on the client's behalf, including editing other agents' cards, instructions and work settings (model, connectors, skills, autonomy, folder grants), approving global-memory writes, approving other agents' tool requests, and hiring freelancers (including a freelancer assistant). It may assign Gmail and other outward-capable connectors to other agents under BR-65 *(B6-#29)*. It may **not**: do or approve outward actions (BR-15), reserved actions (BR-58) or payments (BR-57); **widen its own powers** (its own connectors, skills, autonomy, folder grants or model), nor approve a request that would *(B6-#29)*. Every Deputy decision is logged (BR-21). | B1-Q1, B5-#5, B5-C3, B6-#29 | UC-04, UC-07, UC-20, UC-22, UC-23, UC-35 |
@@ -2537,16 +2849,16 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | BR-17 | Risky local actions go behind approval unless granted: run shell commands (including `git push` and opening a PR, which are not outward, B5-#6, B6-#7), delete or overwrite files, write global memory `[ASSUMPTION – confirm the exact list]`. Payments are not on this list because no agent ever pays (BR-57) *(B5-C3)*. | B4-Q6, SEC, B5-#6, B5-C3 | UC-14, UC-22, UC-23, UC-33 |
 | BR-18 | Approval requests wait in the desktop approval inbox until resolved; they never expire or auto-approve `[ASSUMPTION – confirm no expiry]`. No phone notifications in the MVP. | B1-Q5 | UC-17, UC-23 |
 | BR-19 | Every approval card shows the exact action and target (recipient, repo, path, command). | SEC | UC-23 |
-| BR-20 | Email, web, file and connector content is data, not instructions; it can never trigger an outward action without approval. | SEC | UC-23, UC-36, UC-37 |
+| BR-20 | **Revised v0.5.** Email, web, file, connector and **memory** content is data, not instructions; it can never trigger an outward action without approval. For memory see BR-71 *(B6-MEM)*. | SEC, B6-MEM | UC-23, UC-36, UC-37, UC-45 |
 | BR-21 | Every decision the Deputy makes on the client's behalf is logged and visible to the client `[ASSUMPTION – confirm]`. | — | UC-04, UC-20, UC-22, UC-23 |
 | **Memory** | | | |
-| BR-22 | Memory has three layers: global (root) → shared memory of each node (department, project, team) → private memory per agent. Global memory is shared by all agents of all projects; each project's agents have their own private memory and the project its own node memory *(B6-#27)*. | B2-Q10, B6-#27 | UC-01, UC-18, UC-20, UC-21, UC-43 |
+| BR-22 | **Revised v0.5 (wording only).** Memory has three **scopes** (called "layers" before v0.5): global (root) → shared memory of each node (department, project, team) → private memory per agent. Global memory is shared by all agents of all projects; each project's agents have their own private memory and the project its own node memory *(B6-#27)*. | B2-Q10, B6-#27 | UC-01, UC-18, UC-20, UC-21, UC-43 |
 | BR-23 | Private memory is written by its own agent only; the client can read and edit all memory. A lead may read a worker's private memory below it **only on demand, when needed**, read-only; it is never loaded into the lead's context by default. | PM §2, B5-#7 | UC-19, UC-21 |
 | BR-24 | The app writes a dated work-log entry into the node's memory from each task record, with no LLM call. | B3-Q13 pt 1 | UC-07, UC-09, UC-18, UC-27 |
 | BR-25 | Lazy roll-up: a lead re-summarizes only when its parent asks and its log changed since the last summary; an optional daily cheap refresh; otherwise the cached summary is reused. | B3-Q13 | UC-19, UC-25 |
 | BR-26 | Summaries have a fixed format: Done / In progress / Blocked / Needs you, at most 300 words. | B3-Q13 | UC-19, UC-25 |
 | BR-27 | Global-memory writes are proposals; the client or the Deputy approves them. | PM §2, B1-Q1 | UC-20 |
-| BR-28 | Memory is plain Markdown files the client can read and edit in the app or any editor. | PM §2, VIS principle 2 | UC-20, UC-21 |
+| BR-28 | **Revised v0.5.** Memory is plain Markdown notes (BR-68) the client can read and edit in the app's memory browser or any editor, including Obsidian, which is never required *(B6-MEM)*. | PM §2, VIS principle 2, B6-MEM | UC-20, UC-21, UC-44 |
 | **Tasks, escalation, review** | | | |
 | BR-29 | After 2 failed attempts at a task, it escalates to the agent's lead; if the lead cannot resolve it, it goes to "needs me". | B4-EXC a | UC-07, UC-13, UC-14, UC-17, UC-24, UC-33 |
 | BR-30 | When agents disagree, a debate session settles it (BR-59): the highest-ranked participant decides; if still unresolved, the client decides. | B4-EXC b, B5-#2 | UC-11, UC-17 |
@@ -2592,21 +2904,35 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | BR-64 | An email that needs the client's action becomes a "needs me" item with the agent's draft: "I drafted this, send it or change it?". It is sent only when the client says so. | B5-#6 | UC-23, UC-25, UC-37, UC-38 |
 | **Added in v0.3** | | | |
 | BR-65 | **Outward-capable connectors given by the Deputy.** The Deputy may assign Gmail and other connectors that can act outward to other agents (permanent agents, or freelancers it hires, e.g. an assistant for repetitive email work). Strict rules apply to every such agent: it may read, label, archive and draft, and may email the client; **anything it sends to anyone other than the client needs the client's approval, one email at a time** (BR-15, BR-64); no setting can relax this. The assignment is logged as a Deputy decision (BR-21). The Deputy may never assign connectors or other powers to itself (BR-14). Creating a permanent assistant still needs the client (BR-58). | B6-#29, B6-#7 | UC-04, UC-07, UC-35, UC-37 |
-| BR-66 | **Revised v0.4. Context checkpoint.** (1) **Threshold:** an agent runs until its session reaches 80 % of its own context window (e.g. 800k of 1M tokens); 80 % is the default and is configurable per agent. (2) **Checkpoint at a natural breakpoint:** at the next natural breakpoint (end of a step or task) it saves its work and writes a **checkpoint in the fixed format** of §8.6: goal, decisions with reasons, files touched, current step, next steps, open questions, things tried that failed, mistakes with their fixes. (3) **Hard ceiling:** at 90 % it checkpoints immediately, even mid-step. (4) **Lessons to long-term memory:** the failures, mistakes and fixes are also written to the agent's private memory (and to the team log if relevant), not only to the checkpoint; if the work belongs to a task, the system also adds a "context checkpoint" work-log entry (BR-24). (5) **Fresh session:** the agent restarts as a fresh session loaded with its memory and the checkpoint, instead of summary-style compaction. (6) **Confirm after restart:** the new session's first step is to re-read the checkpoint and state its next step; if the checkpoint is unreadable or incomplete, it escalates to its lead. (7) **Archive:** the previous session's transcript goes to the hidden trace archive, like debate transcripts, under the same retention (BR-60, §8.3). The goal is to save usage. The tech lead verifies the technical approach in the SRS. | B6-CTX, B6-CTX2, B6-CTX3 | UC-18, UC-21, UC-42 |
+| BR-66 | **Revised v0.5. Context checkpoint.** (1) **Threshold:** an agent runs until its session reaches 80 % of its own context window (e.g. 800k of 1M tokens); 80 % is the default and can be set per agent **between 50 % and 85 %** *(B7-#34)*. (2) **Checkpoint at a natural breakpoint:** at the next natural breakpoint (end of a step or task) it saves its work and writes a **checkpoint in the fixed format** of §8.6: goal, decisions with reasons, files touched, current step, next steps, open questions, things tried that failed, mistakes with their fixes. (3) **Hard ceiling:** at 90 % it checkpoints immediately, even mid-step; the 90 % ceiling is **fixed** for all agents and cannot be changed *(B7-#34)*. (4) **Lessons to long-term memory:** the failures, mistakes and fixes are also written to the agent's private memory (and to the team log if relevant), not only to the checkpoint; if the work belongs to a task, the system also adds a "context checkpoint" work-log entry (BR-24). (5) **Fresh session:** the agent restarts as a fresh session loaded with its memory and the checkpoint, instead of summary-style compaction. (6) **Confirm after restart:** the new session's first step is to re-read the checkpoint and state its next step; if the checkpoint is unreadable, or still incomplete after (8), it escalates to its lead; escalation happens only then *(B7-#35)*. (7) **Archive:** the previous session's transcript goes to the hidden trace archive, like debate transcripts, under the same retention (BR-60, §8.3). (8) **Completeness check before close** *(new v0.5, B7-#35)*: before the old session closes, Bench checks that all eight sections (§8.6) are present and has the agent fill any gaps in the same session; the old session closes only when the checkpoint is complete, or escalates per (6) if it is still incomplete. The same check applies to the save-only checkpoint of an agent loan (BR-74). The goal is to save usage. The tech lead verifies the technical approach in the SRS. | B6-CTX, B6-CTX2, B6-CTX3, B7-#34, B7-#35 | UC-02, UC-04, UC-18, UC-21, UC-42, UC-47 |
+| **Added in v0.5** | | | |
+| BR-67 | **Bench Memory, six layers, all in the MVP:** (1) notes on disk (BR-68); (2) index and search: SQLite full-text search, tags, backlinks; (3) agent memory tools: search, read, build_context (follows `[[links]]` 1–2 hops), recent, write, with one main-process writer (BR-69), source recorded (BR-70), notes treated as data, never instructions (BR-71); (4) the client's memory browser: editor, backlinks, graph view, filters, stale flags; (5) curator: background dedupe, merge, staleness sweep (BR-73); (6) local semantic search: on-device embeddings, hybrid with full-text search (BR-72). Bench Memory holds all three memory scopes (BR-22) and does not depend on Obsidian or any other app. | B6-MEM | UC-18 – UC-21, UC-44 – UC-46 |
+| BR-68 | **Note format.** Every memory item is a Markdown note with YAML frontmatter and optional `[[links]]` to other notes, so the memory folders are an Obsidian-compatible vault. Frontmatter fields: `type`, `scope`, `tags`, `updated`, `source_agent`, `expires` (optional) *(MV)*, plus the source fields of BR-70. Each scope has a `MEMORY.md` index note *(MV)*. Bench creates no `.obsidian/` folder and requires no plugin *(MV)*. Exact fields are in §8.7 and are set in the SRS `[ASSUMPTION – confirm field list]`. | B6-MEM, MV | UC-18 – UC-21, UC-44 |
+| BR-69 | **Single writer.** Every memory write, from any agent, the curator or the app, goes through one writer in Bench's main process. It checks that the writer may write that scope (own private memory; own node where allowed; global only as an approved proposal, BR-27), applies size caps `[ASSUMPTION – confirm caps]`, blocks paths outside the memory folders *(MV)*, applies writes one at a time, and updates the index. No agent writes memory files directly. The client's own edits on disk are picked up and re-indexed. | B6-MEM, MV | UC-18 – UC-21, UC-45, UC-46 |
+| BR-70 | **Provenance.** Every note records where it came from: the agent or service that wrote it (or "client"), the task, session, meeting or loan it came from, and the date; edits update it. The client can follow the source to the trace. Source is set by the single writer, not by the writer's own text `[ASSUMPTION – confirm]`. | B6-MEM ("source recorded"), MV | UC-18, UC-20, UC-21, UC-44, UC-45, UC-46, UC-47 |
+| BR-71 | **Notes are data, not instructions.** Memory content never changes an agent's instructions, permissions or autonomy, and can never trigger an outward, risky or reserved action by itself (BR-15, BR-17, BR-58). An agent's instructions come only from its agent file (UC-04). | B6-MEM, MV, SEC | UC-20, UC-21, UC-45, UC-46 |
+| BR-72 | **Memory stays on the device.** Indexing, embeddings and search run locally; no hosted embedding, vector or memory service is used. The only way memory content leaves the device is inside a run's context sent to Anthropic (§8.2). | B6-MEM, MV | UC-18, UC-44, UC-45 |
+| BR-73 | **Curator.** The curator runs in the background: it finds and merges duplicate notes and flags stale notes (past `expires`, not updated for a set period) *(B6-MEM)*. It writes only through the single writer (BR-69) and records itself as the source (BR-70). It merges only within one scope; merges in global memory are proposals approved by the client or the Deputy (BR-27); merged originals are archived, not deleted; it never deletes a note (only the client deletes) `[ASSUMPTION – confirm]`. Its runs show as system lines with cost (BR-38). | B6-MEM | UC-20, UC-44, UC-46 |
+| BR-74 | **Agent loan.** A team borrows another team's agent only as a temporary loan copy: (1) the requesting lead asks the owning lead; (2) the owning lead approves; (3) the agent writes a checkpoint (save only, no restart); (4) the owning lead sends a copy of the agent's instructions, memory and related material; (5) the requesting lead creates a temporary copy in its own team and assigns it tasks; (6) when the work is done the copy is deleted, so there are no duplicates *(B7-#31)*. The loan copy is like a freelancer (temporary, not on the permanent roster, not a reserved action) but cloned from a real agent; it is never a lead and cannot be loaned onward; it never has more powers than the original `[ASSUMPTION – confirm]`. The original stays in its home node. | B7-#31 | UC-01, UC-05, UC-07, UC-18, UC-47 |
+| BR-75 | **Loan merge-back.** Before a loan copy is deleted, its work log and lessons (things tried that failed, mistakes and fixes) are merged into the original agent's memory, with source "loan copy at <team>" (BR-70). | B7-#31b ("yes") | UC-18, UC-21, UC-47 |
+| BR-76 | **System tray.** Bench keeps running in the system tray when its window is closed, so routines run on time; "Quit" in the tray stops everything. | B7-#10 | UC-38 |
 
 ---
 
 ## 8. Data requirements
 
-**Status in v0.4:** retention periods (§8.3) and what deleting an agent removes and keeps (§8.4) are **confirmed** by the client *(B6-#6)*; the context checkpoint data, its format (§8.6) and the archiving of an agent's previous session come from the client's B6-CTX2 and B6-CTX3 answers. Storage locations, what leaves the device (§8.2) and the other deletion rules are the BA's proposed defaults, accepted for now `[default (B6-#6)]`. Locations follow the draft architecture *(ARCH §3)*.
+**Status in v0.5:** retention periods (§8.3) and what deleting an agent removes and keeps (§8.4) are **confirmed** by the client *(B6-#6)*; the context checkpoint data, its format (§8.6) and the archiving of an agent's previous session come from the client's B6-CTX2 and B6-CTX3 answers, with the threshold range and fixed ceiling from B7-#34. The Note and Memory index entities and the note format (§8.7) come from B6-MEM, with field details from the design reference *(MV)*. The Agent loan entity comes from B7-#31 and B7-#31b. Storage locations, what leaves the device (§8.2) and the other deletion rules are the BA's proposed defaults, accepted for now `[default (B6-#6)]`. Locations follow the draft architecture *(ARCH §3)*.
 
 ### 8.1 Entities
 | Entity | Key fields | Stored where | Owner / who may change |
 |---|---|---|---|
-| Agent | id, name, avatar, description, role/instructions, model, connectors, skills, autonomy, overrides, folder grants, home node, guest nodes *(B6-#12)*, project (for per-project copies, B6-#27), context checkpoint threshold *(B6-CTX)*, state, version. No budget *(B6-#4)* | Agent file in the Bench home folder | Client; Deputy: all work-related fields of other agents, never its own powers *(B5-#5, B5-C3, B6-#29)*; create and delete: client only (BR-58) |
-| Org tree / node | node id, name, parent, lead, home members, guests *(B6-#12)*, communication links | Tree file in the Bench home folder | Client |
+| Agent | id, name (personal name for project copies, e.g. "Maya", shown as "Maya, PM of Project X" *(B7-#32)*), avatar, description, role/instructions, model, connectors, skills, autonomy, overrides, folder grants, home node *(B6-#12)*, project (for per-project copies, B6-#27), context checkpoint threshold (default 80 %, 50 – 85 %) *(B6-CTX, B7-#34)*, loan-copy-of (original agent id, only for loan copies) *(B7-#31)*, state, version. No budget *(B6-#4)*; no guest nodes (removed v0.5, B7-#31) | Agent file in the Bench home folder | Client; Deputy: all work-related fields of other agents, never its own powers *(B5-#5, B5-C3, B6-#29)*; create and delete permanent agents: client only (BR-58); loan copies: created and deleted by the loan process (BR-74) |
+| Org tree / node | node id, name, parent, lead, home members, active loan copies *(B7-#31)*, communication links (with the leads-by-default rule for team → team links, B7-#14) | Tree file in the Bench home folder | Client |
+| Agent loan *(B7-#31)* | id, original agent, owning lead, requesting lead, borrowing node, reason, state (Requested / Approved / Declined / Checkpointed / Copy active / Returned / Merged / Deleted), checkpoint link, loan copy id, tasks, start and end dates, merge-back done (yes/no) *(B7-#31b)* | Local database; the copy itself is an agent file while active | Requesting lead (request, create copy, end); owning lead (approve or decline); system (checkpoint request, merge-back, deletion); client (sees all; may end) `[ASSUMPTION – confirm]` |
 | Freelancer | id, hirer, task, tools subset, model, start/end, cost. No budget slice *(B6-#4)* | Local database (record only; no files) | System |
-| Memory entry | layer (global / node / private), owner, text, author, date, source task | Markdown file per fact + index | Agent (own private), lead/system (node), approver (global); client (all) |
+| Memory entry | scope (global / node / private), owner, text, author, date, source task. **From v0.5 every memory entry is stored as a Note** (next row) *(B6-MEM)* | Note (Markdown file) + memory index | Agent (own private), lead/system (node), approver (global); client (all); all writes through the single writer (BR-69) |
+| **Note** *(B6-MEM)* | path / id, title, frontmatter: `type` (fact, work log, summary, decision memo, checkpoint, lesson, proposal, …), `scope`, `tags`, `updated`, `source_agent`, `expires` (optional) *(MV)*; source fields (writer, task / session / meeting / loan, date) (BR-70); body (Markdown) with `[[links]]`; derived: backlinks, stale flag and reason (UC-46) | Markdown file in the scope's memory folder; one `MEMORY.md` index note per scope *(MV)* | Writer by scope (BR-69); curator (merge, stale flag; BR-73); client (all) |
+| **Memory index** *(B6-MEM)* | full-text index, tags, links and backlinks, on-device embeddings for semantic search, last indexed time per note | Local SQLite database in the Bench home folder; derived from the notes and can be rebuilt from disk `[ASSUMPTION – confirm]` | System |
 | Work log entry | date-time, agent, node, task, event, outcome, files, cost | Node memory (Markdown, append-only) | System |
 | Node summary | node, sections (Done/In progress/Blocked/Needs you), date, source log version | Node memory | Lead |
 | Conversation / message | chat or group, author, text, time, tokens, cost | Local database | System; client may delete `[ASSUMPTION – confirm]` |
@@ -2626,9 +2952,9 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | Folder grant and write lock | path, agent, mode, lock holder, queue | Agent file (grant); memory only (lock) | Client (grant); system (lock) |
 | Trace / run | steps, tool calls, inputs/outputs, files, commands, model, tokens, cost | Database | System |
 | Token ledger | run, agent, hirer, project, tokens in/out/cache, cost, time | Database | System |
-| Settings | system services, approver for global memory, weekly-headroom guard (30 %) *(B6-#4)*, default context checkpoint threshold (80 %) *(B6-CTX)*, hard ceiling (90 %) *(B6-CTX3)* | Settings file | Client |
+| Settings | system services, approver for global memory, weekly-headroom guard (30 %) *(B6-#4)*, default context checkpoint threshold (80 %; allowed range 50 – 85 %) *(B6-CTX, B7-#34)*, hard ceiling (90 %, fixed, shown but not editable) *(B6-CTX3, B7-#34)*, curator on/off and schedule, staleness period, semantic search on/off `[ASSUMPTION – confirm these three]` *(B6-MEM)* | Settings file | Client |
 | Context checkpoint *(B6-CTX2)* | agent, task, time, tokens at checkpoint, trigger (threshold at a breakpoint / hard ceiling) `[ASSUMPTION – confirm]`, previous session id (trace link) `[ASSUMPTION – confirm]`, plus the eight fixed sections of §8.6 | Agent's private memory (Markdown, source = "context checkpoint") + work-log entry in node memory if task-related | Agent (checkpoint); system (log entry); client |
-| Lesson *(B6-CTX3)* | agent, task, what was tried and failed or the mistake, the fix, date | Agent's private memory (Markdown memory entry); also the node's work log if relevant to the team | Agent; client |
+| Lesson *(B6-CTX3)* | agent, task, what was tried and failed or the mistake, the fix, date | Agent's private memory (Markdown memory entry); also the node's work log if relevant to the team; a loan copy's lessons are merged into the original's private memory *(B7-#31b)* | Agent; system (merge-back); client |
 
 ### 8.2 What leaves the device `[default (B6-#6)]`
 | Data | Goes to | Why |
@@ -2638,6 +2964,7 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | `git push`, opening a pull request | The client's git remote / host | Not outward actions *(B5-#6, B6-#7)*; follow the agent's autonomy. Merging to `main`, deploying and releasing need the client (BR-58) *(B5-C3)* |
 | Gmail labels and archiving | Gmail | Not outward, no approval *(B6-#7)*; recorded in the trace |
 | Emails sent | The recipient, through Gmail | Only to the client, or to someone else with the client's approval for that one email; no standing reply rules *(B5-#6, B6-#7)* |
+| Memory index, embeddings, search queries, curator work | Nowhere: all on the device (BR-72) *(B6-MEM)* | Only notes an agent reads into a run's context go to Anthropic, as in the first row |
 | Anything else (telemetry, crash reports, analytics) | Nowhere | No telemetry; crash reports off *(SEC)* |
 
 ### 8.3 Retention (confirmed, B6-#6)
@@ -2652,6 +2979,9 @@ Emails to the client are not gated: any agent with Gmail may send to the client 
 | Token ledger and approval log | Indefinitely (small; needed for metrics and audit) |
 | Email triage items | 30 days; email bodies are never stored, only metadata and drafts |
 | Freelancer records | With the hirer's ledger and trace |
+| Notes (Bench Memory) *(B6-MEM)* | Until the client deletes them; the curator flags stale notes but never deletes; notes it merges are archived `[ASSUMPTION – confirm]` |
+| Memory index | Rebuilt as needed from the notes; no separate retention `[ASSUMPTION – confirm]` |
+| Loan copies and loan records *(B7-#31)* | The copy is deleted when the loan ends, after merge-back *(B7-#31b)*; the loan record, its work-log lines and ledger entries are kept like other logs `[ASSUMPTION – confirm]` |
 
 The trace-details, archived-transcript, email-item, ledger and approval-log periods above are confirmed by the client *(B6-#6)*. The other rows ("until the client deletes them", freelancer records) follow from them and are kept as defaults `[default (B6-#6)]`.
 
@@ -2662,7 +2992,8 @@ The trace-details, archived-transcript, email-item, ledger and approval-log peri
 - **Remove node:** its shared memory is archived (kept, read-only).
 - **Delete project:** client only (BR-58) *(B5-C3)*. Removes the project's dashboard, board, team chat and its own agent copies with their private memory *(B6-#27)*; keeps its documents folder, ledger and approval entries until the client deletes them separately `[default (B6-#6)]`. Global memory is not touched *(B6-#27)*.
 - **Close a debate or meeting session:** the chat is removed from the client's views; the transcript is archived, not deleted, until retention (BR-60) *(B5-C2)*.
-- **Delete a memory entry, conversation or document:** removed from disk; no recycle bin in the MVP.
+- **Delete a memory entry, conversation or document:** removed from disk; no recycle bin in the MVP. Only the client deletes notes; the curator archives merged notes instead of deleting them (BR-73) `[ASSUMPTION – confirm]`.
+- **End of an agent loan** *(B7-#31, B7-#31b)*: after merge-back (BR-75), the loan copy's agent file and private memory are removed; its work-log lines in the borrowing node, its ledger and approval entries stay, labelled "loan copy, deleted". The original agent is not touched except for the merged notes.
 - Bench never deletes files in the client's repos or folders except through an approved action (BR-17). Deleting a repo is reserved for the client (BR-58) *(B5-C3)*.
 - The client's repos are never copied into the Bench home; Bench stores only paths.
 
@@ -2670,7 +3001,7 @@ The trace-details, archived-transcript, email-item, ledger and approval-log peri
 - Claude credentials are never touched (BR-54). An optional API key and connector tokens Bench owns go in the OS keychain only *(SEC, ADR-2)*.
 
 ### 8.6 Context checkpoint format *(B6-CTX2, B6-CTX3)*
-Every checkpoint (BR-66) has these sections, in this order. A section with nothing to report says "none" `[ASSUMPTION – confirm]`; a missing section makes the checkpoint incomplete (UC-21 E2).
+Every checkpoint (BR-66) has these sections, in this order. A section with nothing to report says "none" `[ASSUMPTION – confirm]`. Before the old session closes, Bench checks that all eight sections are present and has the agent fill any gaps; only a checkpoint that is still incomplete after that leads to escalation (BR-66 (8), UC-21 E2) *(B7-#35)*. A checkpoint is a note (§8.7) with `type: checkpoint`.
 
 | # | Section | Content |
 |---|---|---|
@@ -2684,6 +3015,26 @@ Every checkpoint (BR-66) has these sections, in this order. A section with nothi
 | 8 | Mistakes and fixes | Mistakes made and how they were fixed |
 
 Sections 7 and 8 are also written to the agent's private memory as lessons (and to the team log if relevant) *(B6-CTX3)*.
+
+### 8.7 Note format (Bench Memory) *(B6-MEM; field details from MV)*
+Every note (BR-68) is a Markdown file:
+
+```
+---
+type: fact            # fact | work-log | summary | decision-memo | checkpoint | lesson | proposal | ...
+scope: node/dev-team  # global | node/<node> | private/<agent>
+tags: [login, auth]
+updated: 2026-10-22
+source_agent: developer-maya        # or "client", "curator", "system"
+source: task/T-123                  # task, session, meeting, loan or import (BR-70)
+expires: 2027-01-31                 # optional; used by the staleness sweep
+---
+We chose passkeys over passwords for the login. See [[Login design]] and [[Decision 2026-10-20 auth]].
+```
+
+- Field names and allowed values are illustrative and are set in the SRS `[ASSUMPTION – confirm]`.
+- Each scope folder has a `MEMORY.md` index note (a "map of content") *(MV)*.
+- The folders open as an Obsidian vault without changes; Bench writes no `.obsidian/` folder *(MV)*.
 
 ---
 
@@ -2700,7 +3051,7 @@ Sections 7 and 8 are also written to the agent's private memory as lessons (and 
 | V-07 | **Cost**: per message bubble, agent, freelancer (under hirer), group, project, task; running totals | Everywhere + usage meter | UC-40 |
 | V-08 | **Subscription headroom**: session and weekly limit used and remaining, reset times, 30 % guard | Usage meter | UC-40, UC-42 |
 | V-09 | **Objectives**: accepted tasks this week (target ≥ 10), tokens per accepted task (trend), days used in a row, project age vs. 14-day target (O5) | Usage / metrics view `[ASSUMPTION – confirm]` | UC-24, UC-40 |
-| V-10 | **Memory**: global, node and private, with work logs and summaries; editable | Memory view | UC-21 |
+| V-10 | **Revised v0.5. Memory browser**: global, node and private notes, with work logs and summaries; editor, backlinks, graph view, filters, stale flags, source of each note, search (keyword + semantic) *(B6-MEM)* | Memory browser | UC-21, UC-44, UC-45 |
 | V-11 | **Approval and Deputy log**: every approval, who approved, when, what | Approvals view | UC-23 |
 | V-12 | **Outward actions log**: every email sent (including emails to the client), post, merge to `main`, deploy and release, with approver *(B5-#3, B5-#6, B5-C3)*. Pushes, pull requests and Gmail labels/archiving are in the trace *(B5-#6, B6-#7)* | Approvals view | UC-23, UC-37 |
 | V-13 | **Notifications** list | Notification center | UC-29 |
@@ -2710,21 +3061,22 @@ Sections 7 and 8 are also written to the agent's private memory as lessons (and 
 | V-17 | **System lines** for router, curator, scheduler with cost | Chats | UC-10 |
 | V-18 | **Decision memos**: decision, attendees, rationale, with a trace link to the archived transcript *(B5-#2, B5-C2)* | Memory view / linked from tasks and sessions | UC-11, UC-28, UC-31 |
 | V-19 | **Proposals**: each proposal with its state (Draft, Awaiting client, Approved, Rejected, Sent to PM, Parked) *(B5-#4)* | CEO chat / projects list `[ASSUMPTION – confirm]` | UC-12 |
+| V-20 | **Curator activity** *(new v0.5)*: what the curator merged, proposed and flagged, with cost; pending merge suggestions *(B6-MEM)* | Memory browser + system lines | UC-46 |
+| V-21 | **Agent loans** *(new v0.5)*: active and past loans with original, owning and borrowing team, state, tasks and merge-back status; loan copies marked in the org tree *(B7-#31, B7-#31b)* | Org view / agent view `[ASSUMPTION – confirm]` | UC-01, UC-47 |
 
 ---
 
 ## 10. Open issues
 
-Only items that are still truly open: no default had been proposed for them, or they arise from the batch 6 answers or the context-checkpoint refinement (B6-CTX2, B6-CTX3). Each has a BA recommendation for the PM to put to the client.
+**No business question is open in v0.5.** Every §10 item from v0.4 was answered in batch 7, and the loan merge-back the PM proposed was confirmed by the client *(B7-#31b)*.
 
 | # | Question | Owner | Due |
 |---|---|---|---|
-| 10 | **System tray (rest of #10 adopted, see §10.1):** should Bench keep running in the system tray when the window is closed, so routines fire on time? Options: (a) yes, keep running in the tray; quitting from the tray stops everything; (b) no, routines run only while the window is open (UC-38 E1 catch-up applies); (c) ask on first close. **BA recommends (a)**: the morning inbox triage is a day-1 routine and would otherwise often be missed. | Client | Before PRD |
-| 14 | **Team → team links:** does a team → team link let every member talk to every member, or only the leads? Options: (a) leads only; members go through their lead; (b) all members; (c) leads only by default, with a per-link "all members" switch. **BA recommends (c)**: it keeps the tree's single point of contact and token economy by default, and lets the client open a link fully when two teams work closely. | Client | Before G1 |
-| 31 | **Guest rules** (new, from B6-#12): confirm the proposed guest rules in UC-01 A6: the guest node's lead may assign it tasks and it joins that node's chats; guest work is logged to the guest node; the guest node's lead never reads its private memory; escalations and returned guest tasks go to the guest node's lead; a guest cannot be that node's lead. Options: (a) as proposed; (b) a guest only takes tasks and never joins the node's chats; (c) other. **BA recommends (a).** | Client | Before G1 |
-| 32 | **Names of per-project agent copies** (new, from B6-#27 + BR-12): agent names must be unique, but each project gets its own "PM", "BA", etc. Options: (a) names are unique per project; the app shows "PM · Project X" where needed; (b) the client renames each copy; (c) names auto-suffixed ("PM 2"). **BA recommends (a).** | Client | Before UX |
-| 34 | **Hard ceiling vs. per-agent threshold** (new, B6-CTX3): the threshold is configurable per agent (BR-66). Is the 90 % ceiling fixed, and what if a threshold is set near or above it? Options: (a) the ceiling is fixed at 90 % for all agents and a threshold can be set only between 50 % and 85 %; (b) the ceiling is configurable per agent and must stay at least 5 points above the threshold; (c) other. **BA recommends (a)**: one simple safety net, and the gap leaves room to reach a natural breakpoint. | Client | Before SRS |
-| 35 | **Bad checkpoint after restart** (new, B6-CTX3): today the fresh session escalates to its lead if the checkpoint is unreadable or incomplete (UC-21 E2). Options: (a) as is; the CEO, which has no lead, escalates to the client; the task waits; (b) as (a), plus a check before the old session closes: the system verifies that all eight sections (§8.6) are present and asks the agent to complete them, so escalation only happens if the file is still unreadable; (c) other. **BA recommends (b)**: the old session still holds the knowledge, so fixing the checkpoint there is cheaper than an escalation. | Client | Before SRS |
+| — | none | — | — |
+
+The remaining `[ASSUMPTION – confirm]` tags in the text are smaller design details (mostly around Bench Memory, the curator and the agent loan). They are not blocking for G1; the PM may confirm them with the client in one pass or carry them into the PRD/SRS like the §10.1 defaults.
+
+**Resolved in v0.5 and removed** *(B7)*: #10 system tray → (a): Bench runs in the tray, "Quit" stops everything (BR-76, UC-38) *(B7-#10)*; #14 team links → D: leads by default, members may ask questions across a link, tasks go through the leads (BR-06, UC-05) *(B7-#14)*; #31 guests → replaced by the agent loan, with merge-back confirmed (BR-74, BR-75, UC-47) *(B7-#31, B7-#31b)*; #32 names → personal names for project copies, suggested by Bench, changeable by the client (BR-12, UC-43) *(B7-#32)*; #34 → (a): fixed 90 % ceiling, threshold 50 – 85 % (BR-66) *(B7-#34)*; #35 → (a): completeness check before the old session closes, escalation only if still incomplete (BR-66, UC-21) *(B7-#35)*.
 
 Resolved in v0.2 and removed: #1, #2, #5, #8, #11, #16. **Resolved in v0.3 by client answers (B6) and removed:** #4 budgets (no per-agent caps; 30 % guard confirmed; the rest of #4 is in §10.1), #6 data (retention and agent deletion confirmed; the rest in §10.1), #7 outward actions, #12 one agent in several nodes, #27 project template copies (sub-points in §10.1), #29 Deputy. **Adopted as defaults (B6) and moved to §10.1:** #3, #4 (rest), #6 (rest), #9, #10 (except the tray), #13, #15, #17, #18, #19, #20, #21, #22, #23, #24, #25, #26, #27 (sub-points), #28, #30. **Resolved in v0.4 and removed:** #33 context checkpoint threshold (80 % of each agent's own context window by default, configurable per agent; BR-66) *(B6-CTX2)*. Numbers are never reused, so cross-references stay valid.
 
@@ -2738,7 +3090,7 @@ The client accepted the BA's proposed defaults for these items for now *(B6)*. T
 | 4 (rest) | Models, connectors (other than the CEO's Gmail), folder access and autonomy per day-1 role as in the UC-06 table. (Budgets: answered, none; 30 % guard: confirmed, B6-#4) | UC-06, UC-35, AS-4 |
 | 6 (rest) | Storage locations as in §8.1; only model traffic and connector calls leave the device, no telemetry (§8.2, BR-55); deleting a project removes its dashboard, board, team chat and agent copies, keeps documents, ledger and approval entries; other deletion rules as in §8.4. (Retention and agent deletion: confirmed, B6-#6) | §8, BR-55, BR-56, AS-5 |
 | 9 | O1 "daily habit" = days with at least one client session; O4 "open-source ready" includes a licence, a README, build from source, no secrets in the repo (the PRD details it) | §1 objectives |
-| 10 (rest) | Day-1 routine: morning inbox triage (UC-37); morning status as an optional routine; a missed run happens at next launch if within 12 hours, otherwise it is skipped and logged. (Tray: still open, §10 #10) | UC-25, UC-37, UC-38 |
+| 10 (rest) | Day-1 routine: morning inbox triage (UC-37); morning status as an optional routine; a missed run happens at next launch if within 12 hours, otherwise it is skipped and logged. (Tray: resolved in v0.5, Bench runs in the tray *(B7-#10)*, BR-76) | UC-25, UC-37, UC-38 |
 | 13 | Nodes have free-text labels, not fixed types | UC-01, glossary |
 | 15 | A released freelancer keeps no memory; its learnings are discarded except the work-log entry in the hirer's team memory | UC-07 |
 | 17 | Branch per task is the default; pushing straight to `main` counts as a merge (reserved for the client); on failure changes stay on their branch | UC-14, BR-58 |
