@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bench · UI direction samples v0.1</title>
+<title>Bench · UI direction samples v0.2</title>
 <style>
 /* ==========================================================================
-   Bench direction v0.1 · Apple base system × Grok Bot feel × Dots characters
+   Bench direction v0.2 · Apple base system × Grok Bot feel × Dots characters
+   v0.2 = client feedback round 1 (U1–U8): routines, agent settings, projects
+   in the sidebar and on Home, split view, tickets, a quieter top bar, voice.
    Tokens (draft). Final token files ship to docs/design/ui/tokens/ after the
    client approves this direction.
    ========================================================================== */
@@ -16,6 +18,7 @@
   --ash:#6e6e73;            /* secondary text: 5.1:1 on white, 4.7:1 on Frost */
   --mist:#858585;           /* icon strokes only (3.7:1, UI parts) */
   --hairline:#d2d2d7; --pebble:#e2e2e5; --ice:#f4f8fb;
+  --control:#8e8e93;        /* v0.2: form-field borders, 3.3:1 on white (WCAG 1.4.11) */
   --bubble:#efeff1;         /* agent bubble (Bench addition between Frost and Pebble) */
   --row-hover:#ebebef; --row-on:#e3e3e8;
   /* Action: the one blue */
@@ -63,6 +66,9 @@ h1,h2,h3{margin:0;font-weight:600}
 .btn.outline:hover{background:#f2f7fd}
 .btn.plain{color:var(--carbon)}
 .btn.plain:hover{background:var(--frost)}
+.btn.sm{height:32px;padding:0 12px;font-size:14px}
+.btn.danger{background:var(--white);border-color:var(--err-ink);color:var(--err-ink)}
+.btn.danger:hover{background:var(--err-tint)}
 .btn:disabled,.btn[aria-disabled="true"]{background:var(--pebble)!important;border-color:transparent!important;color:#86868b!important;cursor:not-allowed;transform:none}
 .btn svg{width:16px;height:16px;flex:none}
 .icon-btn{width:36px;height:36px;border-radius:var(--r-pill);border:0;background:transparent;color:var(--carbon);display:inline-grid;place-items:center;cursor:pointer;flex:none;transition:background-color var(--d-press) var(--ease),transform var(--d-press) var(--ease)}
@@ -154,7 +160,7 @@ h1,h2,h3{margin:0;font-weight:600}
 .search input{width:100%;height:34px;border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--white);padding:0 10px 0 32px;font-size:14px}
 .search svg{position:absolute;left:10px;top:9px;width:16px;height:16px;color:var(--mist)}
 .side-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 8px 12px}
-.side-sec{display:flex;align-items:center;justify-content:space-between;padding:14px 10px 4px;height:36px}
+.side-sec{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 4px 2px 10px;min-height:36px}
 .side-sec h2{font-size:12px;font-weight:600;color:var(--ash);letter-spacing:-0.01em;white-space:nowrap}
 .side-links{display:flex;gap:2px}
 .side-links .icon-btn{width:32px;height:32px}
@@ -192,14 +198,19 @@ h1,h2,h3{margin:0;font-weight:600}
 .side.collapsed .side-top{padding-left:18px}
 .side.collapsed .side-foot{flex-direction:column}
 
-.main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--white)}
-.top{height:52px;flex:none;display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:1px solid var(--hairline);background:var(--white)}
-.crumbs{font-size:14px;color:var(--ash);display:flex;gap:6px;align-items:center;white-space:nowrap}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--white);position:relative}
+.main.on-frost{background:var(--frost)}
+/* U7: the top bar is air, not a box. No border, no fill, two quiet controls. */
+.top{height:48px;flex:none;display:flex;align-items:center;gap:16px;padding:0 16px 0 24px}
+.crumbs{font-size:14px;color:var(--ash);display:flex;gap:6px;align-items:center;white-space:nowrap;min-width:0;overflow:hidden}
 .crumbs b{color:var(--carbon);font-weight:600}
-.top-r{margin-left:auto;display:flex;align-items:center;gap:12px}
-.plan{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--hairline);border-radius:var(--r-pill);background:var(--white);cursor:pointer;font-size:12px;color:var(--graphite)}
-.plan:hover{background:var(--frost)}
-.plan b{color:var(--carbon)}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:4px;flex:none}
+.quiet{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 10px;border:0;border-radius:var(--r-pill);background:transparent;font-size:14px;color:var(--graphite);cursor:pointer;white-space:nowrap;transition:background-color var(--d-press) var(--ease)}
+.quiet:hover{background:var(--row-hover)}
+.main.on-frost .quiet:hover{background:#e8e8ed}
+.quiet b{color:var(--carbon);font-weight:600;font-variant-numeric:tabular-nums}
+.quiet .ring{flex:none;width:16px;height:16px}
+.quiet.needs{color:var(--carbon);font-weight:600}
 .bar{position:relative;display:inline-block;width:64px;height:4px;border-radius:var(--r-pill);background:var(--pebble);flex:none}
 .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-pill);background:var(--graphite)}
 .bar .mark{position:absolute;top:-3px;width:1px;height:10px;background:var(--carbon)}
@@ -209,7 +220,7 @@ h1,h2,h3{margin:0;font-weight:600}
 /* ---------- Home ---------- */
 .home.screen{display:block;background:var(--frost);overflow-y:auto}
 .home-wrap{display:block}
-.home-wrap{max-width:1120px;width:100%;margin:0 auto;padding:48px 48px 64px}
+.home-wrap{max-width:1120px;width:100%;margin:0 auto;padding:24px 48px 64px}
 .eyebrow{font-size:14px;color:var(--ash);margin:0 0 4px}
 .display{font:600 40px/1.1 var(--font-display);letter-spacing:-0.015em}
 .sub{font-size:21px;line-height:1.24;font-weight:300;letter-spacing:-0.005em;color:var(--graphite);margin:8px 0 0}
@@ -218,34 +229,99 @@ h1,h2,h3{margin:0;font-weight:600}
 .ask input::placeholder{color:var(--ash)}
 .ask:focus-within{outline:2px solid var(--blue);outline-offset:0}
 .atlas-last{max-width:720px;margin:10px 0 0 4px;font-size:14px;color:var(--graphite);display:flex;gap:8px;align-items:center}
-.home-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;margin-top:40px;align-items:start}
-.card{background:var(--white);border-radius:var(--r-card)}
-.card-h{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 8px}
-.card-h h2{font-size:21px;font-weight:600;letter-spacing:-0.01em;display:flex;align-items:center;gap:10px}
-.group-h{display:flex;align-items:center;gap:8px;padding:16px 24px 6px;font-size:12px;font-weight:600;color:var(--ash);letter-spacing:-0.01em}
-.wnm{list-style:none;margin:0;padding:0 0 4px}
-.wnm li{display:flex;gap:14px;align-items:center;padding:14px 24px;position:relative;height:auto}
-.wnm li>.avh{align-self:flex-start;margin-top:2px}
-.wnm li>div{flex:1 1 auto;min-width:0}
-.wnm li>.btn{flex:none}
-.wnm li+li{border-top:1px solid var(--hairline)}
-.wnm .t{font-weight:600;font-size:15px;line-height:1.35}
-.wnm .d{font-size:14px;line-height:1.43;color:var(--ash);margin-top:2px;max-width:46ch}
-.wnm .tags{display:flex;gap:8px;align-items:center;margin-top:8px}
-.wnm li.top{padding-top:16px;padding-bottom:18px}
-.more{padding:2px 24px 8px;font-size:14px;color:var(--ash);margin:0}
-.card-f{padding:8px 24px 20px}
+/* Grid: max 1120 - 2×48 padding = 1024 content. 1.2fr + 32 + 1fr: at 1440 (sidebar 288) 541 | 451; at 1280, 471 | 393. */
+.home-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;margin-top:32px;align-items:start}
+@media (max-width:1100px){.home-grid{grid-template-columns:minmax(0,1fr)}}
+.sec-h{display:flex;align-items:center;gap:10px;margin:0 4px 12px;min-height:32px}
+.sec-h h2{font-size:21px;font-weight:600;letter-spacing:-0.01em;display:flex;align-items:center;gap:10px}
+.sec-h>.caption{margin-left:auto;white-space:nowrap}
 .roster{list-style:none;margin:0;padding:4px 12px 8px}
 .roster li .srow{padding:10px 12px}
 .roster .avh{--cut:#fff}
 .roster .srow:hover .avh{--cut:var(--row-hover)}
-.r-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
-.r-role{font-weight:400;color:var(--ash)}
 .roster .s-main{flex:1;min-width:0}
-@media (max-width:1360px){.home-grid{grid-template-columns:minmax(0,1fr)}}
-.new-agent{display:flex;align-items:center;gap:12px;width:calc(100% - 24px);margin:4px 12px 16px;padding:12px;border:1px dashed var(--hairline);border-radius:var(--r-card);background:transparent;cursor:pointer;text-align:left}
-.new-agent:hover{background:var(--frost)}
-.ghost-shape{width:40px;height:40px;flex:none}
+
+/* U6: "What needs you" as separate tickets. States: rest (all equal) · open (one) · small (the others). */
+.tk-group{display:flex;align-items:baseline;gap:6px;margin:20px 4px 8px;font-size:12px;font-weight:600;color:var(--ash)}
+.tk-group:first-child{margin-top:0}
+.tk-group span{font-weight:400}
+.tickets{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.tk{background:var(--white);border-radius:var(--r-bubble);transition:opacity var(--d-panel) var(--ease),transform var(--d-panel) var(--ease)}
+.tk.leaving{opacity:0;transform:scale(.98)}
+.tk-head{display:flex;align-items:center;gap:12px;width:100%;min-height:40px;padding:14px 16px;border:0;border-radius:var(--r-bubble);background:transparent;text-align:left;cursor:pointer;transition:padding var(--d-expand) var(--ease-out),background-color var(--d-press) var(--ease)}
+.tk-head:hover{background:#fafafc}
+.tk[data-state="open"] .tk-head:hover{background:transparent}
+.tk-head:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:var(--r-bubble)}
+.tk-head .avh{--cut:#fff}
+.tk-head .av{width:32px;height:32px;transition:width var(--d-expand) var(--ease-out),height var(--d-expand) var(--ease-out)}
+.tk-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.tk-l1{display:flex;align-items:center;gap:8px;min-width:0}
+.tk-t{flex:0 1 auto;min-width:0;font-size:15px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tk-mini{display:none;flex:none}
+.tk-meta{display:grid;grid-template-rows:1fr;opacity:1;transition:grid-template-rows var(--d-expand) var(--ease-out),opacity var(--d-panel) var(--ease)}
+.tk-meta>span{overflow:hidden;min-height:0}
+.tk-meta-in{display:flex;align-items:center;gap:8px;padding-top:6px;font-size:12px;color:var(--ash);white-space:nowrap;min-width:0}
+.tk-meta-in .who{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.tk-meta-in .age{margin-left:auto;flex:none;padding-left:8px}
+.tk-chev{flex:none;display:grid;place-items:center;width:24px;height:24px;color:var(--mist);transition:transform var(--d-expand) var(--ease-out)}
+.tk-chev svg{width:18px;height:18px}
+.tk-more{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--d-expand) var(--ease-out)}
+.tk-more>div{overflow:hidden;min-height:0}
+.tk-body{padding:0 20px 20px 60px}
+.tk[data-state="open"] .tk-more{grid-template-rows:1fr}
+.tk[data-state="open"] .tk-chev{transform:rotate(180deg)}
+.tk[data-state="open"] .tk-t{white-space:normal}
+.tk[data-state="small"] .tk-head{padding:8px 16px}
+.tk[data-state="small"] .av{width:24px;height:24px}
+.tk[data-state="small"] .bdg{--b:11px}
+.tk[data-state="small"] .tk-meta{grid-template-rows:0fr;opacity:0}
+.tk[data-state="small"] .tk-mini{display:inline-flex}
+.tk[data-state="small"] .tk-t{font-size:14px}
+.tk-d{margin:0 0 12px;font-size:14px;line-height:1.5;color:var(--graphite);max-width:56ch}
+.tk-opts{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:6px}
+.tk-opts li{padding:10px 12px;border-radius:var(--r-card);background:var(--frost);font-size:14px;line-height:1.4}
+.tk-opts b{display:block;font-weight:600}
+.tk-opts span{display:block;margin-top:2px;font-size:12px;color:var(--ash)}
+.tk-mail{margin:0 0 14px;padding:12px 14px;border-radius:var(--r-card);background:var(--frost);font-size:14px;line-height:1.47}
+.tk-mail p{margin:6px 0 0}
+.tk-facts{margin:0 0 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;font-size:14px;line-height:1.43}
+.tk-facts dt{color:var(--ash)}
+.tk-facts dd{margin:0}
+.tk-body .cmd{margin:0 0 14px}
+.tk-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tk-foot{margin:12px 0 0;font-size:12px;line-height:1.5;color:var(--ash);max-width:60ch}
+.tk-moreline{display:flex;align-items:center;gap:12px;margin:12px 4px 0}
+.tk-moreline .caption{flex:1;min-width:0}
+.tk-empty{background:var(--white);border-radius:var(--r-bubble);padding:24px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.tk-empty b{font-size:17px;font-weight:600;letter-spacing:-0.02em}
+.tk-empty p{margin:0 0 10px;font-size:14px;line-height:1.5;color:var(--graphite);max-width:46ch}
+
+/* U5: Projects on Home. One card per active project + a New project card. */
+.projects{display:flex;flex-direction:column;gap:12px}
+.pcard{position:relative;background:var(--white);border-radius:var(--r-card);padding:16px 12px 16px 20px;display:flex;flex-direction:column;gap:14px;transition:background-color var(--d-press) var(--ease)}
+.pcard:has(.pc-link:hover){background:#fbfbfd}
+.pcard:has(.pc-link:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.pc-top{display:flex;align-items:flex-start;gap:8px}
+.pc-id{flex:1;min-width:0}
+.pc-id h3{margin:0 0 2px;font-size:17px;font-weight:600;letter-spacing:-0.02em}
+.pc-link{border:0;background:none;padding:0;font:inherit;letter-spacing:inherit;color:inherit;cursor:pointer;text-align:left}
+.pc-link::after{content:"";position:absolute;inset:0;border-radius:var(--r-card)}
+.pc-link:focus-visible{outline:none}
+.pc-top>.tag{position:relative;z-index:1;margin-top:3px;flex:none}
+.pc-more{position:relative;z-index:1;width:32px;height:32px;margin-top:-2px}
+.pc-more svg{width:18px;height:18px}
+.pc-foot{display:flex;align-items:center;gap:12px;min-width:0;padding-right:8px}
+.pc-act{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard.new{flex-direction:row;align-items:center;gap:14px;width:100%;padding:14px 20px;border:1px dashed var(--mist);background:transparent;font:inherit;letter-spacing:inherit;color:inherit;text-align:left;cursor:pointer}
+.pcard.new:hover{background:var(--white)}
+.pc-plus{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--pebble);color:var(--carbon)}
+.pc-plus svg{width:20px;height:20px}
+.pcard.new b{display:block;font-size:15px;font-weight:600}
+.prog{display:flex;flex-direction:column;gap:6px;padding-right:8px}
+.prog-l{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px;color:var(--graphite)}
+.prog-l b{color:var(--carbon);font-weight:600;font-variant-numeric:tabular-nums}
+.track{position:relative;display:block;height:6px;border-radius:var(--r-pill);background:var(--pebble);overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-pill);background:var(--carbon)}
 
 /* ---------- Conversation (shared) ---------- */
 .msgs{display:flex;flex-direction:column;gap:6px;padding:8px 24px 24px}
@@ -360,12 +436,10 @@ h1,h2,h3{margin:0;font-weight:600}
 .appr-done .ok{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--ok-tint);color:var(--ok-ink);flex:none}
 .appr-done .ok.neutral{background:var(--pebble);color:var(--carbon)}
 .appr-done svg{width:16px;height:16px}
-.routine{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--hairline)}
-.routine .t{font-weight:600;font-size:14px}
-.field{display:flex;flex-direction:column;gap:6px;padding:0 20px 16px}
-.field label{font-size:12px;font-weight:600;color:var(--graphite)}
-.field input,.field textarea{border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--frost);padding:8px 10px;font-size:14px}
-.field input:focus-visible,.field textarea:focus-visible{outline:2px solid var(--blue);outline-offset:0;border-color:transparent;border-radius:var(--r-card)}
+.ws{container-type:inline-size}
+.split.wide-pane{grid-template-columns:minmax(340px,.85fr) minmax(540px,1.15fr)}
+.split.wide-pane.pane-off{grid-template-columns:minmax(400px,1fr) 0}
+.ws-scroll{flex:1;min-height:0;overflow-y:auto}
 
 /* take-over (full-screen workspace) */
 .takeover{position:fixed;inset:0;z-index:50;background:var(--white);display:flex;flex-direction:column;transition:clip-path var(--d-expand) var(--ease-out)}
@@ -466,6 +540,194 @@ table.spec code{font-size:12px}
 .radius-demo div{width:140px;height:64px;border:1px solid var(--hairline);display:grid;place-items:center;font-size:12px;color:var(--graphite);background:var(--frost)}
 pre.vars{background:var(--frost);border-radius:var(--r-card);padding:16px 20px;font:400 12px/1.6 var(--mono);letter-spacing:0;overflow:auto;max-height:360px}
 
+/* ---------- v0.2: form controls ---------- */
+.inp{width:100%;height:36px;border:1px solid var(--control);border-radius:var(--r-card);background:var(--white);padding:0 10px;font-size:14px;letter-spacing:-0.016em}
+textarea.inp{height:auto;padding:8px 10px;line-height:1.45;resize:vertical}
+.inp:focus-visible{outline:2px solid var(--blue);outline-offset:1px;border-radius:var(--r-card)}
+.inp.mini{width:auto;min-width:104px;height:32px}
+.f{display:flex;flex-direction:column;gap:6px;margin:0 0 16px}
+.f label{font-size:12px;font-weight:600;color:var(--graphite)}
+.f .opt{font-weight:400;color:var(--ash)}
+.f2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.switch span{min-width:20px}
+
+/* ---------- v0.2 sidebar: projects as collapsible groups (U3, U4) ---------- */
+.sec-btn{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:0;border-radius:var(--r-pill);background:transparent;font-size:12px;font-weight:600;color:var(--link);cursor:pointer;white-space:nowrap}
+.sec-btn:hover{background:var(--row-hover)}
+.sec-btn svg{width:14px;height:14px}
+.pg{margin:2px 0}
+.pg-h{display:flex;align-items:center;gap:2px;border-radius:var(--r-card)}
+.pg-toggle{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:36px;padding:0 8px 0 6px;border:0;border-radius:var(--r-card);background:transparent;cursor:pointer;text-align:left;transition:background-color var(--d-press) var(--ease)}
+.pg-toggle:hover{background:var(--row-hover)}
+.pg-chev{flex:none;display:grid;place-items:center;width:20px;height:20px;color:var(--ash);transition:transform var(--d-panel) var(--ease-move)}
+.pg-chev svg{width:16px;height:16px}
+.pg[data-open="false"] .pg-chev{transform:rotate(-90deg)}
+.pg-name{flex:none;font-size:14px;font-weight:600;white-space:nowrap}
+.pg-sub{flex:1;min-width:0;font-size:12px;color:var(--ash);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg-more{width:32px;height:32px}
+.pg-more svg{width:18px;height:18px}
+.pg-list{display:grid;grid-template-rows:1fr;transition:grid-template-rows var(--d-panel) var(--ease-move)}
+.pg[data-open="false"] .pg-list{grid-template-rows:0fr}
+.pg-list>div{overflow:hidden;min-height:0;padding-left:8px}
+.side.collapsed .pg-h,.side.collapsed .sec-btn{display:none}
+.side.collapsed .side-sec{min-height:0}
+.side.collapsed .pg-list>div{padding-left:0}
+
+/* ---------- v0.2 menu (right-click and the visible "…" button) ---------- */
+.menu{position:fixed;z-index:90;min-width:232px;max-width:300px;padding:6px;background:var(--white);border:1px solid var(--hairline);border-radius:var(--r-card)}
+.menu.anim{animation:menuIn var(--d-badge) var(--ease-out)}
+@keyframes menuIn{from{opacity:0;transform:translateY(-4px)}}
+.menu [role="menuitem"]{display:flex;align-items:center;gap:10px;width:100%;min-height:36px;padding:0 10px;border:0;border-radius:6px;background:transparent;font-size:14px;color:var(--carbon);text-align:left;cursor:pointer}
+.menu [role="menuitem"] svg{width:16px;height:16px;color:var(--graphite);flex:none}
+.menu [role="menuitem"]:hover,.menu [role="menuitem"]:focus{background:var(--row-hover)}
+.menu [role="menuitem"]:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;border-radius:6px}
+.menu hr{border:0;border-top:1px solid var(--hairline);margin:6px 4px}
+.menu .m-cap{padding:6px 10px 4px;font-size:12px;line-height:1.4;color:var(--ash)}
+.dropzones{position:absolute;inset:0;z-index:40;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;background:rgba(245,245,247,.94)}
+.dz{display:grid;place-items:center;padding:16px;border:2px dashed var(--mist);border-radius:var(--r-card);font-size:15px;font-weight:600;color:var(--graphite);text-align:center}
+.dz.over{border-color:var(--blue);color:var(--blue)}
+
+/* ---------- v0.2 project view, solo and split (U4) ---------- */
+/* Split: left = --lw of the width, a 9 px divider, right = the rest. 1440: (1152-9)/2 ≈ 571 each; 1280: ≈ 491 each. */
+.splitv{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,var(--lw,50%)) 9px minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.sv-div{position:relative;cursor:col-resize;background:transparent;touch-action:none}
+.sv-div::before{content:"";position:absolute;top:0;bottom:0;left:4px;width:1px;background:var(--hairline);transition:background-color var(--d-press) var(--ease)}
+.sv-div:hover::before,.sv-div:focus-visible::before,.sv-div.drag::before{left:3px;width:3px;background:var(--blue)}
+.sv-div:focus-visible{outline:none}
+.pv{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--frost);container-type:inline-size}
+#p-project .pv{flex:1}
+.pv-head{flex:none;display:flex;align-items:center;gap:10px;min-height:60px;padding:10px 12px 10px 20px;background:var(--white);border-bottom:1px solid var(--hairline)}
+.pv-id{flex:1;min-width:0}
+.pv-id h2{font-size:17px;font-weight:600;letter-spacing:-0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-id .caption{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-head .stack{flex:none}
+.pv-body{flex:1;min-height:0;overflow-y:auto}
+.pv-inner{max-width:1040px;margin:0 auto;padding:20px 20px 40px}
+.pv-sec{margin-top:24px}
+.pv-sec h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:15px}
+.pv-needs{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-direction:column;gap:6px}
+.pvn{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;padding:6px 12px 6px 8px;border:0;border-radius:var(--r-bubble);background:var(--white);text-align:left;cursor:pointer}
+.pvn:hover{background:#fafafc}
+.pvn .avh{--cut:#fff}
+.pvn-t{flex:1;min-width:0;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-none{margin:0;font-size:14px;color:var(--ash)}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+.col h4{display:flex;gap:6px;margin:0 0 8px;font-size:12px;font-weight:600;color:var(--ash)}
+.col h4 span{font-weight:400}
+.col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.bcard{display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:var(--r-card);background:var(--white)}
+.bt{font-size:14px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.bm{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--ash)}
+.bm .avh{--cut:#fff}
+.col-more{margin:8px 2px 0}
+@container (max-width:560px){.board{grid-template-columns:minmax(0,1fr)}}
+@container (max-width:440px){.pv-head .stack{display:none}}
+
+/* ---------- v0.2 routines (U1) ---------- */
+.rt-head{flex:none;display:flex;align-items:center;gap:12px;padding:14px 16px 8px 20px}
+.rt-head h3{font-size:15px}
+.rt-head .btn{margin-left:auto}
+.rt-sum{margin:0 20px 12px;font-size:12px;line-height:1.5;color:var(--ash)}
+.rt-sum b{color:var(--carbon);font-weight:600}
+.rt-new{margin:0 16px 12px;padding:14px;border-radius:var(--r-card);background:var(--frost)}
+.rt-new label{display:block;margin:0 0 6px;font-size:12px;font-weight:600;color:var(--graphite)}
+.rt-new-row{display:flex;gap:8px;align-items:center}
+.rt-new-row .inp{flex:1;min-width:0}
+.rt-draft{margin-top:12px;padding:12px 14px;border-radius:var(--r-card);background:var(--white);border:1px solid var(--hairline)}
+.rt-est{margin:8px 0 10px;font-size:12px;line-height:1.5;color:var(--graphite)}
+.rt-acts{display:flex;flex-wrap:wrap;gap:8px}
+.rt-list{list-style:none;margin:0;padding:0 16px 20px;display:flex;flex-direction:column;gap:8px}
+.rt{padding:12px 12px 12px 16px;border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--white)}
+.rt.off{background:#fafafa}
+.rt-top{display:flex;align-items:center;gap:8px;min-width:0}
+.rt-name{min-width:0;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt.off .rt-name{color:var(--graphite)}
+.rt-top>.tag{flex:none}
+.rt-tog{margin-left:auto;flex:none}
+.rt-more{width:32px;height:32px}
+.rt-more svg{width:18px;height:18px}
+.rt-when{margin-top:2px;font-size:14px;color:var(--graphite)}
+.rt-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 0;padding-top:10px;border-top:1px solid var(--pebble)}
+.rt-stats dt{font-size:12px;color:var(--ash)}
+.rt-stats dd{margin:2px 0 0;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.rt-stats small{display:block;font-size:12px;font-weight:400;line-height:1.4;color:var(--ash)}
+.rt.off .rt-stats dd{color:var(--graphite)}
+.rt-empty{margin:8px 16px;padding:24px 20px;border:1px dashed var(--mist);border-radius:var(--r-card);display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.rt-empty b{font-size:15px}
+.rt-empty p{margin:0;font-size:14px;line-height:1.5;color:var(--graphite);max-width:46ch}
+.rt-sugg{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.rt-sugg button{height:32px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--hairline);background:var(--white);font-size:14px;cursor:pointer}
+.rt-sugg button:hover{background:var(--frost)}
+
+/* ---------- v0.2 agent settings (U2): a section nav, one section per view ---------- */
+.set{flex:1;min-height:0;display:grid;grid-template-columns:184px minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.set-nav{overflow-y:auto;padding:8px;border-right:1px solid var(--hairline)}
+.set-nav button{display:block;width:100%;min-height:44px;padding:6px 10px;border:0;border-radius:var(--r-card);background:transparent;text-align:left;cursor:pointer;transition:background-color var(--d-press) var(--ease)}
+.set-nav button+button{margin-top:2px}
+.set-nav button:hover{background:var(--row-hover)}
+.set-nav button[aria-current="true"]{background:var(--row-on)}
+.set-nav b{display:block;font-size:14px;font-weight:600;line-height:1.3}
+.set-nav span{display:block;font-size:12px;line-height:1.33;color:var(--ash);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-main{overflow-y:auto;min-width:0;padding:16px 20px 32px}
+.set-main h4{margin:0 0 4px;font-size:17px;font-weight:600;letter-spacing:-0.02em}
+.set-lede{margin:0 0 16px;font-size:14px;line-height:1.45;color:var(--graphite);max-width:52ch}
+.set-group{margin-top:24px}
+.set-group h5{margin:0 0 4px;font-size:12px;font-weight:600;color:var(--ash)}
+.setrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--pebble)}
+.set-group h5+.setrow,.set-lede+.setrow{border-top:0}
+.sr-m{flex:1;min-width:0}
+.sr-t{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:600;line-height:1.35}
+.sr-t code{font-size:13px;font-weight:500}
+.sr-d{margin-top:2px;font-size:12px;line-height:1.45;color:var(--ash)}
+.setrow>svg,.sr-ic{flex:none;color:var(--ash)}
+.sr-ic{display:grid;place-items:center;width:20px}
+.setrow .btn,.setrow .switch,.setrow select,.setrow .lockv{flex:none}
+.setrow.na .sr-t{color:var(--graphite)}
+.sr-none{margin:8px 0 0;font-size:14px;color:var(--ash)}
+.lockv{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ash);white-space:nowrap}
+.lockv svg{width:14px;height:14px}
+.pf-av{display:flex;align-items:center;gap:16px;margin:0 0 20px}
+.rcs{display:flex;flex-direction:column;gap:8px}
+.rc{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--hairline);border-radius:var(--r-card);cursor:pointer;transition:border-color var(--d-press) var(--ease),background-color var(--d-press) var(--ease)}
+.rc:hover{background:#fafafc}
+.rc:has(input:checked){border-color:var(--carbon);box-shadow:inset 0 0 0 1px var(--carbon)}
+.rc:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:2px}
+.rc input{flex:none;width:16px;height:16px;margin:2px 0 0;accent-color:var(--carbon)}
+.rc input:focus-visible{outline:none}
+.rc-b{flex:1;min-width:0}
+.rc-b b{display:block;font-size:14px;font-weight:600}
+.rc-b span{display:block;margin-top:2px;font-size:12px;line-height:1.45;color:var(--ash)}
+.rc-e{flex:none;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.rc-e small{display:block;font-size:12px;font-weight:400;color:var(--ash)}
+.ck-row{display:flex;align-items:baseline;gap:10px}
+.ck-row output{font-size:21px;font-weight:600;font-variant-numeric:tabular-nums}
+.ck input[type="range"]{display:block;width:100%;margin:10px 0 2px;accent-color:var(--carbon)}
+.ck-ends{display:flex;justify-content:space-between}
+.ck-bar{position:relative;height:8px;margin:18px 0 8px;border-radius:var(--r-pill);background:var(--pebble)}
+.ck-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-pill) 0 0 var(--r-pill);background:#c7c7cc}
+.ck-z{position:absolute;left:90%;right:0;top:0;bottom:0;border-radius:0 var(--r-pill) var(--r-pill) 0;background:repeating-linear-gradient(135deg,var(--graphite) 0 1px,transparent 1px 4px)}
+.ck-t{position:absolute;top:-4px;width:2px;height:16px;margin-left:-1px;border-radius:1px;background:var(--carbon)}
+.ck-leg{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 10px}
+.ck-leg span{display:inline-flex;align-items:center;gap:6px}
+.ck-leg i{display:inline-block;flex:none}
+.lg-t{width:2px;height:12px;border-radius:1px;background:var(--carbon)}
+.lg-z{width:14px;height:8px;border-radius:2px;background:repeating-linear-gradient(135deg,var(--graphite) 0 1px,transparent 1px 4px)}
+#ckHelp{margin:0;max-width:56ch;line-height:1.5}
+.nprev{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-card);background:var(--frost)}
+.nprev .avh{--cut:var(--frost)}
+.nprev>div{flex:1;min-width:0;font-size:14px}
+.danger{margin-top:28px;padding-top:4px;border-top:1px solid var(--hairline)}
+.danger .setrow{border-top:0}
+.del-box{padding:4px 0 0}
+.del-box label{display:block;margin:0 0 6px;font-size:12px;font-weight:600;color:var(--graphite)}
+@container (max-width:540px){
+  .set{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .set-nav{display:flex;gap:4px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--hairline)}
+  .set-nav button{flex:none;width:auto;min-height:36px}
+  .set-nav button+button{margin-top:0}
+  .set-nav span{display:none}
+}
+
 /* ---------- Reduced motion (OS setting, or the demo switch) ---------- */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -477,11 +739,12 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
 <!-- ======================= Prototype chrome (not part of the UI) ======================= -->
 <header class="proto" aria-label="Prototype controls (not part of the UI)">
-  <div class="proto-id"><b>Bench · UI direction v0.1</b><span class="caption">Hi-fi direction samples, Phase 5 preview. Demo chrome is not UI.</span></div>
+  <div class="proto-id"><b>Bench · UI direction v0.2</b><span class="caption">Client feedback round 1 applied. Demo chrome is not UI.</span></div>
   <div class="seg" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" aria-controls="p-home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" aria-controls="p-agent" aria-selected="false" tabindex="-1">Agent · Noor</button>
     <button role="tab" id="t-team" aria-controls="p-team" aria-selected="false" tabindex="-1">Team chat</button>
+    <button role="tab" id="t-split" aria-controls="p-split" aria-selected="false" tabindex="-1">Split view</button>
     <button role="tab" id="t-tokens" aria-controls="p-tokens" aria-selected="false" tabindex="-1">Tokens</button>
   </div>
   <div class="proto-r">
@@ -501,7 +764,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
     <div class="side-top">
       <button class="icon-btn" id="sideToggle" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar"><span data-ic="sidebar"></span></button>
       <span class="wordmark">Bench <small>(codename)</small></span>
-      <button class="icon-btn fill new-btn" data-act="newAgent" aria-label="New agent" title="New agent"><span data-ic="plus"></span></button>
+      <button class="icon-btn fill new-btn" data-menu="new" aria-haspopup="menu" aria-expanded="false" aria-label="New agent or project" title="New agent or project"><span data-ic="plus"></span></button>
     </div>
     <div class="search"><span data-ic="search"></span><input type="search" id="sideSearch" placeholder="Search agents and chats" aria-label="Search agents and chats"></div>
     <div class="side-scroll" id="sideList"></div>
@@ -512,24 +775,24 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
     </div>
   </aside>
 
-  <div class="main">
+  <div class="main on-frost" id="main">
     <div class="top">
       <nav class="crumbs" aria-label="Breadcrumb" id="crumbs"><b>Home</b></nav>
       <div class="top-r">
-        <button class="plan" data-act="stub" aria-label="Plan usage: 41 percent of the weekly limit used, resets Monday 09:00, headroom OK. Open usage">
-          Week <span class="bar" aria-hidden="true"><i style="width:41%"></i><span class="mark" style="left:70%"></span></span>
-          <span><b>41 %</b> · resets Mon 09:00 · Headroom OK</span>
+        <button class="quiet" data-act="stub" title="41 % of your week used · resets Mon 09:00 · headroom OK" aria-label="41 percent of your weekly limit used. Resets Monday 09:00. Headroom OK. Open Usage">
+          <svg class="ring" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" fill="none" stroke="#d2d2d7" stroke-width="2"/><circle cx="8" cy="8" r="6" fill="none" stroke="#474747" stroke-width="2" stroke-linecap="round" stroke-dasharray="15.46 37.70" transform="rotate(-90 8 8)"/></svg>
+          <span><b>41 %</b> of your week</span>
         </button>
-        <button class="btn secondary" style="height:32px" data-tab="home" aria-label="8 items need you. Open Home">Needs me <span class="count">8</span></button>
+        <button class="quiet needs" id="needsTop" data-tab="home" aria-label="8 things need you. Open Home"><span id="needsTopL">Needs you</span><span class="count">8</span></button>
       </div>
     </div>
 
     <!-- ============ HOME ============ -->
     <section class="screen home" id="p-home" role="tabpanel" aria-labelledby="t-home">
       <div class="home-wrap">
-        <p class="eyebrow">Thursday, 22 October · Bench, Sprint 2, day 1</p>
+        <p class="eyebrow">Thursday, 22 October</p>
         <h1 class="display">Good morning.</h1>
-        <p class="sub">Eight things need you. Start with Jade: QA-3 is blocked.</p>
+        <p class="sub" id="homeSub">Eight things need you. Start with Jade: QA-3 is blocked.</p>
 
         <form class="ask" id="askForm" aria-label="Message Atlas">
           <span class="avh" data-av="atlas" data-size="28"></span>
@@ -539,74 +802,14 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
         <p class="atlas-last"><span class="caption">Atlas, 08:02</span> 1 reply to dana drafted in your voice and held for your ok. nothing sends until you've read it.</p>
 
         <div class="home-grid">
-          <section class="card" aria-labelledby="needsH">
-            <div class="card-h"><h2 id="needsH">What needs me <span class="count">8</span></h2><span class="caption">Live · 0 tokens</span></div>
-            <div class="group-h">Decide <span class="caption">5</span></div>
-            <ul class="wnm">
-              <li class="top">
-                <span class="avh" data-av="jade" data-size="40"></span>
-                <div><div class="t">Jade's E2E tests failed twice on Windows CI</div>
-                  <div class="d">QA-3 · Bench. Karim couldn't resolve it and suggests 2 options.</div>
-                  <div class="tags"><span class="tag solid">Blocked</span><span class="caption">95 min</span></div></div>
-                <button class="btn primary" data-act="stub">Decide on QA-3</button>
-              </li>
-              <li>
-                <span class="avh" data-av="atlas" data-size="40"></span>
-                <div><div class="t">Email draft: "send it or change it?"</div>
-                  <div class="d">To dana.k@example.com · Re: Interview availability. Held for your ok.</div>
-                  <div class="tags"><span class="tag solid">Outward</span><span class="caption">2 h</span></div></div>
-                <button class="btn secondary" data-act="stub">Review email</button>
-              </li>
-              <li>
-                <span class="avh" data-av="karim" data-size="40"></span>
-                <div><div class="t">Karim wants to merge PR #41 to main</div>
-                  <div class="d">Code review passed; CI green on Windows and Ubuntu.</div>
-                  <div class="tags"><span class="tag line">Reserved</span><span class="caption">40 min</span></div></div>
-                <button class="btn secondary" data-act="stub">Review merge</button>
-              </li>
-              <li>
-                <span class="avh" data-av="noor" data-size="40"></span>
-                <div><div class="t">Noor asks to run npm test in bench</div>
-                  <div class="d">The full suite before she opens the pull request for S1-4.</div>
-                  <div class="tags"><span class="tag">Work request</span><span class="caption">2 min</span></div></div>
-                <button class="btn secondary" data-tab="agent">Review request</button>
-              </li>
-              <li>
-                <span class="avh" data-av="sam" data-size="40"></span>
-                <div><div class="t">Payment needed: Figma seat for Sam</div>
-                  <div class="d">Paid by you outside Bench. Agents never pay.</div>
-                  <div class="tags"><span class="tag line">Payment</span><span class="caption">3 h</span></div></div>
-                <button class="btn secondary" data-act="stub">Review payment</button>
-              </li>
-            </ul>
-            <div id="moreGroups">
-              <div class="group-h">Meet <span class="caption">2</span></div>
-              <p class="more">Maya's Sprint 2 review and Omar's interview, below the top 5.</p>
-              <div class="group-h">For your info <span class="caption">1</span></div>
-              <p class="more">A debate is running in Bench: where does the Stop button live?</p>
-            </div>
-            <div id="allGroups" hidden>
-              <div class="group-h">Meet <span class="caption">2</span></div>
-              <ul class="wnm">
-                <li><span class="avh" data-av="maya" data-size="40"></span><div><div class="t">Maya: "we have something to show you"</div><div class="d">Sprint 2 review: onboarding (S1-2) and the agent runner (S1-3).</div></div><button class="btn secondary" data-act="stub">Join review</button></li>
-                <li><span class="avh" data-av="omar" data-size="40"></span><div><div class="t">Omar, BA lead, wants to meet you</div><div class="d">8 questions about memory filters. Continue at question 3.</div></div><button class="btn secondary" data-act="stub">Continue interview</button></li>
-              </ul>
-              <div class="group-h">For your info <span class="caption">1</span></div>
-              <ul class="wnm"><li><span class="avh" data-av="maya" data-size="40"></span><div><div class="t">Debate running: where does the Stop button live?</div><div class="d">Maya decides when the 5 minutes are up.</div></div><button class="btn secondary" data-tab="team">Watch debate</button></li></ul>
-            </div>
-            <div class="card-f"><button class="btn secondary" id="showAll" aria-expanded="false" aria-controls="allGroups">Show all 8</button></div>
+          <section aria-labelledby="needsH">
+            <div class="sec-h"><h2 id="needsH">What needs you <span class="count" id="needsCount">8</span></h2><span class="caption">Live · uses no tokens</span></div>
+            <div id="tkList"></div>
           </section>
 
-          <section class="card" aria-labelledby="teamH">
-            <div class="card-h"><h2 id="teamH">Team now</h2><a href="#" data-act="stub" class="list">Open Bench › Team</a></div>
-            <div class="group-h">Company</div>
-            <ul class="roster" id="rosterCo"></ul>
-            <div class="group-h">Bench · 7 agents</div>
-            <ul class="roster" id="rosterBench"></ul>
-            <button class="new-agent" data-act="newAgent">
-              <span class="ghost-shape" data-ghost></span>
-              <span><b class="list" style="font-weight:600;display:block">New agent</b><span class="caption">Describe what you need in a chat. Atlas drafts it; nothing is created until you confirm.</span></span>
-            </button>
+          <section aria-labelledby="projH">
+            <div class="sec-h"><h2 id="projH">Projects</h2><span class="caption" id="projCount">2 active</span></div>
+            <div class="projects" id="projList"></div>
           </section>
         </div>
       </div>
@@ -621,7 +824,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
           <div class="caption">Developer · Bench › Dev team · Sonnet · Ask every time</div>
         </div>
         <div class="ah-meta">
-          <span class="ctx" title="Context used in this session" aria-label="Context 34 percent used, checkpoint at 70 percent">Context <span class="bar" aria-hidden="true"><i style="width:34%"></i><span class="mark" style="left:70%"></span></span> <b>34 %</b><span class="ctx-x"> · checkpoint at 70 %</span></span>
+          <span class="ctx" id="ctxBox" title="Context used in this session" aria-label="Context 34 percent used, checkpoint at 70 percent">Context <span class="bar" aria-hidden="true"><i style="width:34%"></i><span class="mark" id="ctxMark" style="left:70%"></span></span> <b>34 %</b><span class="ctx-x" id="ctxX"> · checkpoint at 70 %</span></span>
           <span class="chip">This run <b>28.4k tokens</b> · 0.9 % of week</span>
           <button class="btn secondary" id="stopBtn"><span data-ic="stop"></span><span>Stop</span></button>
           <button class="icon-btn" id="paneToggle" aria-pressed="true" aria-controls="wsPane" aria-label="Show Noor's workspace" title="Noor's workspace"><span data-ic="monitor"></span></button>
@@ -692,7 +895,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
                 <button role="tab" aria-selected="false" tabindex="-1" data-wtab="routines">Routines</button>
                 <button role="tab" aria-selected="false" tabindex="-1" data-wtab="settings">Settings</button>
               </div>
-              <span class="caption" style="margin-left:auto">Live · updated 09:14</span>
+              <span class="caption" id="wsCap" style="margin-left:auto;white-space:nowrap">Live · updated 09:14</span>
             </div>
 
             <div class="ws-panel" data-wpanel="screen">
@@ -715,26 +918,37 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
                     <button class="btn outline" id="allowAlways" aria-describedby="scopeNote">Always allow this pattern</button>
                     <button class="btn plain" id="denyBtn">Deny</button>
                   </div>
-                  <p class="scope" id="scopeNote">"Always allow" lets Noor run <code>npm test</code> in bench without asking. Other commands and other repos still ask. Revoke it any time in Settings › Permissions or on Noor's page › Autonomy.</p>
+                  <p class="scope" id="scopeNote">"Always allow" lets Noor run <code>npm test</code> in bench without asking. Other commands and other repos still ask. Revoke it any time in Noor › Settings › Autonomy.</p>
                 </div>
               </div>
             </div>
 
             <div class="ws-panel" data-wpanel="routines" hidden>
-              <div class="ws-title"><h3>Routines</h3><span class="caption">Run on a schedule; each run shows its cost</span></div>
-              <div class="routine"><span data-ic="clock"></span><div style="flex:1"><div class="t">Morning test sweep</div><div class="caption">Weekdays at 8:00 · last run 08:00, 6.2k tokens</div></div><label class="switch"><input type="checkbox" checked aria-label="Morning test sweep on"> On</label></div>
-              <div class="routine"><span data-ic="clock"></span><div style="flex:1"><div class="t">Dependency check</div><div class="caption">Mondays at 9:00 · deferred when the 30 % guard is on</div></div><label class="switch"><input type="checkbox" aria-label="Dependency check off"> Off</label></div>
-              <div style="padding:16px 20px"><button class="btn secondary" data-act="stub"><span data-ic="plus"></span> New routine</button></div>
+              <div class="rt-head"><h3>Noor's routines</h3><button type="button" class="btn secondary sm" id="rtNewBtn" aria-controls="rtNew"><span data-ic="plus"></span>New routine</button></div>
+              <div class="ws-scroll" id="rtScroll">
+                <p class="rt-sum" id="rtSum"></p>
+                <form class="rt-new" id="rtNew" aria-label="New routine" hidden>
+                  <label for="rtIn">Describe the routine in plain words</label>
+                  <div class="rt-new-row"><input class="inp" id="rtIn" autocomplete="off" placeholder="every Friday at 4 pm, list the pull requests merged this week"><button type="submit" class="btn secondary sm">Draft it</button></div>
+                  <div id="rtOut" aria-live="polite"></div>
+                </form>
+                <ul class="rt-list" id="rtList" aria-label="Routines"></ul>
+                <div class="rt-empty" id="rtEmpty" hidden>
+                  <b>No routines yet</b>
+                  <p>Describe one in plain words and Noor runs it on schedule, read-only. You see what each run costs before you save it.</p>
+                  <div class="rt-sugg" role="group" aria-label="Examples">
+                    <button type="button" data-rt-ex="Every weekday at 8, run the tests and list what failed">Run the tests every weekday at 8</button>
+                    <button type="button" data-rt-ex="Every Monday at 9, check for outdated dependencies">Check dependencies on Mondays</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="ws-panel" data-wpanel="settings" hidden>
-              <div class="ws-title"><h3>Settings</h3><span class="caption" id="unsaved">No unsaved changes</span></div>
-              <div style="display:flex;align-items:center;gap:16px;padding:8px 20px 20px"><span class="avh" data-av="noor" data-size="64" data-nobadge></span><button class="btn secondary" data-act="stub">Customize avatar…</button></div>
-              <div class="field"><label for="fName">Name</label><input id="fName" value="Noor"></div>
-              <div class="field"><label for="fTitle">Title (optional)</label><input id="fTitle" value="Developer"></div>
-              <div class="field"><label for="fDesc">Description</label><textarea id="fDesc" rows="3">Developer. Writes code and tests in the repos you point her to.</textarea></div>
-              <div class="field" style="flex-direction:row;align-items:center;justify-content:space-between"><span class="list">Notify me when Noor needs me</span><label class="switch"><input type="checkbox" checked aria-label="Notifications on"> On</label></div>
-              <div style="padding:0 20px 20px"><button class="btn secondary" id="saveSet">Save changes</button></div>
+              <div class="set">
+                <nav class="set-nav" id="setNav" aria-label="Noor's settings sections"></nav>
+                <section class="set-main" id="setMain" aria-labelledby="secH"></section>
+              </div>
             </div>
           </div>
         </aside>
@@ -779,8 +993,29 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
         </aside>
       </div>
     </section>
+
+    <!-- ============ SPLIT VIEW (U4): two projects side by side ============ -->
+    <section class="screen" id="p-split" role="tabpanel" aria-labelledby="t-split" hidden>
+      <div class="splitv" id="splitv">
+        <div class="pv" id="svL" role="region" aria-label="Left pane"></div>
+        <div class="sv-div" id="svDiv" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Resize the panes" aria-valuemin="30" aria-valuemax="70" aria-valuenow="50" title="Drag, or use the arrow keys"></div>
+        <div class="pv" id="svR" role="region" aria-label="Right pane"></div>
+      </div>
+    </section>
+
+    <!-- ============ ONE PROJECT IN THE MAIN AREA ============ -->
+    <section class="screen" id="p-project" aria-label="Project" hidden>
+      <div class="pv" id="pvSolo"></div>
+    </section>
+
+    <div class="dropzones" id="dropzones" hidden>
+      <div class="dz" data-dz="here">Drop to open here</div>
+      <div class="dz" data-dz="split">Drop to open in split view</div>
+    </div>
   </div>
 </div>
+
+<div class="menu" id="menu" role="menu" hidden></div>
 
 <!-- ============ TAKE-OVER (full-screen workspace) ============ -->
 <div class="takeover" id="takeover" role="dialog" aria-modal="true" aria-labelledby="toT" hidden>
@@ -788,16 +1023,16 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
     <span class="avh" data-av="noor" data-size="28" data-status="paused"></span>
     <div style="flex:1"><div class="appr-t" id="toT">You have Noor's workspace</div><div class="caption">Noor is paused while you work. Your edits are logged in the trace and she continues from them.</div></div>
     <span class="tag">Paused</span>
-    <button class="btn primary" id="toDone">I'm done, continue</button>
+    <button class="btn primary" id="toDone">Done editing, continue</button>
   </div>
   <div class="files"><span style="height:34px;display:inline-flex;align-items:center;padding:0 10px;font:12px var(--mono);border-bottom:2px solid var(--carbon)">Composer.tsx</span></div>
   <div class="to-body" id="toBody">
-    <div class="cursor" id="cursor" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3l14 8-6.5 1.6L9.5 19z" fill="#1d1d1f" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/></svg><span>You</span></div>
+    <div class="cursor" id="cursor" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 3l14 8-6.5 1.6L9.5 19z" fill="#1d1d1f" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/></svg><span>You</span></div>
     <div id="toDiff"></div>
   </div>
 </div>
 
-<!-- ============ NEW AGENT DIALOG ============ -->
+<!-- ============ NEW AGENT / NEW PROJECT DIALOG ============ -->
 <div class="scrim" id="scrim" hidden>
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgT" id="dlg">
     <div class="dlg-h"><h2 id="dlgT">New agent</h2><button class="icon-btn" id="dlgX" aria-label="Close"><span data-ic="x"></span></button></div>
@@ -810,10 +1045,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
       <div class="msgs" id="dMsgs" style="padding-top:4px">
         <div class="m ag"><div class="bubble">good to meet you. what do you want me around for?</div></div>
       </div>
-      <div class="sugg" id="dSugg" role="group" aria-label="Suggested descriptions">
-        <button type="button" data-s="Write release notes from merged PRs every Friday and hold them for me.">Release notes every Friday</button>
-        <button type="button" data-s="Watch my GitHub issues and tell me when one needs me.">Watch my GitHub issues</button>
-      </div>
+      <div class="sugg" id="dSugg" role="group" aria-label="Suggested descriptions"></div>
     </div>
     <form class="composer" id="dForm" style="margin:12px 20px" aria-label="Describe the agent">
       <textarea id="dIn" rows="1" placeholder="Describe what it should do" aria-label="Describe what the agent should do"></textarea>
@@ -830,7 +1062,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 <!-- ============ TOKENS SHEET ============ -->
 <main class="sheet" id="p-tokens" role="tabpanel" aria-labelledby="t-tokens" hidden>
   <div class="sheet-wrap">
-    <p class="eyebrow">Bench design system · direction v0.1 · light mode (dark is Phase 5b)</p>
+    <p class="eyebrow">Bench design system · direction v0.2 · light mode (dark is Phase 5b)</p>
     <h1 class="display">A white room, one blue switch, and a family of characters.</h1>
     <p class="sub" style="max-width:40ch">Apple carries the structure. The agents carry the colour.</p>
 
@@ -846,7 +1078,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
       <p class="lede">One family (Inter, or SF on macOS) plus a monospace for code. Bench body is 15 px, not Apple's 17 px, because this is a dense desktop work app. Tracking follows Apple's negative curve.</p>
       <table class="spec"><thead><tr><th>Role</th><th>Specimen</th><th>Size / line / weight</th><th>Tracking</th></tr></thead><tbody>
         <tr><td>Display</td><td><span style="font:600 40px/1.1 var(--font-display);letter-spacing:-0.015em">Good morning.</span></td><td>40 / 1.10 / 600</td><td>−0.015em</td></tr>
-        <tr><td>Title</td><td><span style="font:600 28px/1.18 var(--font-display);letter-spacing:-0.01em">What needs me</span></td><td>28 / 1.18 / 600</td><td>−0.01em</td></tr>
+        <tr><td>Title</td><td><span style="font:600 28px/1.18 var(--font-display);letter-spacing:-0.01em">What needs you</span></td><td>28 / 1.18 / 600</td><td>−0.01em</td></tr>
         <tr><td>Subhead</td><td><span style="font-size:21px;line-height:1.24;font-weight:300;letter-spacing:-0.005em">Eight things need you.</span></td><td>21 / 1.24 / 300</td><td>−0.005em</td></tr>
         <tr><td>Section</td><td><span style="font-size:17px;font-weight:600;letter-spacing:-0.02em">Noor</span></td><td>17 / 1.30 / 600</td><td>−0.02em</td></tr>
         <tr><td>Body (Bench)</td><td>Stop now sits in the composer and replaces Send.</td><td>15 / 1.47 / 400</td><td>−0.016em</td></tr>
@@ -862,7 +1094,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
       <p class="lede">A 4-px scale. Panels pad 16 or 24, elements sit 12 apart, sections 40 to 64. Two radii plus one exception. No shadows on UI; depth comes from surface shifts (Frost → White) and 1-px hairlines.</p>
       <table class="spec" id="spaceT"><tbody></tbody></table>
       <h3>Radius</h3>
-      <div class="radius-demo"><div style="border-radius:980px">980 px · buttons, tags, chips</div><div style="border-radius:8px">8 px · cards, inputs, panes</div><div style="border-radius:18px">18 px · chat bubbles (bend)</div></div>
+      <div class="radius-demo"><div style="border-radius:980px">980 px · buttons, tags, chips</div><div style="border-radius:8px">8 px · cards, inputs, panes</div><div style="border-radius:18px">18 px · chat bubbles, tickets (bend)</div></div>
       <h3>Elevation</h3>
       <p class="list" style="margin:0;max-width:62ch">None. The only shadow in the product is the soft ground shadow under a hero avatar, which counts as imagery (Apple allows shadow on product imagery only).</p>
     </section>
@@ -967,6 +1199,108 @@ const ST = {
   error:{label:"Error",cls:"err",desc:"\"×\" on red (filled)"}
 };
 const EXPR = {idle:"sleepy",thinking:"curious",working:"focused",waiting:"calm",blocked:"calm",paused:"sleepy",stopped:"calm",error:"surprised"};
+/* InterviewKit's team. Ten hues, twelve agents: hues repeat across projects, never inside one (open decision). */
+Object.assign(AG, {
+  rana: {name:"Rana",role:"PM · lead",shape:"egg",pal:"honey",expr:"calm",status:"working",act:"Closing Sprint 1",snip:"sprint 1 wraps today: 5 of 8 done",time:"09:05"},
+  yusuf:{name:"Yusuf",role:"BA",shape:"hexagon",pal:"aqua",expr:"curious",status:"waiting",act:"Wants to meet you about the interview flow",snip:"6 questions on the interview flow",time:"08:50"},
+  tala: {name:"Tala",role:"Developer",shape:"pill",pal:"mint",expr:"focused",status:"working",act:"Building the booking page",snip:"booking page: calendar picker done",time:"09:13"}
+});
+
+/* ============================== v0.2 data: projects, needs, routines, settings ============================== */
+/* Board items: [id, title, owner, kind]. Counts and progress are always computed from these rows. */
+const PROJ = {
+  bench:{id:"bench",name:"Bench",sprint:2,day:1,days:3,ends:"Sat 24 Oct",
+    team:["maya","omar","karim","noor","sam","jade","lina"],side:["karim","jade","noor","maya"],more:["omar","sam","lina"],
+    cluster:["maya","karim","omar"],tcTime:"09:11",tcSnip:"Maya: follow-ups for Karim and Omar",activity:"Noor is running tests · a debate is live",
+    board:{
+      todo:[["S1-6","SQLite persistence","karim"],["S2-5","Routine scheduler","noor"],["S2-6","Memory browser","lina"]],
+      doing:[["S1-4","Chat UI: streaming, markdown, stop","noor","working"],["QA-3","E2E on Windows CI","jade","blocked"],["S2-1","First-run screens","sam","working"],["S1-2","Onboarding","maya","review"],["S1-3","Agent runner","karim","review"]],
+      done:[["S2-0","Sprint 2 plan","maya"],["S1-1","Repo and CI","karim"]]}},
+  ik:{id:"ik",name:"InterviewKit",sprint:1,day:3,days:3,ends:"today",
+    team:["rana","yusuf","tala"],side:["rana","yusuf","tala"],more:[],
+    cluster:["rana","yusuf","tala"],tcTime:"09:05",tcSnip:"Rana: sprint 1 wraps today",activity:"Sprint 1 ends today · Tala is building the booking page",
+    board:{
+      todo:[["IK-8","Reminder email drafts","tala"]],
+      doing:[["IK-6","Booking page","tala","working"],["IK-7","Interview flow questions","yusuf","waiting"]],
+      done:[["IK-1","Proposal and plan","rana"],["IK-2","Repo setup","tala"],["IK-3","Candidate list","yusuf"],["IK-4","Calendar connector","tala"],["IK-5","Landing copy","rana"]]}}
+};
+const PROJ_ORDER = ["bench","ik"];
+/* "What needs you", in priority order (D2): blocked > outward/reserved > requests > meetings > FYI. */
+const NEEDS = [
+  {k:"qa3",grp:"decide",av:"jade",proj:"bench",tag:["solid","Blocked"],title:"QA-3 is blocked: E2E failed twice",who:"Jade · QA-3 · Bench",age:"95 min",start:"QA-3 is blocked",
+    d:"Jade's end-to-end tests failed twice on the Windows CI runners, at 07:12 and 07:39. Karim couldn't fix it and suggests two ways out. You choose.",
+    opts:[["A paid Windows runner","About 2 h to set up · needs a payment from you"],["Nightly E2E on Karim's machine","Free · results each morning instead of on every pull request"]],
+    acts:[["primary","Decide on QA-3","stub"],["secondary","Ask Karim","stub"]],foot:"Escalated by Karim at 07:45 after two failed attempts."},
+  {k:"email",grp:"decide",av:"atlas",proj:null,appr:true,tag:["solid","Outward"],title:"Email to Dana: send it or change it?",who:"Atlas · Company",age:"2 h",start:"the email to Dana is waiting",
+    d:"Atlas drafted a reply to Dana in your voice. Nothing sends until you press Send.",
+    mail:{to:"dana.k@example.com",sub:"Re: Interview availability",body:"Hi Dana, Tuesday or Wednesday afternoon both work. Would 15:00 on Tuesday suit you?"},
+    acts:[["primary","Review email","stub"],["secondary","Change it","stub"]]},
+  {k:"merge",grp:"decide",av:"karim",proj:"bench",appr:true,tag:["line","Reserved"],title:"Merge PR #41 to main",who:"Karim · Bench",age:"40 min",start:"PR #41 is ready to merge",
+    d:"Code review passed and CI is green. Merging to main is reserved for you, so no agent can do it.",
+    facts:[["Changes","6 files · +212 −48"],["Checks","Windows, Ubuntu and the secret scan passed"]],
+    acts:[["primary","Review merge","stub"],["secondary","Open PR #41","stub"]]},
+  {k:"npm",grp:"decide",av:"noor",proj:"bench",appr:true,tag:["","Work request"],title:"Noor asks to run npm test",who:"Noor · S1-4 · Bench",age:"2 min",start:"Noor wants to run npm test",
+    d:"The full suite, 214 tests in about 3 minutes, before Noor opens the pull request for S1-4. It stays inside bench/.",
+    cmd:"npm test",where:"in repo bench",
+    acts:[["primary","Allow once","allow"],["outline","Always allow this pattern","always"],["plain","Deny","deny"]],
+    foot:"\"Always allow\" covers npm test in bench only. Other commands and repos still ask. Revoke it any time in Noor › Settings › Autonomy."},
+  {k:"pay",grp:"decide",av:"sam",proj:"bench",tag:["line","Payment"],title:"Payment needed: a Figma seat for Sam",who:"Sam · Bench",age:"3 h",start:"a Figma seat needs paying",
+    d:"Sam needs a Figma Professional seat for the first-run screens. You pay outside Bench; agents never pay.",
+    facts:[["What","Figma Professional, 1 seat"],["For","Hand-off files for S2-1"]],
+    acts:[["primary","Mark as paid","paid"],["secondary","Not now","stub"]]},
+  {k:"review",grp:"meet",av:"maya",proj:"bench",tag:["","Meeting"],title:"Maya has something to show you",who:"Maya · Sprint 2 review · Bench",age:"30 min",start:"Maya has something to show you",
+    d:"The Sprint 2 review: onboarding (S1-2) and the agent runner (S1-3). About 10 minutes; you accept or send back each one.",
+    acts:[["primary","Join the review","stub"],["secondary","Later today","stub"]]},
+  {k:"yusuf",grp:"meet",av:"yusuf",proj:"ik",tag:["","Meeting"],title:"Yusuf wants to meet you",who:"Yusuf · BA · InterviewKit",age:"25 min",start:"Yusuf wants to meet you",
+    d:"6 questions about the interview flow before Tala builds it. You can stop after any question and pick up later.",
+    acts:[["primary","Start the interview","stub"],["secondary","Later today","stub"]]},
+  {k:"debate",grp:"fyi",av:"maya",proj:"bench",tag:["","Live"],title:"A debate is running: where does Stop live?",who:"Maya decides · Bench",age:"Now",start:"a debate is running",
+    d:"Maya, Sam and Noor have 5 minutes. If they don't agree, Maya decides. The memo goes to memory.",
+    acts:[["primary","Watch the debate","team"]]}
+];
+const GRP = {decide:"Decide",meet:"Meet",fyi:"For your info"};
+const NUMW = ["No","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve"];
+const H = {open:null, showAll:false, done:new Set(), empty:false};
+const SIDE = {open:{bench:true, ik:false}, more:{bench:false, ik:false}};
+const EXTRA = [];
+const SPLIT = {l:"bench", r:"ik", lw:50};
+const PV = {solo:"bench"};
+/* Week maths, consistent with the chat meta lines: about 30k tokens = 1 % of the week. */
+const pctW = k => k / 30;
+const fmtPct = p => (p >= 1 ? p.toFixed(1) : p.toFixed(2)) + " %";
+const RT = {empty:false, list:[
+  {id:"sweep",name:"Morning test sweep",when:"Every weekday at 08:00",next:"Tomorrow 08:00",nextSub:"Fri 23 Oct",last:"Today 08:00",lastSub:"Done · 6.2k tokens",lastK:6.2,est:6.0,perWeek:5,on:true,ro:true},
+  {id:"deps",name:"Dependency check",when:"Every Monday at 09:00",next:"Mon 26 Oct",nextSub:"09:00",last:"Mon 19 Oct",lastSub:"Deferred · weekly headroom under 30 %",lastK:0,est:9.0,perWeek:1,on:true,ro:true},
+  {id:"prs",name:"Merged PR digest",when:"Every Friday at 16:00",next:"Fri 23 Oct",nextSub:"16:00",last:"—",lastSub:"Never run",lastK:0,est:3.5,perWeek:1,on:false,ro:true}
+]};
+let RT_DRAFT = null;
+const TIERS = [["fast","Fast","Haiku","Routing, quick answers, small edits.",0.5],["balanced","Balanced","Sonnet","Most coding work. The Developer default.",1.2],["deep","Deep","Opus","Hard design and debugging. Uses your week fastest.",6]];
+const PRESETS = [["ask","Ask every time","Noor asks before shell commands, deleting files and writing global memory."],["trusted","Trusted","Runs tests and edits granted folders without asking. Asks for anything new."],["auto","Autonomous","Everything except outward and reserved actions."]];
+const SECS = [["profile","Profile"],["model","Model"],["autonomy","Autonomy"],["connectors","Connectors"],["skills","Skills"],["memory","Memory"],["workspace","Workspace"],["notifications","Notifications"],["lifecycle","Lifecycle"]];
+const SET = {sec:"profile", name:"Noor", title:"Developer", desc:"Writes code and tests in the repos you point her to. Opens pull requests; never merges.",
+  tier:"balanced", preset:"ask", ckpt:70, browser:false, browserRoutines:false, stamp:"Saves as you go",
+  overrides:[["Read files in granted folders","allow"],["Edit files in granted folders","ask"],["Run shell commands","ask"],["Delete or overwrite files","ask"]],
+  grants:[{cmd:"pnpm test chat",where:"in bench",by:"you",when:"21 Oct 16:02"},{cmd:"git push",where:"to feat/* branches in bench",by:"Atlas, on your behalf",when:"22 Oct 08:40"}],
+  conns:[{id:"github",name:"GitHub",on:true,d:"Repo bench: issues, pull requests, checks",k:1.1},
+    {id:"gmail",name:"Gmail",on:false,out:true,d:"Read, label and draft. Sending to anyone but you always needs you",k:0.9},
+    {id:"gdrive",name:"Google Drive",on:false,d:"Docs you share with Bench",k:0.6},
+    {id:"ctx7",name:"Context7",on:true,d:"Library documentation lookup",k:0.4},
+    {id:"figma",name:"Figma",na:true,d:"Not in your Claude Code inventory. Add it there first"}],
+  /* Built-in library per role (CR-005): the Developer set, plus two from the client's own inventory. */
+  skills:[{n:"Test-driven development",d:"Writes the failing test first.",on:true,b:true},
+    {n:"Systematic debugging",d:"Finds the cause before changing code.",on:true,b:true},
+    {n:"Verify before done",d:"Runs the checks before calling it finished.",on:true,b:true},
+    {n:"Receiving code review",d:"Checks review comments before acting on them.",on:true,b:true},
+    {n:"Incremental implementation",d:"Small, tested steps.",on:true,b:true},
+    {n:"Diagnosing bugs",d:"Reproduces first, then narrows it down.",on:true,b:true},
+    {n:"Pull requests",d:"Clear descriptions and a tight scope.",on:true,b:true},
+    {n:"Frontend design",d:"UI taste rules. Usually for designers.",on:false},
+    {n:"Security review",d:"Checks changes for common risks.",on:false}],
+  folders:[{p:"bench/",d:"Repo · read and write",by:"you",when:"20 Oct"},{p:"docs-site/",d:"Read only",by:"Atlas, on your behalf",when:"21 Oct"}],
+  notif:[{t:"needs your approval",d:"Always on: approvals never wait silently.",on:true,lock:true},{t:"is blocked or escalates to you",on:true},{t:"finishes a task",on:false},{t:"has a routine fail or get skipped",on:true}]
+};
+const DLG = {mode:"agent"};
+let MENU = null, DRAG = null;
 
 /* ============================== icons ============================== */
 const IC = {
@@ -990,9 +1324,18 @@ const IC = {
   x:'<path d="M6 6l12 12M18 6 6 18"/>',
   clock:'<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
   arrowR:'<path d="M5 12h14M13 6l6 6-6 6"/>',
-  expand:'<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>'
+  expand:'<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>',
+  chevD:'<path d="m6 9 6 6 6-6"/>',
+  more:'<circle cx="5.5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.4" fill="currentColor" stroke="none"/>',
+  columns:'<rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M12 4.5v15"/>',
+  window:'<rect x="3.5" y="4.5" width="13" height="11" rx="2"/><path d="M8 19.5h10.5a2 2 0 0 0 2-2V9"/>',
+  enter:'<rect x="4" y="4.5" width="16" height="15" rx="2"/><path d="M4 9h16"/>',
+  eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',
+  folder:'<path d="M3.5 7A1.5 1.5 0 0 1 5 5.5h4l2 2h8A1.5 1.5 0 0 1 20.5 9v8.5A1.5 1.5 0 0 1 19 19H5a1.5 1.5 0 0 1-1.5-1.5z"/>'
 };
-function ic(name){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IC[name]||""}</svg>`; }
+/* Every SVG carries explicit width and height (the v0.1 routine clock had none and filled the pane). CSS may resize it. */
+function ic(name, size = 16){ return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IC[name]||""}</svg>`; }
 
 /* ============================== avatars ============================== */
 function glyph(st){
@@ -1006,7 +1349,7 @@ function glyph(st){
     stopped:'<rect x="3.5" y="3.5" width="5" height="5" rx="1" fill="currentColor"/>',
     error:'<path d="M4 4l4 4M8 4l-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
   }[st] || "";
-  return `<svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">${g}</svg>`;
+  return `<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">${g}</svg>`;
 }
 function eyesFor(expr, gap){
   const L = -gap, R = gap;
@@ -1027,9 +1370,9 @@ function avatarSVG(a, o = {}){
   const body = `<g fill="${paint}"${strokeAttr}>${S.d}</g>`;
   const exprs = o.hero ? ["calm","focused","sleepy","surprised","curious"] : [o.expr || a.expr];
   const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"><g class="blink" fill="#fff">${exprs.map(e=>`<g class="xp x-${e}">${eyesFor(e,gap)}</g>`).join("")}</g></g></g>`;
-  if (!o.hero) return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
+  if (!o.hero) return `<svg width="100%" height="100%" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
   const [hx, hy] = S.hl, gy = Math.min(S.bottom + 5, 101);
-  return `<svg viewBox="0 0 100 106" aria-hidden="true" focusable="false">
+  return `<svg width="100%" height="100%" viewBox="0 0 100 106" aria-hidden="true" focusable="false">
     <defs>
       <radialGradient id="${id}g" cx="40%" cy="32%" r="78%" fx="32%" fy="22%"><stop offset="0" stop-color="${P.light}"/><stop offset=".52" stop-color="${P.base}"/><stop offset="1" stop-color="${P.deep}"/></radialGradient>
       <clipPath id="${id}c">${S.d}</clipPath>
@@ -1056,12 +1399,12 @@ function avatar(id, size, opts = {}){
 }
 function tag(st){ return `<span class="tag ${ST[st].cls}">${glyph(st)}${ST[st].label}</span>`; }
 function mention(id){ const a = AG[id], P = PAL[a.pal]; return `<span class="mention" style="--m-tint:${P.tint};--m-ink:${P.ink}">${avatar(id,16,{nobadge:true})}${a.name}</span>`; }
-function cluster(size){
+function cluster(size, ids = ["maya","karim","omar"], label = "Bench team chat"){
   const s = Math.round(size * 0.56);
-  return `<span class="cluster" role="img" aria-label="Bench team chat" style="--s:${size}px">
-    <span style="position:absolute;left:0;top:0">${avatar("maya",s,{nobadge:true})}</span>
-    <span style="position:absolute;right:0;top:${Math.round(size*0.08)}px">${avatar("karim",s,{nobadge:true})}</span>
-    <span style="position:absolute;left:${Math.round(size*0.22)}px;bottom:0">${avatar("omar",s,{nobadge:true})}</span></span>`;
+  return `<span class="cluster" role="img" aria-label="${esc(label)}" style="--s:${size}px">
+    <span style="position:absolute;left:0;top:0">${avatar(ids[0],s,{nobadge:true})}</span>
+    <span style="position:absolute;right:0;top:${Math.round(size*0.08)}px">${avatar(ids[1],s,{nobadge:true})}</span>
+    <span style="position:absolute;left:${Math.round(size*0.22)}px;bottom:0">${avatar(ids[2],s,{nobadge:true})}</span></span>`;
 }
 function hydrate(scope = document){
   $$("[data-av]", scope).forEach(el => {
@@ -1080,67 +1423,142 @@ function toast(html, ms = 6000){
 }
 
 /* ============================== sidebar ============================== */
-const SIDE_ACTIVE = {home:"home", agent:"noor", team:"teamchat"};
 function srow(key, iconHTML, name, snip, time, label = ""){
   return `<button class="srow" data-row="${key}" aria-label="${esc(label || name)}">${iconHTML}<span class="s-main"><span class="s-line"><span class="s-name">${name}</span>${time ? `<span class="s-time">${time}</span>` : ""}</span>${snip !== null ? `<span class="s-snip">${snip}</span>` : ""}</span></button>`;
 }
-function agentRow(id){
+function agentRow(id, morePid){
   const a = AG[id];
   const snip = a.typing ? `<span class="s-snip typing" style="--t-dot:${PAL[a.pal].deep}">Typing<span class="tdots" aria-hidden="true"><i></i><i></i><i></i></span></span>` : esc(a.snip);
-  return `<button class="srow" data-row="${id}" data-name="${a.name.toLowerCase()} ${a.role.toLowerCase()}"><span class="avh">${avatar(id,36)}</span><span class="s-main"><span class="s-line"><span class="s-name">${a.name}</span><span class="s-time">${a.time}</span></span>${a.typing ? snip : `<span class="s-snip">${snip}</span>`}</span></button>`;
+  const more = morePid ? ` data-more="${morePid}"${SIDE.more[morePid] ? "" : " hidden"}` : "";
+  return `<button class="srow" data-row="${id}" data-name="${a.name.toLowerCase()} ${a.role.toLowerCase()}"${more}><span class="avh">${avatar(id,36)}</span><span class="s-main"><span class="s-line"><span class="s-name">${a.name}</span><span class="s-time">${a.time}</span></span>${a.typing ? snip : `<span class="s-snip">${snip}</span>`}</span></button>`;
+}
+/* U4: each project is a collapsible group with a visible "…" menu (and right-click / drag). */
+function liveNeeds(){ return H.empty ? [] : NEEDS.filter(n => !H.done.has(n.k)); }
+function needsFor(pid){ return liveNeeds().filter(n => n.proj === pid).length; }
+function tcRow(pid){
+  const P = PROJ[pid];
+  return `<button class="srow" data-row="tc-${pid}" data-name="team chat ${P.name.toLowerCase()}"><span class="avh">${cluster(36, P.cluster, P.name + " team chat")}</span><span class="s-main"><span class="s-line"><span class="s-name">Team chat</span><span class="s-time">${P.tcTime}</span></span><span class="s-snip">${esc(P.tcSnip)}</span></span></button>`;
+}
+function moreRow(pid){
+  const P = PROJ[pid], open = SIDE.more[pid];
+  return `<button class="srow more-row" data-more-btn="${pid}" aria-expanded="${open}"><span class="ricon">${ic("more")}</span><span class="s-main"><span class="s-name">${open ? "Show fewer" : P.more.length + " more"}</span>${open ? "" : `<span class="s-snip">${esc(P.more.map(id => AG[id].name).join(", "))}</span>`}</span></button>`;
+}
+function projGroup(pid){
+  const P = PROJ[pid], open = SIDE.open[pid], n = needsFor(pid);
+  const rows = srow(`dash-${pid}`, `<span class="ricon">${ic("grid")}</span>`, "Dashboard", null, "", `${P.name} dashboard`)
+    + tcRow(pid) + P.side.map(id => agentRow(id)).join("")
+    + P.more.map(id => agentRow(id, pid)).join("") + (P.more.length ? moreRow(pid) : "")
+    + (pid === "bench" ? `<div id="newRows">${EXTRA.map(id => agentRow(id)).join("")}</div>` : "");
+  return `<div class="pg" data-proj="${pid}" data-open="${open}">
+    <div class="pg-h" draggable="true" data-drag-proj="${pid}">
+      <button class="pg-toggle" data-pg="${pid}" aria-expanded="${open}" aria-controls="pgl-${pid}" title="${P.name}: Sprint ${P.sprint}, day ${P.day} of ${P.days}"><span class="pg-chev">${ic("chevD")}</span><span class="pg-name">${esc(P.name)}</span><span class="pg-sub">S${P.sprint} · day ${P.day}</span>${n ? `<span class="count" aria-hidden="true">${n}</span><span class="sr">, ${n} need you</span>` : ""}</button>
+      <button class="icon-btn pg-more" data-menu="proj" data-pid="${pid}" aria-haspopup="menu" aria-expanded="false" aria-label="${P.name} options: open here, in split view or in a new window" title="Open here, in split view or in a new window">${ic("more")}</button>
+    </div>
+    <div class="pg-list" id="pgl-${pid}"${open ? "" : " inert"}><div>${rows}</div></div>
+  </div>`;
 }
 function buildSidebar(){
   const ricon = n => `<span class="ricon">${ic(n)}</span>`;
+  const appr = liveNeeds().filter(n => n.appr).length;
   $("#sideList").innerHTML =
     srow("home", ricon("home"), "Home", null, "") +
-    srow("appr", ricon("shield"), `Approvals`, null, `<span class="count" aria-hidden="true">4</span>`, "Approvals, 4 pending") +
+    srow("appr", ricon("shield"), "Approvals", null, appr ? `<span class="count" aria-hidden="true">${appr}</span>` : "", `Approvals, ${appr} waiting for you`) +
     `<div class="side-sec"><h2>Company</h2><div class="side-links"><button class="icon-btn" data-act="stub" aria-label="Open the Company page" title="Company page">${ic("building")}</button></div></div>` +
     agentRow("atlas") + agentRow("iris") +
-    `<div class="side-sec"><h2>Bench</h2><div class="side-links">
-       <button class="icon-btn" data-act="stub" aria-label="Bench dashboard" title="Dashboard">${ic("grid")}</button>
-       <button class="icon-btn" data-act="stub" aria-label="Bench team" title="Team">${ic("tree")}</button>
-       <button class="icon-btn" data-act="stub" aria-label="Bench sessions, 1 live now" title="Sessions · 1 live">${ic("calendar")}</button></div></div>` +
-    `<button class="srow" data-row="teamchat" data-name="team chat bench"><span class="avh">${cluster(36)}</span><span class="s-main"><span class="s-line"><span class="s-name">Team chat</span><span class="s-time">09:11</span></span><span class="s-snip">Maya: follow-ups for Karim and Omar</span></span></button>` +
-    ["maya","omar","karim","noor","sam","jade","lina"].map(agentRow).join("") +
-    `<div id="newRows"></div>` +
+    `<div class="side-sec"><h2>Projects</h2><button class="sec-btn" data-act="newProject">${ic("plus")}New project</button></div>` +
+    PROJ_ORDER.map(projGroup).join("") +
     `<div class="side-sec"><h2>Insight</h2></div>` +
     srow("mem", ricon("memory"), "Memory", null, "") + srow("usage", ricon("gauge"), "Usage", null, "") + srow("trace", ricon("trace"), "Trace", null, "");
   $$("#sideList .srow").forEach(b => {
     const nm = b.querySelector(".s-name"); if (nm) b.setAttribute("title", nm.textContent);
   });
+  markSide();
+  filterSide();
 }
-function markSide(tab){
+function setGroupOpen(pid, open){
+  SIDE.open[pid] = open;
+  const g = $(`#sideList .pg[data-proj="${pid}"]`); if (!g) return;
+  g.dataset.open = open;
+  g.querySelector(".pg-toggle").setAttribute("aria-expanded", open);
+  g.querySelector(".pg-list").inert = !open;
+}
+function toggleMore(pid){
+  SIDE.more[pid] = !SIDE.more[pid];
+  $$(`#sideList .srow[data-more="${pid}"]`).forEach(r => { r.hidden = !SIDE.more[pid]; });
+  const b = $(`#sideList [data-more-btn="${pid}"]`);
+  if (b) { b.outerHTML = moreRow(pid); $(`#sideList [data-more-btn="${pid}"]`).focus(); }
+}
+function filterSide(){
+  const q = $("#sideSearch").value.trim().toLowerCase();
+  $$("#sideList .srow[data-name]").forEach(r => {
+    const pid = r.dataset.more;
+    r.hidden = q ? !r.dataset.name.includes(q) : (pid ? !SIDE.more[pid] : false);
+  });
+  if (q) $$("#sideList .pg").forEach(g => { if (g.querySelector(".srow[data-name]:not([hidden])")) setGroupOpen(g.dataset.proj, true); });
+}
+function sideKey(){ return {home:"home", agent:"noor", team:"tc-bench", split:"dash-" + SPLIT.l, project:"dash-" + PV.solo}[current]; }
+function markSide(){
   $$("#sideList .srow").forEach(b => b.removeAttribute("aria-current"));
-  const k = SIDE_ACTIVE[tab]; if (k) { const r = $(`#sideList [data-row="${k}"]`); if (r) r.setAttribute("aria-current","page"); }
+  const k = sideKey(); if (k) { const r = $(`#sideList [data-row="${k}"]`); if (r) r.setAttribute("aria-current","page"); }
 }
 
 /* ============================== tabs ============================== */
-const CRUMBS = {
-  home:'<b>Home</b>',
-  agent:'Bench <span aria-hidden="true">›</span> Team <span aria-hidden="true">›</span> <b>Noor</b>',
-  team:'Bench <span aria-hidden="true">›</span> <b>Team chat</b>'
-};
-let current = "home";
-/* Hash routes: #home #agent #team #tokens #agent-takeover #new-agent. replaceState never fires hashchange, so no loops. */
+function crumbs(tab){
+  const s = '<span aria-hidden="true">›</span>';
+  switch (tab){
+    case "agent": return `Bench ${s} Team ${s} <b>Noor</b>`;
+    case "team": return `Bench ${s} <b>Team chat</b>`;
+    case "split": return `<b>${esc(PROJ[SPLIT.l].name)}</b> <span>and</span> <b>${esc(PROJ[SPLIT.r].name)}</b> <span>· split view</span>`;
+    case "project": return `Projects ${s} <b>${esc(PROJ[PV.solo].name)}</b>`;
+    default: return "<b>Home</b>";
+  }
+}
+let current = "home", curHash = "home";
+/* Hash routes (v0.1 kept): #home #agent #team #tokens #agent-takeover #new-agent.
+   v0.2: #home-ticket-open #home-empty #agent-routines #agent-routines-empty #agent-settings #agent-settings-<section>
+   #split #project-bench #project-ik #new-project. replaceState never fires hashchange, so no loops. */
 function setHash(h){ if (location.hash !== "#" + h) history.replaceState(null, "", "#" + h); }
+function go(h){ if (location.hash === "#" + h) route(); else location.hash = h; }
 function route(){
   const h = (location.hash || "#home").slice(1);
+  closeMenu(false);
   if (h !== "agent-takeover" && N.taken) endTake(true);
-  if (h !== "new-agent" && !$("#scrim").hidden) $("#scrim").hidden = true;
+  if (h !== "new-agent" && h !== "new-project" && !$("#scrim").hidden) $("#scrim").hidden = true;
   if (h === "agent-takeover") { show("agent"); openTakeover(false); return; }
-  if (h === "new-agent") { show("home"); openDialog(false); return; }
-  show(["home","agent","team","tokens"].includes(h) ? h : "home");
+  if (h === "new-agent" || h === "new-project") { show("home"); openDialog(false, h === "new-project" ? "project" : "agent"); return; }
+  if (h === "home" || h === "home-ticket-open" || h === "home-empty") {
+    const emp = h === "home-empty";
+    if (H.empty !== emp) { H.empty = emp; renderNeeds(); }
+    show("home", h);
+    setTicket(h === "home-ticket-open" ? "qa3" : null);
+    return;
+  }
+  if (h === "agent" || h.startsWith("agent-")) {
+    show("agent", h);
+    if (h.startsWith("agent-routines")) { RT.empty = h === "agent-routines-empty"; wsTab("routines", true); }
+    else if (h.startsWith("agent-settings")) { SET.sec = h.slice(15) || "profile"; wsTab("settings", true); }
+    else wsTab("screen", true);
+    return;
+  }
+  if (h === "split") { show("split"); return; }
+  if (h.startsWith("project-") && PROJ[h.slice(8)]) { show("project", h); return; }
+  show(["team","tokens"].includes(h) ? h : "home");
 }
 window.addEventListener("hashchange", route);
-function show(tab){
+function show(tab, hash){
   current = tab;
-  setHash(tab);
+  curHash = hash || (tab === "agent" ? agentHash() : tab);
+  setHash(curHash);
   $$('.proto [role="tab"]').forEach(t => { const on = t.id === "t-" + tab; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; });
+  if (!$('.proto [role="tab"][aria-selected="true"]')) $('.proto [role="tab"]').tabIndex = 0;
   const isTokens = tab === "tokens";
   $("#app").hidden = isTokens; $("#p-tokens").hidden = !isTokens;
-  ["home","agent","team"].forEach(s => { $("#p-" + s).hidden = s !== tab; });
+  ["home","agent","team","split","project"].forEach(s => { $("#p-" + s).hidden = s !== tab; });
+  $("#main").classList.toggle("on-frost", tab === "home");
   $("#heroDemo").hidden = tab !== "agent";
-  if (!isTokens) { $("#crumbs").innerHTML = CRUMBS[tab]; markSide(tab); }
+  if (tab === "project") { const pid = curHash.slice(8); if (PROJ[pid]) PV.solo = pid; renderSolo(); }
+  if (tab === "split") renderSplit();
+  if (!isTokens) { $("#crumbs").innerHTML = crumbs(tab); markSide(); }
   if (tab === "agent") startAgent();
   if (tab === "team") startTeam();
   if (isTokens) buildTokens();
@@ -1155,21 +1573,153 @@ $$('.proto [role="tab"]').forEach((t, i, all) => {
 });
 
 /* ============================== home ============================== */
-function rosterRow(id){
-  const a = AG[id];
-  return `<li><button class="srow" data-row="${id}"><span class="avh">${avatar(id,40)}</span><span class="s-main"><span class="s-name">${a.name}<span class="r-role"> · ${a.role}</span></span><span class="s-snip" title="${esc(a.act)}">${esc(a.act)}</span></span><span class="r-side"><span class="s-time">${a.time}</span>${tag(a.status)}</span></button></li>`;
+/* ---------- U6: tickets ---------- */
+function evidenceHTML(n){
+  if (n.opts) return `<ol class="tk-opts">${n.opts.map(([t, d]) => `<li><b>${esc(t)}</b><span>${esc(d)}</span></li>`).join("")}</ol>`;
+  if (n.mail) return `<div class="tk-mail"><div class="caption">To ${esc(n.mail.to)} · ${esc(n.mail.sub)}</div><p>${esc(n.mail.body)}</p></div>`;
+  if (n.facts) return `<dl class="tk-facts">${n.facts.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join("")}</dl>`;
+  if (n.cmd) return `<div class="cmd"><span class="muted">$</span> ${esc(n.cmd)} <span class="in">${esc(n.where)}</span></div>`;
+  return "";
 }
-function buildHome(){
-  $("#rosterCo").innerHTML = ["atlas","iris"].map(rosterRow).join("");
-  $("#rosterBench").innerHTML = ["maya","omar","karim","noor","sam","jade","lina"].map(rosterRow).join("");
-  $$("[data-ghost]").forEach(el => { el.innerHTML = avatar({name:"New agent",shape:"blob",pal:"neutral",expr:"curious",status:"idle"},40,{nobadge:true}); });
+function actHTML([cls, label, act]){
+  const data = act === "stub" ? 'data-act="stub"' : act === "team" ? 'data-tab="team"' : `data-tka="${act}"`;
+  return `<button type="button" class="btn ${cls}" ${data}>${esc(label)}</button>`;
 }
-$("#showAll").addEventListener("click", e => {
-  const open = e.currentTarget.getAttribute("aria-expanded") !== "true";
-  e.currentTarget.setAttribute("aria-expanded", open);
-  e.currentTarget.textContent = open ? "Show top 5 only" : "Show all 8";
-  $("#allGroups").hidden = !open; $("#moreGroups").hidden = open;
+function ticketHTML(n){
+  const t = `<span class="tag ${n.tag[0]}">${esc(n.tag[1])}</span>`;
+  return `<li class="tk" data-k="${n.k}" data-state="rest">
+    <button type="button" class="tk-head" id="tkh-${n.k}" aria-expanded="false" aria-controls="tkm-${n.k}">
+      <span class="avh" aria-hidden="true">${avatar(n.av,32)}</span>
+      <span class="tk-main">
+        <span class="tk-l1"><span class="tk-t">${esc(n.title)}</span><span class="tk-mini" aria-hidden="true">${t}</span></span>
+        <span class="tk-meta"><span><span class="tk-meta-in">${t}<span class="who">${esc(n.who)}</span><span class="age">${esc(n.age)}</span></span></span></span>
+      </span>
+      <span class="tk-chev">${ic("chevD")}</span>
+    </button>
+    <div class="tk-more" id="tkm-${n.k}" role="region" aria-labelledby="tkh-${n.k}" inert><div><div class="tk-body">
+      <p class="tk-d">${esc(n.d)}</p>${evidenceHTML(n)}
+      <div class="tk-acts">${n.acts.map(actHTML).join("")}</div>
+      ${n.foot ? `<p class="tk-foot">${esc(n.foot)}</p>` : ""}
+    </div></div></div>
+  </li>`;
+}
+function busyCount(){ return PROJ_ORDER.reduce((s, p) => s + PROJ[p].board.doing.length, 0); }
+function renderNeeds(){
+  const live = liveNeeds(), total = live.length;
+  let html = "";
+  if (!total) {
+    html = `<div class="tk-empty"><b>You're all caught up.</b><p>The team is working on ${busyCount()} things. Nothing needs you right now; new items land here as they come in.</p><button type="button" class="btn secondary" data-open-proj="bench">Open the Bench dashboard</button></div>`;
+  } else {
+    const shown = H.showAll ? live : live.slice(0, 5);
+    const groups = [];
+    shown.forEach(n => { const g = groups[groups.length - 1]; if (g && g.grp === n.grp) g.items.push(n); else groups.push({grp:n.grp, items:[n]}); });
+    html = groups.map(g => `<div class="tk-group">${GRP[g.grp]} <span>${live.filter(n => n.grp === g.grp).length}</span></div><ul class="tickets">${g.items.map(ticketHTML).join("")}</ul>`).join("");
+    const hidden = live.slice(shown.length);
+    if (hidden.length) {
+      const parts = [];
+      hidden.forEach(n => { const p = parts.find(x => x.grp === n.grp); if (p) p.n++; else parts.push({grp:n.grp, n:1}); });
+      html += `<div class="tk-moreline"><span class="caption">Also waiting: ${parts.map(p => `${GRP[p.grp]} ${p.n}`).join(" · ")}</span><button type="button" class="btn plain sm" id="showAll" aria-expanded="false">Show all ${total}</button></div>`;
+    } else if (H.showAll && total > 5) {
+      html += `<div class="tk-moreline"><span class="caption"></span><button type="button" class="btn plain sm" id="showAll" aria-expanded="true">Show the top 5 only</button></div>`;
+    }
+  }
+  $("#tkList").innerHTML = html;
+  H.open = null;
+  updateCounts();
+}
+function setTicket(k, interactive){
+  H.open = k || null;
+  $$("#tkList .tk").forEach(li => {
+    const on = li.dataset.k === k;
+    li.dataset.state = k ? (on ? "open" : "small") : "rest";
+    li.querySelector(".tk-head").setAttribute("aria-expanded", on);
+    li.querySelector(".tk-more").inert = !on;
+  });
+  if (k && interactive) {
+    const li = $(`#tkList .tk[data-k="${k}"]`);
+    setTimeout(() => { if (li) li.scrollIntoView({block:"nearest", behavior: reduced() ? "auto" : "smooth"}); }, reduced() ? 0 : 340);
+  }
+}
+function resolveTicket(k, msg){
+  if (H.done.has(k)) return;
+  H.done.add(k);
+  const li = $(`#tkList .tk[data-k="${k}"]`);
+  const fin = () => {
+    renderNeeds();
+    if (msg) toast(esc(msg), 8000);
+    const f = $("#tkList .tk-head") || $("#tkList button"); if (f && current === "home") f.focus();
+  };
+  if (li && !reduced()) { li.classList.add("leaving"); setTimeout(fin, 240); } else fin();
+}
+function ticketAct(k, act){
+  if (act === "allow" || act === "always" || act === "deny") {
+    resolveTicket(k, act === "deny" ? "Denied. Noor opens the pull request with the chat tests only."
+      : act === "always" ? "Always allowed: npm test in bench. Revoke it in Noor › Settings › Autonomy."
+      : "Allowed once. Noor is running npm test in bench.");
+    resolveAppr(act === "allow" ? "once" : act);
+  } else if (act === "paid") resolveTicket(k, "Marked as paid. Sam is told the Figma seat is ready.");
+}
+function openTicketOnHome(k){
+  const idx = liveNeeds().findIndex(n => n.k === k);
+  if (idx >= 5 && !H.showAll) { H.showAll = true; renderNeeds(); }
+  show("home");
+  setTicket(k, true);
+  const head = $(`#tkh-${k}`); if (head) head.focus();
+}
+$("#tkList").addEventListener("click", e => {
+  const head = e.target.closest(".tk-head");
+  if (head) { const k = head.closest(".tk").dataset.k; setTicket(H.open === k ? null : k, true); return; }
+  const a = e.target.closest("[data-tka]");
+  if (a) { ticketAct(a.closest(".tk").dataset.k, a.dataset.tka); return; }
+  if (e.target.closest("#showAll")) { H.showAll = !H.showAll; renderNeeds(); const b = $("#showAll"); if (b) b.focus(); }
 });
+$("#tkList").addEventListener("keydown", e => {
+  if (e.key === "Escape" && H.open) { const k = H.open; e.preventDefault(); setTicket(null); const h = $(`#tkh-${k}`); if (h) h.focus(); return; }
+  const head = e.target.closest(".tk-head");
+  if (!head || (e.key !== "ArrowDown" && e.key !== "ArrowUp")) return;
+  const heads = $$("#tkList .tk-head"), i = heads.indexOf(head);
+  const nx = heads[i + (e.key === "ArrowDown" ? 1 : -1)];
+  if (nx) { e.preventDefault(); nx.focus(); }
+});
+
+/* ---------- U5: project cards ---------- */
+function progHTML(P){
+  const done = P.board.done.length, total = P.board.todo.length + P.board.doing.length + done, pct = Math.round(done / total * 100);
+  return `<div class="prog"><div class="prog-l"><span><b>${done}</b> of ${total} done</span><span class="caption">${pct} %</span></div><span class="track" role="img" aria-label="${done} of ${total} stories done"><i style="width:${pct}%"></i></span></div>`;
+}
+function stackHTML(ids, size){ return ids.map(id => `<span class="avh">${avatar(id, size, {nobadge:true})}</span>`).join(""); }
+function projCard(pid){
+  const P = PROJ[pid], n = needsFor(pid);
+  return `<article class="pcard" data-pid="${pid}">
+    <div class="pc-top">
+      <div class="pc-id"><h3><button type="button" class="pc-link" data-open-proj="${pid}">${esc(P.name)}</button></h3><span class="caption">Sprint ${P.sprint} · day ${P.day} of ${P.days} · ends ${P.ends}</span></div>
+      ${n ? `<span class="tag warn">${n} need${n === 1 ? "s" : ""} you</span>` : `<span class="tag ok">All clear</span>`}
+      <button type="button" class="icon-btn pc-more" data-menu="proj" data-pid="${pid}" aria-haspopup="menu" aria-expanded="false" aria-label="${P.name} options: open here, in split view or in a new window" title="Open here, in split view or in a new window">${ic("more")}</button>
+    </div>
+    ${progHTML(P)}
+    <div class="pc-foot"><span class="stack" role="img" aria-label="Team: ${P.team.map(id => AG[id].name).join(", ")}">${stackHTML(P.team, 24)}</span><span class="caption pc-act">${esc(P.activity)}</span></div>
+  </article>`;
+}
+function buildProjects(){
+  $("#projList").innerHTML = PROJ_ORDER.map(projCard).join("") +
+    `<button type="button" class="pcard new" data-act="newProject"><span class="pc-plus">${ic("plus", 20)}</span><span><b>New project</b><span class="caption">Tell Atlas what to build. It drafts a one-page proposal; nothing is created until you confirm.</span></span></button>`;
+  $("#projCount").textContent = `${PROJ_ORDER.length} active`;
+}
+function updateCounts(){
+  const live = liveNeeds(), n = live.length;
+  const c = $("#needsCount"); c.textContent = n; c.hidden = !n;
+  const tb = $("#needsTop"), tc = tb.querySelector(".count");
+  tc.textContent = n; tc.hidden = !n;
+  $("#needsTopL").textContent = n ? "Needs you" : "All caught up";
+  tb.setAttribute("aria-label", n ? `${n} ${n === 1 ? "thing needs" : "things need"} you. Open Home` : "Nothing needs you. Open Home");
+  $("#homeSub").textContent = n
+    ? `${NUMW[n] || n} ${n === 1 ? "thing needs" : "things need"} you. Start with ${AG[live[0].av].name}: ${live[0].start}.`
+    : `You're all caught up. The team is working on ${busyCount()} things.`;
+  buildSidebar();
+  buildProjects();
+  if (current === "split") renderSplit();
+  if (current === "project") renderSolo();
+}
 $("#askForm").addEventListener("submit", e => {
   e.preventDefault();
   const v = $("#askIn").value.trim();
@@ -1181,34 +1731,76 @@ $("#askForm").addEventListener("submit", e => {
 /* ---------- new agent, created by conversation ---------- */
 const LUMEN = {name:"Lumen",role:"Release notes",shape:"droplet",pal:"honey",expr:"curious",status:"idle",act:"Drafts release notes on Fridays",snip:"first draft due friday",time:"Now"};
 let dlgReturn = null, dlgDone = false;
-function openDialog(animate){
+const GHOST = s => ({name:"New agent", shape:s, pal:"neutral", expr:"calm", status:"idle"});
+const SITE_TEAM = [{name:"PM",shape:"cloud",pal:"mint",expr:"calm",status:"idle"},{name:"Tech lead",shape:"square",pal:"periwinkle",expr:"focused",status:"idle"},{name:"Developer",shape:"pill",pal:"coral",expr:"curious",status:"idle"}];
+function openDialog(animate, mode = "agent"){
+  DLG.mode = mode === "project" ? "project" : "agent";
+  const proj = DLG.mode === "project";
   dlgReturn = document.activeElement; dlgDone = false;
   const dlg = $("#dlg");
   dlg.classList.remove("anim");
   if (animate !== false && !reduced()) { void dlg.offsetWidth; dlg.classList.add("anim"); }
+  $("#dlgT").textContent = proj ? "New project" : "New agent";
   $("#morph").classList.remove("done");
-  $("#morph .before").innerHTML = avatar({name:"New agent",shape:"droplet",pal:"neutral",expr:"curious",status:"idle"},76,{nobadge:true});
-  $("#morph .after").innerHTML = avatar(LUMEN,76,{nobadge:true});
-  $("#dlgName").textContent = "New agent"; $("#dlgName").style.color = "var(--graphite)";
+  $("#morph .before").innerHTML = proj ? cluster(76, [GHOST("cloud"), GHOST("square"), GHOST("pill")], "Draft team") : avatar({name:"New agent",shape:"droplet",pal:"neutral",expr:"curious",status:"idle"},76,{nobadge:true});
+  $("#morph .after").innerHTML = proj ? cluster(76, SITE_TEAM, "The new project's team") : avatar(LUMEN,76,{nobadge:true});
+  $("#dlgName").textContent = proj ? "New project" : "New agent"; $("#dlgName").style.color = "var(--graphite)";
   $("#dlgSub").textContent = "Draft · not created yet";
   $("#dlgBody").style.setProperty("--wash", PAL.neutral.wash);
-  $("#dMsgs").innerHTML = `<div class="m ag"><div class="bubble">good to meet you. what do you want me around for?</div></div>`;
+  $("#dMsgs").innerHTML = proj
+    ? `<div class="m ag"><div class="bubble">what should the team build? a sentence or two is enough.</div></div>`
+    : `<div class="m ag"><div class="bubble">good to meet you. what do you want me around for?</div></div>`;
+  const sugg = proj
+    ? [["A landing page for Bench","A landing page for Bench, ready for the open-source launch."],["An interview booking tool","A small tool that lets candidates book interview slots."]]
+    : [["Release notes every Friday","Write release notes from merged PRs every Friday and hold them for review."],["Watch the GitHub issues","Watch the GitHub issues and flag the ones that need a decision."]];
+  $("#dSugg").innerHTML = sugg.map(([l, s]) => `<button type="button" data-s="${esc(s)}">${esc(l)}</button>`).join("");
   $("#dSugg").hidden = false; $("#dIn").value = ""; $("#dForm").hidden = false;
-  $("#dCreate").disabled = true; $("#dCreate").textContent = "Create agent";
-  $("#dHint").textContent = "Describe the agent first. Atlas drafts it from your words.";
+  $("#dIn").placeholder = proj ? "Describe what to build" : "Describe what it should do";
+  $("#dIn").setAttribute("aria-label", proj ? "Describe what the project should build" : "Describe what the agent should do");
+  $("#dForm").setAttribute("aria-label", proj ? "Describe the project" : "Describe the agent");
+  $("#dCreate").disabled = true; $("#dCreate").textContent = proj ? "Create project" : "Create agent";
+  $("#dHint").textContent = proj ? "Describe the project first. Atlas drafts a one-page proposal from your words." : "Describe the agent first. Atlas drafts it from your words.";
   $("#scrim").hidden = false; $("#dIn").focus();
-  setHash("new-agent");
+  setHash(proj ? "new-project" : "new-agent");
 }
 function closeDialog(){
   $("#scrim").hidden = true;
-  if (location.hash === "#new-agent") setHash(current);
+  if (location.hash === "#new-agent" || location.hash === "#new-project") setHash(curHash);
   if (dlgReturn && dlgReturn.focus) dlgReturn.focus();
+}
+function projName(text){
+  const t = text.toLowerCase();
+  if (/landing|site|website|page/.test(t)) return "Bench site";
+  if (/interview|book|slot/.test(t)) return "Slot booker";
+  const w = text.replace(/[^\w\s-]/g, "").trim().split(/\s+/).slice(0, 3).join(" ");
+  return w ? w.charAt(0).toUpperCase() + w.slice(1) : "New project";
 }
 function dlgSend(text){
   if (dlgDone || !text.trim()) return;
   dlgDone = true; $("#dSugg").hidden = true; $("#dForm").hidden = true;
   const add = h => { $("#dMsgs").insertAdjacentHTML("beforeend", h); const b = $("#dlgBody"); b.scrollTop = b.scrollHeight; };
   add(`<div class="m me enter"><div class="bubble" style="background:var(--white);border:1px solid var(--hairline)">${esc(text)}</div></div>`);
+  if (DLG.mode === "project") {
+    const nm = projName(text);
+    add(`<div class="thinking enter" id="dThink"><span class="tdots3" style="--dot:${PAL.lavender.deep}" aria-hidden="true"><i></i><i></i><i></i></span>Atlas · Thinking</div>`);
+    setTimeout(() => {
+      const th = $("#dThink"); if (th) th.remove();
+      $("#morph").classList.add("done");
+      $("#dlgBody").style.setProperty("--wash", PAL.mint.wash);
+      $("#dlgName").textContent = nm; $("#dlgName").style.color = PAL.mint.ink;
+      $("#dlgSub").textContent = "Proposal by Atlas · nothing is created until you confirm";
+      add(`<div class="sys enter">Proposal drafted · ${esc(nm)} · 2.3k tokens</div>`);
+      add(`<div class="m ag enter"><div class="bubble"><p>here's the one-pager:</p><ul class="check">
+        <li>${ic("check")}<span><b>Name</b><span class="arrow">→</span>${esc(nm.toLowerCase())}</span></li>
+        <li>${ic("check")}<span><b>Team</b><span class="arrow">→</span>product + dev template · 7 agents, each with its own name</span></li>
+        <li>${ic("check")}<span><b>Sprint 1</b><span class="arrow">→</span>3 days · starts tomorrow at 09:00</span></li>
+        <li>${ic("check")}<span><b>Estimate</b><span class="arrow">→</span>≈ 180k tokens for sprint 1 · 6 % of your week</span></li>
+        </ul><p>nothing is created until you press create project.</p></div></div>`);
+      $("#dCreate").disabled = false;
+      $("#dHint").textContent = "Creating a project is yours to confirm.";
+    }, reduced() ? 300 : 1400);
+    return;
+  }
   add(`<div class="thinking enter" id="dThink"><span class="tdots3" style="--dot:${PAL.neutral.deep}" aria-hidden="true"><i></i><i></i><i></i></span>Thinking</div>`);
   setTimeout(() => {
     $("#dThink")?.remove();
@@ -1234,8 +1826,15 @@ $("#dlg").addEventListener("animationend", e => { if (e.target === $("#dlg")) $(
 $("#dCancel").addEventListener("click", closeDialog);
 $("#dlgX").addEventListener("click", closeDialog);
 $("#dCreate").addEventListener("click", () => {
+  if (DLG.mode === "project") {
+    const nm = $("#dlgName").textContent;
+    closeDialog();
+    toast(`${esc(nm)} is approved. In the app its team and dashboard are set up now; this sample doesn't add it.`, 10000);
+    return;
+  }
   AG.lumen = LUMEN;
-  $("#newRows").innerHTML = agentRow("lumen");
+  if (!EXTRA.includes("lumen")) EXTRA.push("lumen");
+  buildSidebar();
   closeDialog();
   toast(`Lumen created in Bench › Dev team · <a href="#" data-act="stub">Open Lumen's chat</a>`, 10000);
 });
@@ -1353,12 +1952,281 @@ function wsView(v){
   else renderTerm();
 }
 $$("#wsPane .files [role=tab]").forEach(b => b.addEventListener("click", () => wsView(b.dataset.file)));
-$$("[data-wtab]").forEach(b => b.addEventListener("click", () => {
-  $$("[data-wtab]").forEach(x => { const on = x === b; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; });
-  $$("[data-wpanel]").forEach(p => { p.hidden = p.dataset.wpanel !== b.dataset.wtab; });
-}));
-$$("#wsPane .ws-panel[data-wpanel=settings] input, #wsPane .ws-panel[data-wpanel=settings] textarea").forEach(f => f.addEventListener("input", () => { $("#unsaved").textContent = "Unsaved changes (1)"; }));
-$("#saveSet").addEventListener("click", () => { $("#unsaved").textContent = "Saved to agents/noor/agent.md"; toast("Noor's settings saved"); });
+/* ---------- workspace tabs: Screen · Routines · Settings ---------- */
+function agentHash(){
+  const t = $('[data-wtab][aria-selected="true"]');
+  const w = t ? t.dataset.wtab : "screen";
+  if (w === "routines") return RT.empty ? "agent-routines-empty" : "agent-routines";
+  if (w === "settings") return SET.sec === "profile" ? "agent-settings" : "agent-settings-" + SET.sec;
+  return "agent";
+}
+function wsTab(name, keepHash){
+  $$("[data-wtab]").forEach(x => { const on = x.dataset.wtab === name; x.setAttribute("aria-selected", on); x.tabIndex = on ? 0 : -1; });
+  $$("[data-wpanel]").forEach(p => { p.hidden = p.dataset.wpanel !== name; });
+  $("#split").classList.toggle("wide-pane", name === "settings");
+  if ($("#split").classList.contains("pane-off")) setPane(true);
+  if (name === "routines") renderRoutines();
+  if (name === "settings") setSec(SET.sec, true);
+  $("#wsCap").textContent = name === "screen" ? "Live · updated 09:14" : name === "routines" ? routineCap() : SET.stamp;
+  if (!keepHash && current === "agent") { curHash = agentHash(); setHash(curHash); }
+}
+$$("[data-wtab]").forEach(b => b.addEventListener("click", () => wsTab(b.dataset.wtab)));
+
+/* ---------- U1: routines ---------- */
+function rtWeekly(list){ return list.filter(r => r.on).reduce((s, r) => s + pctW(r.est) * r.perWeek, 0); }
+function routineCap(){
+  const list = RT.empty ? [] : RT.list;
+  return list.length ? `${list.filter(r => r.on).length} of ${list.length} on` : "No routines yet";
+}
+function rtRow(r){
+  const lastPct = r.lastK ? ` · ${fmtPct(pctW(r.lastK))}` : "";
+  return `<li class="rt${r.on ? "" : " off"}" data-rt="${r.id}">
+    <div class="rt-top"><span class="rt-name">${esc(r.name)}</span>${r.ro ? `<span class="tag" title="Runs without write, send or delete tools">${ic("eye")}Read-only</span>` : ""}
+      <label class="switch rt-tog"><input type="checkbox" data-rt-tog="${r.id}"${r.on ? " checked" : ""} aria-label="${esc(r.name)}"><span>${r.on ? "On" : "Off"}</span></label>
+      <button type="button" class="icon-btn rt-more" data-act="stub" aria-label="${esc(r.name)}: run now, edit or delete" title="Run now, edit or delete">${ic("more")}</button></div>
+    <div class="rt-when">${esc(r.when)}</div>
+    <dl class="rt-stats">
+      <div><dt>Next run</dt><dd>${r.on ? esc(r.next) : "—"}<small>${r.on ? esc(r.nextSub) : "Switched off"}</small></dd></div>
+      <div><dt>Last run</dt><dd>${esc(r.last)}<small>${esc(r.lastSub)}${lastPct}</small></dd></div>
+      <div><dt>Estimate per run</dt><dd>≈ ${r.est.toFixed(1)}k tokens<small>${fmtPct(pctW(r.est))} of your week</small></dd></div>
+    </dl></li>`;
+}
+function renderRoutines(){
+  const list = RT.empty ? [] : RT.list;
+  $("#rtSum").hidden = !list.length;
+  $("#rtSum").innerHTML = list.length ? `${list.filter(r => r.on).length} of ${list.length} on · about <b>${fmtPct(rtWeekly(list))}</b> of your week. They run read-only in the background; anything that writes or sends waits for you.` : "";
+  $("#rtList").innerHTML = list.map(rtRow).join("");
+  $("#rtList").hidden = !list.length;
+  $("#rtEmpty").hidden = !!list.length;
+}
+const DAYS = {monday:"Mon 26 Oct",tuesday:"Tue 27 Oct",wednesday:"Wed 28 Oct",thursday:"Thu 29 Oct",friday:"Fri 23 Oct",saturday:"Sat 24 Oct",sunday:"Sun 25 Oct"};
+function draftRoutine(text){
+  const t = text.toLowerCase();
+  const day = Object.keys(DAYS).find(d => t.includes(d));
+  const m = t.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b/);
+  let hh = m ? +m[1] : 8;
+  const mm = m && m[2] ? m[2] : "00";
+  if (m && m[3] === "pm" && hh < 12) hh += 12;
+  if (hh > 23) hh = 8;
+  const time = String(hh).padStart(2, "0") + ":" + mm;
+  const weekday = /weekday|every morning|each morning/.test(t);
+  const when = day ? `Every ${day.charAt(0).toUpperCase() + day.slice(1)} at ${time}` : weekday ? `Every weekday at ${time}` : `Every day at ${time}`;
+  const core = text.replace(/^[^,]*\b(every|each)\b[^,]*,\s*/i, "").replace(/[.!]+$/, "").trim();
+  const ws = core.split(/\s+/).filter(Boolean);
+  const words = ws.length > 7 ? ws.slice(0, 6).join(" ") + "…" : ws.join(" ");
+  const name = words ? words.charAt(0).toUpperCase() + words.slice(1) : "New routine";
+  const est = 4.0, perWeek = day ? 1 : weekday ? 5 : 7;
+  RT_DRAFT = {id:"r" + Date.now(), name, when, next: day ? DAYS[day] : "Tomorrow", nextSub: time, last:"—", lastSub:"Never run", lastK:0, est, perWeek, on:true, ro:true};
+  $("#rtOut").innerHTML = `<div class="rt-draft">
+    <div class="rt-top"><span class="rt-name">${esc(name)}</span><span class="tag">${ic("eye")}Read-only</span></div>
+    <div class="rt-when">${esc(when)}</div>
+    <p class="rt-est">Before you save: ≈ ${est.toFixed(1)}k tokens per run · ${fmtPct(pctW(est))} of your week, about ${fmtPct(pctW(est) * perWeek)} a week. Noor reads and reports; anything that writes or sends waits for you.</p>
+    <div class="rt-acts"><button type="button" class="btn secondary sm" id="rtSave">Save routine</button><button type="button" class="btn plain sm" id="rtCancel">Cancel</button></div></div>`;
+}
+function openRtNew(text){
+  $("#rtNew").hidden = false; $("#rtOut").innerHTML = ""; RT_DRAFT = null;
+  $("#rtIn").value = text || "";
+  if (text) { draftRoutine(text); const s = $("#rtSave"); if (s) s.focus(); } else $("#rtIn").focus();
+}
+function closeRtNew(){ $("#rtNew").hidden = true; $("#rtOut").innerHTML = ""; $("#rtIn").value = ""; RT_DRAFT = null; }
+$("#rtNewBtn").addEventListener("click", () => { if ($("#rtNew").hidden) openRtNew(); else $("#rtIn").focus(); });
+$("#rtNew").addEventListener("submit", e => {
+  e.preventDefault();
+  const v = $("#rtIn").value.trim();
+  if (!v) { $("#rtIn").focus(); return; }
+  draftRoutine(v);
+});
+$("#rtNew").addEventListener("click", e => {
+  if (e.target.closest("#rtSave") && RT_DRAFT) {
+    const d = RT_DRAFT;
+    RT.empty = false; RT.list.push(d);
+    closeRtNew(); renderRoutines();
+    $("#wsCap").textContent = routineCap();
+    if (current === "agent") { curHash = "agent-routines"; setHash(curHash); }
+    toast(`Routine saved: ${esc(d.name)}. First run ${esc(d.next)} at ${esc(d.nextSub)}.`, 8000);
+    $("#rtNewBtn").focus();
+  } else if (e.target.closest("#rtCancel")) { closeRtNew(); $("#rtNewBtn").focus(); }
+});
+$("#rtEmpty").addEventListener("click", e => { const b = e.target.closest("[data-rt-ex]"); if (b) openRtNew(b.dataset.rtEx); });
+$("#rtList").addEventListener("change", e => {
+  const id = e.target.dataset.rtTog; if (!id) return;
+  const r = RT.list.find(x => x.id === id); if (!r) return;
+  r.on = e.target.checked;
+  renderRoutines();
+  $("#wsCap").textContent = routineCap();
+  const tg = $(`[data-rt-tog="${id}"]`); if (tg) tg.focus();
+});
+
+/* ---------- U2: agent settings ---------- */
+const swH = (attrs, on, label) => `<label class="switch"><input type="checkbox" ${attrs}${on ? " checked" : ""} aria-label="${esc(label)}"><span>${on ? "On" : "Off"}</span></label>`;
+const lockedH = text => `<span class="lockv">${ic("lock", 14)}${esc(text)}</span>`;
+function secSum(id){
+  const on = a => a.filter(x => x.on).length;
+  switch (id){
+    case "profile": return `${SET.name} · ${SET.title || "no title"}`;
+    case "model": { const t = TIERS.find(x => x[0] === SET.tier); return `${t[1]} · ${t[2]}`; }
+    case "autonomy": return `${PRESETS.find(p => p[0] === SET.preset)[1]} · ${SET.grants.length} grant${SET.grants.length === 1 ? "" : "s"}`;
+    case "connectors": { const c = SET.conns.filter(x => x.on); return c.length ? `${c.length} on · ${c.map(x => x.name).join(", ")}` : "None on"; }
+    case "skills": return `${on(SET.skills)} of ${SET.skills.length} on`;
+    case "memory": return `Checkpoint at ${SET.ckpt} %`;
+    case "workspace": return `${SET.folders.length} folder${SET.folders.length === 1 ? "" : "s"} · browser ${SET.browser ? "on" : "off"}`;
+    case "notifications": return `${on(SET.notif)} of ${SET.notif.length} on`;
+    case "lifecycle": return "Active";
+  }
+  return "";
+}
+const SECTION = {
+  profile: () => `<h4 id="secH" tabindex="-1">Profile</h4><p class="set-lede">How Noor appears to you and to the team.</p>
+    <div class="pf-av"><span class="avh">${avatar("noor",64,{nobadge:true})}</span><div><button type="button" class="btn secondary sm" data-act="stub">Change avatar…</button><p class="caption" style="margin:6px 0 0">Coral pill · curious eyes</p></div></div>
+    <div class="f"><label for="sName">Name</label><input class="inp" id="sName" value="${esc(SET.name)}" maxlength="40" autocomplete="off"></div>
+    <div class="f"><label for="sTitle">Title <span class="opt">optional</span></label><input class="inp" id="sTitle" value="${esc(SET.title)}" autocomplete="off"></div>
+    <div class="f"><label for="sDesc">Description</label><textarea class="inp" id="sDesc" rows="3">${esc(SET.desc)}</textarea><span class="caption">Bench reads this to decide who replies.</span></div>
+    <div class="f2">
+      <div class="f"><label for="sTeam">Home team</label><select class="inp" id="sTeam"><option>Bench › Dev team</option><option>Bench › Product team</option><option>InterviewKit › Team</option></select></div>
+      <div class="f"><label for="sLead">Lead</label><select class="inp" id="sLead"><option>Karim · Tech lead</option><option>Maya · PM</option><option>Atlas · CEO</option></select></div>
+    </div>
+    <p class="caption" style="margin:0">Karim sees Noor's work log. He reads her private notes only when he needs to, and only to read.</p>`,
+  model: () => `<h4 id="secH" tabindex="-1">Model</h4><p class="set-lede">Pick a tier. Bench maps it to the current Claude model.</p>
+    <div class="rcs" role="radiogroup" aria-labelledby="secH">${TIERS.map(([v, n, m, d, k]) => `<label class="rc"><input type="radio" name="tier" value="${v}"${SET.tier === v ? " checked" : ""}><span class="rc-b"><b>${n} · ${m}</b><span>${d}</span></span><span class="rc-e">≈ ${fmtPct(pctW(k))}<small>of your week per turn</small></span></label>`).join("")}</div>
+    <p class="caption" style="margin:12px 0 0">Applies from Noor's next run. Her context window is 1M tokens.</p>`,
+  autonomy: () => `<h4 id="secH" tabindex="-1">Autonomy</h4><p class="set-lede">What Noor may do without asking you first.</p>
+    <div class="rcs" role="radiogroup" aria-labelledby="secH">${PRESETS.map(([v, n, d]) => `<label class="rc"><input type="radio" name="preset" value="${v}"${SET.preset === v ? " checked" : ""}><span class="rc-b"><b>${n}</b><span>${d}</span></span></label>`).join("")}</div>
+    <div class="set-group"><h5>Per-tool overrides</h5>
+      ${SET.overrides.map(([t, v], i) => `<div class="setrow"><div class="sr-m"><div class="sr-t">${esc(t)}</div></div><select class="inp mini" data-ov="${i}" aria-label="${esc(t)}">${[["ask","Ask"],["allow","Allow"],["block","Block"]].map(([o, l]) => `<option value="${o}"${o === v ? " selected" : ""}>${l}</option>`).join("")}</select></div>`).join("")}
+      <div class="setrow"><div class="sr-m"><div class="sr-t">Write global memory</div><div class="sr-d">Always a proposal that you or Atlas approve</div></div>${lockedH("Proposal")}</div>
+    </div>
+    <div class="set-group"><h5>Always asks you, whatever the preset</h5>
+      ${[["Send, post or publish","Outward"],["Merge to main, deploy or release","Reserved for you"],["Delete agents, projects or repos","Reserved for you"],["Pay for anything","Never: agents don't pay"]].map(([t, d]) => `<div class="setrow"><div class="sr-m"><div class="sr-t">${t}</div><div class="sr-d">${d} · can't be changed</div></div>${ic("lock", 16)}</div>`).join("")}
+    </div>
+    <div class="set-group"><h5>Active grants · ${SET.grants.length}</h5>
+      ${SET.grants.length ? SET.grants.map((g, i) => `<div class="setrow"><div class="sr-m"><div class="sr-t"><code>${esc(g.cmd)}</code> ${esc(g.where)}</div><div class="sr-d">Always · granted by ${esc(g.by)} · ${esc(g.when)}</div></div><button type="button" class="btn secondary sm" data-revoke="${i}" aria-label="Revoke ${esc(g.cmd)} ${esc(g.where)}">Revoke</button></div>`).join("") : `<p class="sr-none">No standing grants. Noor asks every time.</p>`}
+    </div>`,
+  connectors: () => `<h4 id="secH" tabindex="-1">Connectors</h4><p class="set-lede">From your Claude Code inventory. Only the ones switched on load for Noor, and each one adds to every turn's tokens.</p>
+    ${SET.conns.map(c => `<div class="setrow${c.na ? " na" : ""}"><div class="sr-m"><div class="sr-t">${esc(c.name)}${c.out ? ' <span class="tag">Outward-capable</span>' : ""}</div><div class="sr-d">${esc(c.d)}${c.k && !c.na ? ` · ≈ ${c.k}k tokens per turn` : ""}</div></div>${c.na ? '<span class="caption">Not available</span>' : swH(`data-conn="${c.id}"`, c.on, c.name)}</div>`).join("")}`,
+  skills: () => {
+    const row = (s, i) => `<div class="setrow"><div class="sr-m"><div class="sr-t">${esc(s.n)}</div><div class="sr-d">${esc(s.d)}</div></div>${swH(`data-skill="${i}"`, s.on, s.n)}</div>`;
+    return `<h4 id="secH" tabindex="-1">Skills</h4><p class="set-lede">Bench ships a skill set for each role. Each one loads only when Noor needs it.</p>
+    <div class="set-group"><h5>Built in · Developer</h5>${SET.skills.map((s, i) => s.b ? row(s, i) : "").join("")}</div>
+    <div class="set-group"><h5>From your Claude Code inventory</h5>${SET.skills.map((s, i) => s.b ? "" : row(s, i)).join("")}</div>`;
+  },
+  memory: () => `<h4 id="secH" tabindex="-1">Memory</h4><p class="set-lede">What Noor remembers, and when she starts a fresh session.</p>
+    <div class="setrow"><div class="sr-m"><div class="sr-t">Private notes</div><div class="sr-d">46 notes · last written today 08:58 · only Noor writes here</div></div><button type="button" class="btn secondary sm" data-act="stub">Open notes</button></div>
+    <div class="setrow"><div class="sr-m"><div class="sr-t">Team memory</div><div class="sr-d">Bench › Dev team · read and write</div></div></div>
+    <div class="setrow"><div class="sr-m"><div class="sr-t">Global memory</div><div class="sr-d">Read only for Noor; her writes reach you as proposals</div></div></div>
+    <div class="set-group ck"><h5>Context checkpoint</h5>
+      <div class="ck-row"><label for="sCk" class="sr-t">Checkpoint at</label><output id="ckVal" for="sCk">${SET.ckpt} %</output><span class="caption">default 80 %</span></div>
+      <input type="range" id="sCk" min="50" max="85" step="5" value="${SET.ckpt}" aria-describedby="ckHelp" aria-valuetext="${SET.ckpt} percent">
+      <div class="ck-ends caption" aria-hidden="true"><span>50 %</span><span>85 %</span></div>
+      <div class="ck-bar" aria-hidden="true"><i id="ckFill" style="width:${SET.ckpt}%"></i><span class="ck-z"></span><span class="ck-t" id="ckTick" style="left:${SET.ckpt}%"></span></div>
+      <div class="ck-leg caption" aria-hidden="true"><span><i class="lg-t"></i>Checkpoint <b id="ckLeg">${SET.ckpt} %</b></span><span><i class="lg-z"></i>From 90 %: immediate, fixed</span></div>
+      <p class="caption" id="ckHelp">Noor saves a checkpoint at the next natural break after <b id="ckTok">${SET.ckpt * 10}k</b> of her 1M-token context, then starts fresh with her memory and the checkpoint. At 900k (90 %) every agent checkpoints at once, even mid-step. That ceiling can't be changed.</p>
+    </div>`,
+  workspace: () => `<h4 id="secH" tabindex="-1">Workspace</h4><p class="set-lede">The folders Noor can reach, and whether she gets a browser.</p>
+    <div class="set-group"><h5>Folder grants</h5>
+      ${SET.folders.length ? SET.folders.map((f, i) => `<div class="setrow"><span class="sr-ic">${ic("folder", 16)}</span><div class="sr-m"><div class="sr-t"><code>${esc(f.p)}</code></div><div class="sr-d">${esc(f.d)} · granted by ${esc(f.by)} · ${esc(f.when)}</div></div><button type="button" class="btn secondary sm" data-revoke-folder="${i}" aria-label="Revoke ${esc(f.p)}">Revoke</button></div>`).join("") : '<p class="sr-none">No folders. Noor can only chat.</p>'}
+      <button type="button" class="btn secondary sm" data-act="stub" style="margin-top:10px">${ic("plus")}Grant a folder…</button>
+      <p class="caption" style="margin:10px 0 0">Noor can't see anything outside these. One writer per folder at a time; the others queue.</p>
+    </div>
+    <div class="set-group"><h5>Browser</h5>
+      <div class="setrow"><div class="sr-m"><div class="sr-t">Give Noor a browser</div><div class="sr-d">Her own isolated profile. She asks before clicks, typing and new sites, and you can take over any time. Screenshots stay on this PC for 30 days.</div></div>${swH('id="sBrowser"', SET.browser, "Give Noor a browser")}</div>
+      ${SET.browser ? `<div class="setrow"><div class="sr-m"><div class="sr-t">Use the browser in routines</div><div class="sr-d">Off by default, so routines stay read-only.</div></div>${swH('id="sBrowserRt"', SET.browserRoutines, "Use the browser in routines")}</div>` : ""}
+    </div>`,
+  notifications: () => `<h4 id="secH" tabindex="-1">Notifications</h4><p class="set-lede">When to tell you about Noor. In the app on this PC; no phone notifications yet.</p>
+    ${SET.notif.map((n, i) => `<div class="setrow"><div class="sr-m"><div class="sr-t">Tell you when Noor ${esc(n.t)}</div>${n.d ? `<div class="sr-d">${esc(n.d)}</div>` : ""}</div>${n.lock ? lockedH("Always on") : swH(`data-notif="${i}"`, n.on, "Tell you when Noor " + n.t)}</div>`).join("")}
+    <div class="set-group"><h5>How it arrives</h5><div class="nprev"><span class="avh">${avatar("noor",28,{status:"waiting"})}</span><div><b>Noor needs you</b><div class="caption">Run npm test in bench · Work request</div></div><span class="caption">now</span></div></div>`,
+  lifecycle: () => `<h4 id="secH" tabindex="-1">Lifecycle</h4><p class="set-lede">Noor is <b>Active</b> · created 14 Oct · 312 runs.</p>
+    ${[["Pause","Stops new work after the current step. Her open tasks go back to Karim.","Pause Noor"],
+       ["Archive","Noor becomes read-only. Her memory and history stay.","Archive"],
+       ["Duplicate without memory","Copies her profile, model, skills and connectors. Private notes start empty.","Duplicate"],
+       ["Loan to another team","Karim sends a copy to the other team's lead. When the work is done, its lessons merge back here and the copy is deleted.","Loan…"]]
+      .map(([t, d, b]) => `<div class="setrow"><div class="sr-m"><div class="sr-t">${t}</div><div class="sr-d">${d}</div></div><button type="button" class="btn secondary sm" data-act="stub">${b}</button></div>`).join("")}
+    <div class="danger">
+      <div class="setrow"><div class="sr-m"><div class="sr-t">Delete Noor <span class="tag line">Reserved</span></div><div class="sr-d">Only you can delete an agent. Removes her agent file and private notes; work-log lines and ledger entries stay, marked "deleted".</div></div><button type="button" class="btn danger sm" id="delStart" aria-expanded="false" aria-controls="delBox">Delete…</button></div>
+      <div class="del-box" id="delBox" hidden><label for="delIn">Type <b>Noor</b> to delete her</label><div class="rt-new-row"><input class="inp" id="delIn" autocomplete="off"><button type="button" class="btn danger sm" id="delGo" disabled>Delete Noor</button></div></div>
+    </div>`
+};
+function updateNavSums(){ $$("#setNav [data-sec]").forEach(b => { b.querySelector("span").textContent = secSum(b.dataset.sec); }); }
+function setSec(sec, noHash){
+  if (!SECS.some(s => s[0] === sec)) sec = "profile";
+  SET.sec = sec;
+  if (!$("#setNav").children.length) $("#setNav").innerHTML = SECS.map(([id, l]) => `<button type="button" data-sec="${id}"><b>${l}</b><span></span></button>`).join("");
+  $$("#setNav [data-sec]").forEach(b => { if (b.dataset.sec === sec) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current"); });
+  updateNavSums();
+  $("#setMain").innerHTML = SECTION[sec]();
+  $("#setMain").scrollTop = 0;
+  if (!noHash && current === "agent") { curHash = agentHash(); setHash(curHash); }
+}
+function saved(){
+  SET.stamp = "Saved · applies from Noor's next step";
+  if (!$('[data-wpanel="settings"]').hidden) $("#wsCap").textContent = SET.stamp;
+  updateNavSums();
+}
+function refreshSec(sec){ if (SET.sec === sec && !$('[data-wpanel="settings"]').hidden) setSec(sec, true); updateNavSums(); }
+function paintCk(){
+  const v = SET.ckpt, set = (id, f) => { const el = $(id); if (el) f(el); };
+  set("#ckVal", el => { el.textContent = v + " %"; });
+  set("#ckLeg", el => { el.textContent = v + " %"; });
+  set("#ckFill", el => { el.style.width = v + "%"; });
+  set("#ckTick", el => { el.style.left = v + "%"; });
+  set("#ckTok", el => { el.textContent = v * 10 + "k"; });
+  set("#sCk", el => { el.setAttribute("aria-valuetext", v + " percent"); });
+  $("#ctxMark").style.left = v + "%";
+  $("#ctxX").textContent = ` · checkpoint at ${v} %`;
+  $("#ctxBox").setAttribute("aria-label", `Context 34 percent used, checkpoint at ${v} percent`);
+}
+$("#setNav").addEventListener("click", e => { const b = e.target.closest("[data-sec]"); if (b) setSec(b.dataset.sec); });
+$("#setNav").addEventListener("keydown", e => {
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  const bs = $$("#setNav [data-sec]"), i = bs.indexOf(e.target.closest("[data-sec]"));
+  const n = bs[i + (e.key === "ArrowDown" ? 1 : -1)];
+  if (n) { e.preventDefault(); n.focus(); setSec(n.dataset.sec); }
+});
+$("#setMain").addEventListener("input", e => {
+  if (e.target.id === "sCk") { SET.ckpt = +e.target.value; paintCk(); }
+  else if (e.target.id === "delIn") $("#delGo").disabled = e.target.value.trim() !== "Noor";
+});
+$("#setMain").addEventListener("change", e => {
+  const t = e.target, d = t.dataset;
+  if (t.name === "tier") SET.tier = t.value;
+  else if (t.name === "preset") SET.preset = t.value;
+  else if (d.ov !== undefined) SET.overrides[+d.ov][1] = t.value;
+  else if (d.conn) { const c = SET.conns.find(x => x.id === d.conn); if (c) c.on = t.checked; }
+  else if (d.skill !== undefined) SET.skills[+d.skill].on = t.checked;
+  else if (d.notif !== undefined) SET.notif[+d.notif].on = t.checked;
+  else if (t.id === "sBrowser") { SET.browser = t.checked; setSec("workspace", true); const b = $("#sBrowser"); if (b) b.focus(); }
+  else if (t.id === "sBrowserRt") SET.browserRoutines = t.checked;
+  else if (t.id === "sName") SET.name = t.value.trim() || "Noor";
+  else if (t.id === "sTitle") SET.title = t.value.trim();
+  else if (t.id === "sDesc") SET.desc = t.value.trim();
+  else if (t.id === "delIn") return;
+  const lab = t.closest(".switch"); if (lab && t.type === "checkbox") { const sp = lab.querySelector("span"); if (sp) sp.textContent = t.checked ? "On" : "Off"; }
+  saved();
+});
+$("#setMain").addEventListener("click", e => {
+  const rv = e.target.closest("[data-revoke]");
+  if (rv) {
+    const g = SET.grants.splice(+rv.dataset.revoke, 1)[0];
+    setSec("autonomy", true); saved();
+    toast(`Revoked. Noor asks before running ${esc(g.cmd)} again.`);
+    $("#secH").focus();
+    return;
+  }
+  const rf = e.target.closest("[data-revoke-folder]");
+  if (rf) {
+    const f = SET.folders.splice(+rf.dataset.revokeFolder, 1)[0];
+    setSec("workspace", true); saved();
+    toast(`Revoked. Noor can no longer reach ${esc(f.p)}`);
+    $("#secH").focus();
+    return;
+  }
+  if (e.target.closest("#delStart")) {
+    const box = $("#delBox"); box.hidden = !box.hidden;
+    $("#delStart").setAttribute("aria-expanded", !box.hidden);
+    if (!box.hidden) $("#delIn").focus();
+    return;
+  }
+  if (e.target.closest("#delGo")) { $("#delBox").hidden = true; $("#delIn").value = ""; $("#delGo").disabled = true; $("#delStart").setAttribute("aria-expanded", "false"); toast("Demo only: nothing was deleted."); }
+});
 
 function setPane(on){
   $("#split").classList.toggle("pane-off", !on);
@@ -1378,9 +2246,12 @@ $("#wOpen").addEventListener("click", () => {
 function resolveAppr(kind){
   if (!N.pending) return;
   N.pending = false;
+  /* One request, one fact: resolving it here also clears the Home ticket, and "always" becomes a visible grant. */
+  if (!H.done.has("npm")) { H.done.add("npm"); renderNeeds(); }
+  if (kind === "always") { SET.grants.unshift({cmd:"npm test", where:"in bench", by:"you", when:"22 Oct 09:15"}); refreshSec("autonomy"); }
   const map = {
     once:["Allowed once","Noor is running npm test in bench. Logged in the trace.","ok"],
-    always:["Always allowed: npm test in bench","Noor won't ask for this command in bench again. Revoke in Settings › Permissions or Noor › Autonomy.","ok"],
+    always:["Always allowed: npm test in bench","Noor won't ask for this command in bench again. Revoke it in Noor › Settings › Autonomy.","ok"],
     deny:["Denied","Noor won't run npm test. She'll open the pull request with the chat tests only.","neutral"],
     withdrawn:["Request withdrawn","Noor stopped before running it. Nothing ran.","neutral"]
   }[kind];
@@ -1543,7 +2414,7 @@ function buildTeam(){
     <div class="sys">${ic("memory")} Memory updated · Interview plan: memory filters · Omar</div>
     <div class="m me" style="margin-top:10px"><div class="bubble neutral">${mention("karim")} is the Windows CI blocker something I need to decide?</div><div class="meta">09:05 · Read</div></div>
     <div class="sys">Bench picked ${sysAv("karim")} Karim (@mention) · 0.3k tokens</div>
-    ${gm("karim","09:06",['<span class="react named" role="img" aria-label="Maya reacted with a thumbs up">👍 Maya</span>yes. qa-3 failed twice on the windows runners. two ways out: a paid runner, or nightly e2e on my machine. both are in what needs me.'],"2.0k")}
+    ${gm("karim","09:06",['<span class="react named" role="img" aria-label="Maya reacted with a thumbs up">👍 Maya</span>yes. qa-3 failed twice on the windows runners. two ways out: a paid runner, or nightly e2e on my machine. both are waiting in what needs you.'],"2.0k")}
     <div class="handoff" id="handoff">
       <span class="ho-chip" aria-hidden="true"><span class="avh">${avatar("maya",24,{nobadge:true})}</span><span class="ho-track"><span class="ho-dot">S1-6</span></span><span class="avh">${avatar("karim",24,{nobadge:true})}</span></span>
       <span class="sys" style="margin:0">Maya handed S1-6 SQLite persistence to Karim · the Dev team owns storage · 0.2k tokens · <a href="#" data-act="stub">Open task</a></span>
@@ -1609,7 +2480,7 @@ function buildTokens(){
   };
   $("#swN").innerHTML = [
     ["Frost","#f5f5f7","Canvas (Home, sidebar)","surface"],["White","#ffffff","Content surfaces","surface"],["Carbon","#1d1d1f","Primary text","text"],["Graphite","#474747","Secondary text","text"],
-    ["Ash","#6e6e73","Muted text, meta","text"],["Mist","#858585","Icon strokes","icon"],["Hairline","#d2d2d7","Dividers (decorative)","surface"],["Pebble","#e2e2e5","Disabled, tracks","surface"],
+    ["Ash","#6e6e73","Muted text, meta","text"],["Mist","#858585","Icon strokes","icon"],["Hairline","#d2d2d7","Dividers (decorative)","surface"],["Control","#8e8e93","Form-field borders (v0.2)","icon"],["Pebble","#e2e2e5","Disabled, tracks","surface"],
     ["Bubble","#efeff1","Agent bubble","surface"],["Apple Blue","#0071e3","The one filled action, focus","onfill"],["Link Blue","#0066cc","Links, outlined secondary","text"]
   ].map(x => sw(...x)).join("");
   $("#swF").innerHTML = [
@@ -1646,6 +2517,7 @@ function buildTokens(){
   $("#varsPre").textContent = `:root{
   --frost:#f5f5f7; --white:#fff; --carbon:#1d1d1f; --graphite:#474747; --ash:#6e6e73;
   --mist:#858585; --hairline:#d2d2d7; --pebble:#e2e2e5; --ice:#f4f8fb; --bubble:#efeff1;
+  --control:#8e8e93; /* v0.2: form-field borders, 3.3:1 */
   --blue:#0071e3; --blue-hover:#0077ed; --blue-press:#006edb; --link:#0066cc;
   --ok-ink:#1e6b34; --ok-tint:#e4f4e8; --warn-fill:#ff9f0a; --warn-ink:#7a4500; --warn-tint:#fff1d6;
   --err-fill:#e5352b; --err-ink:#b3261e; --err-tint:#fde8e7;
@@ -1662,19 +2534,179 @@ function buildTokens(){
 ` + Object.keys(PAL).filter(k => k !== "neutral").map(k => { const P = PAL[k]; return `--agent-${k}: ${P.base} ${P.light} ${P.deep} ${P.tint} ${P.wash} ${P.ink};`; }).join("\n");
 }
 
+/* ============================== U4: project view, split view, menus, drag ============================== */
+const KIND = {blocked:'<span class="tag solid">Blocked</span>', review:'<span class="tag warn">In review</span>', working:'<span class="tag">Working</span>', waiting:'<span class="tag warn">Waiting for you</span>'};
+function bcard([id, t, o, k]){
+  return `<li class="bcard"><span class="bt">${esc(t)}</span><span class="bm"><span class="avh">${avatar(o,20,{nobadge:true})}</span><span>${id} · ${AG[o].name}</span>${k ? KIND[k] : ""}</span></li>`;
+}
+function pvHTML(pid, side){
+  const P = PROJ[pid], live = liveNeeds().filter(n => n.proj === pid);
+  const cols = [["todo","To do"],["doing","In progress"],["done","Done"]].map(([k, l]) => {
+    const items = P.board[k];
+    return `<div class="col"><h4>${l} <span>${items.length}</span></h4><ul>${items.slice(0, 4).map(bcard).join("")}</ul>${items.length > 4 ? `<p class="caption col-more">${items.length - 4} more</p>` : ""}</div>`;
+  }).join("");
+  const needs = live.length
+    ? `<ul class="pv-needs">${live.slice(0, 3).map(n => `<li><button type="button" class="pvn" data-open-ticket="${n.k}"><span class="avh" aria-hidden="true">${avatar(n.av,24,{nobadge:true})}</span><span class="pvn-t">${esc(n.title)}</span><span class="tag ${n.tag[0]}">${esc(n.tag[1])}</span></button></li>`).join("")}</ul>${live.length > 3 ? `<button type="button" class="btn plain sm" data-tab="home">All ${live.length} on Home</button>` : ""}`
+    : `<p class="pv-none">Nothing needs you on ${esc(P.name)}.</p>`;
+  return `<div class="pv-head" data-pv="${pid}">
+      <div class="pv-id"><h2>${esc(P.name)}</h2><span class="caption">Sprint ${P.sprint} · day ${P.day} of ${P.days} · ends ${P.ends}</span></div>
+      <span class="stack" role="img" aria-label="Team: ${P.team.map(id => AG[id].name).join(", ")}">${stackHTML(P.team, 24)}</span>
+      <button type="button" class="icon-btn" data-menu="pv" data-pid="${pid}" data-side="${side}" aria-haspopup="menu" aria-expanded="false" aria-label="${P.name} pane options" title="Pane options">${ic("more")}</button>
+      ${side !== "solo" ? `<button type="button" class="icon-btn" data-close-pane="${side}" aria-label="Close the ${P.name} pane" title="Close pane">${ic("x")}</button>` : ""}
+    </div>
+    <div class="pv-body"><div class="pv-inner">
+      ${progHTML(P)}
+      <section class="pv-sec"><h3>Needs you${live.length ? ` <span class="count">${live.length}</span>` : ""}</h3>${needs}</section>
+      <section class="pv-sec"><h3>Sprint ${P.sprint} board</h3><div class="board">${cols}</div></section>
+    </div></div>`;
+}
+const otherProj = pid => PROJ_ORDER.find(p => p !== pid);
+function renderSplit(){
+  $("#svL").innerHTML = pvHTML(SPLIT.l, "L");
+  $("#svR").innerHTML = pvHTML(SPLIT.r, "R");
+  $("#svL").setAttribute("aria-label", `${PROJ[SPLIT.l].name}, left pane`);
+  $("#svR").setAttribute("aria-label", `${PROJ[SPLIT.r].name}, right pane`);
+  $("#splitv").style.setProperty("--lw", SPLIT.lw + "%");
+  $("#svDiv").setAttribute("aria-valuenow", SPLIT.lw);
+}
+function renderSolo(){ $("#pvSolo").innerHTML = pvHTML(PV.solo, "solo"); }
+function openSplit(pid, asLeft){
+  if (asLeft) { SPLIT.l = pid; SPLIT.r = otherProj(pid); } else { SPLIT.r = pid; SPLIT.l = otherProj(pid); }
+  go("split");
+}
+function projAction(pid, act, side){
+  if (act === "here") { PV.solo = pid; go("project-" + pid); }
+  else if (act === "split") openSplit(pid, false);
+  else if (act === "window") toast(`In the app, ${esc(PROJ[pid].name)} opens in its own window. This sample doesn't open windows.`, 8000);
+  else if (act === "toggle") setGroupOpen(pid, !SIDE.open[pid]);
+  else if (act === "swap") { const l = SPLIT.l; SPLIT.l = SPLIT.r; SPLIT.r = l; renderSplit(); $("#crumbs").innerHTML = crumbs("split"); markSide(); }
+  else if (act === "close") { const keep = side === "L" ? SPLIT.r : SPLIT.l; PV.solo = keep; go("project-" + keep); }
+}
+(() => {
+  const d = $("#svDiv");
+  const setW = w => { SPLIT.lw = Math.round(Math.min(70, Math.max(30, w))); $("#splitv").style.setProperty("--lw", SPLIT.lw + "%"); d.setAttribute("aria-valuenow", SPLIT.lw); };
+  d.addEventListener("pointerdown", e => { d.setPointerCapture(e.pointerId); d.classList.add("drag"); });
+  d.addEventListener("pointermove", e => { if (!d.classList.contains("drag")) return; const r = $("#splitv").getBoundingClientRect(); setW((e.clientX - r.left) / r.width * 100); });
+  const end = () => d.classList.remove("drag");
+  d.addEventListener("pointerup", end); d.addEventListener("pointercancel", end);
+  d.addEventListener("keydown", e => { if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); setW(SPLIT.lw + (e.key === "ArrowRight" ? 5 : -5)); } });
+})();
+
+/* Menu: one floating role="menu", opened by a visible "…" button (keyboard) or by right-click (pointer). */
+function openMenu(items, anchor, at, onPick, label){
+  closeMenu(false);
+  const m = $("#menu");
+  m.innerHTML = items.map(it => it.sep ? "<hr>" : it.cap ? `<div class="m-cap" aria-hidden="true">${esc(it.cap)}</div>` : `<button type="button" role="menuitem" tabindex="-1" data-mi="${it.act}">${ic(it.icon)}<span>${esc(it.label)}</span></button>`).join("");
+  m.setAttribute("aria-label", label || "Options");
+  m.hidden = false;
+  m.classList.remove("anim"); if (!reduced()) { void m.offsetWidth; m.classList.add("anim"); }
+  const r = anchor ? anchor.getBoundingClientRect() : {left:0, bottom:0, top:0};
+  let x = at ? at.x : r.left, y = at ? at.y : r.bottom + 4;
+  const mw = m.offsetWidth, mh = m.offsetHeight;
+  if (x + mw > innerWidth - 8) x = Math.max(8, innerWidth - 8 - mw);
+  if (y + mh > innerHeight - 8) y = Math.max(8, (at ? at.y : r.top) - mh - 4);
+  m.style.left = x + "px"; m.style.top = y + "px";
+  MENU = {anchor, onPick};
+  if (anchor) anchor.setAttribute("aria-expanded", "true");
+  const first = m.querySelector('[role="menuitem"]'); if (first) first.focus();
+}
+function closeMenu(refocus){
+  if (!MENU) return;
+  const a = MENU.anchor; MENU = null;
+  $("#menu").hidden = true;
+  if (a) { a.setAttribute("aria-expanded", "false"); if (refocus !== false && document.contains(a)) a.focus(); }
+}
+function projMenuItems(pid){
+  return [{act:"here", icon:"enter", label:"Open here"}, {act:"split", icon:"columns", label:"Open in split view"}, {act:"window", icon:"window", label:"Open in a new window"},
+    {sep:true}, {act:"toggle", icon:"chevD", label: SIDE.open[pid] ? "Collapse in the sidebar" : "Expand in the sidebar"},
+    {cap:"You can also drag a project onto the main area."}];
+}
+function pvMenuItems(side){
+  return side === "solo"
+    ? [{act:"split", icon:"columns", label:"Open in split view"}, {act:"window", icon:"window", label:"Open in a new window"}]
+    : [{act:"here", icon:"enter", label:"Open here"}, {act:"window", icon:"window", label:"Open in a new window"}, {act:"swap", icon:"columns", label:"Swap sides"}, {sep:true}, {act:"close", icon:"x", label:"Close this pane"}];
+}
+function openMenuFor(btn, at){
+  const kind = btn.dataset.menu, pid = btn.dataset.pid;
+  if (kind === "proj") openMenu(projMenuItems(pid), btn, at, act => projAction(pid, act), `${PROJ[pid].name} options`);
+  else if (kind === "pv") { const side = btn.dataset.side; openMenu(pvMenuItems(side), btn, at, act => (act === "split" ? openSplit(pid, true) : projAction(pid, act, side)), `${PROJ[pid].name} pane options`); }
+  else if (kind === "new") openMenu([{act:"agent", icon:"plus", label:"New agent"}, {act:"project", icon:"grid", label:"New project"}], btn, at, act => openDialog(true, act), "Create");
+}
+$("#menu").addEventListener("keydown", e => {
+  const items = $$('#menu [role="menuitem"]'), i = items.indexOf(document.activeElement);
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    const n = i < 0 ? items[0] : items[(i + (e.key === "ArrowDown" ? 1 : items.length - 1)) % items.length];
+    n.focus();
+  } else if (e.key === "Home") { e.preventDefault(); items[0].focus(); }
+  else if (e.key === "End") { e.preventDefault(); items[items.length - 1].focus(); }
+  else if (e.key === "Escape") { e.preventDefault(); closeMenu(true); }
+  else if (e.key === "Tab") closeMenu(false);
+});
+document.addEventListener("mousedown", e => {
+  if (MENU && !e.target.closest("#menu") && e.target.closest("[data-menu]") !== MENU.anchor) closeMenu(false);
+});
+window.addEventListener("resize", () => closeMenu(false));
+document.addEventListener("contextmenu", e => {
+  const t = e.target.closest && e.target.closest("[data-drag-proj], .pcard[data-pid], .pv-head[data-pv]");
+  if (!t) return;
+  const btn = t.querySelector("[data-menu]");
+  if (!btn) return;
+  e.preventDefault();
+  openMenuFor(btn, {x:e.clientX, y:e.clientY});
+});
+/* Drag a project header from the sidebar onto the main area: drop left = open here, right = split view. */
+document.addEventListener("dragstart", e => {
+  const h = e.target.closest && e.target.closest("[data-drag-proj]");
+  if (!h) return;
+  DRAG = h.dataset.dragProj;
+  e.dataTransfer.setData("text/plain", DRAG);
+  e.dataTransfer.effectAllowed = "copy";
+  closeMenu(false);
+  setTimeout(() => { if (DRAG) $("#dropzones").hidden = false; }, 0);
+});
+document.addEventListener("dragend", () => { DRAG = null; $("#dropzones").hidden = true; $$(".dz").forEach(z => z.classList.remove("over")); });
+$$(".dz").forEach(z => {
+  z.addEventListener("dragover", e => { if (!DRAG) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; z.classList.add("over"); });
+  z.addEventListener("dragleave", () => z.classList.remove("over"));
+  z.addEventListener("drop", e => {
+    e.preventDefault();
+    const pid = DRAG; DRAG = null;
+    $("#dropzones").hidden = true; z.classList.remove("over");
+    if (pid) projAction(pid, z.dataset.dz);
+  });
+});
+
 /* ============================== global wiring ============================== */
 document.addEventListener("click", e => {
+  const mb = e.target.closest("[data-menu]");
+  if (mb) { e.preventDefault(); if (MENU && MENU.anchor === mb) closeMenu(true); else openMenuFor(mb); return; }
+  const mi = e.target.closest("#menu [data-mi]");
+  if (mi) { const fn = MENU && MENU.onPick, act = mi.dataset.mi; closeMenu(true); if (fn) fn(act); return; }
   const tabBtn = e.target.closest("[data-tab]");
-  if (tabBtn) { e.preventDefault(); show(tabBtn.dataset.tab); return; }
+  if (tabBtn) { e.preventDefault(); if (tabBtn.dataset.tab === "home") go("home"); else show(tabBtn.dataset.tab); return; }
   const na = e.target.closest('[data-act="newAgent"]');
-  if (na) { e.preventDefault(); openDialog(); return; }
-  const row = e.target.closest("#sideList .srow, .roster .srow, #newRows .srow");
+  if (na) { e.preventDefault(); openDialog(true, "agent"); return; }
+  const np = e.target.closest('[data-act="newProject"]');
+  if (np) { e.preventDefault(); openDialog(true, "project"); return; }
+  const pg = e.target.closest("[data-pg]");
+  if (pg) { setGroupOpen(pg.dataset.pg, !SIDE.open[pg.dataset.pg]); return; }
+  const mr = e.target.closest("[data-more-btn]");
+  if (mr) { toggleMore(mr.dataset.moreBtn); return; }
+  const op = e.target.closest("[data-open-proj]");
+  if (op) { projAction(op.dataset.openProj, "here"); return; }
+  const ot = e.target.closest("[data-open-ticket]");
+  if (ot) { openTicketOnHome(ot.dataset.openTicket); return; }
+  const cp = e.target.closest("[data-close-pane]");
+  if (cp) { projAction(null, "close", cp.dataset.closePane); return; }
+  const row = e.target.closest("#sideList .srow");
   if (row && row.dataset.row) {
     const r = row.dataset.row;
-    if (r === "home") return show("home");
+    if (r === "home") return go("home");
     if (r === "noor") return show("agent");
-    if (r === "teamchat") return show("team");
-    toast("Not part of this direction sample. Home, Noor and the Bench team chat are.");
+    if (r === "tc-bench") return show("team");
+    if (r.startsWith("dash-")) return projAction(r.slice(5), "here");
+    toast("Not part of this direction sample. Home, Noor, the Bench team chat and the project dashboards are.");
     return;
   }
   const st = e.target.closest('[data-act="stub"]');
@@ -1687,10 +2719,7 @@ $("#sideToggle").addEventListener("click", e => {
   e.currentTarget.setAttribute("aria-label", col ? "Expand sidebar" : "Collapse sidebar");
   e.currentTarget.title = col ? "Expand sidebar" : "Collapse sidebar";
 });
-$("#sideSearch").addEventListener("input", e => {
-  const q = e.target.value.trim().toLowerCase();
-  $$("#sideList .srow[data-name]").forEach(r => { r.hidden = q && !r.dataset.name.includes(q); });
-});
+$("#sideSearch").addEventListener("input", filterSide);
 $("#rmToggle").addEventListener("change", e => root.classList.toggle("rm", e.target.checked));
 /* Arrow keys inside the in-app tablists (workspace views, files). The prototype tabs have their own handler. */
 document.addEventListener("keydown", e => {
@@ -1704,8 +2733,7 @@ document.addEventListener("keydown", e => {
 });
 
 /* ============================== init ============================== */
-buildSidebar();
-buildHome();
+renderNeeds();
 buildTeam();
 hydrate();
 $("#hero").innerHTML = avatarSVG(AG.noor, {hero:true});
