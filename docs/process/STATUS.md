@@ -13,7 +13,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 | 1 | Requirements / BRD | ✅ Done ([interviews](../requirements/interviews/)) | [BRD v1.0](../requirements/BRD.md) **Baselined** | G1 ✅ 2026-10-22 |
 | 2 | PRD | 🟡 Draft v0.1 | [PRD](../requirements/PRD.md) | G2 ⏳ |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
-| 4 | UX design | 🟡 Low-fi prototype v0.3 (feedback round 1, CR-001) | [UX package](../design/ux/README.md), [prototype](../design/ux/prototype/index.html) | G4 ⏳ |
+| 4 | UX design | 🟡 Low-fi prototype v0.4 (status badges, shape avatars with eyes) | [UX package](../design/ux/README.md), [prototype](../design/ux/prototype/index.html) | G4 ⏳ |
 | 5 | UI design & brand (incl. **final name**) | ⚪ Not started | `docs/design/ui/` | G5 ⏳ |
 | 6 | Backlog & Sprint 1 | ⚪ Not started ([BACKLOG](../BACKLOG.md) / [ROADMAP](../ROADMAP.md) are provisional) | GitHub Issues / board | G6 ⏳ |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
