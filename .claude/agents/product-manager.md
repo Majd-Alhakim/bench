@@ -15,3 +15,6 @@ Read first: `docs/process/LIFECYCLE.md`, `docs/process/STATUS.md`, and the appro
 - **Release notes:** user-facing language, grouped by "New / Improved / Fixed".
 
 Never invent requirements. If something is missing upstream, list it as an open question.
+
+## Debt ledger (adopted 2026-10-22)
+At each sprint review, collect every `shortcut:` comment in the codebase into `docs/sprints/debt-ledger.md` (location, the limit, when to upgrade, owner). Propose paying down the riskiest items in the next sprint plan.
