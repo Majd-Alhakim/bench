@@ -61,3 +61,21 @@
 > No don't cut, it is achievable don't worry i want to test the limits, form experience 14 days for agents is long time
 
 **Recorded:** Bench keeps the **full MVP scope** (all Must use cases). The target stays **open-source ready 14 days after build start (G6)**. The PRD *sequences* the work into 3-day sprints; it doesn't cut anything. The PM tracks the risks (usage-limit throughput, the client's review bandwidth, CI time) from Sprint 1 velocity and raises them early if the trend misses the target.
+
+## Batch 6: business-critical open issues from BRD v0.2 (2026-10-22)
+
+| BRD §10 | Question | Answer |
+|---|---|---|
+| #4 | Budgets: accept the proposed per-agent caps? | **No per-agent caps.** Only the overall plan-usage meter and the 30% weekly-headroom guard apply. |
+| #6 | Data retention | **Proposed defaults:** trace details and archived transcripts 90 days, then summarized; email items 30 days, bodies never stored; cost ledger and approval log kept indefinitely. Deleting an agent removes its files and memory; its logs stay labelled "deleted agent". |
+| #7 | Which edge cases need no approval? | **Labelling/archiving Gmail** and **opening pull requests** need no approval. **Standing reply rules: not allowed**, so each email reply sent to someone else needs the client. |
+| #27 | Project template: copies or shared agents? | **Each project gets its own copies** of the template agents, with their own memory. Global memory stays shared. |
+| #12 | One agent in several places? | **One home node, guest elsewhere.** |
+| #29 | Deputy self-limits | *"Give Gmail to other agents but with strict rules like CEO might need to hire and assistant that handles the repetitive tasks it still require me to approve before sending anything"* |
+
+**Interpretation of #29:**
+- The CEO **may give Gmail to other agents** (for example an assistant it hires for repetitive email work), under strict rules: **anything those agents send still needs the client's approval.**
+- The CEO **may not widen its own powers** (not selected).
+- If the "assistant" is a *permanent* agent, creating it still needs the client (C3). The CEO may hire a *freelancer* assistant on its own.
+
+**All other §10 items:** the BA's proposed defaults are accepted for now and carried into the PRD/SRS. The client will correct them against the prototype.
