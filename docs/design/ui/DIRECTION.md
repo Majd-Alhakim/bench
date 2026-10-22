@@ -4,7 +4,7 @@
 
 **Client brief (verbatim):** *"the style and feel of grok bot which I find cool and clean and how everything runs and the animations; also the style of open Ai dots is nice design also; I want ours to be mix of both and imagine that Apple have created its own one with its design system."*
 
-References: [`references/`](references/): the Apple style guide, three Dots screenshots, the client's shape-avatar image. **Pending:** the Grok Bot screen recording (the file path is on another machine).
+References: [`references/`](references/): the Apple style guide, three Dots screenshots, the client's shape-avatar image. Grok Bot screen recording analyzed: [../../research/teardowns/grok-bot-ui-video.md](../../research/teardowns/grok-bot-ui-video.md) (agent-list sidebar, agents created by conversation, inline workspace card with Take over / I'm done, checklist results, system lines, side panel with screen + routines + settings).
 
 ## 1. What each reference contributes
 | Source | Take | Leave |
@@ -38,4 +38,5 @@ References: [`references/`](references/): the Apple style guide, three Dots scre
 - D-UI2: Hero avatar render: **soft dimensional (recommended)** or flat everywhere?
 - D-UI3: A faint per-agent canvas wash behind its chat (Dots), **yes (recommended)** or a plain Frost canvas?
 - D-UI4: The sidebar: a **thin icon rail (Dots, recommended)** or the current labelled sidebar?
+- D-UI6: Theme: Grok Bot is **dark**; the Apple base is **light**. **Light first, dark as a mode (recommended)**, or dark first?
 - D-UI5: The name: Phase 5 also runs naming ("Bench" is still a codename).
