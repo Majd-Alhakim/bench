@@ -1,6 +1,6 @@
 # Archived direction: "the Look" (2026-10-22)
 
-Snapshot of the design direction before the client changed **only the Home screen and the agent characters** (Home = a realistic isometric office with minimal creatures). Everything else here (brand feel, design system, chats, UX spec) stays the current direction; this copy is a frozen backup. Kept so we can come back to it if the new direction doesn't work. Client: *"save the current style and its assets and don't override it so we can come back to it if needed"*.
+Frozen backup of the "Look" direction taken on 2026-10-22 during a short detour to an office concept (since dropped; see `../2026-10-22-office-concept/`). **The Look is the active direction again**; the live files are in `docs/design/ui/brand/`, `system/` and `prototype/`. Kept so we can come back to it if the new direction doesn't work. Client: *"save the current style and its assets and don't override it so we can come back to it if needed"*.
 
 Also tagged in git: `design/the-look-2026-10-22`.
 
