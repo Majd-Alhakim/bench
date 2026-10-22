@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 1 (BRD v0.3 In Review)
-**Next step:** client reviews the BRD and answers the last 5 open issues (§10) → `/gate G1`; other details adopted as defaults (§10.1) → `/gate G1`
+**Next step:** client reviews the BRD and answers the last 5 open issues (§10) → `/gate G1`; other details adopted as defaults (§10.1)
 
 ## Phase tracker
 
