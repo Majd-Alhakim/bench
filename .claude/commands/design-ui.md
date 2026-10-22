@@ -5,7 +5,7 @@ argument-hint: "[naming | brand | avatars | prototype]"
 
 Precondition: G4 is approved (naming and the moodboard may start earlier). Focus: $ARGUMENTS
 
-0. Load the `ui-ux-guide` skill and include it in the brief: the designer applies its rules and returns its review checklist with the deliverable.
+0. Load the `ui-ux-guide` and `premium-craft` skills and include them in the brief: the designer applies their rules and returns the ui-ux-guide checklist and the premium-craft rubric with the deliverable. Don't accept a deliverable with any rubric axis below Senior.
 1. Brief the `ui-designer`:
    - inputs: the PRD, the UX package, the client's answers about taste
    - template: `docs/templates/UI-BRIEF.md`

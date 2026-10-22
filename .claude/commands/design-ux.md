@@ -4,7 +4,7 @@ description: Phase 4. UX research, personas, journeys, flows and a low-fi protot
 
 Precondition (lean mode): a BRD draft exists. The low-fi prototype starts right after it, in parallel with the PRD, and its feedback corrects the BRD and PRD. The G4 approval still comes after the PRD (G2).
 
-0. Load the `ui-ux-guide` skill and include it in the brief: the designer applies its rules and returns its review checklist with the deliverable.
+0. Load the `ui-ux-guide` and `premium-craft` skills and include them in the brief: the designer applies their rules and returns the ui-ux-guide checklist and the premium-craft rubric with the deliverable. Don't accept a deliverable with any rubric axis below Senior.
 1. Brief the `ux-designer`:
    - inputs: BRD, PRD, `docs/PRODUCT-MODEL.md`, the competitive brief, the interview notes
    - template: `docs/templates/UX-BRIEF.md`
