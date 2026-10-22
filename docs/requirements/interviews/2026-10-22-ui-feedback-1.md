@@ -13,3 +13,5 @@ Screenshots shared: Noor's Routines tab (a giant clock icon), Noor's Settings ta
 | U7 | "I believe the top bar could be better more minimal modern and clean design" | Redesign the top bar: fewer boxes and borders; a quiet usage indicator; "Needs me" as a minimal badge; more air |
 
 Also: *"you do it"* → the PM ran the local skills update script (caveman v4.0.1, taste-skill 2.1.4, 24 stale skills moved to a backup).
+
+| U8 | "the copy on the app should be talking to me like 'what need you' not 'what need me' and this across everything, imagen my main agent is talking to me" | **Voice rule for all copy:** the app speaks as the main agent addressing the client in the second person ("What needs you", "Needs you · 8", "Your agents", "You're all caught up"). It never uses "me/my" for the client. Apply to the UI, the UX prototype, and the BRD/PRD terms at the next document pass (BRD glossary: "What needs me" → "What needs you") |
