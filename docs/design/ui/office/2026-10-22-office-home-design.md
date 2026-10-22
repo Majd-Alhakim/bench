@@ -3,7 +3,7 @@
 | Field | Value |
 |---|---|
 | Status | Draft for client approval (brainstorm, 2026-10-22) |
-| Replaces | The "Look" direction (archived: `docs/design/ui/archive/2026-10-22-the-look/`, tag `design/the-look-2026-10-22`) |
+| Replaces | Only the Home screen and the agent characters of the "Look" direction (full snapshot archived: `docs/design/ui/archive/2026-10-22-the-look/`, tag `design/the-look-2026-10-22`) |
 | Inputs | Client brainstorm (this document records it), references in `docs/design/ui/references/` (`office-iso-*-client.webp`, `creature-sheet-client-2026-10-22.webp`), research `docs/research/teardowns/minimal-characters.md`, UX premium spec `docs/design/ux/premium/`, skills `premium-craft` + `ui-ux-guide` |
 
 ## 1. Intent and why
@@ -92,8 +92,12 @@
 - **Click a desk's monitor = "Look inside":** shows exactly what the agent is doing right now (file diff, browser, terminal). The eyes glyph appears on hover over monitors, meeting rooms and any cost line.
 - **Look inside** everywhere else keeps its meaning: open the trace behind a message, cost or file.
 
-### 4.5 The rest of the app
-Agent page, team chat, settings, routines, memory, usage, trace keep the v0.2 structure and the UX premium spec (`docs/design/ux/premium/`). Their visual style is re-derived from the office direction (materials, light, colour) in the UI phase; the creatures replace the old avatars everywhere (lists, chat, profile hero).
+### 4.5 The rest of the app: unchanged
+**Client: "the same feel of bench right now and the style of the chats and everything we agreed on is the same but the only difference is the home screen style and the characters style and design".**
+- Everything outside Home keeps what was agreed: the v0.2 structure (agent page with conversation + workspace, team chat, settings, routines, memory, usage, trace), the UX premium spec (`docs/design/ux/premium/`), the brand feel and the design system (`docs/design/ui/brand/`, `docs/design/ui/system/`: tokens, Porcelain/Ink, one blue action, continuous corners, the Receipt cost line, the Ticket, the Room tint, Look inside, second-person voice, lowercase agent voice).
+- **Only two things change:** (1) Home becomes the office; (2) the characters. Wherever the old eye-blob avatar appeared (sidebar, lists, chat, agent hero, mentions, team chat, split view), the agent's creature appears instead, rendered small and flat-shaded at list/chat sizes and as the 3D creature in the hero.
+- The office's lighting and materials are tuned to sit inside the existing Bench chrome (Porcelain canvas, Ink text, Cobalt actions), not the other way round.
+- Brand items that depended on the old eye-stroke signature (the eyes-as-every-face rule) are retired; the "Look inside" glyph and the rest of the brand stay. The mark/app icon is reviewed in the UI phase only if it still reads as the old characters.
 
 ## 5. Constraints
 - **Performance budget** (Windows-first, typical laptop): office idle ≤ 5 % CPU and no fan spin; 60 fps target, 30 fps floor; the office pauses/sleeps when the window is hidden or minimized; time to first interactive Home ≤ 1.5 s after launch; a "Reduce motion / Simple view" setting replaces the 3D office with a static render + the list.
