@@ -110,8 +110,8 @@ ui-ux-guide review checklist (✅ pass · ⚠ partial · ❌ fail · N/A):
 - Bubble radius 18 px and agent-coloured thinking dots (bends 1 and 2).
 
 **New in v0.2:**
-- D-UI7: Should Home **open the top ticket by default** (one click less, a blue button visible at rest), or start with all tickets equal as built?
-- D-UI8: Hue reuse: once there are more than 10 agents, should hues **repeat across projects** (as built) or should the palette grow past 10?
-- D-UI9: "Open in a new window": a real second app window per project (Electron supports it; more to build and test), or split view only for v0.1?
-- D-UI10: Settings saves as you go (as built) or with one Save per section?
-- D-UI11: Routines are read-only by default (CR-003 M4). Should a routine ever be allowed to write files (with an explicit opt-in per routine), or is read-only a hard rule?
+- ~~D-UI7~~ **Decided:** open the top ticket by default. Was: Should Home **open the top ticket by default** (one click less, a blue button visible at rest), or start with all tickets equal as built?
+- ~~D-UI8~~ **Decided:** keep 10 hues; identity = hue × shape. Was: Hue reuse: once there are more than 10 agents, should hues **repeat across projects** (as built) or should the palette grow past 10?
+- ~~D-UI9~~ **Decided:** no separate windows; open as an in-app pane/tab. Was: "Open in a new window": a real second app window per project (Electron supports it; more to build and test), or split view only for v0.1?
+- ~~D-UI10~~ **Decided:** saves as you go. Was: Settings saves as you go (as built) or with one Save per section?
+- ~~D-UI11~~ **Decided:** routines can do anything the agent can (CR-006). Was: Routines are read-only by default (CR-003 M4). Should a routine ever be allowed to write files (with an explicit opt-in per routine), or is read-only a hard rule?
