@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Draft for client approval (brainstorm, 2026-10-22) |
+| Status | **Approved by the client** 2026-10-22 ("Approved. Go ahead: UX flows, the office look board + creature library, and the tech lead's 3D feasibility spike.") |
 | Replaces | Only the Home screen and the agent characters of the "Look" direction (full snapshot archived: `docs/design/ui/archive/2026-10-22-the-look/`, tag `design/the-look-2026-10-22`) |
 | Inputs | Client brainstorm (this document records it), references in `docs/design/ui/references/` (`office-iso-*-client.webp`, `creature-sheet-client-2026-10-22.webp`), research `docs/research/teardowns/minimal-characters.md`, UX premium spec `docs/design/ux/premium/`, skills `premium-craft` + `ui-ux-guide` |
 
