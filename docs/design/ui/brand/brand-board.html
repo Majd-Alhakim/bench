@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand board · bench (codename) · stage 1</title>
+<style>
+/* Self-contained: a copy of the tokens this page needs (source of truth: ../system/tokens.css). No network. */
+:root{
+  color-scheme:light;
+  --ink:#15171d; --ink-2:#474b57; --ink-3:#646976;
+  --porcelain:#f3f4f7; --sunken:#eceef2; --sel:#e4e6ec; --white:#fff; --p300:#c4c8d1; --p500:#868b97;
+  --cobalt:#2e5bff; --cobalt-hover:#2550eb; --cobalt-tint:#ebf0ff; --cobalt-on-ink:#8fa8ff;
+  --ok-ink:#1b7a45; --ok-tint:#e3f5ea; --ok-fill:#22a35a;
+  --attn-ink:#8a5300; --attn-tint:#fff1d9; --attn-fill:#f5a20a;
+  --danger-ink:#c0262d; --danger-tint:#fdeaea; --danger-fill:#e5383b;
+  --on-ink:#eceef3; --on-ink-2:#a9adb8; --ink-raised:#1f2128; --ink-line:rgb(255 255 255 / .08);
+  --line-subtle:rgb(21 23 29 / .07); --line:rgb(21 23 29 / .11);
+  --font-text:"SF Pro Text",-apple-system,BlinkMacSystemFont,"Segoe UI Variable Text","Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;
+  --font-display:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI Variable Display","Segoe UI Variable","Segoe UI",Inter,system-ui,sans-serif;
+  --font-mono:"SF Mono",ui-monospace,"Cascadia Code","Cascadia Mono",Consolas,monospace;
+  --corner:round; --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:24px;
+  --elev-1:0 0 0 1px var(--line-subtle);
+  --elev-3:0 0 0 1px hsl(228 16% 10% / .07),0 4px 10px hsl(228 16% 10% / .08),0 16px 40px hsl(228 16% 10% / .10);
+  --ease-out:cubic-bezier(.22,1,.36,1); --ease-in-out:cubic-bezier(.65,0,.35,1);
+  --spring-smooth:linear(0,.078 5%,.235 10%,.401 15%,.549 20%,.669 25%,.762 30%,.831 35%,.882 40%,.944 50%,.974 60%,.988 70%,.995 80%,1);
+  --spring-snappy:linear(0,.061 5%,.198 10%,.36 15%,.518 20%,.656 25%,.768 30%,.854 35%,.917 40%,.987 50%,1.012 60%,1.015 70%,1.011 80%,1.006 90%,1);
+  --spring-gentle:linear(0,.074 5%,.249 10%,.463 15%,.673 20%,.85 25%,.983 30%,1.069 35%,1.114 40%,1.127 45%,1.117 50%,1.068 60%,1.019 70%,.991 80%,.984 90%,1);
+}
+@supports (corner-shape:squircle){:root{--corner:squircle;--r-xs:9px;--r-sm:16px;--r-md:22px;--r-lg:28px;--r-xl:38px}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--porcelain)}
+body{font:15px/22px var(--font-text);letter-spacing:-.006em;color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:var(--cobalt);color:#fff}
+.num{font-variant-numeric:tabular-nums}
+.wrap{width:min(1200px,calc(100% - 160px));margin-inline:auto}
+.sq{corner-shape:var(--corner)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-radius:6px}
+
+/* chapters */
+.ch{padding:112px 0}
+.ch.white{background:var(--white)}
+.ch.ink{background:var(--ink);color:var(--on-ink)}
+.ch-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:64px;align-items:end;margin-bottom:56px}
+.ch-title{font:600 44px/48px var(--font-display);letter-spacing:-.032em;max-width:22ch;text-wrap:balance}
+.ch-lead{font-size:17px;line-height:26px;color:var(--ink-2);max-width:42ch;text-wrap:pretty}
+.ink .ch-lead{color:var(--on-ink-2)}
+.h3{font:600 20px/26px var(--font-display);letter-spacing:-.014em}
+.p{color:var(--ink-2);max-width:60ch;text-wrap:pretty}
+.ink .p{color:var(--on-ink-2)}
+.cap{font-size:13px;line-height:18px;color:var(--ink-3)}
+.ink .cap{color:var(--on-ink-2)}
+.meta{font-size:12px;line-height:16px;color:var(--ink-3)}
+.card{background:var(--white);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-1)}
+
+/* avatar */
+.av{position:relative;display:inline-block;width:var(--s);height:var(--s);flex:none;vertical-align:middle}
+.av>svg{display:block;overflow:visible}
+.av.hero{height:calc(var(--s) * 1.06)}
+.bdg{position:absolute;right:-2px;bottom:-2px;width:var(--b);height:var(--b);border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--ink-2);box-shadow:0 0 0 2px #fff,inset 0 0 0 1px var(--line)}
+.bdg svg{width:70%;height:70%}
+.bdg.attn{background:var(--attn-fill);color:var(--ink);box-shadow:0 0 0 2px #fff}
+.bdg.solid{background:var(--ink);color:#fff;box-shadow:0 0 0 2px #fff}
+.bdg.err{background:var(--danger-fill);color:#fff;box-shadow:0 0 0 2px #fff}
+.bdg.ok{background:var(--ok-fill);color:#fff;box-shadow:0 0 0 2px #fff}
+.blink{transform-box:fill-box;transform-origin:center;animation:blink 6s infinite;animation-delay:var(--bd,0s)}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.breathe .body{transform-box:fill-box;transform-origin:50% 100%;animation:breathe 5.2s ease-in-out infinite;animation-delay:var(--bd,0s)}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.028)}}
+.look{transition:transform .64s var(--spring-gentle)}
+
+/* hero */
+.hero{min-height:900px;padding:24px 0 48px;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:24px;height:48px}
+.topbar .grow{flex:1}
+.lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .36)}
+.lockup svg{display:block}
+.rm{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);height:32px;padding:0 4px}
+.sw{width:34px;height:20px;border-radius:999px;background:var(--p300);position:relative;transition:background .2s ease}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / .2);transition:transform .32s var(--spring-snappy)}
+[aria-checked="true"] .sw{background:var(--ink)}
+[aria-checked="true"] .sw::after{transform:translateX(14px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:72px;align-items:center;margin-top:64px}
+.hero h1{font:600 96px/94px var(--font-display);letter-spacing:-.046em;margin-left:-.04em}
+.hero .lead{font-size:20px;line-height:30px;color:var(--ink-2);max-width:30em;margin-top:28px;letter-spacing:-.012em;text-wrap:pretty}
+.hero .note{margin-top:16px}
+.icon-fig{display:grid;justify-items:center;gap:20px}
+.icon-fig svg{filter:drop-shadow(0 30px 40px hsl(228 30% 12% / .28)) drop-shadow(0 6px 10px hsl(228 30% 12% / .16))}
+.icon-fig figcaption{text-align:center;max-width:30ch}
+.team{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));margin-top:auto;padding-top:40px;align-items:end}
+.team figure{display:grid;justify-items:center;gap:10px}
+.team figcaption{text-align:center;line-height:16px}
+.team b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+.team span{font-size:12px;color:var(--ink-3)}
+.team-cap{display:flex;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+
+/* idea */
+.idea{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:96px}
+.essence{font:600 28px/36px var(--font-display);letter-spacing:-.022em;text-wrap:balance;max-width:22ch}
+.essence-list{margin-top:40px;display:grid;gap:28px}
+.essence-list dt{font-size:13px;color:var(--ink-3);margin-bottom:4px}
+.essence-list dd{font-size:17px;line-height:26px;max-width:40ch}
+.traits{display:grid;gap:0}
+.trait{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px;padding:22px 0;border-top:1px solid var(--line)}
+.trait:last-child{border-bottom:1px solid var(--line)}
+.trait b{font:600 20px/26px var(--font-display);letter-spacing:-.014em}
+.trait b i{font-style:normal;color:var(--ink-3);font-weight:400;display:block;font-size:13px;line-height:18px;letter-spacing:0;margin-top:2px}
+
+/* signature */
+.look-grid{display:grid;grid-template-columns:380px minmax(0,1fr);gap:80px;align-items:start}
+.big-eyes{position:sticky;top:80px;display:grid;gap:24px}
+.big-eyes svg{width:100%;height:auto}
+.jobs{display:grid;gap:56px}
+.job{display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:40px;align-items:start}
+.job .p{margin-top:8px}
+.frag{background:var(--white);color:var(--ink);border-radius:var(--r-lg);corner-shape:var(--corner);padding:20px}
+.row{display:flex;align-items:center;gap:12px}
+.bubble{background:var(--sunken);border-radius:var(--r-lg);corner-shape:var(--corner);padding:10px 14px;max-width:34em}
+.msgmeta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px;font-size:12px;line-height:16px;color:var(--ink-3)}
+.lookin{display:inline-flex;align-items:center;gap:5px;color:var(--cobalt);font-weight:600;border-radius:999px;padding:3px 8px 3px 6px;background:var(--cobalt-tint)}
+.lookin svg{width:14px;height:14px}
+.pop{margin-top:10px;margin-left:44px;background:#fff;border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3);padding:8px;max-width:360px}
+.pop li{list-style:none;display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 8px;border-radius:var(--r-sm);font-size:13px;line-height:18px}
+.pop li:first-child{background:rgb(21 23 29 / .045)}
+.pop li span:last-child{color:var(--ink-3);font-size:12px}
+.pop .ico{width:16px;height:16px;color:var(--ink-3)}
+.tkt{display:flex;align-items:center;gap:12px;background:#fff;border-radius:var(--r-lg);corner-shape:var(--corner);padding:12px 12px 12px 14px;box-shadow:var(--elev-1)}
+.tkt .t{flex:1;min-width:0}
+.tkt .t b{display:block;font-weight:600}
+.tag{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;border-radius:999px;font-size:12px;line-height:16px;font-weight:600;white-space:nowrap;flex:none}
+.tag.attn{background:var(--attn-tint);color:var(--attn-ink)}
+.tag.ok{background:var(--ok-tint);color:var(--ok-ink)}
+.tag.neutral{background:var(--sunken);color:var(--ink-2)}
+.tag.ink{background:var(--ink);color:#fff}
+.tag.danger{background:var(--danger-tint);color:var(--danger-ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap}
+.btn.primary{background:var(--cobalt);color:#fff}
+.btn.secondary{background:#fff;box-shadow:inset 0 0 0 1px rgb(21 23 29 / .16);color:var(--ink)}
+.btn.lg{height:40px;padding:0 20px;font-size:15px}
+.glance .look{animation:glance 4.8s var(--ease-in-out) infinite}
+@keyframes glance{0%,30%,100%{transform:translate(0,0)}40%,85%{transform:translate(4px,1px)}}
+.stage.has-status{padding-bottom:44px}
+.family-strip{display:flex;gap:8px;flex-wrap:wrap;padding:16px 20px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--ink-raised)}
+
+/* logo */
+.logo-stage{display:grid;place-items:center;height:380px;position:relative;overflow:hidden}
+.clear{position:relative;padding:34px;border-radius:var(--r-lg);corner-shape:var(--corner);background:repeating-linear-gradient(135deg,rgb(46 91 255 / .07) 0 8px,rgb(46 91 255 / .03) 8px 16px)}
+.clear-note{position:absolute;left:24px;bottom:20px}
+.logo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+.logo-tile{border-radius:var(--r-md);corner-shape:var(--corner);padding:20px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.logo-tile.on-white{background:#fff;box-shadow:var(--elev-1)}
+.logo-tile.on-ink{background:var(--ink);color:var(--on-ink)}
+.logo-tile.on-ink .cap{color:var(--on-ink-2)}
+.sizes{display:flex;align-items:flex-end;gap:18px}
+.sizes figure{display:grid;justify-items:center;gap:8px}
+.slot{display:inline-block;height:14px;border-radius:999px;background:var(--p300)}
+.rename{display:grid;gap:12px}
+.rules{margin-top:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 48px}
+.rules li{list-style:none;padding-left:22px;position:relative;color:var(--ink-2)}
+.rules li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:50%;background:var(--p500)}
+.rules li.dont::before{background:none;border-radius:0;width:10px;height:2px;top:10px;background:var(--danger-ink)}
+.construct{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;align-items:center;margin-top:16px;padding:32px}
+
+/* icon */
+.icon-grid{display:grid;grid-template-columns:420px minmax(0,1fr);gap:72px;align-items:center}
+.osbar{border-radius:var(--r-lg);corner-shape:var(--corner);padding:14px 18px;display:flex;align-items:center;gap:14px}
+.osbar.dock{background:rgb(255 255 255 / .72);box-shadow:0 0 0 1px rgb(21 23 29 / .08),0 10px 30px rgb(21 23 29 / .12);justify-content:center;width:max-content}
+.osbar.task{background:#e9ebf0;border-radius:var(--r-sm);justify-content:center;gap:8px;padding:6px 12px}
+.ph{width:44px;height:44px;border-radius:12px;background:linear-gradient(#d9dce3,#c9cdd6)}
+.osbar.task .ph{width:28px;height:28px;border-radius:6px}
+.tb-slot{display:grid;justify-items:center;gap:3px;padding:6px;border-radius:6px}
+.tb-slot.on{background:rgb(255 255 255 / .7)}
+.tb-slot i{display:block;width:16px;height:3px;border-radius:2px;background:var(--cobalt)}
+.icon-sizes{display:flex;align-items:flex-end;gap:28px;margin-top:40px}
+.icon-sizes figure{display:grid;justify-items:center;gap:10px}
+
+/* family */
+.shapes{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
+.shapes figure{display:grid;justify-items:center;gap:12px;padding:20px 0 16px;border-radius:var(--r-md);corner-shape:var(--corner)}
+.shapes figcaption{text-align:center;font-size:13px;line-height:18px}
+.shapes figcaption span{display:block;color:var(--ink-3);font-size:12px;line-height:16px}
+.fam-grid{display:grid;grid-template-columns:minmax(0,1fr) 452px;gap:64px;margin-top:64px}
+.exprs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px 12px;margin-top:20px}
+.exprs figure{display:grid;justify-items:start;gap:8px}
+.exprs b{font-weight:600;font-size:13px;display:block;line-height:18px}
+.exprs span{font-size:12px;color:var(--ink-3);line-height:16px;display:block}
+.states{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px 12px;margin-top:20px}
+.states figure{display:flex;align-items:center;gap:12px}
+.matrix{display:grid;grid-template-columns:repeat(10,32px);gap:12px;margin-top:20px}
+.matrix .av{--s:32px}
+.picker{margin-top:56px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
+.pick-ui{padding:24px;display:grid;grid-template-columns:120px minmax(0,1fr);gap:24px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip-shape{width:36px;height:36px;border-radius:var(--r-sm);corner-shape:var(--corner);display:grid;place-items:center;background:var(--sunken)}
+.chip-shape.sel{background:#fff;box-shadow:0 0 0 2px var(--ink)}
+.chip-hue{width:24px;height:24px;border-radius:50%}
+.chip-hue.sel{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
+.chip-hue.used{opacity:.35}
+
+/* colour */
+.ratio{display:flex;height:72px;border-radius:var(--r-md);corner-shape:var(--corner);overflow:hidden;box-shadow:var(--elev-1)}
+.ratio div{display:flex;align-items:flex-end;padding:10px 12px;font-size:12px;line-height:16px}
+.core{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px;margin-top:16px}
+.sw-big{border-radius:var(--r-md);corner-shape:var(--corner);overflow:hidden;box-shadow:var(--elev-1);background:#fff}
+.sw-big .chip{height:120px;display:flex;align-items:flex-end;padding:14px 16px;font:600 20px/26px var(--font-display);letter-spacing:-.014em}
+.sw-big .info{padding:12px 16px 14px;display:grid;gap:2px}
+.fb{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.fb .card{padding:16px;display:grid;gap:10px}
+.hues{margin-top:48px;width:100%;border-collapse:collapse}
+.hues th{font-size:12px;font-weight:400;color:var(--ink-3);text-align:left;padding:0 12px 10px 0}
+.hues th.r,.hues td.r{text-align:right}
+.hues td{padding:10px 12px 10px 0;border-top:1px solid var(--line);vertical-align:middle;font-size:13px}
+.hues .dot{display:inline-block;width:28px;height:28px;border-radius:8px;vertical-align:middle;box-shadow:inset 0 0 0 1px rgb(21 23 29 / .06)}
+.mention{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 3px;border-radius:999px;background:var(--m-tint);color:var(--m-ink);font-weight:600;font-size:13px}
+.aa{font-size:12px;color:var(--ok-ink);font-weight:600}
+.aa.fail{color:var(--danger-ink)}
+.versus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.versus .card{padding:20px;display:flex;align-items:center;gap:16px}
+
+/* type */
+.type-grid{display:grid;grid-template-columns:420px minmax(0,1fr);gap:72px;align-items:start}
+.aa-spec{font:600 220px/1 var(--font-display);letter-spacing:-.06em;margin-left:-.05em}
+.ladder{display:grid}
+.step{display:grid;grid-template-columns:120px minmax(0,1fr);gap:24px;align-items:baseline;padding:16px 0;border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.numerals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:32px}
+.numerals .card{padding:16px 20px}
+
+/* motion */
+.motion-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.mtile{background:#fff;border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:var(--elev-1);overflow:hidden;display:grid;grid-template-rows:200px auto}
+.stage{position:relative;display:grid;place-items:center;background:var(--wash,#f9fafb);overflow:hidden}
+.mtile .txt{padding:16px 20px 20px;display:grid;gap:4px}
+.mtile .txt .meta{margin-top:4px}
+.think-dots{display:inline-flex;gap:4px;margin-right:6px;vertical-align:middle}
+.think-dots i{width:6px;height:6px;border-radius:50%;background:var(--dot);animation:dot 1.2s infinite ease-in-out}
+.think-dots i:nth-child(2){animation-delay:.16s}.think-dots i:nth-child(3){animation-delay:.32s}
+@keyframes dot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+.drift .look{animation:drift 3.2s var(--ease-in-out) infinite}
+@keyframes drift{0%,100%{transform:translate(0,0)}25%{transform:translate(-3px,-3px)}60%{transform:translate(3px,-3px)}}
+.scan .look{animation:scan 1.8s var(--ease-in-out) infinite alternate}
+@keyframes scan{from{transform:translateX(-3.5px)}to{transform:translateX(3.5px)}}
+.statusline{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:13px;color:var(--ink-2)}
+.bar{width:180px;height:4px;border-radius:999px;background:var(--sunken);overflow:hidden;margin:8px auto 0}
+.bar i{display:block;height:100%;width:100%;background:var(--ink);transform-origin:left;animation:fill 6s linear infinite}
+@keyframes fill{from{transform:scaleX(.08)}to{transform:scaleX(1)}}
+.handoff{width:340px;height:150px;position:relative}
+.handoff .from{position:absolute;left:8px;top:64px}
+.handoff .to{position:absolute;right:8px;top:64px}
+.handoff .to .body-bump{animation:bump 3.6s infinite}
+@keyframes bump{0%,74%,100%{transform:scale(1)}80%{transform:scale(1.1,.92)}88%{transform:scale(.97,1.03)}}
+.hchip{position:absolute;left:0;top:0;offset-path:path("M 52 78 C 120 6, 220 6, 288 78");offset-rotate:0deg;display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 3px;border-radius:999px;background:#fff;box-shadow:var(--elev-3);font-size:12px;font-weight:600;white-space:nowrap;animation:travel 3.6s infinite}
+@keyframes travel{0%{offset-distance:0%;opacity:0;scale:.7}10%{offset-distance:0%;opacity:1;scale:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}70%{offset-distance:100%;opacity:1;scale:1}80%{offset-distance:100%;opacity:0;scale:.4}100%{offset-distance:100%;opacity:0;scale:.4}}
+.birth{position:relative;width:110px;height:118px}
+.birth>*{position:absolute;inset:0}
+.birth .ghost{animation:ghost 4.8s infinite}
+.birth .real{animation:real 4.8s infinite;transform-origin:50% 90%}
+@keyframes ghost{0%,18%{opacity:1;scale:.86}34%,100%{opacity:0;scale:1}}
+@keyframes real{0%,18%{opacity:0;scale:.6;animation-timing-function:var(--spring-gentle)}40%,100%{opacity:1;scale:1}}
+.birth .real .blink{animation:birthblink 4.8s infinite}
+@keyframes birthblink{0%,48%{transform:scaleY(.08)}56%,70%,76%,100%{transform:scaleY(1)}73%{transform:scaleY(.08)}}
+.finish{display:grid;grid-template-columns:auto auto;gap:24px;align-items:center}
+.checks{display:grid;gap:8px;font-size:13px}
+.checks div{display:flex;align-items:center;gap:8px;opacity:.25;animation:tick 5s infinite}
+.checks div:nth-child(2){animation-delay:.25s}.checks div:nth-child(3){animation-delay:.5s}
+.checks svg{width:16px;height:16px;color:var(--ok-fill)}
+@keyframes tick{0%,10%{opacity:.25}18%,90%{opacity:1}100%{opacity:.25}}
+.swap{position:relative;width:76px;height:80px}
+.swap>*{position:absolute;inset:0}
+.swap .a{animation:fadeA 5s infinite}
+.swap .b{animation:fadeB 5s infinite}
+@keyframes fadeA{0%,34%{opacity:1}40%,86%{opacity:0}92%,100%{opacity:1}}
+@keyframes fadeB{0%,34%{opacity:0}40%,86%{opacity:1}92%,100%{opacity:0}}
+.springs{margin-top:16px;padding:24px 28px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:center}
+.springs svg{width:100%;height:auto}
+.sp-legend{display:grid;gap:16px}
+.sp-legend div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px}
+.sp-legend i{width:14px;height:3px;border-radius:2px;margin-top:9px}
+
+/* voice */
+.voice-grid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:72px;align-items:start}
+.voice-rules{display:grid;gap:28px}
+.pairs{display:grid;gap:12px}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.say{border-radius:var(--r-md);corner-shape:var(--corner);padding:14px 16px;display:grid;gap:8px;align-content:start}
+.say.do{background:#fff;box-shadow:var(--elev-1)}
+.say.dont{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.say .lbl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.say.do .lbl{color:var(--ok-ink)}
+.say.dont .lbl{color:var(--danger-ink)}
+.say.dont .sample{color:var(--ink-2)}
+.say .lbl svg{width:14px;height:14px}
+.sysline{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-3)}
+
+/* alternatives */
+.alts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.alt{border-radius:var(--r-lg);corner-shape:var(--corner);overflow:hidden;background:#fff;box-shadow:var(--elev-1)}
+.alt .art{height:240px;position:relative;overflow:hidden}
+.alt .txt{padding:20px 24px 24px;display:grid;gap:8px}
+.alt .why{margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
+
+/* decisions */
+.decisions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+.dec{background:var(--ink-raised);border-radius:var(--r-md);corner-shape:var(--corner);padding:18px 20px;display:grid;gap:6px}
+.dec b{font-weight:600}
+.dec .rec{color:var(--cobalt-on-ink);font-size:13px}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:72px;padding-top:24px;border-top:1px solid var(--ink-line)}
+
+/* reduced motion: the same information at rest */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.hchip{offset-distance:50%}.birth .ghost{opacity:0}.checks div{opacity:1}.swap .a{opacity:0}.swap .b{opacity:1}}
+html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition:none!important}
+html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .checks div{opacity:1} html.rm .swap .a{opacity:0} html.rm .swap .b{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ============================== HERO ============================== -->
+<header class="wrap hero">
+  <div class="topbar">
+    <span class="lockup" style="--h:28px" id="topLockup" aria-label="bench (codename)"></span>
+    <span class="grow"></span>
+    <span class="cap">Brand identity and design system · stage 1 · 22 Oct 2026 · for your review</span>
+    <button class="rm" id="rmToggle" role="switch" aria-checked="false"><span class="sw" aria-hidden="true"></span>Reduce motion</button>
+  </div>
+  <div class="hero-grid">
+    <div>
+      <h1>Your team,<br>in plain sight.</h1>
+      <p class="lead">A desktop team of agents you can see through. Every step, token and file stays in view, and when they need you, they look up.</p>
+      <p class="cap note">“bench” is a codename. The name is still yours to choose; every part of this brand survives a rename.</p>
+    </div>
+    <figure class="icon-fig">
+      <span id="heroIcon"></span>
+      <figcaption class="cap">The app icon is a lit window. Your team works inside, and the glass lets you see all of it.</figcaption>
+    </figure>
+  </div>
+  <div class="team" id="team"></div>
+  <div class="team-cap"><span class="cap">The family: nine shapes, ten hues, one pair of eyes. Move your pointer and they look at you.</span><span class="cap">Hero render · flat in lists</span></div>
+</header>
+
+<!-- ============================== IDEA ============================== -->
+<section class="ch white">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">A glass box with a team inside.</h2>
+      <p class="ch-lead">Other agent teams feel like magic and hide the bill. This one feels like a well-lit studio: you see who is working, on what, and what it costs, and nothing leaves without you.</p>
+    </div>
+    <div class="idea">
+      <div>
+        <p class="essence">Essence: in plain sight.</p>
+        <dl class="essence-list">
+          <div><dt>What it is</dt><dd>Your own company of agents on your desktop, with every step, prompt, token and file open to you.</dd></div>
+          <div><dt>How it should feel</dt><dd>Calm control. Like looking into a workshop through clean glass: busy, warm, nothing hidden.</dd></div>
+          <div><dt>What it promises</dt><dd>You see it before it happens, you can take it back, and the team gets better at working for you.</dd></div>
+        </dl>
+      </div>
+      <div class="traits" aria-label="Personality">
+        <div class="trait"><b>Candid<i>not clinical</i></b><p class="p">Says what it did, what it costs and what it couldn’t do, in plain words. Numbers over adjectives.</p></div>
+        <div class="trait"><b>Calm<i>not sleepy</i></b><p class="p">Quiet chrome, alive characters. Nothing flashes, nothing pings without a reason, and the team still feels present.</p></div>
+        <div class="trait"><b>Warm<i>not cute</i></b><p class="p">Characters with eyes, never mascots with jokes. No exclamation marks, no emoji in the interface.</p></div>
+        <div class="trait"><b>Precise<i>not technical</i></b><p class="p">Exact times, counts and percentages. Jargon stays in the trace, one click away.</p></div>
+        <div class="trait"><b>Deferential<i>not passive</i></b><p class="p">You are the founder. The team proposes, drafts and asks; it never acts outward on its own.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SIGNATURE ============================== -->
+<section class="ch ink">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">The signature is the Look.</h2>
+      <p class="ch-lead">Two slanted strokes. They are every agent’s face, the mark, the way you open the glass box, and the way the team asks for you. One shape, four jobs, used nowhere else.</p>
+    </div>
+    <div class="look-grid">
+      <div class="big-eyes">
+        <svg viewBox="0 0 380 300" aria-hidden="true"><g transform="translate(118 150)"><g class="blink" style="--bd:1.2s" fill="#eceef3"><rect x="-34" y="-92" width="68" height="184" rx="34" transform="rotate(-12)"/><rect x="110" y="-92" width="68" height="184" rx="34" transform="rotate(-12 144 0)"/></g></g></svg>
+        <p class="cap">The stroke is a pill rotated 12°, about 2.6 times as tall as it is wide. In the wordmark, the letters are drawn with the same stroke.</p>
+      </div>
+      <div class="jobs">
+        <div class="job">
+          <div><h3 class="h3">A face for every agent</h3><p class="p">Hue and shape change; the eyes never do. That family resemblance is what makes ninety agents feel like one team.</p></div>
+          <div class="family-strip" id="faceStrip"></div>
+        </div>
+        <div class="job">
+          <div><h3 class="h3">Look inside, anywhere</h3><p class="p">The glass box has one handle. The eyes glyph opens the trace of any message, cost, file or memory note: same glyph, same place, everywhere.</p></div>
+          <div class="frag">
+            <div class="row" style="align-items:flex-start"><span id="noorChat"></span><div><div class="bubble">stop now sits in the composer and replaces send while i’m running. it’s in the diff on the right.</div>
+              <div class="msgmeta num"><span>09:04</span><span>·</span><span>1.8k tokens</span><span>·</span><span>0.06 % of your week</span><span class="lookin"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 6.1)" fill="currentColor"/><rect x="8.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 6.1)" fill="currentColor"/></svg>Look inside</span></div></div></div>
+            <ul class="pop num">
+              <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2.5h5l3 3v8H4z"/><path d="M9 2.5v3h3"/></svg><span>Read Composer.tsx</span><span>0.4k</span></li>
+              <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13l1-3 7-7 2 2-7 7z"/></svg><span>Edited 3 files · +9 −3</span><span>0.9k</span></li>
+              <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4l3 3-3 3M8 11h5"/></svg><span>Ran npm test · 214 passed</span><span>0.3k</span></li>
+              <li><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z"/><path d="M6 7h4M6 10h2"/></svg><span>Wrote a lesson to memory</span><span>0.2k</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="job">
+          <div><h3 class="h3">Attention, not alarms</h3><p class="p">When an agent needs you, its eyes go to the thing to decide. No red dot, no ping: the amber tag and the words carry the meaning, the eyes carry the feeling.</p></div>
+          <div class="frag" style="background:var(--porcelain)">
+            <div class="tkt"><span id="noorGlance" class="glance"></span><div class="t"><b>Noor asks to run npm test</b><span class="row" style="gap:6px;margin-top:2px"><span class="tag attn">Needs you</span><span class="cap num">≈ 0.9 % of your week</span></span></div><span class="btn primary">Allow once</span></div>
+          </div>
+        </div>
+        <div class="job">
+          <div><h3 class="h3">The mark</h3><p class="p">The same eyes on an Ink squircle. It stands for the team as a whole, so it never takes an agent’s hue.</p></div>
+          <div class="row" style="gap:20px"><span id="markInk"></span><span id="markWhite"></span><span class="cap" style="max-width:30ch;color:var(--on-ink-2)">Ink on light grounds, white on Ink. Never on Cobalt, never on a hue.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== LOGO ============================== -->
+<section class="ch">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">A wordmark that takes any name.</h2>
+      <p class="ch-lead">The mark carries the identity, so the name can change. The letters are drawn with the eye stroke: lowercase, monoline, round ends, bowls from one circle. Any short name can be drawn to the same rules.</p>
+    </div>
+    <div class="card logo-stage">
+      <div class="clear" id="bigLockupWrap"><span class="lockup" style="--h:112px" id="bigLockup"></span></div>
+      <span class="cap clear-note">Tinted area: clear space, one eye height on every side. Nothing enters it.</span>
+    </div>
+    <div class="logo-grid">
+      <div class="logo-tile on-white"><span class="lockup" style="--h:36px" id="lk1"></span><p class="cap">On Porcelain and white. Ink only.</p></div>
+      <div class="logo-tile on-ink"><span class="lockup" style="--h:36px" id="lk2"></span><p class="cap">On Ink: the mark inverts, white squircle, Ink eyes.</p></div>
+      <div class="logo-tile on-white"><div class="sizes" id="markSizes"></div><p class="cap">Smallest: 16 px. Below 24 px the mark stands alone, without the name.</p></div>
+      <div class="logo-tile on-white"><div class="rename" id="renameSlots"></div><p class="cap">Rename grammar: mark, gap of 0.36 × height, name of 3 to 8 lowercase letters.</p></div>
+    </div>
+    <div class="card construct">
+      <div id="construct"></div>
+      <div>
+        <h3 class="h3">Construction</h3>
+        <ul class="rules" style="grid-template-columns:1fr;margin-top:12px">
+          <li>x-height 50, ascender 80, stroke 10 (the eye stroke at this size)</li>
+          <li>Every bowl is one circle (r 20); every arch is a half circle</li>
+          <li>Round ends and joins; no contrast, no italics, no capitals</li>
+          <li>Spacing optical: round to round 8, straight to round 10</li>
+          <li class="dont">No mouth, no third eye, no gradient on the wordmark</li>
+          <li class="dont">Never outline, stretch or recolour the mark in a hue</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== APP ICON ============================== -->
+<section class="ch white">
+  <div class="wrap">
+    <div class="icon-grid">
+      <figure class="icon-fig"><span id="iconBig"></span></figure>
+      <div>
+        <h2 class="ch-title">A lit window at night.</h2>
+        <p class="ch-lead" style="margin-top:16px">Dark glass, the eyes, and the team’s colours glowing low inside like a room still at work. It reads as one object in a dock full of flat tiles, and it is the only place the brand uses a full spectrum.</p>
+        <div style="margin-top:40px;display:grid;gap:20px">
+          <div class="osbar dock" aria-label="macOS dock (generic)"><span class="ph"></span><span class="ph"></span><span id="iconDock"></span><span class="ph"></span><span class="ph"></span></div>
+          <div class="osbar task" aria-label="Windows taskbar (generic)"><span class="tb-slot"><span class="ph"></span><b style="height:3px"></b></span><span class="tb-slot on"><span id="iconTask"></span><i></i></span><span class="tb-slot"><span class="ph"></span></span><span class="tb-slot"><span class="ph"></span></span></div>
+        </div>
+        <div class="icon-sizes" id="iconSizes"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FAMILY ============================== -->
+<section class="ch">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">Nine shapes, ten hues, one pair of eyes.</h2>
+      <p class="ch-lead">Non-human on purpose: the agents are characters, not people pretending. Eyes only, never a mouth. Flat in lists and chat lines; a soft dimensional render at the top of a conversation and on the profile.</p>
+    </div>
+    <div class="shapes" id="shapes"></div>
+    <div class="fam-grid">
+      <div>
+        <h3 class="h3">Expressions follow the work</h3>
+        <p class="p" style="margin-top:6px">The status is always a word and a badge. The eyes add the feeling, so you read the team at a glance.</p>
+        <div class="exprs" id="exprs"></div>
+        <h3 class="h3" style="margin-top:48px">Status, on the avatar and in words</h3>
+        <div class="states" id="states"></div>
+      </div>
+      <div>
+        <h3 class="h3">Identity is hue × shape</h3>
+        <p class="p" style="margin-top:6px">Ninety combinations. Inside one project a pair is never used twice, so two agents never look alike.</p>
+        <div class="matrix" id="matrix" aria-label="All 90 hue and shape combinations"></div>
+      </div>
+    </div>
+    <div class="picker">
+      <div>
+        <h3 class="h3">How you get one</h3>
+        <p class="p" style="margin-top:6px">When you create an agent, Atlas proposes a shape and a free hue from the job. You can keep it or pick: hues already used in the project are dimmed, and the preview blinks when you choose. That blink is the agent’s first moment.</p>
+      </div>
+      <div class="card pick-ui" id="pickUi"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== COLOUR ============================== -->
+<section class="ch white">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">Ink, Porcelain, Cobalt. Then the team.</h2>
+      <p class="ch-lead">The chrome is three colours that share one faint blue undertone, so it reads as a single material. Colour that means something lives on top: one Cobalt action per screen, amber for what needs you, and each agent’s hue on its own things.</p>
+    </div>
+    <div class="ratio" aria-label="Colour proportion 60 30 10">
+      <div style="flex:60;background:#f3f4f7;color:var(--ink-2)">Porcelain ground · 60 %</div>
+      <div style="flex:30;background:#fff;color:var(--ink-2);box-shadow:inset 1px 0 0 var(--line)">White surfaces and Ink text · 30 %</div>
+      <div style="flex:7;background:#15171d;color:#eceef3">Ink</div>
+      <div style="flex:2;background:#2e5bff"></div>
+      <div style="flex:1;display:flex;align-items:stretch;padding:0"><i style="flex:1;background:#ff5f73"></i><i style="flex:1;background:#f2ab1d"></i><i style="flex:1;background:#3cc47c"></i><i style="flex:1;background:#2db4dc"></i><i style="flex:1;background:#e05cb4"></i></div>
+    </div>
+    <p class="cap" style="margin-top:8px">The last 10 %: Ink for emphasis, Cobalt for the one action, agent hues on avatars, name tags and their own conversation.</p>
+    <div class="core" id="core"></div>
+    <div class="fb" id="fb"></div>
+    <table class="hues" id="hueTable">
+      <thead><tr><th>Hue</th><th>Base</th><th>Ink</th><th>Tint</th><th>Wash</th><th>In use</th><th class="r">Ink on white</th><th class="r">Ink on tint</th><th class="r">Ink text on tint</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="cap" style="margin-top:12px">Ratios are computed live on this page from the token values. AA needs 4.5:1 for text. Pear replaces Periwinkle (proposal): a blue-violet agent ink read like a link next to Cobalt.</p>
+    <div class="versus">
+      <div class="card"><span class="btn primary lg">Allow once</span><div><b>Cobalt #2e5bff</b> <span class="tag neutral">Proposed</span><p class="cap">Deeper and inkier than stock Apple Blue; shares the undertone of Ink and Porcelain. White on it 5.17:1.</p></div></div>
+      <div class="card"><span class="btn lg" style="background:#0071e3;color:#fff">Allow once</span><div><b>Apple Blue #0071e3</b> <span class="tag neutral">v0.2</span><p class="cap">Familiar, and that is the problem: it makes the app read as a borrowed system. White on it 4.70:1.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== TYPE ============================== -->
+<section class="ch">
+  <div class="wrap type-grid">
+    <div>
+      <div class="aa-spec" aria-hidden="true">Aa</div>
+      <h2 class="ch-title" style="margin-top:8px">The platform’s own voice.</h2>
+      <p class="ch-lead" style="margin-top:16px">SF Pro on macOS, Segoe UI Variable on Windows, Inter on Linux. Native type makes it feel like it belongs on your machine; identity comes from the drawn wordmark, the eyes and the colour.</p>
+      <p class="cap" style="margin-top:16px">Two weights: 400 and 600. Tabular figures on every number that changes. Code and commands only in the monospace.</p>
+    </div>
+    <div>
+      <div class="ladder" id="ladder"></div>
+      <div class="numerals">
+        <div class="card"><span class="meta">Tabular figures</span><p class="num" style="font-size:20px;line-height:28px;margin-top:6px">28.4k tokens<br>0.9 % of your week<br>11.1k tokens</p></div>
+        <div class="card"><span class="meta">Monospace, commands only</span><p style="font:13px/20px var(--font-mono);margin-top:6px">$ npm test<br>214 passed · 3 m 02 s</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== MOTION ============================== -->
+<section class="ch white">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">Calm and alive.</h2>
+      <p class="ch-lead">The chrome settles like an object with weight and never bounces. Only the characters move on their own, and every movement says something: who has the work, what just landed, who needs you. With reduced motion, the same information arrives at rest.</p>
+    </div>
+    <div class="motion-grid">
+      <div class="mtile"><div class="stage" id="mIdle" style="--wash:#f6fcf8"></div><div class="txt"><b>Idle: breathe and blink</b><span class="cap">A 5 s breath and a blink every 6 s. The only loop in the product, and only on the hero avatar.</span></div></div>
+      <div class="mtile"><div class="stage has-status" style="--wash:#f5fcfb"><div id="mThink" class="drift"></div><div class="statusline"><span class="think-dots" style="--dot:#00756a"><i></i><i></i><i></i></span>Thinking</div></div><div class="txt"><b>Thinking: the eyes drift</b><span class="cap">Dots in the agent’s ink, always with the word.</span></div></div>
+      <div class="mtile"><div class="stage has-status" style="--wash:#fff8f9"><div id="mWork" class="scan"></div><div class="statusline num">Running tests · 128 of 214<div class="bar"><i></i></div></div></div><div class="txt"><b>Working: the eyes scan</b><span class="cap">Live progress under the name, never a spinner.</span></div></div>
+      <div class="mtile"><div class="stage"><div class="handoff" id="mHand"></div></div><div class="txt"><b>Handoff: the brief travels</b><span class="cap">Maya’s chip flies to Noor on a travel curve and lands with a gentle spring. You see who has the work now.</span></div></div>
+      <div class="mtile"><div class="stage" style="--wash:#fffcf4"><div class="birth" id="mBirth"></div></div><div class="txt"><b>Birth: first blink</b><span class="cap">At Create, the shape takes its hue and the eyes open. Once per agent, ever.</span></div></div>
+      <div class="mtile"><div class="stage" style="--wash:#fff8f9"><div class="finish"><div class="swap" id="mFinish"></div><div class="checks"><div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg><b>unit</b>&nbsp;→ 214 passed</div><div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg><b>e2e</b>&nbsp;→ 12 passed</div><div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg><b>lint</b>&nbsp;→ clean</div></div></div></div><div class="txt"><b>Green finish</b><span class="cap">Checks land in order, then the eyes relax into a smile. The end of a task feels like an end.</span></div></div>
+    </div>
+    <div class="card springs">
+      <svg viewBox="0 0 640 220" id="springChart" aria-label="Spring curves"></svg>
+      <div class="sp-legend">
+        <div><i style="background:#15171d"></i><span><b>smooth</b> · 420 ms · panes, tickets, sheets<br><span class="cap">critically damped, no overshoot</span></span></div>
+        <div><i style="background:#2e5bff"></i><span><b>snappy</b> · 320 ms · switches, chips<br><span class="cap">1.5 % settle: felt, not seen</span></span></div>
+        <div><i style="background:#ff5f73"></i><span><b>gentle</b> · 640 ms · characters only<br><span class="cap">a real overshoot, never on chrome</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== VOICE ============================== -->
+<section class="ch">
+  <div class="wrap voice-grid">
+    <div>
+      <h2 class="ch-title">You, from the main agent.</h2>
+      <div class="voice-rules" style="margin-top:32px">
+        <div><h3 class="h3">The app speaks to you</h3><p class="p" style="margin-top:6px">As the main agent would: “What needs you”, “You’re all caught up”. Never “me” or “my” for you.</p></div>
+        <div><h3 class="h3">Agents write in lowercase</h3><p class="p" style="margin-top:6px">Short, concrete, first person: “on it.”, “done.” The interface stays in sentence case.</p></div>
+        <div><h3 class="h3">Numbers, then words</h3><p class="p" style="margin-top:6px">The exact time, count and cost first; reassurance second; one next step last.</p></div>
+      </div>
+    </div>
+    <div class="pairs" id="pairs"></div>
+  </div>
+</section>
+
+<!-- ============================== ALTERNATIVES ============================== -->
+<section class="ch white">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">Two other directions we weighed.</h2>
+      <p class="ch-lead">Both are coherent. Neither does both halves of the job, the glass box and the team, as well as the Look.</p>
+    </div>
+    <div class="alts">
+      <article class="alt">
+        <div class="art" style="background:#fff">
+          <svg viewBox="0 0 588 240" width="100%" height="240" aria-hidden="true">
+            <rect width="588" height="240" fill="#fbfbfc"/>
+            <path d="M24 150 C 120 150, 140 90, 210 90 S 300 150, 360 150 S 450 70, 564 70" fill="none" stroke="#15171d" stroke-width="2"/>
+            <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="12" fill="#646976">
+              <circle cx="96" cy="136" r="7" fill="#ff5f73"/><text x="80" y="172">read</text>
+              <circle cx="210" cy="90" r="7" fill="#f2ab1d"/><text x="194" y="74">edit</text>
+              <circle cx="300" cy="140" r="7" fill="#3cc47c"/><text x="288" y="172">test</text>
+              <circle cx="420" cy="104" r="7" fill="#2db4dc"/><text x="396" y="88">handoff</text>
+              <circle cx="540" cy="71" r="7" fill="#2e5bff"/><text x="528" y="54">done</text>
+            </g>
+            <text x="24" y="44" font-family="Segoe UI Variable Display, Segoe UI, sans-serif" font-weight="600" font-size="26" fill="#15171d" letter-spacing="-0.6">Follow the thread.</text>
+          </svg>
+        </div>
+        <div class="txt">
+          <h3 class="h3">B · The Thread</h3>
+          <p class="p">An instrument. The signature is one live line that runs through every step, changes hue at each handoff and opens the trace anywhere you touch it. Ink on white, numbers forward, almost no illustration.</p>
+          <p class="cap why">Why not first: precise but cold. It serves the glass box and loses the team; the characters you asked for become dots on a line, and thin lines everywhere drift into ornament.</p>
+        </div>
+      </article>
+      <article class="alt">
+        <div class="art" id="altDaylight" style="background:#e3f6fb"></div>
+        <div class="txt">
+          <h3 class="h3">C · Daylight Studio</h3>
+          <p class="p">Warm and plush. Big dimensional characters everywhere, each screen washed in the colour of whoever you’re with, rounder type, a playful greeting on every first open.</p>
+          <p class="cap why">Why not first: lovely in a demo, tiring at hour six. Cute wins over premium, and serious moments (a cost, a denied approval, a delete) lose their weight next to plush faces.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== DECISIONS ============================== -->
+<section class="ch ink">
+  <div class="wrap">
+    <div class="ch-head">
+      <h2 class="ch-title">What you decide.</h2>
+      <p class="ch-lead">Each one is a proposal on top of the base you already approved. The recommended option is what this board shows.</p>
+    </div>
+    <div class="decisions">
+      <div class="dec"><b>Direction</b><span class="cap">A · In plain sight (the Look), B · The Thread, or C · Daylight Studio</span><span class="rec">Recommended: A</span></div>
+      <div class="dec"><b>P-1 · Signature neutral</b><span class="cap">Porcelain and Ink (faint blue undertone) instead of Apple Frost and Carbon</span><span class="rec">Recommended: Porcelain and Ink</span></div>
+      <div class="dec"><b>P-2 · Action colour</b><span class="cap">Cobalt #2e5bff instead of Apple Blue #0071e3; still one blue per screen</span><span class="rec">Recommended: Cobalt</span></div>
+      <div class="dec"><b>P-3 · Typeface</b><span class="cap">The platform’s own face (SF Pro, Segoe UI Variable), or bundle one face everywhere (Inter)</span><span class="rec">Recommended: the platform’s own face</span></div>
+      <div class="dec"><b>P-4 · Pear replaces Periwinkle</b><span class="cap">Keeps blue for actions only; Karim moves to Pear</span><span class="rec">Recommended: yes</span></div>
+      <div class="dec"><b>P-5 · Continuous corners</b><span class="cap">Squircle corners everywhere the engine draws them; bubbles still read as 18 px</span><span class="rec">Recommended: yes</span></div>
+      <div class="dec"><b>P-6 · “Look inside”</b><span class="cap">The eyes glyph replaces the word “Trace” on every message, cost and file</span><span class="rec">Recommended: yes</span></div>
+      <div class="dec"><b>P-7 · Sound</b><span class="cap">Silent by default; three optional soft sounds (needs you, done, handoff)</span><span class="rec">Recommended: silent by default</span></div>
+    </div>
+    <div class="foot"><span class="lockup" style="--h:24px" id="footLockup"></span><span class="cap">Stage 1 of 2. Next: the hi-fi prototype rebuilt on this system, with the UX spec.</span></div>
+  </div>
+</section>
+
+<script>
+/* ---------- data ---------- */
+const HUE = {
+  coral:{n:"Coral",base:"#ff5f73",light:"#ffb8c1",deep:"#e0364f",ink:"#c4283f",tint:"#ffe6e9",wash:"#fff8f9"},
+  tangerine:{n:"Tangerine",base:"#ff8a3d",light:"#ffc9a3",deep:"#e0601a",ink:"#b04a00",tint:"#ffeee2",wash:"#fffaf6"},
+  honey:{n:"Honey",base:"#f2ab1d",light:"#ffe2a0",deep:"#cf8600",ink:"#8a5a00",tint:"#fff4dc",wash:"#fffcf4"},
+  pear:{n:"Pear",base:"#96bf2c",light:"#d6ec9a",deep:"#6c9410",ink:"#4d6a00",tint:"#f0f7dc",wash:"#fbfdf4"},
+  mint:{n:"Mint",base:"#3cc47c",light:"#aeedc9",deep:"#1f9658",ink:"#1d7a43",tint:"#e5f7ec",wash:"#f6fcf8"},
+  teal:{n:"Teal",base:"#1fb5a3",light:"#9ee8dc",deep:"#0c8a7c",ink:"#00756a",tint:"#e1f6f2",wash:"#f5fcfb"},
+  aqua:{n:"Aqua",base:"#2db4dc",light:"#a6e6f7",deep:"#0e86b0",ink:"#006b85",tint:"#e3f6fb",wash:"#f6fcfe"},
+  lavender:{n:"Lavender",base:"#8e6cf0",light:"#cbbcff",deep:"#5f3fd0",ink:"#5a3dc8",tint:"#efeaff",wash:"#faf8ff"},
+  orchid:{n:"Orchid",base:"#e05cb4",light:"#f6b6e1",deep:"#b8358d",ink:"#b0287f",tint:"#fbe7f4",wash:"#fef8fc"},
+  cocoa:{n:"Cocoa",base:"#a66e4e",light:"#dcb59d",deep:"#7d4c31",ink:"#7a4a2e",tint:"#f5ebe4",wash:"#fcf8f5"},
+  none:{n:"Unassigned",base:"#b4b7bf",light:"#dfe1e6",deep:"#8b8f99",ink:"#474b57",tint:"#eceef2",wash:"#f9fafb"}
+};
+const HUE_ORDER = ["coral","tangerine","honey","pear","mint","teal","aqua","lavender","orchid","cocoa"];
+const SHAPES = {
+  sphere:  {n:"Sphere",d:'<circle cx="50" cy="52" r="40"/>', eye:[50,50,13], hl:[34,30], bottom:92},
+  droplet: {n:"Droplet",d:'<path d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/>', eye:[50,66,12], hl:[38,50], bottom:95},
+  cloud:   {n:"Cloud",d:'<path d="M26 84 C12 84 6 72 10 62 C4 54 8 40 22 40 C22 26 36 18 48 24 C56 12 76 14 80 30 C92 32 98 46 92 56 C98 66 92 84 76 84 Z"/>', eye:[52,60,13], hl:[34,38], bottom:84},
+  hexagon: {n:"Hexagon",d:'<polygon points="50,12 84,31 84,71 50,90 16,71 16,31"/>', round:10, eye:[50,52,13], hl:[34,32], bottom:95},
+  blob:    {n:"Blob",d:'<path d="M54 10 C76 12 92 30 88 52 C85 70 92 84 72 90 C54 95 34 92 20 80 C8 68 8 48 16 34 C24 18 36 9 54 10 Z"/>', eye:[50,50,13], hl:[34,28], bottom:93},
+  egg:     {n:"Egg",d:'<path d="M50 8 C71 8 86 38 86 60 C86 80 70 94 50 94 C30 94 14 80 14 60 C14 38 29 8 50 8 Z"/>', eye:[50,60,12], hl:[36,32], bottom:94},
+  pill:    {n:"Pill",d:'<rect x="6" y="27" width="88" height="48" rx="24"/>', eye:[60,51,11], hl:[26,38], bottom:75},
+  triangle:{n:"Triangle",d:'<polygon points="50,16 88,82 12,82"/>', round:14, eye:[50,64,10], hl:[42,44], bottom:89},
+  square:  {n:"Rounded square",d:'<rect x="12" y="13" width="76" height="76" rx="22"/>', eye:[50,50,13], hl:[30,30], bottom:89}
+};
+const SHAPE_ORDER = ["sphere","droplet","cloud","hexagon","blob","egg","pill","triangle","square"];
+const CAST = [
+  {id:"atlas",name:"Atlas",role:"Main agent",shape:"sphere",hue:"lavender"},
+  {id:"iris",name:"Iris",role:"Assistant",shape:"droplet",hue:"aqua"},
+  {id:"maya",name:"Maya",role:"PM",shape:"cloud",hue:"mint"},
+  {id:"omar",name:"Omar",role:"Analyst",shape:"hexagon",hue:"teal"},
+  {id:"sam",name:"Sam",role:"Designer",shape:"blob",hue:"tangerine"},
+  {id:"lina",name:"Lina",role:"Analyst",shape:"egg",hue:"cocoa"},
+  {id:"noor",name:"Noor",role:"Developer",shape:"pill",hue:"coral"},
+  {id:"jade",name:"Jade",role:"QA",shape:"triangle",hue:"orchid"},
+  {id:"karim",name:"Karim",role:"Tech lead",shape:"square",hue:"pear"},
+  {id:"lumen",name:"Lumen",role:"Release notes",shape:"droplet",hue:"honey"}
+];
+const A = Object.fromEntries(CAST.map(c=>[c.id,c]));
+const ST = {
+  idle:{l:"Idle",c:"",e:"calm"}, thinking:{l:"Thinking",c:"",e:"curious"}, working:{l:"Working",c:"",e:"focused"},
+  waiting:{l:"Needs you",c:"attn",e:"calm"}, blocked:{l:"Blocked",c:"solid",e:"concerned"}, paused:{l:"Paused",c:"",e:"sleepy"},
+  error:{l:"Error",c:"err",e:"concerned"}, done:{l:"Done",c:"ok",e:"pleased"}
+};
+
+/* ---------- renderers ---------- */
+let UID = 0;
+function eyesFor(expr, gap){
+  const L=-gap, R=gap;
+  switch(expr){
+    case "focused": return [L,R].map(x=>`<rect x="${x-4.5}" y="-3.5" width="9" height="7" rx="3.5"/>`).join("");
+    case "sleepy": return [L,R].map(x=>`<path d="M${x-5} -1 Q${x} 4 ${x+5} -1" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>`).join("");
+    case "pleased": return [L,R].map(x=>`<path d="M${x-5} 2.5 Q${x} -4.5 ${x+5} 2.5" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>`).join("");
+    case "surprised": return [L,R].map(x=>`<circle cx="${x}" cy="0" r="6"/>`).join("");
+    case "concerned": return `<rect x="${L-3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(16 ${L} 0)"/><rect x="${R-3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(-16 ${R} 0)"/>`;
+    case "curious": return `<rect x="${L-3.6}" y="-9" width="7.2" height="18" rx="3.6" transform="rotate(-12 ${L} 0)"/><rect x="${R-3.2}" y="-5.5" width="6.4" height="11" rx="3.2" transform="rotate(-12 ${R} 0)"/>`;
+    default: return [L,R].map(x=>`<rect x="${x-3.5}" y="-8" width="7" height="16" rx="3.5" transform="rotate(-12 ${x} 0)"/>`).join("");
+  }
+}
+function avatarSVG(a, o={}){
+  const P=HUE[a.hue], S=SHAPES[a.shape], id="g"+(++UID);
+  const [ex,ey,gap]=S.eye;
+  const paint=o.hero?`url(#${id}f)`:P.base;
+  const stroke=S.round?` stroke="${paint}" stroke-width="${S.round}" stroke-linejoin="round"`:"";
+  const body=`<g fill="${paint}"${stroke}>${S.d}</g>`;
+  const eyes=`<g transform="translate(${ex} ${ey})"><g class="look"><g class="blink" fill="#fff">${eyesFor(o.expr||"calm",gap)}</g></g></g>`;
+  if(!o.hero) return `<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
+  const [hx,hy]=S.hl, gy=Math.min(S.bottom+5,101);
+  return `<svg viewBox="0 0 100 106" width="100%" height="100%" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="${id}f" cx="40%" cy="30%" r="80%" fx="32%" fy="20%"><stop offset="0" stop-color="${P.light}"/><stop offset=".5" stop-color="${P.base}"/><stop offset="1" stop-color="${P.deep}"/></radialGradient>
+      <clipPath id="${id}c">${S.d}</clipPath>
+      <filter id="${id}b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+      <filter id="${id}s" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="1.8"/></filter>
+    </defs>
+    <ellipse cx="50" cy="${gy}" rx="26" ry="3" fill="#15171d" opacity=".16" filter="url(#${id}s)"/>
+    <g class="body">${body}
+      <g clip-path="url(#${id}c)">
+        <ellipse cx="70" cy="90" rx="34" ry="18" fill="${P.deep}" opacity=".3" filter="url(#${id}b)"/>
+        <ellipse cx="${hx}" cy="${hy}" rx="15" ry="8" transform="rotate(-30 ${hx} ${hy})" fill="#fff" opacity=".5" filter="url(#${id}b)"/>
+        <ellipse cx="${hx-3}" cy="${hy-2}" rx="4.5" ry="2.4" transform="rotate(-30 ${hx-3} ${hy-2})" fill="#fff" opacity=".85"/>
+      </g>${eyes}
+    </g></svg>`;
+}
+function glyph(st){
+  const g = {
+    idle:'<circle cx="6" cy="6" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+    thinking:'<circle cx="2.8" cy="6" r="1.2" fill="currentColor"/><circle cx="6" cy="6" r="1.2" fill="currentColor"/><circle cx="9.2" cy="6" r="1.2" fill="currentColor"/>',
+    working:'<path d="M6 2.5a3.5 3.5 0 1 1-3.4 2.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+    waiting:'<path d="M6 2.6v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="6" cy="9.1" r="1.1" fill="currentColor"/>',
+    blocked:'<path d="M3 6h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+    paused:'<path d="M4.4 3.4v5.2M7.6 3.4v5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+    error:'<path d="M4 4l4 4M8 4l-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+    done:'<path d="M3.4 6.2l1.8 1.8 3.4-3.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>'
+  }[st];
+  return `<svg viewBox="0 0 12 12" aria-hidden="true">${g}</svg>`;
+}
+function avatar(a, size, o={}){
+  const st=o.status, b=size>=64?20:size>=40?16:size>=32?14:12;
+  const label=a.name+(st?` · ${ST[st].l}`:"");
+  const expr=o.expr||(st?ST[st].e:"calm");
+  return `<span class="av${o.hero?" hero":""}${o.cls?" "+o.cls:""}" role="img" aria-label="${label}" title="${label}" style="--s:${size}px;--b:${b}px${o.bd?";--bd:"+o.bd:""}">${avatarSVG(a,{hero:o.hero,expr})}${st&&size>=24&&!o.hero?`<span class="bdg ${ST[st].c}">${glyph(st)}</span>`:""}</span>`;
+}
+const SQ = "M50 0 C77 0 89 0 94.5 5.5 C100 11 100 23 100 50 C100 77 100 89 94.5 94.5 C89 100 77 100 50 100 C23 100 11 100 5.5 94.5 C0 89 0 77 0 50 C0 23 0 11 5.5 5.5 C11 0 23 0 50 0Z";
+function markSVG(size, fill="#15171d", eye="#fff"){
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true"><path d="${SQ}" fill="${fill}"/><g fill="${eye}"><rect x="34" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 40.25 49)"/><rect x="55" y="34" width="12.5" height="30" rx="6.25" transform="rotate(-12 61.25 49)"/></g></svg>`;
+}
+/* "bench" drawn with the eye stroke: x-height 50, ascender 80, stroke 10, bowls r 20, arches r 16 */
+const WM_PATHS = `<path d="M6 6V74"/><circle cx="26" cy="54" r="20"/>
+    <path d="M64 54H104A20 20 0 1 0 98.14 68.14"/>
+    <path d="M124 74V48A16 16 0 0 1 156 48V74"/>
+    <path d="M210.14 39.86A20 20 0 1 0 210.14 68.14"/>
+    <path d="M230 6V74M230 48A16 16 0 0 1 262 48V74"/>`;
+const WM_ATTR = (c)=>`fill="none" stroke="${c}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"`;
+function wordmarkSVG(h, color="#15171d"){
+  return `<svg viewBox="0 0 268 80" width="${h*268/80}" height="${h}" ${WM_ATTR(color)} aria-hidden="true">${WM_PATHS}</svg>`;
+}
+function lockup(el, inverse=false){
+  const h=parseFloat(getComputedStyle(el).getPropertyValue("--h"));
+  el.innerHTML = (inverse?markSVG(h,"#fff","#15171d"):markSVG(h)) + wordmarkSVG(h*0.8, inverse?"#eceef3":"#15171d");
+  el.style.alignItems="flex-end";
+}
+function iconSVG(size){
+  const id="i"+(++UID);
+  return `<svg viewBox="0 0 512 512" width="${size}" height="${size}" aria-hidden="true">
+    <defs>
+      <linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2f3a"/><stop offset=".55" stop-color="#17191f"/><stop offset="1" stop-color="#0c0d11"/></linearGradient>
+      <clipPath id="${id}c"><path d="${SQ}" transform="scale(5.12)"/></clipPath>
+      <filter id="${id}b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="34"/></filter>
+      <linearGradient id="${id}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".25" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    </defs>
+    <g clip-path="url(#${id}c)">
+      <rect width="512" height="512" fill="url(#${id}g)"/>
+      <g filter="url(#${id}b)" opacity=".95">
+        <ellipse cx="70" cy="500" rx="110" ry="80" fill="#ff5f73"/>
+        <ellipse cx="190" cy="520" rx="100" ry="80" fill="#f2ab1d"/>
+        <ellipse cx="300" cy="510" rx="100" ry="80" fill="#3cc47c"/>
+        <ellipse cx="410" cy="515" rx="100" ry="80" fill="#2db4dc"/>
+        <ellipse cx="500" cy="490" rx="90" ry="80" fill="#e05cb4"/>
+      </g>
+      <rect width="512" height="512" fill="url(#${id}e)"/>
+      <path d="${SQ}" transform="translate(2 2) scale(5.08)" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width=".6"/>
+    </g>
+    <g fill="#fff"><rect x="176" y="150" width="64" height="156" rx="32" transform="rotate(-12 208 228)"/><rect x="284" y="150" width="64" height="156" rx="32" transform="rotate(-12 316 228)"/></g>
+  </svg>`;
+}
+/* contrast */
+function lum(hex){const n=parseInt(hex.slice(1),16);return [n>>16&255,n>>8&255,n&255].map(v=>{v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((s,v,i)=>s+v*[.2126,.7152,.0722][i],0)}
+function cr(a,b){const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+function aa(r){return `<span class="aa${r<4.5?" fail":""}">${r.toFixed(2)}${r>=7?" AAA":r>=4.5?" AA":" fail"}</span>`}
+const $ = s => document.querySelector(s);
+
+/* ---------- build ---------- */
+document.querySelectorAll(".lockup").forEach(el=>lockup(el, !!el.closest(".ink,.on-ink")));
+$("#heroIcon").innerHTML = iconSVG(300);
+$("#iconBig").innerHTML = iconSVG(380);
+$("#iconDock").innerHTML = iconSVG(52);
+$("#iconTask").innerHTML = iconSVG(28);
+$("#iconSizes").innerHTML = [128,64,48,32,16].map(s=>`<figure>${iconSVG(s)}<figcaption class="meta num">${s} px</figcaption></figure>`).join("");
+$("#markInk").innerHTML = markSVG(64,"#eceef3","#15171d");
+$("#markWhite").innerHTML = `<span style="display:inline-grid;place-items:center;width:96px;height:96px;border-radius:22px;background:#f3f4f7">${markSVG(56)}</span>`;
+$("#markSizes").innerHTML = [48,32,24,20,16].map(s=>`<figure>${markSVG(s)}<figcaption class="meta num">${s}</figcaption></figure>`).join("");
+$("#renameSlots").innerHTML = [3,5,8].map(n=>`<span class="lockup" style="--h:24px;display:flex;align-items:flex-end;gap:9px">${markSVG(24)}<span class="slot" style="width:${n*11}px;height:12px;margin-bottom:1px"></span></span>`).join("");
+$("#construct").innerHTML = `<svg viewBox="-8 -10 336 100" width="100%" aria-label="Wordmark construction">
+  <g ${WM_ATTR("#15171d")} opacity=".9">${WM_PATHS}</g>
+  <g stroke="#2e5bff" stroke-opacity=".55" stroke-width=".6" fill="none">
+    <path d="M-8 1H276M-8 29H276M-8 79H276"/>
+    <circle cx="26" cy="54" r="20"/><circle cx="84" cy="54" r="20"/><circle cx="196" cy="54" r="20"/><circle cx="140" cy="48" r="16"/><circle cx="246" cy="48" r="16"/>
+  </g>
+  <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="7" fill="#2e5bff"><text x="282" y="3.5">ascender</text><text x="282" y="31.5">x-height</text><text x="282" y="81.5">baseline</text></g></svg>`;
+
+/* hero team, eyes follow the pointer */
+$("#team").innerHTML = CAST.map((c,i)=>`<figure>${avatar(c,84,{hero:true,cls:"breathe",bd:(i*0.53).toFixed(2)+"s"})}<figcaption><b>${c.name}</b><span>${c.role}</span></figcaption></figure>`).join("");
+const looks=[...document.querySelectorAll("#team .look")];
+let raf=0;
+addEventListener("pointermove",e=>{
+  if(document.documentElement.classList.contains("rm")||matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(()=>looks.forEach(l=>{
+    const r=l.closest(".av").getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height*.5;
+    const dx=e.clientX-cx, dy=e.clientY-cy, d=Math.hypot(dx,dy)||1, k=Math.min(1,d/300);
+    l.style.transform=`translate(${(dx/d*4*k).toFixed(2)}px,${(dy/d*3*k).toFixed(2)}px)`;
+  }));
+});
+
+/* signature fragments */
+$("#faceStrip").innerHTML = CAST.map(c=>avatar(c,34)).join("");
+$("#noorChat").innerHTML = avatar(A.noor,32);
+$("#noorGlance").innerHTML = avatar(A.noor,40,{status:"waiting"});
+
+/* shapes */
+const SHAPE_HUE = {sphere:"lavender",droplet:"aqua",cloud:"mint",hexagon:"teal",blob:"tangerine",egg:"cocoa",pill:"coral",triangle:"orchid",square:"pear"};
+$("#shapes").innerHTML = SHAPE_ORDER.map((s,i)=>`<figure>${avatar({name:SHAPES[s].n,shape:s,hue:SHAPE_HUE[s]},76,{hero:true,cls:"breathe",bd:(i*.4)+"s"})}<figcaption>${SHAPES[s].n}<span>${HUE[SHAPE_HUE[s]].n}</span></figcaption></figure>`).join("");
+const EXPR = [["calm","Calm","idle, needs you"],["curious","Curious","thinking"],["focused","Focused","working"],["pleased","Pleased","done, 1.6 s"],["concerned","Concerned","blocked, error"],["sleepy","Sleepy","paused, stopped"],["surprised","Surprised","interrupted, 0.4 s"]];
+$("#exprs").innerHTML = EXPR.map(([e,l,u])=>`<figure>${avatar({name:l,shape:"sphere",hue:"aqua"},56,{hero:true,expr:e})}<div><b>${l}</b><span>${u}</span></div></figure>`).join("");
+$("#states").innerHTML = Object.keys(ST).map(s=>`<figure>${avatar(A.maya,40,{status:s})}<span class="tag ${s==="waiting"?"attn":s==="done"?"ok":s==="error"?"danger":s==="blocked"?"ink":"neutral"}">${ST[s].l}</span></figure>`).join("");
+$("#matrix").innerHTML = SHAPE_ORDER.map(s=>HUE_ORDER.map(h=>avatar({name:`${SHAPES[s].n} · ${HUE[h].n}`,shape:s,hue:h},32)).join("")).join("");
+$("#pickUi").innerHTML = `<div style="display:grid;justify-items:center;gap:8px">${avatar({name:"Lumen",shape:"droplet",hue:"honey"},96,{hero:true,cls:"breathe"})}<span class="cap">Lumen · Release notes</span></div>
+  <div style="display:grid;gap:16px"><div><span class="meta">Shape</span><div class="chips" style="margin-top:6px">${SHAPE_ORDER.map(s=>`<span class="chip-shape sq${s==="droplet"?" sel":""}" title="${SHAPES[s].n}"><span style="width:24px;height:24px;display:block">${avatarSVG({shape:s,hue:"none"},{expr:"calm"})}</span></span>`).join("")}</div></div>
+  <div><span class="meta">Hue · dimmed ones are taken in this project</span><div class="chips" style="margin-top:8px">${HUE_ORDER.map(h=>`<span class="chip-hue${h==="honey"?" sel":""}${["lavender","mint","teal","coral","orchid","pear"].includes(h)?" used":""}" style="background:${HUE[h].base}" title="${HUE[h].n}"></span>`).join("")}</div></div>
+  <div class="row"><span class="btn primary">Create Lumen</span><span class="btn secondary">Let Atlas pick</span></div></div>`;
+
+/* colour */
+const core = [["Ink","#15171d","#fff","Text, the mark, toasts",[["White","#ffffff"],["Porcelain","#f3f4f7"]]],["Porcelain","#f3f4f7","#15171d","The ground: canvas and sidebar",[["Ink","#15171d"],["Text 3 #646976","#646976"]]],["White","#ffffff","#15171d","Content sheets, cards, bubbles",[["Ink","#15171d"],["Text 2 #474b57","#474b57"]]],["Cobalt","#2e5bff","#fff","The one action, links, focus",[["White label","#ffffff"],["As a link on Porcelain","#f3f4f7"]]]];
+$("#core").innerHTML = core.map(([n,hex,on,use,pairs])=>`<div class="sw-big"><div class="chip" style="background:${hex};color:${on}">${n}</div><div class="info"><span class="num" style="font-weight:600">${hex}</span><span class="cap">${use}</span>${pairs.map(([pn,ph])=>`<span class="meta">${pn}: ${aa(cr(hex,ph))}</span>`).join("")}</div></div>`).join("");
+const fb = [["Done","ok","#1b7a45","#e3f5ea","#22a35a","Checks, finished runs, green CI"],["Needs you","attn","#8a5300","#fff1d9","#f5a20a","Approvals, questions, anything waiting on you"],["Error","danger","#c0262d","#fdeaea","#e5383b","Failures, always with the cause and a next step"]];
+$("#fb").innerHTML = fb.map(([l,c,ink,tint,fill,use])=>`<div class="card"><div class="row"><span class="tag ${c}">${l}</span><span style="width:18px;height:18px;border-radius:50%;background:${fill}"></span></div><span class="cap">${use}</span><span class="meta">Ink on white ${aa(cr(ink,"#ffffff"))} · on tint ${aa(cr(ink,tint))}</span></div>`).join("");
+$("#hueTable tbody").innerHTML = HUE_ORDER.map(h=>{const P=HUE[h];const c=CAST.find(x=>x.hue===h);return `<tr><td><b>${P.n}</b></td><td><span class="dot" style="background:${P.base}"></span></td><td><span class="dot" style="background:${P.ink}"></span></td><td><span class="dot" style="background:${P.tint}"></span></td><td><span class="dot" style="background:${P.wash}"></span></td><td><span class="mention" style="--m-tint:${P.tint};--m-ink:${P.ink}">${avatar(c,16)}${c.name}</span></td><td class="r num">${aa(cr(P.ink,"#ffffff"))}</td><td class="r num">${aa(cr(P.ink,P.tint))}</td><td class="r num">${aa(cr("#15171d",P.tint))}</td></tr>`}).join("");
+
+/* type ladder */
+const steps=[["Display · 44","44px","48px","-0.032em",600,"In plain sight"],["Headline · 28","28px","34px","-0.022em",600,"What needs you"],["Title · 20","20px","26px","-0.014em",600,"Noor’s screen"],["Body · 15","15px","22px","-0.006em",400,"Noor wants to run the full test suite before she opens the pull request."],["Sub · 13","13px","18px","0",400,"Runs 214 tests, about 3 minutes · stays inside bench/"],["Meta · 12","12px","16px","0.005em",400,"09:04 · 1.8k tokens · 0.06 % of your week"]];
+$("#ladder").innerHTML = steps.map(([n,fs,lh,ls,w,t])=>`<div class="step"><span class="meta">${n}<br>${lh} · ${w}</span><span class="num" style="font:${w} ${fs}/${lh} ${parseInt(fs)>=20?"var(--font-display)":"var(--font-text)"};letter-spacing:${ls}">${t}</span></div>`).join("");
+
+/* motion tiles */
+$("#mIdle").innerHTML = avatar(A.maya,100,{hero:true,cls:"breathe"});
+$("#mThink").innerHTML = avatar(A.omar,100,{hero:true,expr:"curious"});
+$("#mWork").innerHTML = avatar(A.noor,100,{hero:true,expr:"focused"});
+$("#mHand").innerHTML = `<span class="from">${avatar(A.maya,48)}</span><span class="to"><span class="body-bump" style="display:inline-block">${avatar(A.noor,48,{expr:"focused"})}</span></span><span class="hchip">${avatar(A.maya,18)}Brief · QA-3 fix</span>`;
+$("#mBirth").innerHTML = `<div class="ghost">${avatar({name:"New agent",shape:"droplet",hue:"none"},110,{hero:true,expr:"sleepy"})}</div><div class="real">${avatar(A.lumen,110,{hero:true})}</div>`;
+$("#mFinish").innerHTML = `<span class="a">${avatar(A.noor,76,{hero:true,expr:"focused"})}</span><span class="b">${avatar(A.noor,76,{hero:true,expr:"pleased"})}</span>`;
+// remove inner blink loops in birth's real avatar (it has its own sequence)
+document.querySelectorAll("#mBirth .ghost .blink").forEach(b=>b.style.animation="none");
+
+/* spring chart */
+(function(){
+  const curves={smooth:["#15171d",[[0,0],[.05,.078],[.1,.235],[.15,.401],[.2,.549],[.25,.669],[.3,.762],[.35,.831],[.4,.882],[.5,.944],[.6,.974],[.7,.988],[.8,.995],[1,1]]],
+    snappy:["#2e5bff",[[0,0],[.05,.061],[.1,.198],[.15,.36],[.2,.518],[.25,.656],[.3,.768],[.35,.854],[.4,.917],[.5,.987],[.6,1.012],[.7,1.015],[.8,1.011],[.9,1.006],[1,1]]],
+    gentle:["#ff5f73",[[0,0],[.05,.074],[.1,.249],[.15,.463],[.2,.673],[.25,.85],[.3,.983],[.35,1.069],[.4,1.114],[.45,1.127],[.5,1.117],[.6,1.068],[.7,1.019],[.8,.991],[.9,.984],[1,1]]]};
+  const X=t=>40+t*580, Y=v=>190-v*150;
+  let s=`<g stroke="rgb(21 23 29 / .08)" stroke-width="1"><path d="M40 ${Y(0)}H620M40 ${Y(1)}H620"/></g>
+    <g font-family="Segoe UI Variable Text, Segoe UI, sans-serif" font-size="12" fill="#646976"><text x="0" y="${Y(0)+4}">0</text><text x="0" y="${Y(1)+4}">1</text><text x="40" y="214">start</text><text x="586" y="214">end</text></g>`;
+  for(const [k,[c,pts]] of Object.entries(curves)) s+=`<polyline fill="none" stroke="${c}" stroke-width="2.4" stroke-linejoin="round" points="${pts.map(([t,v])=>X(t).toFixed(1)+","+Y(v).toFixed(1)).join(" ")}"/>`;
+  $("#springChart").innerHTML=s;
+})();
+
+/* voice pairs */
+const ok='<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5 5.5-6"/></svg>';
+const no='<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l6 6M10 4l-6 6"/></svg>';
+const pairs=[
+  [`<span class="h3" style="font-size:20px">What needs you <span class="tag attn num">3</span></span>`,`<span class="h3" style="font-size:20px;color:var(--ink-2)">Pending items (3)</span>`],
+  [`<span>Noor wants to run <b>npm test</b> in bench. About 3 minutes, 0.9 % of your week.</span><span class="row"><span class="btn primary">Allow once</span><span class="btn secondary">Deny</span></span>`,`<span>Permission request: tool execution (Bash). Approve?</span><span class="row"><span class="btn secondary">Yes</span><span class="btn secondary">No</span></span>`],
+  [`<span><b>Paused: your weekly limit is reached.</b> 2 of 2 runs paused. They resume Mon 26 Oct at 09:00, and nothing is lost.</span>`,`<span>Error 429: rate limit exceeded. Something went wrong.</span>`],
+  [`<span class="bubble" style="display:block">done. swapped in date-fns, 41 lines removed. tests are green.</span>`,`<span class="bubble" style="display:block">Great news! 🎉 I have successfully completed the task you requested!</span>`],
+  [`<span class="sysline">${avatar(A.atlas,16)}Atlas drafted Lumen. Nothing is created until you press Create.</span>`,`<span class="sysline">Agent created successfully!</span>`],
+  [`<span>The draft to Dana is held. Nothing sends until you’ve read it.</span>`,`<span>Are you sure you want to continue?</span>`]
+];
+$("#pairs").innerHTML = pairs.map(([d,n])=>`<div class="pair"><div class="say do"><span class="lbl">${ok}Write</span><div class="sample" style="display:grid;gap:10px">${d}</div></div><div class="say dont"><span class="lbl">${no}Not</span><div class="sample" style="display:grid;gap:10px">${n}</div></div></div>`).join("");
+
+/* alt C art */
+$("#altDaylight").innerHTML = `<div style="position:absolute;left:28px;top:28px;font:600 30px/34px var(--font-display);letter-spacing:-.02em;color:#006b85">hi, i’m iris.<br><span style="font-weight:400;font-size:17px;line-height:24px">what should i keep an eye on?</span></div>
+  <div style="position:absolute;right:24px;bottom:-14px;display:flex;align-items:flex-end;gap:0">${avatar(A.iris,150,{hero:true,cls:"breathe"})}<span style="margin-left:-26px">${avatar(A.lumen,96,{hero:true,cls:"breathe",bd:"1s"})}</span><span style="margin-left:-18px">${avatar(A.maya,120,{hero:true,cls:"breathe",bd:"2s",expr:"pleased"})}</span></div>`;
+
+/* reduce motion demo switch */
+$("#rmToggle").addEventListener("click",e=>{const on=document.documentElement.classList.toggle("rm");e.currentTarget.setAttribute("aria-checked",on);if(on)looks.forEach(l=>l.style.transform="")});
+</script>
+</body>
+</html>
