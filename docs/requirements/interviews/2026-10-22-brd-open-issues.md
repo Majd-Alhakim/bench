@@ -129,3 +129,24 @@ On the curator and semantic search: *"add them as layers to the plan"*. On the s
 6. Local semantic search: on-device embeddings, hybrid with full-text search
 
 Design reference: docs/research/memory-vault.md.
+
+## Remaining open issues answered (B7, 2026-10-22)
+
+| BRD §10 | Answer |
+|---|---|
+| #14 Team links | **D:** leads by default. Members may *ask* each other questions across a link, but tasks go through the leads. |
+| #31 Guests | *"rather than transferring the full agent the team lead will request other team lead to hand them on agent as guest then the team lead would approve and ask the required agent to generate to do what he does when they reach the context limit (what we agreed on that it saves and start fresh) but here it only saves and then the team lead of that team will send a copy of the instructions and memory and everything related to that agent and the other team lead who requested the agent it create a copy of that agent on their team and assign it tasks and when finished it deletes it so there is no duplicates"* |
+| #10 System tray | **A:** Bench keeps running in the system tray; "Quit" in the tray stops everything. |
+| #32 Names | **C:** each project copy gets a personal name (e.g. "Maya, PM of Project X"); Bench suggests names and the client can change them. |
+| #34 Checkpoint limits | **(a):** a fixed 90% ceiling; each agent's threshold can be set between 50% and 85%. |
+| #35 Bad checkpoint | **(a):** before the old session closes, Bench checks all eight sections and has the agent fill any gaps; it escalates only if the checkpoint is still incomplete. |
+
+**Interpretation of #31, the "agent loan":**
+1. The requesting lead asks the owning lead for an agent.
+2. The owning lead approves.
+3. The agent writes a checkpoint (save only, no restart).
+4. The owning lead sends a copy of the agent's instructions, memory and related material.
+5. The requesting lead creates a temporary copy in its own team and assigns it tasks.
+6. When the work is done, the copy is deleted, so there are no duplicates.
+
+**PM proposal, pending client confirmation:** before the copy is deleted, its work log and lessons are merged back into the original agent's memory, so its learning isn't lost.
