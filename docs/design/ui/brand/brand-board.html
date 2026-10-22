@@ -70,30 +70,32 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.028)}}
 .look{transition:transform .64s var(--spring-gentle)}
 
-/* hero */
-.hero{min-height:900px;padding:24px 0 48px;display:flex;flex-direction:column}
+/* masthead (was .hero, which collided with the .av.hero avatar class and made every hero avatar 900 px tall) */
+.masthead{min-height:min(100vh,860px);padding:24px 0 32px;display:flex;flex-direction:column}
 .topbar{display:flex;align-items:center;gap:24px;height:48px}
 .topbar .grow{flex:1}
 .lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .36)}
 .lockup svg{display:block}
-.rm{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);height:32px;padding:0 4px}
+.rm-btn{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);height:32px;padding:0 4px}
 .sw{width:34px;height:20px;border-radius:999px;background:var(--p300);position:relative;transition:background .2s ease}
 .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / .2);transition:transform .32s var(--spring-snappy)}
 [aria-checked="true"] .sw{background:var(--ink)}
 [aria-checked="true"] .sw::after{transform:translateX(14px)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:72px;align-items:center;margin-top:64px}
-.hero h1{font:600 96px/94px var(--font-display);letter-spacing:-.046em;margin-left:-.04em}
-.hero .lead{font-size:20px;line-height:30px;color:var(--ink-2);max-width:30em;margin-top:28px;letter-spacing:-.012em;text-wrap:pretty}
-.hero .note{margin-top:16px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:72px;align-items:center;margin-top:40px}
+.masthead h1{font:600 96px/94px var(--font-display);letter-spacing:-.046em;margin-left:-.04em}
+.masthead .lead{font-size:20px;line-height:30px;color:var(--ink-2);max-width:30em;margin-top:28px;letter-spacing:-.012em;text-wrap:pretty}
+.masthead .note{margin-top:16px}
 .icon-fig{display:grid;justify-items:center;gap:20px}
 .icon-fig svg{filter:drop-shadow(0 30px 40px hsl(228 30% 12% / .28)) drop-shadow(0 6px 10px hsl(228 30% 12% / .16))}
 .icon-fig figcaption{text-align:center;max-width:30ch}
-.team{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));margin-top:auto;padding-top:40px;align-items:end}
-.team figure{display:grid;justify-items:center;gap:10px}
+/* The cast row: names sit 8 px under the avatars (one figure = avatar + caption, nothing between). */
+.team{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));margin-top:auto;padding-top:32px;align-items:end}
+.team figure{display:flex;flex-direction:column;align-items:center;gap:8px}
+.team figure>.av{flex:none}
 .team figcaption{text-align:center;line-height:16px}
-.team b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
-.team span{font-size:12px;color:var(--ink-3)}
-.team-cap{display:flex;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+.team figcaption b{display:block;font-size:13px;font-weight:600;color:var(--ink)}
+.team figcaption span{font-size:12px;color:var(--ink-3)}
+.team-cap{display:flex;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
 
 /* idea */
 .idea{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:96px}
@@ -316,12 +318,12 @@ html.rm .hchip{offset-distance:50%} html.rm .birth .ghost{opacity:0} html.rm .ch
 <body>
 
 <!-- ============================== HERO ============================== -->
-<header class="wrap hero">
+<header class="wrap masthead">
   <div class="topbar">
     <span class="lockup" style="--h:28px" id="topLockup" aria-label="bench (codename)"></span>
     <span class="grow"></span>
     <span class="cap">Brand identity and design system · stage 1 · 22 Oct 2026 · for your review</span>
-    <button class="rm" id="rmToggle" role="switch" aria-checked="false"><span class="sw" aria-hidden="true"></span>Reduce motion</button>
+    <button class="rm-btn" id="rmToggle" role="switch" aria-checked="false"><span class="sw" aria-hidden="true"></span>Reduce motion</button>
   </div>
   <div class="hero-grid">
     <div>
