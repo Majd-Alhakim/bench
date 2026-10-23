@@ -2,16 +2,16 @@
 
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
-**Current phase:** 2 (PRD) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22.
-**Next step:** client reviews BRD v1.1 + PRD v0.2 and answers the "Open questions for G2" → `/gate G2`; then G4/G5 on prototype v0.7; then the SRS (`/specs`). Spikes S0-1 (subscription login via Agent SDK), browser agent and shell containment may run early on `spike/` branches (proposed, needs the client's OK).
+**Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
+**Next step:** spikes S0-1 (subscription login via Agent SDK), SP-B1 (browser agent) and M8 (shell containment) on `spike/` branches (approved, G2-Q12) → close G0; fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: brainstorm in progress.
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
 | 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ⏳ |
-| 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.1** applies CR-001…007 + decisions, pending client confirmation | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
-| 2 | PRD | 🟡 **v0.2** for review (5 × 3-day sprints, 51 UCs) | [PRD](../requirements/PRD.md) | G2 ⏳ |
+| 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.2** applies CR-001…008 + G2 answers; open items §10 #41–#43 | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
+| 2 | PRD | ✅ **v0.3** (5 × 3-day sprints, 51 UCs), G2 questions answered | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
 | 4 | UX design | 🟡 Premium spec, Laws of UX audit, low-fi v0.4 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ⏳ |
 | 5 | UI design & brand | 🟡 Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.7**; name still open | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ⏳ |
@@ -31,6 +31,7 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 | Date | Gate | Decision | Client comments |
 |---|---|---|---|
 | 2026-10-22 | G1 (BRD) | **Approved**: BRD v0.5 baselined as v1.0 | "yes". Remaining detail assumptions are carried into the PRD/SRS as defaults |
+| 2026-10-23 | G2 (PRD) | **Approved with changes**: PRD v0.3, BRD v1.2 | Accepted 8 recommendations; changed Q3 (browser asks only at first sign-in), Q4 (model auto by complexity, changeable), Q5 (agents never delete on the computer), Q6 (drafts only, never send or post). Recorded as CR-008 |
 
 ## Change requests
 
@@ -42,4 +43,5 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 | [CR-004](../requirements/change-requests/CR-004.md) | 2026-10-22 | Local deliverables + opt-in browser agent | Approved |
 | [CR-005](../requirements/change-requests/CR-005.md) | 2026-10-22 | Built-in skill library per role (+ engineering-craft, 2026-10-23) | Approved |
 | [CR-006](../requirements/change-requests/CR-006.md) | 2026-10-22 | Routines can do anything the agent can | Approved |
-| [CR-007](../requirements/change-requests/CR-007.md) | 2026-10-23 | Only what matters needs you; merge, commit and send are automatic | Approved |
+| [CR-007](../requirements/change-requests/CR-007.md) | 2026-10-23 | Only what matters needs you; merge and commit are automatic (send part replaced by CR-008) | Approved |
+| [CR-008](../requirements/change-requests/CR-008.md) | 2026-10-23 | Drafts, not sends; no deletes on the computer; browser asks only at sign-in | Approved |
