@@ -1,0 +1,328 @@
+/*
+ * Bench design tokens · v2.1 (2026-10-23: dark first; v2.1 = dark neutrals are true charcoal grey, no blue cast)
+ * Source of truth for the design system. Spec: ./DESIGN-SYSTEM.md
+ *
+ * Dark is the default theme (client, 2026-10-23: "make the app dark first and option to switch to white").
+ * Light is the option. The app sets data-theme on <html> to the resolved theme: "dark" (default) or "light";
+ * "Match system" is resolved in main (Electron nativeTheme) and written as one of the two.
+ *   :root                     → dark (default, also [data-theme="dark"])
+ *   :root[data-theme="light"] → light (Porcelain, the v1.1 values, unchanged)
+ *
+ * Naming: primitives (--porcelain-*, --graphite-*, --cobalt-*, --hue-*-base/light/deep) are the palette and never
+ * change. Roles (--bg-*, --text-*, --line-*, --action-*, --ok-*, --attn-*, --danger-*, --hue-*-ink/tint/wash,
+ * --agent-*) are theme-aware; components use only roles. A raw hex in a component is a second palette starting: don't.
+ * Hairlines, hover and press are a low alpha of --ink-rgb, so one rule draws dark on Porcelain and light on Graphite.
+ *
+ * Contrast results quoted below are WCAG 2.x ratios computed from these exact values (the prototype's System
+ * sheet recomputes them live for whichever theme is on).
+ */
+
+:root {
+  /* ------------------------------------------------------------------ */
+  /* 1. Colour primitives (fixed)                                        */
+  /* ------------------------------------------------------------------ */
+
+  /* Porcelain: the light neutral. A faint blue undertone shared with Ink and Cobalt. (P-1) */
+  --porcelain-0: #ffffff;
+  --porcelain-25: #f9fafb;
+  --porcelain-50: #f3f4f7;   /* light ground */
+  --porcelain-100: #eceef2;  /* light sunken */
+  --porcelain-150: #e4e6ec;
+  --porcelain-200: #d8dbe2;
+  --porcelain-300: #c4c8d1;  /* decorative only */
+  --porcelain-500: #868b97;  /* light control edge: 3.41:1 on white */
+  --porcelain-600: #646976;  /* light text-3: 5.49 on white */
+  --porcelain-700: #474b57;  /* light text-2: 8.71 on white */
+  --porcelain-900: #15171d;  /* Ink: 17.9 on white */
+
+  /* Graphite (now charcoal, v2.1): the dark neutral. Pure grey, R = G = B, no blue or purple cast, never #000
+     (client, 2026-10-23: "make it actually dark charcoal color and grey"). The names stay for import stability.
+     Depth is a lighter step: ground → surface → raised → fill. */
+  --graphite-0: #161616;     /* dark ground (charcoal) */
+  --graphite-1: #1f1f1f;     /* surface: cards, bubbles, panels, sidebar sheets */
+  --graphite-2: #282828;     /* raised: menus, dialogs, popovers, @-mention list */
+  --graphite-3: #2f2f2f;     /* fill: tags, counts, disabled, segmented track */
+  --graphite-4: #333333;     /* inverse on dark: toasts, ink banners */
+  --graphite-5: #3d3d3d;     /* segmented thumb */
+  --graphite-6: #737373;     /* dark control edge: 3.82 ground · 3.37 surface · 3.11 raised */
+  --graphite-7: #989898;     /* dark text-3: 6.27 ground · 5.54 surface · 5.11 raised · 4.62 fill */
+  --graphite-8: #b8b8b8;     /* dark text-2: 9.12 ground · 8.05 surface · 6.71 fill */
+  --graphite-9: #ebebeb;     /* dark Ink: a soft light grey, not white. 15.2 ground · 13.4 surface · 11.2 fill */
+
+  /* Cobalt: the one action colour (P-2). On dark the fill lifts one step so white text still passes. */
+  --cobalt-50: #ebf0ff;
+  --cobalt-300: #8fa8ff;     /* links and focus on dark: 7.94 on graphite-0, 7.01 on graphite-1, 5.84 on graphite-3 */
+  --cobalt-400: #3a64ff;     /* dark action fill: white on it 4.72 · edge 3.83 on graphite-0 (non-text 3:1) */
+  --cobalt-500: #2e5bff;     /* light action: white on it 5.17 · on white 5.17 */
+  --cobalt-600: #2550eb;
+  --cobalt-700: #1f45d1;
+
+  /* Feedback. Always with a word or a glyph, never colour alone. Dark values are desaturated light inks on dark tints. */
+  --green-50: #e3f5ea;  --green-500: #22a35a;  --green-700: #1b7a45;
+  --amber-50: #fff1d9;  --amber-500: #f5a20a;  --amber-700: #8a5300;
+  --red-50:   #fdeaea;  --red-500:   #e5383b;  --red-700:   #c0262d;
+  --green-d-ink: #6fd09a; --green-d-tint: #13261b; --green-d-fill: #3c9e66;   /* ink on tint 8.5 · on surface 8.8 */
+  --amber-d-ink: #f0b45a; --amber-d-tint: #2c2213; --amber-d-fill: #e8a33a;   /* ink on tint 8.49 · Ink #15171d on fill 8.3 */
+  --red-d-ink:   #ff8a85; --red-d-tint:   #2e1517; --red-d-fill:   #d9474a;   /* ink on tint 7.47 · white glyph on fill 4.24 */
+
+  /* Agent hues: ten identities. Identity = hue × shape (D-UI8). Never on a button, never for status.
+     base/light/deep are fixed (the avatar body and its hero gradient look the same in both themes). */
+  --hue-coral-base: #ff5f73;     --hue-coral-light: #ffb8c1;     --hue-coral-deep: #e0364f;
+  --hue-tangerine-base: #ff8a3d; --hue-tangerine-light: #ffc9a3; --hue-tangerine-deep: #e0601a;
+  --hue-honey-base: #f2ab1d;     --hue-honey-light: #ffe2a0;     --hue-honey-deep: #cf8600;
+  --hue-pear-base: #96bf2c;      --hue-pear-light: #d6ec9a;      --hue-pear-deep: #6c9410;
+  --hue-mint-base: #3cc47c;      --hue-mint-light: #aeedc9;      --hue-mint-deep: #1f9658;
+  --hue-teal-base: #1fb5a3;      --hue-teal-light: #9ee8dc;      --hue-teal-deep: #0c8a7c;
+  --hue-aqua-base: #2db4dc;      --hue-aqua-light: #a6e6f7;      --hue-aqua-deep: #0e86b0;
+  --hue-lavender-base: #8e6cf0;  --hue-lavender-light: #cbbcff;  --hue-lavender-deep: #5f3fd0;
+  --hue-orchid-base: #e05cb4;    --hue-orchid-light: #f6b6e1;    --hue-orchid-deep: #b8358d;
+  --hue-cocoa-base: #a66e4e;     --hue-cocoa-light: #dcb59d;     --hue-cocoa-deep: #7d4c31;
+  --hue-none-base: #b4b7bf;      --hue-none-light: #dfe1e6;      --hue-none-deep: #8b8f99;
+}
+
+/* ==================================================================== */
+/* 2. Colour roles · DARK (the default)                                  */
+/* ==================================================================== */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 235 235 235;
+
+  --bg-ground: var(--graphite-0);       /* 60 %: canvas, sidebar */
+  --bg-surface: var(--graphite-1);      /* 30 %: cards, bubbles, panels */
+  --bg-raised: var(--graphite-2);       /* what floats: menus, dialogs, popovers */
+  --bg-sunken: var(--graphite-3);       /* fills: tags, counts, disabled (lighter than the surface on dark) */
+  --bg-inverse: var(--graphite-4);      /* toasts, ink banners */
+  --seg-on: var(--graphite-5);          /* the selected segment */
+
+  --state-hover: rgb(var(--ink-rgb) / 0.045);
+  --state-press: rgb(var(--ink-rgb) / 0.085);
+  --state-selected: rgb(var(--ink-rgb) / 0.07);
+
+  --text-1: var(--graphite-9);
+  --text-2: var(--graphite-8);
+  --text-3: var(--graphite-7);
+  --text-inverse: #ededed;              /* 10.8 on graphite-4 */
+  --text-inverse-2: #adadad;            /* 5.63 on graphite-4 */
+  --text-on-action: #ffffff;            /* 4.72 on cobalt-400 */
+  --text-on-ink: var(--graphite-0);     /* text on an Ink fill (Send, counts, Blocked tag): 15.2 */
+  --ink-hover: #f5f5f5;  --ink-press: #d9d9d9;
+  --mark: var(--graphite-9);            /* the Quartet mark in the interface */
+
+  --line-subtle: rgb(var(--ink-rgb) / 0.07);
+  --line: rgb(var(--ink-rgb) / 0.11);
+  --line-control: var(--graphite-6);
+
+  --action: var(--cobalt-400);
+  --action-hover: var(--cobalt-500);
+  --action-press: var(--cobalt-600);
+  --action-tint: rgb(58 100 255 / 0.18);  /* cobalt-300 text on it (over the surface) 6.09 */
+  --action-text: var(--cobalt-300);       /* links on hover/focus only (Von Restorff) */
+  --focus: var(--cobalt-300);
+
+  --ok-ink: var(--green-d-ink);    --ok-tint: var(--green-d-tint);    --ok-fill: var(--green-d-fill);   --ok-solid: var(--green-700);
+  --attn-ink: var(--amber-d-ink);  --attn-tint: var(--amber-d-tint);  --attn-fill: var(--amber-d-fill); --on-attn: #161616;
+  --danger-ink: var(--red-d-ink);  --danger-tint: var(--red-d-tint);  --danger-fill: var(--red-d-fill); --danger-solid: var(--red-700); --danger-solid-hover: #a81f26;
+
+  --sw-track: #404040;  --sw-track-hover: #4d4d4d;  --sw-knob: #cccccc;  --sw-knob-on: var(--graphite-0);
+  --diff-add: rgb(63 185 110 / 0.14);  --diff-del: rgb(255 100 100 / 0.13);
+
+  /* Agent hues on dark: ink = the hue's light step (≥ 7:1 on its tint); tint = the body colour at 12 % over the
+     surface, 14 % for the two dim hues (the client's bubble, mention chips). No canvas wash on dark (v2.1): the
+     wash resolves to the charcoal ground, so the agent's colour lives on its avatar, name and bubble only. */
+  --hue-coral-ink: var(--hue-coral-light);         --hue-coral-tint: color-mix(in srgb, var(--hue-coral-base) 12%, #1f1f1f);         --hue-coral-wash: var(--graphite-0);
+  --hue-tangerine-ink: var(--hue-tangerine-light); --hue-tangerine-tint: color-mix(in srgb, var(--hue-tangerine-base) 12%, #1f1f1f); --hue-tangerine-wash: var(--graphite-0);
+  --hue-honey-ink: var(--hue-honey-light);         --hue-honey-tint: color-mix(in srgb, var(--hue-honey-base) 12%, #1f1f1f);         --hue-honey-wash: var(--graphite-0);
+  --hue-pear-ink: var(--hue-pear-light);           --hue-pear-tint: color-mix(in srgb, var(--hue-pear-base) 12%, #1f1f1f);           --hue-pear-wash: var(--graphite-0);
+  --hue-mint-ink: var(--hue-mint-light);           --hue-mint-tint: color-mix(in srgb, var(--hue-mint-base) 12%, #1f1f1f);           --hue-mint-wash: var(--graphite-0);
+  --hue-teal-ink: var(--hue-teal-light);           --hue-teal-tint: color-mix(in srgb, var(--hue-teal-base) 12%, #1f1f1f);           --hue-teal-wash: var(--graphite-0);
+  --hue-aqua-ink: var(--hue-aqua-light);           --hue-aqua-tint: color-mix(in srgb, var(--hue-aqua-base) 12%, #1f1f1f);           --hue-aqua-wash: var(--graphite-0);
+  --hue-lavender-ink: var(--hue-lavender-light);   --hue-lavender-tint: color-mix(in srgb, var(--hue-lavender-base) 14%, #1f1f1f);   --hue-lavender-wash: var(--graphite-0);
+  --hue-orchid-ink: var(--hue-orchid-light);       --hue-orchid-tint: color-mix(in srgb, var(--hue-orchid-base) 12%, #1f1f1f);       --hue-orchid-wash: var(--graphite-0);
+  --hue-cocoa-ink: var(--hue-cocoa-light);         --hue-cocoa-tint: color-mix(in srgb, var(--hue-cocoa-base) 14%, #1f1f1f);         --hue-cocoa-wash: var(--graphite-0);
+  --hue-none-ink: var(--hue-none-light);           --hue-none-tint: var(--graphite-3);                                              --hue-none-wash: var(--graphite-0);
+
+  /* Elevation on dark: a lighter surface and a 1px light ring; only what floats adds a soft black shadow. No glows. */
+  --shadow-color: 0 0% 0%;
+  --elev-0: none;
+  --elev-1: 0 0 0 1px rgb(var(--ink-rgb) / 0.055);
+  --elev-2: 0 0 0 1px rgb(var(--ink-rgb) / 0.08);
+  --elev-3: 0 0 0 1px rgb(var(--ink-rgb) / 0.09), 0 16px 40px rgb(0 0 0 / 0.45);
+  --elev-4: 0 0 0 1px rgb(var(--ink-rgb) / 0.1), 0 24px 64px rgb(0 0 0 / 0.55);
+  --scrim: rgb(0 0 0 / 0.55);
+  --scrim-soft: rgb(0 0 0 / 0.35);      /* What needs you over the current screen */
+}
+
+/* ==================================================================== */
+/* 2b. Colour roles · LIGHT (the option; the v1.1 values, unchanged)     */
+/* ==================================================================== */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ink-rgb: 21 23 29;
+
+  --bg-ground: var(--porcelain-50);
+  --bg-surface: var(--porcelain-0);
+  --bg-raised: var(--porcelain-0);
+  --bg-sunken: var(--porcelain-100);
+  --bg-inverse: var(--porcelain-900);
+  --seg-on: var(--porcelain-0);
+
+  --text-1: var(--porcelain-900);
+  --text-2: var(--porcelain-700);
+  --text-3: var(--porcelain-600);       /* also placeholders: 4.73 on sunken */
+  --text-inverse: #eceef3;
+  --text-inverse-2: #a9adb8;            /* 7.98 on Ink */
+  --text-on-action: #ffffff;
+  --text-on-ink: #ffffff;
+  --ink-hover: #2b2e37;  --ink-press: #000000;
+  --mark: var(--porcelain-900);
+
+  --line-control: var(--porcelain-500);
+
+  --action: var(--cobalt-500);
+  --action-hover: var(--cobalt-600);
+  --action-press: var(--cobalt-700);
+  --action-tint: var(--cobalt-50);      /* cobalt text on it 4.54 */
+  --action-text: var(--cobalt-500);
+  --focus: var(--cobalt-500);
+
+  --ok-ink: var(--green-700);   --ok-tint: var(--green-50);   --ok-fill: var(--green-500);
+  --attn-ink: var(--amber-700); --attn-tint: var(--amber-50); --attn-fill: var(--amber-500);
+  --danger-ink: var(--red-700); --danger-tint: var(--red-50); --danger-fill: var(--red-500);
+
+  --sw-track: var(--porcelain-300);  --sw-track-hover: #b3b8c3;  --sw-knob: #ffffff;  --sw-knob-on: #ffffff;
+  --diff-add: #e9f6ee;  --diff-del: #fdeeee;
+
+  /* Agent hues on light: ink is AA on white and on its tint */
+  --hue-coral-ink: #c4283f;     --hue-coral-tint: #ffe6e9;     --hue-coral-wash: #fff8f9;
+  --hue-tangerine-ink: #b04a00; --hue-tangerine-tint: #ffeee2; --hue-tangerine-wash: #fffaf6;
+  --hue-honey-ink: #8a5a00;     --hue-honey-tint: #fff4dc;     --hue-honey-wash: #fffcf4;
+  --hue-pear-ink: #4d6a00;      --hue-pear-tint: #f0f7dc;      --hue-pear-wash: #fbfdf4;
+  --hue-mint-ink: #1d7a43;      --hue-mint-tint: #e5f7ec;      --hue-mint-wash: #f6fcf8;
+  --hue-teal-ink: #00756a;      --hue-teal-tint: #e1f6f2;      --hue-teal-wash: #f5fcfb;
+  --hue-aqua-ink: #006b85;      --hue-aqua-tint: #e3f6fb;      --hue-aqua-wash: #f6fcfe;
+  --hue-lavender-ink: #5a3dc8;  --hue-lavender-tint: #efeaff;  --hue-lavender-wash: #faf8ff;
+  --hue-orchid-ink: #b0287f;    --hue-orchid-tint: #fbe7f4;    --hue-orchid-wash: #fef8fc;
+  --hue-cocoa-ink: #7a4a2e;     --hue-cocoa-tint: #f5ebe4;     --hue-cocoa-wash: #fcf8f5;
+  --hue-none-ink: #474b57;      --hue-none-tint: #eceef2;      --hue-none-wash: #f9fafb;
+
+  /* Elevation on light: tone first, shadow only for what floats */
+  --shadow-color: 228 16% 10%;
+  --elev-1: 0 0 0 1px var(--line-subtle);
+  --elev-2: 0 0 0 1px var(--line-subtle), 0 1px 2px hsl(var(--shadow-color) / 0.05), 0 4px 12px hsl(var(--shadow-color) / 0.05);
+  --elev-3: 0 0 0 1px hsl(var(--shadow-color) / 0.07), 0 4px 10px hsl(var(--shadow-color) / 0.08), 0 16px 40px hsl(var(--shadow-color) / 0.10);
+  --elev-4: 0 0 0 1px hsl(var(--shadow-color) / 0.06), 0 12px 32px hsl(var(--shadow-color) / 0.14), 0 40px 96px hsl(var(--shadow-color) / 0.18);
+  --scrim: rgb(21 23 29 / 0.32);
+  --scrim-soft: rgb(21 23 29 / 0.16);
+}
+
+:root {
+  /* The current agent. Set data-hue on any container; everything inside inherits its identity. */
+  --agent-base: var(--hue-none-base);
+  --agent-light: var(--hue-none-light);
+  --agent-deep: var(--hue-none-deep);
+  --agent-ink: var(--hue-none-ink);
+  --agent-tint: var(--hue-none-tint);
+  --agent-wash: var(--hue-none-wash);
+
+  /* ------------------------------------------------------------------ */
+  /* 3. Type                                                             */
+  /* ------------------------------------------------------------------ */
+  /* P-3 (decided 2026-10-23): Instrument Sans 400/600 for everything, JetBrains Mono for code, commands, diffs and the trace.
+     Both SIL OFL 1.1 and bundled with the app, so every OS renders the same face. The fallbacks only cover a missing file.
+     The app declares the bundled files once (paths are the build's, not these docs'):
+       @font-face { font-family: "Instrument Sans"; src: url("fonts/InstrumentSans[wdth,wght].woff2") format("woff2"); font-weight: 400 700; font-display: block; }
+       @font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono[wght].woff2") format("woff2"); font-weight: 400 600; font-display: block; }
+     Review pages (brand board, components, prototype) load the same faces from Google Fonts instead. */
+  --font-text: "Instrument Sans", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: var(--font-text);
+  --font-mono: "JetBrains Mono", "Cascadia Mono", "SF Mono", ui-monospace, Consolas, monospace;
+
+  --weight-regular: 400;
+  --weight-strong: 600;   /* the only other weight */
+
+  /* Six steps, far apart. Any one view uses four at most. */
+  --fs-meta: 12px;      --lh-meta: 16px;     --ls-meta: 0.005em;
+  --fs-sub: 13px;       --lh-sub: 18px;      --ls-sub: 0;
+  --fs-body: 15px;      --lh-body: 22px;     --ls-body: -0.006em;
+  --fs-title: 20px;     --lh-title: 26px;    --ls-title: -0.014em;
+  --fs-headline: 28px;  --lh-headline: 34px; --ls-headline: -0.022em;
+  --fs-display: 44px;   --lh-display: 48px;  --ls-display: -0.032em;
+
+  --measure-chat: 34em;
+  --measure-prose: 62ch;
+
+  /* ------------------------------------------------------------------ */
+  /* 4. Space (4-pt; spacing by relationship)                            */
+  /* ------------------------------------------------------------------ */
+  --sp-0: 0;
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;  --sp-4: 16px;  --sp-5: 20px;  --sp-6: 24px;
+  --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px;
+
+  /* ------------------------------------------------------------------ */
+  /* 5. Shape: one continuous-corner family (R3)                         */
+  /* ------------------------------------------------------------------ */
+  --corner: round;
+  --r-xs: 10px;  --r-sm: 10px;   /* things inside objects: inputs, options, wells, menu items */
+  --r-md: 18px;  --r-lg: 18px;  --r-xl: 18px;   /* objects: tickets, cards, bubbles, dialogs, menus */
+  --r-full: 999px;               /* controls */
+
+  /* ------------------------------------------------------------------ */
+  /* 7. Motion: physics, not timelines                                   */
+  /* ------------------------------------------------------------------ */
+  --dur-micro: 140ms;  --dur-short: 200ms;  --dur-move: 320ms;  --dur-scene: 420ms;  --dur-character: 640ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-color: ease;
+  --spring-smooth: linear(0, 0.078 5%, 0.235 10%, 0.401 15%, 0.549 20%, 0.669 25%, 0.762 30%, 0.831 35%, 0.882 40%, 0.944 50%, 0.974 60%, 0.988 70%, 0.995 80%, 1);
+  --spring-snappy: linear(0, 0.061 5%, 0.198 10%, 0.36 15%, 0.518 20%, 0.656 25%, 0.768 30%, 0.854 35%, 0.917 40%, 0.987 50%, 1.012 60%, 1.015 70%, 1.011 80%, 1.006 90%, 1);
+  --spring-gentle: linear(0, 0.074 5%, 0.249 10%, 0.463 15%, 0.673 20%, 0.85 25%, 0.983 30%, 1.069 35%, 1.114 40%, 1.127 45%, 1.117 50%, 1.068 60%, 1.019 70%, 0.991 80%, 0.984 90%, 1);
+  --press-scale: 0.97;
+  --rise: 8px;
+
+  /* ------------------------------------------------------------------ */
+  /* 8. Layers                                                           */
+  /* ------------------------------------------------------------------ */
+  --z-base: 0;  --z-sticky: 10;  --z-sidebar: 20;  --z-pane: 30;  --z-dropdown: 100;  --z-popover: 200;
+  --z-toast: 300;  --z-scrim: 400;  --z-dialog: 410;  --z-tooltip: 500;  --z-drag: 600;
+
+  /* ------------------------------------------------------------------ */
+  /* 9. Sizes                                                            */
+  /* ------------------------------------------------------------------ */
+  --control-sm: 28px;   /* visual only: its hit area is grown to 32 (Fitts, fix 15) */
+  --control-md: 32px;   /* desktop click-target floor */
+  --control-lg: 40px;   /* primary actions and Send (fix 13) */
+  --row-1: 40px;  --row-2: 56px;
+  --icon-sm: 14px;  --icon-md: 16px;  --icon-lg: 20px;  --stroke-icon: 1.5px;
+  --av-xs: 16px;  --av-sm: 24px;  --av-md: 32px;  --av-lg: 40px;  --av-xl: 64px;  --av-hero: 96px;
+  --focus-ring: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--focus);
+
+  /* ------------------------------------------------------------------ */
+  /* 10. Sound (P-7). Not CSS: the values the renderer's sound module reads. */
+  /* ------------------------------------------------------------------ */
+  /* needs-you A4 → D5 · 320 ms · done F#5 · 380 ms · handoff breath + E5 → A5 · 290 ms. Spec: DESIGN-SYSTEM.md §8.5. */
+  --sound-volume: 0.7;
+}
+
+/* Continuous corners where the engine draws them. Same visual size, smoother curvature. */
+@supports (corner-shape: squircle) {
+  :root { --corner: squircle; --r-xs: 16px; --r-sm: 16px; --r-md: 28px; --r-lg: 28px; --r-xl: 28px; }
+}
+
+/* Agent identity scopes */
+[data-hue="coral"]     { --agent-base: var(--hue-coral-base);     --agent-light: var(--hue-coral-light);     --agent-deep: var(--hue-coral-deep);     --agent-ink: var(--hue-coral-ink);     --agent-tint: var(--hue-coral-tint);     --agent-wash: var(--hue-coral-wash); }
+[data-hue="tangerine"] { --agent-base: var(--hue-tangerine-base); --agent-light: var(--hue-tangerine-light); --agent-deep: var(--hue-tangerine-deep); --agent-ink: var(--hue-tangerine-ink); --agent-tint: var(--hue-tangerine-tint); --agent-wash: var(--hue-tangerine-wash); }
+[data-hue="honey"]     { --agent-base: var(--hue-honey-base);     --agent-light: var(--hue-honey-light);     --agent-deep: var(--hue-honey-deep);     --agent-ink: var(--hue-honey-ink);     --agent-tint: var(--hue-honey-tint);     --agent-wash: var(--hue-honey-wash); }
+[data-hue="pear"]      { --agent-base: var(--hue-pear-base);      --agent-light: var(--hue-pear-light);      --agent-deep: var(--hue-pear-deep);      --agent-ink: var(--hue-pear-ink);      --agent-tint: var(--hue-pear-tint);      --agent-wash: var(--hue-pear-wash); }
+[data-hue="mint"]      { --agent-base: var(--hue-mint-base);      --agent-light: var(--hue-mint-light);      --agent-deep: var(--hue-mint-deep);      --agent-ink: var(--hue-mint-ink);      --agent-tint: var(--hue-mint-tint);      --agent-wash: var(--hue-mint-wash); }
+[data-hue="teal"]      { --agent-base: var(--hue-teal-base);      --agent-light: var(--hue-teal-light);      --agent-deep: var(--hue-teal-deep);      --agent-ink: var(--hue-teal-ink);      --agent-tint: var(--hue-teal-tint);      --agent-wash: var(--hue-teal-wash); }
+[data-hue="aqua"]      { --agent-base: var(--hue-aqua-base);      --agent-light: var(--hue-aqua-light);      --agent-deep: var(--hue-aqua-deep);      --agent-ink: var(--hue-aqua-ink);      --agent-tint: var(--hue-aqua-tint);      --agent-wash: var(--hue-aqua-wash); }
+[data-hue="lavender"]  { --agent-base: var(--hue-lavender-base);  --agent-light: var(--hue-lavender-light);  --agent-deep: var(--hue-lavender-deep);  --agent-ink: var(--hue-lavender-ink);  --agent-tint: var(--hue-lavender-tint);  --agent-wash: var(--hue-lavender-wash); }
+[data-hue="orchid"]    { --agent-base: var(--hue-orchid-base);    --agent-light: var(--hue-orchid-light);    --agent-deep: var(--hue-orchid-deep);    --agent-ink: var(--hue-orchid-ink);    --agent-tint: var(--hue-orchid-tint);    --agent-wash: var(--hue-orchid-wash); }
+[data-hue="cocoa"]     { --agent-base: var(--hue-cocoa-base);     --agent-light: var(--hue-cocoa-light);     --agent-deep: var(--hue-cocoa-deep);     --agent-ink: var(--hue-cocoa-ink);     --agent-tint: var(--hue-cocoa-tint);     --agent-wash: var(--hue-cocoa-wash); }
+
+/* Reduced motion: the same information, without travel. Opacity and colour changes stay. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-move: 1ms; --dur-scene: 1ms; --dur-character: 1ms; --press-scale: 1; --rise: 0px; }
+}

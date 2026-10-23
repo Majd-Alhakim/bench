@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 (PRD) + 4 (early UX prototype, lean mode). G1 approved 2026-10-22
-**Next step:** `/prd` (PM drafts the PRD from BRD v1.0) and, in parallel, `/design-ux` (low-fi prototype)
+**Next step:** client clicks through the UX prototype (tasks T1–T5) and reviews the PRD draft → feedback corrects both → `/gate G2` (PRD), then G4 (UX)
 
 ## Phase tracker
 
@@ -11,9 +11,9 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 |---|---|---|---|---|
 | 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [competitive brief](../research/competitive-brief.md), [research](../research/) | G0 ⏳ |
 | 1 | Requirements / BRD | ✅ Done ([interviews](../requirements/interviews/)) | [BRD v1.0](../requirements/BRD.md) **Baselined** | G1 ✅ 2026-10-22 |
-| 2 | PRD | ⚪ Not started | `docs/requirements/PRD.md` | G2 ⏳ |
+| 2 | PRD | 🟡 Draft v0.1 | [PRD](../requirements/PRD.md) | G2 ⏳ |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
-| 4 | UX design | ⚪ Not started | `docs/design/ux/` | G4 ⏳ |
+| 4 | UX design | 🟡 Low-fi prototype v0.4 (status badges, shape avatars with eyes) | [UX package](../design/ux/README.md), [prototype](../design/ux/prototype/index.html) | G4 ⏳ |
 | 5 | UI design & brand (incl. **final name**) | ⚪ Not started | `docs/design/ui/` | G5 ⏳ |
 | 6 | Backlog & Sprint 1 | ⚪ Not started ([BACKLOG](../BACKLOG.md) / [ROADMAP](../ROADMAP.md) are provisional) | GitHub Issues / board | G6 ⏳ |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |

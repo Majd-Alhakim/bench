@@ -16,3 +16,7 @@ coverage/
 
 # Claude Code personal files
 CLAUDE.local.md
+scripts/local/
+
+# brainstorm companion scratch
+.superpowers/

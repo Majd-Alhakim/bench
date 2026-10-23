@@ -1,6 +1,6 @@
 # ADR-0001: Electron + Claude Agent SDK for a cross-platform desktop app
 
-- **Status:** Proposed (recommended). Waiting for founder confirmation.
+- **Status:** **Accepted** (2026-10-22). Client: "go with it if its the best option".
 - **Date:** 2026-10-21 (revised the same day for the cross-platform requirement)
 
 ## Context

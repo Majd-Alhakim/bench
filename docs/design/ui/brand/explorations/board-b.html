@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand board B · The Proof · bench (codename)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Schibsted+Grotesk:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* Board B · The Proof. Light-first. Riso print studio: paper, spot inks, one proofing pink that means "your call". */
+:root{
+  color-scheme:light;
+  /* paper and ink */
+  --paper:#f7f2e8; --sheet:#fffcf6; --sunk:#efe8da; --rule:#e2d9c8; --edge:#8d8577;
+  --ink:#1f1c19; --ink-2:#4f4a43; --ink-3:#6e675d;
+  /* the one action: proofing pink */
+  --pink:#ff4fa3; --pink-hover:#ff66b0; --pink-ink:#b8005f; --pink-tint:#ffe3f0;
+  /* meaning */
+  --hl:#ffe14d; --hl-ink:#7a5a00; --ok:#1e7a46; --ok-tint:#e2f1e6; --err:#b42318; --err-tint:#fbe4e0;
+  /* agent spot inks: base (body) / deep (name text) */
+  --a-apricot:#ff8c4b; --d-apricot:#a14a12;
+  --a-ochre:#e0a429;   --d-ochre:#7a5600;
+  --a-moss:#9aa83a;    --d-moss:#55621a;
+  --a-fern:#3aa86b;    --d-fern:#1f7044;
+  --a-teal:#12a594;    --d-teal:#0b6b61;
+  --a-sage:#8db59a;    --d-sage:#3f6b4e;
+  --a-violet:#7a5cd0;  --d-violet:#5a3fb0;
+  --a-cocoa:#a8694a;   --d-cocoa:#7a4630;
+  /* type */
+  --display:"Newsreader","Iowan Old Style",Georgia,serif;
+  --ui:"Schibsted Grotesk","Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono","Cascadia Code",Consolas,monospace;
+  /* shape: cut paper, small radii, hard print shadows */
+  --r-1:3px; --r-2:6px; --r-3:10px;
+  --press:2px 2px 0 var(--ink); --press-up:3px 3px 0 var(--ink); --lift:4px 4px 0 rgb(31 28 25 / .1);
+  /* motion: a press, not a spring */
+  --feed:cubic-bezier(.2,.9,.25,1); --stamp:cubic-bezier(.5,0,.2,1.4);
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .12 0 0 0 0 .1 0 0 0 0 .08 0 0 0 .07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--paper)}
+body{font:400 15px/23px var(--ui);color:var(--ink);background:var(--paper) var(--grain);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:var(--hl);color:var(--ink)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+b,strong{font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--pink-ink);outline-offset:3px;border-radius:var(--r-1)}
+.wrap{width:min(1200px,calc(100% - 120px));margin-inline:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* editorial furniture */
+.folio{font:600 11px/16px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.folio i{font:italic 400 15px/16px var(--display);letter-spacing:0;text-transform:none;color:var(--pink-ink);margin-right:8px}
+.ch{padding:104px 0;border-top:1px solid var(--rule)}
+.ch.sheet{background:var(--sheet)}
+.ch-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:64px;align-items:end;margin-bottom:56px}
+.ch-title{font:500 52px/54px var(--display);letter-spacing:-.022em;margin-top:14px;max-width:18ch;text-wrap:balance}
+.ch-title em{font-style:italic;font-weight:400}
+.lead{font-size:17px;line-height:27px;color:var(--ink-2);max-width:44ch;text-wrap:pretty}
+.h3{font:600 17px/24px var(--ui);letter-spacing:-.01em}
+.p{color:var(--ink-2);max-width:58ch;text-wrap:pretty}
+.cap{font-size:13px;line-height:19px;color:var(--ink-3)}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r-2)}
+
+/* buttons: a press. Pink always means "your call". */
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border-radius:var(--r-2);font:600 14px/1 var(--ui);border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);transition:transform .14s var(--feed),box-shadow .14s var(--feed),background .14s}
+.btn:hover{background:var(--sunk)}
+.btn.primary{background:var(--pink);box-shadow:var(--press)}
+.btn.primary:hover{background:var(--pink-hover);transform:translate(-1px,-1px);box-shadow:var(--press-up)}
+.btn.primary:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+.btn .est{font-weight:400;opacity:.85}
+.btn.sm{height:32px;padding:0 12px;font-size:13px}
+.link{font:600 13px/1 var(--ui);color:var(--ink-2);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;display:inline-flex;align-items:center;gap:6px;height:32px}
+.link:hover{color:var(--ink)}
+.tag{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:var(--r-1);font:600 10.5px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;border:1px solid currentColor;color:var(--ink-2);white-space:nowrap}
+.tag.needs{background:var(--hl);border-color:var(--hl);color:var(--ink)}
+.tag.ok{color:var(--ok);background:var(--ok-tint);border-color:var(--ok-tint)}
+.tag.err{color:var(--err);background:var(--err-tint);border-color:var(--err-tint)}
+
+/* the mark + wordmark */
+.lockup{display:inline-flex;align-items:center;gap:calc(var(--h) * .3);color:var(--ink)}
+.lockup svg{display:block;width:var(--h);height:var(--h)}
+.wm{position:relative;display:inline-block;isolation:isolate;font:800 calc(var(--h) * .72)/1 var(--ui);letter-spacing:-.05em;color:var(--ink)}
+.wm::before{content:attr(data-name);position:absolute;left:.04em;top:.045em;color:var(--pink);z-index:-1}
+.wm.flat::before{display:none}
+
+/* characters (built by script from data-*) */
+.ch-av{position:relative;display:inline-block;flex:none;vertical-align:middle;line-height:0}
+.ch-av svg{display:block;width:100%;height:100%;overflow:visible}
+.ch-av .tone{mix-blend-mode:multiply;opacity:.34}
+.ch-av.small .tone{display:none}
+.ch-av .eye{fill:#fffcf6}
+.ch-av .pupils circle{fill:var(--ink)}
+.ch-av .face{transform-box:fill-box;transform-origin:center;animation:blink 6.5s infinite;animation-delay:var(--bd,0s)}
+@keyframes blink{0%,95%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.ch-av.is-paused .face{animation:none;transform:scaleY(.14)}
+.ch-av.is-paused .pupils{display:none}
+.ch-av.is-working .reg{transform:translate(-2.4px,1.8px);animation:misreg 1.3s infinite steps(1,end)}
+@keyframes misreg{0%{transform:translate(-2.4px,1.8px)}33%{transform:translate(1.8px,-1.4px)}66%{transform:translate(-1.2px,-2px)}100%{transform:translate(-2.4px,1.8px)}}
+.ch-av .think circle{transform-box:fill-box;transform-origin:center;animation:dot 1.4s infinite ease-in-out}
+.ch-av .think circle:nth-child(2){animation-delay:.18s}
+.ch-av .think circle:nth-child(3){animation-delay:.36s}
+@keyframes dot{0%,100%{transform:scale(.55);opacity:.45}40%{transform:scale(1);opacity:1}}
+.ch-av .ring{fill:none;stroke:var(--err);stroke-width:3;stroke-linecap:round}
+/* status stamps: a word always sits beside them */
+.stamp{position:absolute;right:-3px;bottom:-3px;width:var(--b);height:var(--b);border-radius:50%;display:grid;place-items:center;background:var(--sheet);border:1.5px solid var(--ink);color:var(--ink);line-height:0}
+.stamp svg{width:62%;height:62%}
+.stamp.needs{background:var(--hl)}
+.stamp.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.stamp.err{background:var(--err);border-color:var(--err);color:#fff}
+.stamp.ink{background:var(--ink);color:var(--sheet)}
+
+/* masthead */
+.masthead{min-height:min(100vh,900px);padding:22px 0 32px;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:20px;height:48px;border-bottom:1.5px solid var(--ink);padding-bottom:14px}
+.topbar .grow{flex:1}
+.toggle{display:inline-flex;align-items:center;gap:10px;height:32px;font-size:13px;color:var(--ink-2)}
+.sw{width:34px;height:20px;border-radius:999px;border:1.5px solid var(--ink);background:var(--sheet);position:relative}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:var(--ink);transition:transform .2s var(--feed)}
+[aria-pressed="true"] .sw{background:var(--hl)}
+[aria-pressed="true"] .sw::after{transform:translateX(14px)}
+.hero{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:64px;align-items:center;margin:28px 0 20px}
+.hero h1{font:500 88px/86px var(--display);letter-spacing:-.034em;max-width:11.5ch;margin-top:18px;text-wrap:balance}
+.hero h1 em{font-style:italic;font-weight:400;position:relative;white-space:nowrap}
+.hero h1 em::after{content:"";position:absolute;left:-.04em;right:-.06em;bottom:.08em;height:.3em;background:var(--hl);z-index:-1;transform-origin:left;animation:swipe 1.1s .5s var(--feed) both}
+.hero h1{position:relative;isolation:isolate}
+@keyframes swipe{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hero .lead{font-size:19px;line-height:30px;max-width:40ch;margin-top:26px}
+.icon-fig{display:grid;justify-items:center;gap:18px}
+.icon-fig svg{width:236px;height:236px;filter:drop-shadow(0 22px 28px rgb(70 50 30 / .18)) drop-shadow(0 4px 6px rgb(70 50 30 / .12))}
+.icon-fig figcaption{text-align:center;max-width:30ch}
+.cast{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));align-items:end;border-top:1px solid var(--rule);padding-top:22px}
+.cast figure{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cast figcaption{text-align:center;line-height:16px}
+.cast figcaption b{display:block;font-size:13px}
+.cast figcaption span{font-size:12px;color:var(--ink-3)}
+
+/* concept */
+.concept{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:88px}
+.essence{font:italic 400 34px/42px var(--display);letter-spacing:-.012em;max-width:20ch;text-wrap:balance}
+.fits{margin-top:40px;display:grid;gap:0}
+.fit{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--rule)}
+.fit:last-child{border-bottom:1px solid var(--rule)}
+.fit dt{font:600 13px/20px var(--ui);color:var(--ink-3)}
+.fit dd{font-size:15px;line-height:23px}
+.traits{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.trait{padding:18px 18px 16px;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r-2)}
+.trait b{display:block;font:500 22px/26px var(--display);letter-spacing:-.01em}
+.trait i{font-style:normal;font-size:12px;color:var(--ink-3)}
+.trait p{margin-top:8px;font-size:14px;line-height:21px;color:var(--ink-2)}
+.vs{margin-top:28px;width:100%;border-collapse:collapse;font-size:13.5px;line-height:20px}
+.vs th,.vs td{text-align:left;padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.vs th{font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.vs td:first-child{color:var(--ink-3);width:92px}
+
+/* mark */
+.mark-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.plate{border-radius:var(--r-2);border:1px solid var(--rule);background:var(--sheet);padding:28px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.plate.dark{background:var(--ink);border-color:var(--ink);color:#f3ece0}
+.plate.dark .cap{color:#b9b0a2}
+.plate.pinkbg{background:var(--paper)}
+.plate .stage{flex:1;display:grid;place-items:center}
+.sizes{display:flex;align-items:flex-end;gap:22px}
+.sizes figure{display:grid;justify-items:center;gap:8px}
+.slots{display:grid;gap:18px}
+.slot{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px dashed var(--rule)}
+.rules{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.rules div{padding:16px 0 0;border-top:1.5px solid var(--ink)}
+.rules b{display:block;font-size:14px;margin-bottom:4px}
+
+/* characters */
+.cast-big{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.cast-big .card{padding:22px 20px 18px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center}
+.cast-big .card b{display:block;font-size:15px}
+.cast-big .meta{font-size:12px;line-height:17px;color:var(--ink-3)}
+.swatch-dot{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:6px;border:1px solid rgb(31 28 25 / .2)}
+.anatomy{margin-top:16px;display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px}
+.anat{padding:24px;display:grid;justify-items:center;gap:14px}
+.layers{display:flex;gap:18px;align-items:flex-end}
+.layers figure{display:grid;justify-items:center;gap:6px}
+.states{padding:24px 28px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;align-content:center}
+.states figure{display:grid;justify-items:center;gap:12px;text-align:center}
+.states figcaption b{display:block;font-size:13px}
+.states figcaption span{font-size:12px;line-height:16px;color:var(--ink-3);display:block;max-width:15ch}
+
+/* palette */
+.pal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.sw-card{border-radius:var(--r-2);border:1px solid var(--rule);background:var(--sheet);overflow:hidden}
+.sw-card .chip{height:112px;padding:14px;display:flex;align-items:flex-end;justify-content:space-between;font:600 13px/1 var(--ui)}
+.sw-card .info{padding:12px 14px 14px;font-size:12.5px;line-height:19px;color:var(--ink-2)}
+.sw-card .info b{color:var(--ink);font-size:13.5px}
+.cr{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+.cr.fail{color:var(--err)}
+.ratio-row{margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.ratio-table{width:100%;border-collapse:collapse;font-size:13px;line-height:19px}
+.ratio-table td{padding:8px 0;border-bottom:1px solid var(--rule)}
+.ratio-table td:last-child{text-align:right}
+.pair{display:inline-flex;align-items:center;justify-content:center;width:44px;height:24px;border-radius:var(--r-1);font:600 12px/1 var(--ui);margin-right:10px;vertical-align:middle;border:1px solid rgb(31 28 25 / .12)}
+.inks{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:14px}
+.ink-chip{border-radius:var(--r-1);overflow:hidden;border:1px solid var(--rule);background:var(--sheet)}
+.ink-chip i{display:block;height:54px}
+.ink-chip span{display:block;padding:6px 8px 8px;font-size:11.5px;line-height:15px}
+.ink-chip span b{display:block;font-size:12px}
+.ratio{font-size:13px;color:var(--ink-2);margin-top:12px}
+.night{margin-top:16px;padding:22px 24px;border-radius:var(--r-2);background:#1b1815;color:#efe7da;display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;align-items:center}
+.night .cap{color:#b5ab9c}
+.night-sw{display:flex;gap:8px}
+.night-sw i{width:56px;height:40px;border-radius:var(--r-1);border:1px solid rgb(255 255 255 / .1)}
+
+/* type */
+.type-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}
+.spec{padding:30px}
+.spec .big{font:500 120px/1 var(--display);letter-spacing:-.04em}
+.spec .big em{font-style:italic;font-weight:400}
+.spec .ui-big{font:600 72px/1 var(--ui);letter-spacing:-.04em}
+.scale{width:100%;border-collapse:collapse}
+.scale td{padding:12px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
+.scale td:first-child{width:96px;font-size:12px;color:var(--ink-3)}
+.scale td:last-child{text-align:right;font-size:12px;color:var(--ink-3);white-space:nowrap}
+
+/* the app frame */
+.app{display:grid;grid-template-columns:220px minmax(0,1fr) 392px;grid-template-rows:38px 650px;background:var(--paper) var(--grain);border:1.5px solid var(--ink);border-radius:var(--r-3);box-shadow:8px 8px 0 rgb(31 28 25 / .9);overflow:hidden;font-size:14px;line-height:21px}
+.app .tb{grid-column:1 / -1;display:flex;align-items:center;gap:10px;padding:0 0 0 14px;border-bottom:1px solid var(--rule);background:var(--sheet)}
+.app .tb .grow{flex:1}
+.app .tb .crumb{font-size:12px;color:var(--ink-3)}
+.win{display:flex;height:100%}
+.win span{width:46px;display:grid;place-items:center;color:var(--ink-2)}
+.win svg{width:10px;height:10px}
+.side{border-right:1px solid var(--rule);padding:16px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.nav{display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:var(--r-2);color:var(--ink-2)}
+.nav svg{width:16px;height:16px;flex:none}
+.nav.on{background:var(--sheet);color:var(--ink);font-weight:600;box-shadow:inset 0 0 0 1px var(--rule)}
+.nav .badge{margin-left:auto;min-width:20px;height:20px;border-radius:999px;background:var(--hl);color:var(--ink);font:600 11.5px/20px var(--ui);text-align:center;padding:0 6px}
+.side .lbl{font:600 10.5px/14px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:18px 10px 8px}
+.mate{display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;border-radius:var(--r-2);min-width:0}
+.mate div{min-width:0;line-height:15px}
+.mate b{display:block;font-size:13px}
+.mate small{font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.mate small.needs{color:var(--hl-ink);font-weight:600}
+.usage{margin-top:auto;padding:12px 10px 4px;border-top:1px solid var(--rule)}
+.meter{height:6px;border-radius:999px;background:var(--sunk);overflow:hidden;margin:8px 0 6px;border:1px solid var(--rule)}
+.meter i{display:block;height:100%;width:62%;background:var(--ink)}
+.home{padding:26px 30px;min-width:0;overflow:hidden}
+.home .date{font:600 11px/14px var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.home h2{font:500 30px/34px var(--display);letter-spacing:-.02em;margin:8px 0 22px}
+.home h2 em{font-style:italic;font-weight:400}
+.sec{display:flex;align-items:baseline;gap:8px;font:600 13px/18px var(--ui);margin-bottom:12px}
+.sec .n{color:var(--ink-3);font-weight:400}
+.ticket{position:relative;background:var(--sheet);border:1.5px solid var(--ink);border-radius:var(--r-1);padding:20px 20px 16px;box-shadow:var(--lift)}
+.ticket::before{content:"";position:absolute;left:8px;right:8px;top:-6px;height:10px;background:radial-gradient(circle at 6px 5px,var(--paper) 3.2px,transparent 3.8px) 0 0/14px 10px repeat-x}
+.ticket .no{position:absolute;right:18px;top:16px;font:italic 400 13px/1 var(--display);color:var(--ink-3)}
+.t-head{display:flex;gap:14px;align-items:flex-start}
+.t-head h3{font:600 17px/23px var(--ui);letter-spacing:-.01em;padding-right:56px}
+.t-head .prov{font-size:12px;line-height:18px;color:var(--ink-3);margin-top:2px}
+.t-body{margin:14px 0 0 54px}
+.cmd{font:13px/20px var(--mono);background:var(--paper);border:1px dashed var(--edge);border-radius:var(--r-1);padding:9px 12px;display:flex;justify-content:space-between;gap:12px}
+.cmd span{color:var(--ink-3)}
+.conseq{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 14px;font-size:12px;color:var(--ink-2)}
+.conseq b{color:var(--ink)}
+.acts{display:flex;align-items:center;gap:10px}
+.acts .grow{flex:1}
+.ticket.closed{border:1px solid var(--rule);box-shadow:none;padding:14px 18px;margin-top:14px;display:flex;align-items:center;gap:14px}
+.ticket.closed::before{display:none}
+.ticket.closed .tx{flex:1;min-width:0;line-height:18px}
+.ticket.closed b{font-size:14px;display:block}
+.ticket.closed small{font-size:12px;color:var(--ink-3)}
+.learned{margin-top:22px;padding:14px 16px;border-radius:var(--r-2);background:var(--sunk);display:flex;gap:12px;align-items:center;font-size:13px;line-height:19px}
+.learned .chipl{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;border-radius:var(--r-1);background:var(--sheet);border:1px solid var(--rule);font-size:12px;white-space:nowrap}
+.working{margin-top:22px}
+.wrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--rule);font-size:13px}
+.wrow .tx{flex:1;min-width:0}
+.wrow .bar{width:96px;height:4px;background:var(--sunk);border-radius:2px;overflow:hidden}
+.wrow .bar i{display:block;height:100%;background:var(--ink-2)}
+.wrow small{font-size:12px;color:var(--ink-3)}
+.chat{border-left:1px solid var(--rule);display:flex;flex-direction:column;min-width:0;background:var(--sheet)}
+.chat-h{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--rule)}
+.chat-h b{font-size:14px}
+.chat-h small{font-size:12px;color:var(--ink-3);display:block;line-height:15px}
+.stack{display:flex}
+.stack .ch-av{margin-left:-7px;border-radius:50%}
+.stack .ch-av:first-child{margin-left:0}
+.msgs{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.sys{align-self:center;font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:8px}
+.sys::before,.sys::after{content:"";width:28px;height:1px;background:var(--rule)}
+.m{display:flex;gap:10px;align-items:flex-start;max-width:100%}
+.m .body{min-width:0}
+.m .who{font-size:12px;line-height:16px;font-weight:600}
+.m .txt{font-size:14px;line-height:21px;margin-top:2px}
+.m .meta{font-size:11.5px;line-height:16px;color:var(--ink-3);margin-top:4px;display:flex;gap:10px;align-items:center}
+.m .meta a{color:var(--ink-2);text-decoration:underline;text-underline-offset:2px}
+.slip{margin-left:38px;border:1px solid var(--rule);border-left:3px solid var(--a-fern);background:var(--paper);border-radius:var(--r-1);padding:9px 12px;font-size:12.5px;line-height:18px}
+.slip b{font-size:12px}
+.slip .route{display:flex;align-items:center;gap:6px;font-weight:600;font-size:12px;margin-bottom:2px}
+.you{align-self:flex-end;max-width:78%;text-align:right}
+.you .bub{display:inline-block;text-align:left;background:var(--sunk);border:1px solid var(--rule);border-radius:var(--r-3) var(--r-3) var(--r-1) var(--r-3);padding:9px 12px;font-size:14px;line-height:21px}
+.you .meta{justify-content:flex-end}
+.compose{margin:0 12px 12px;border:1.5px solid var(--ink);border-radius:var(--r-2);background:var(--sheet);padding:10px 10px 10px 14px;display:flex;align-items:center;gap:10px}
+.compose span{flex:1;color:var(--ink-3);font-size:14px}
+.send{width:34px;height:34px;border-radius:var(--r-2);border:1.5px solid var(--ink);display:grid;place-items:center;background:var(--sheet)}
+.send svg{width:15px;height:15px}
+.annot{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:28px}
+.annot div{border-top:1.5px solid var(--ink);padding-top:12px;font-size:13px;line-height:20px;color:var(--ink-2)}
+.annot b{color:var(--ink);display:block;font-size:13.5px;margin-bottom:2px}
+.annot i{font:italic 400 18px/1 var(--display);color:var(--pink-ink);margin-right:6px}
+
+/* motion */
+.mo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.mo{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.mo .stage{height:200px;display:grid;place-items:center;position:relative;background:var(--paper);border-bottom:1px solid var(--rule)}
+.mo .txt{padding:16px 18px 18px}
+.mo .txt b{display:block;font-size:15px;margin-bottom:4px}
+.mo .txt p{font-size:13px;line-height:20px;color:var(--ink-2)}
+.mo .txt small{display:block;margin-top:8px;font-size:12px;color:var(--ink-3)}
+/* 1 into register */
+.reg-demo .reg{animation:regsnap 4.2s infinite}
+@keyframes regsnap{0%{transform:translate(-3px,2px)}12%{transform:translate(2px,-1.5px)}24%{transform:translate(-2px,-2px)}36%{transform:translate(2.4px,1.6px)}48%{transform:translate(-1px,1px)}56%,100%{transform:translate(0,0)}}
+.reg-demo .ch-av .face{animation:none}
+.reg-check{position:absolute;left:calc(50% + 34px);top:calc(50% + 22px);animation:checkin 4.2s infinite}
+@keyframes checkin{0%,56%{opacity:0;transform:scale(1.6) rotate(-10deg)}64%,100%{opacity:1;transform:scale(1) rotate(-6deg)}}
+.reg-word{position:absolute;bottom:18px;font-size:12px;font-weight:600}
+.reg-word .a{animation:wordA 4.2s infinite}
+.reg-word .b{position:absolute;left:0;right:0;text-align:center;color:var(--ok);animation:wordB 4.2s infinite}
+@keyframes wordA{0%,55%{opacity:1}60%,100%{opacity:0}}
+@keyframes wordB{0%,55%{opacity:0}60%,100%{opacity:1}}
+/* 2 slip travels */
+.rail{position:relative;width:300px;height:110px}
+.rail .ch-av{position:absolute;top:28px}
+.rail .from{left:0}.rail .to{right:0}
+.rail .line{position:absolute;left:60px;right:60px;top:55px;border-top:1.5px dashed var(--edge)}
+.flying{position:absolute;top:40px;left:96px;height:28px;padding:0 10px;display:flex;align-items:center;gap:6px;background:var(--sheet);border:1.5px solid var(--ink);border-radius:var(--r-1);font:600 12px/1 var(--ui);box-shadow:var(--press);animation:fly 3.8s var(--feed) infinite}
+@keyframes fly{0%{left:40px;opacity:0;transform:rotate(-4deg) scale(.9)}12%{left:52px;opacity:1;transform:rotate(-4deg) scale(1)}62%{left:146px;transform:rotate(2deg)}72%,100%{left:146px;opacity:1;transform:rotate(0)}}
+.rail .names{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+/* 3 highlighter + glance */
+.hl-demo{display:grid;justify-items:center;gap:16px}
+.hl-text{font:500 22px/30px var(--display);background:linear-gradient(var(--hl),var(--hl)) no-repeat 0 85%/100% 45%;padding:0 4px;animation:hlswipe 4s var(--feed) infinite}
+@keyframes hlswipe{0%,10%{background-size:0% 45%}38%,100%{background-size:100% 45%}}
+.glance .pupils{animation:glance 4s var(--feed) infinite}
+@keyframes glance{0%,10%{transform:translate(.6px,1px)}30%,100%{transform:translate(2.8px,2.6px)}}
+/* 4 the stamp */
+.stamp-demo{position:relative;display:grid;justify-items:center;gap:22px}
+.stamp-demo .btn{animation:press 4s infinite}
+@keyframes press{0%,22%{transform:translate(0,0);box-shadow:2px 2px 0 var(--ink)}28%{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}36%,100%{transform:translate(0,0);box-shadow:2px 2px 0 var(--ink)}}
+.signed{font:600 12px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--pink-ink);border:2px solid var(--pink-ink);border-radius:var(--r-1);padding:7px 10px;transform:rotate(-5deg);animation:stampin 4s var(--stamp) infinite}
+@keyframes stampin{0%,30%{opacity:0;transform:rotate(-5deg) scale(1.7)}40%,100%{opacity:1;transform:rotate(-5deg) scale(1)}}
+/* 5 halftone thinking */
+.ht-demo{display:flex;align-items:center;gap:18px}
+.ht-dots{display:grid;grid-template-columns:repeat(4,10px);gap:6px}
+.ht-dots i{width:10px;height:10px;border-radius:50%;background:var(--a-violet);animation:dot 1.6s ease-in-out infinite;animation-delay:calc(var(--i) * .09s)}
+/* 6 arrival */
+.feed-demo{width:240px}
+.feed-demo .mini{background:var(--sheet);border:1.5px solid var(--ink);border-radius:var(--r-1);padding:12px 14px;font-size:13px;line-height:19px;box-shadow:var(--lift);animation:feed 3.6s var(--feed) infinite;transform-origin:20% 100%}
+.feed-demo .mini b{display:block;font-size:13px}
+@keyframes feed{0%{opacity:0;transform:translateY(26px) rotate(-1.6deg)}22%{opacity:1;transform:translateY(-2px) rotate(.4deg)}32%,100%{opacity:1;transform:translateY(0) rotate(0)}}
+.tokens{margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tokens div{border-top:1.5px solid var(--ink);padding-top:12px;font-size:13px;line-height:20px;color:var(--ink-2)}
+.tokens code{font:12px/18px var(--mono);color:var(--ink);display:block;margin-top:4px}
+.tokens b{color:var(--ink)}
+
+/* voice */
+.voice{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.vt{width:100%;border-collapse:collapse;font-size:14px;line-height:21px}
+.vt th{text-align:left;font:600 11px/16px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:0 16px 10px 0;border-bottom:1.5px solid var(--ink)}
+.vt td{padding:12px 16px 12px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.vt td.no{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--err);text-decoration-thickness:1.5px}
+.moments{display:grid;gap:12px}
+.moment{padding:16px 18px}
+.moment .k{font:600 11px/16px var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.moment p{margin-top:6px;font-size:15px;line-height:23px}
+.moment p.agent{font-family:var(--ui)}
+
+/* sound */
+.snd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.snd{padding:22px;display:grid;gap:14px;align-content:start}
+.snd .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.snd .top b{font:500 24px/28px var(--display)}
+.play{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px 0 10px;border-radius:var(--r-2);border:1.5px solid var(--ink);background:var(--sheet);font:600 13px/1 var(--ui)}
+.play:hover{background:var(--sunk)}
+.play svg{width:12px;height:12px}
+.play.on{background:var(--hl)}
+.wave{height:44px;width:100%}
+.snd dl{display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 12px;font-size:13px;line-height:19px}
+.snd dt{color:var(--ink-3)}
+.snd-rules{margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.snd-rules .card{padding:20px 22px}
+.snd-rules ul{margin-top:8px;padding-left:18px;font-size:14px;line-height:22px;color:var(--ink-2)}
+.mute-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:10px}
+
+footer{padding:56px 0 80px;border-top:1.5px solid var(--ink)}
+footer .row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start}
+
+/* Reduced motion: every loop rests on its final, meaningful frame. html.rm previews it. */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+
+<!-- Shared drawing defs: the eight body shapes (100-unit box, ground at ~90), the halftone and its shade mask, the mark. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="s-sphere" d="M50 16a38 38 0 1 1 0 76a38 38 0 1 1 0-76z"/>
+    <path id="s-egg" d="M50 10C72 10 86 42 86 62C86 80 70 92 50 92C30 92 14 80 14 62C14 42 28 10 50 10Z"/>
+    <path id="s-droplet" d="M50 6C50 6 84 38 84 58A34 34 0 0 1 16 58C16 38 50 6 50 6Z"/>
+    <path id="s-pill" d="M36 32H64A26 26 0 0 1 64 84H36A26 26 0 0 1 36 32Z"/>
+    <path id="s-square" d="M32 16H68Q86 16 86 34V72Q86 90 68 90H32Q14 90 14 72V34Q14 16 32 16Z"/>
+    <path id="s-triangle" d="M50 10Q57 10 61 18L90 75Q95 90 80 90H20Q5 90 10 75L39 18Q43 10 50 10Z"/>
+    <path id="s-cloud" d="M28 90C14 90 6 80 8 67C10 56 19 50 27 51C27 35 40 24 55 26C68 28 76 39 76 50C86 49 94 58 93 70C92 82 84 90 72 90Z"/>
+    <path id="s-blob" d="M52 12C73 10 91 27 89 49C88 64 93 76 81 86C68 95 38 95 24 86C10 77 8 59 13 45C18 27 33 14 52 12Z"/>
+    <pattern id="ht" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <circle cx="2.5" cy="2.5" r="1.35" fill="#1f1c19"/>
+    </pattern>
+    <linearGradient id="shadeGrad" x1=".15" y1=".05" x2=".85" y2="1">
+      <stop offset=".42" stop-color="#000"/><stop offset=".95" stop-color="#fff"/>
+    </linearGradient>
+    <mask id="shade" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#shadeGrad)"/></mask>
+    <symbol id="mark" viewBox="0 0 64 64">
+      <rect x="13" y="14" width="44" height="42" rx="12" fill="#ff4fa3"/>
+      <rect x="7" y="8" width="44" height="42" rx="12" fill="#1f1c19"/>
+      <ellipse cx="22.5" cy="27" rx="4.4" ry="6.4" fill="#fffcf6"/><ellipse cx="35.5" cy="27" rx="4.4" ry="6.4" fill="#fffcf6"/>
+      <circle cx="24" cy="28.6" r="2.3" fill="#1f1c19"/><circle cx="37" cy="28.6" r="2.3" fill="#1f1c19"/>
+    </symbol>
+    <symbol id="mark-inv" viewBox="0 0 64 64">
+      <rect x="13" y="14" width="44" height="42" rx="12" fill="#ff4fa3"/>
+      <rect x="7" y="8" width="44" height="42" rx="12" fill="#f7f2e8"/>
+      <ellipse cx="22.5" cy="27" rx="4.4" ry="6.4" fill="#1f1c19"/><ellipse cx="35.5" cy="27" rx="4.4" ry="6.4" fill="#1f1c19"/>
+      <circle cx="24" cy="28.6" r="2.3" fill="#f7f2e8"/><circle cx="37" cy="28.6" r="2.3" fill="#f7f2e8"/>
+    </symbol>
+    <symbol id="mark-mono" viewBox="0 0 64 64">
+      <rect x="7" y="8" width="44" height="42" rx="12" fill="#1f1c19"/>
+      <ellipse cx="22.5" cy="27" rx="4.4" ry="6.4" fill="#fffcf6"/><ellipse cx="35.5" cy="27" rx="4.4" ry="6.4" fill="#fffcf6"/>
+      <circle cx="24" cy="28.6" r="2.3" fill="#1f1c19"/><circle cx="37" cy="28.6" r="2.3" fill="#1f1c19"/>
+    </symbol>
+    <symbol id="app-icon" viewBox="0 0 120 120">
+      <rect width="120" height="120" rx="27" fill="#f7f2e8"/>
+      <rect x=".75" y=".75" width="118.5" height="118.5" rx="26.4" fill="none" stroke="#1f1c19" stroke-opacity=".12" stroke-width="1.5"/>
+      <g stroke="#1f1c19" stroke-width="1.6" stroke-linecap="round" opacity=".7">
+        <path d="M16 29H24M29 16V24M96 29H104M91 16V24M16 91H24M29 96V104M96 91H104M91 96V104"/>
+      </g>
+      <rect x="38" y="40" width="50" height="47" rx="14" fill="#ff4fa3"/>
+      <rect x="32" y="33" width="50" height="47" rx="14" fill="#1f1c19"/>
+      <ellipse cx="49.5" cy="53" rx="5" ry="7.2" fill="#fffcf6"/><ellipse cx="64.5" cy="53" rx="5" ry="7.2" fill="#fffcf6"/>
+      <circle cx="51.3" cy="54.8" r="2.6" fill="#1f1c19"/><circle cx="66.3" cy="54.8" r="2.6" fill="#1f1c19"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ MASTHEAD ============ -->
+<header class="masthead wrap">
+  <div class="topbar">
+    <span class="lockup" style="--h:30px"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm flat" data-name="bench">bench</span></span>
+    <span class="folio" style="margin-left:8px">Brand board B · The Proof · draft for your review · 22 Oct 2026</span>
+    <span class="grow"></span>
+    <button class="toggle" id="rmToggle" type="button" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Preview reduced motion</button>
+  </div>
+
+  <div class="hero">
+    <div>
+      <p class="folio"><i>B.</i>Light-first · a riso print studio</p>
+      <h1>Nothing goes out until you <em>sign it.</em></h1>
+      <p class="lead">Your studio of agents, run like a print shop. Every step is laid out on a proof you can read, every job carries its slip with the cost, and one colour on screen is yours: the proofing pink that means <b>your call</b>.</p>
+    </div>
+    <figure class="icon-fig">
+      <svg viewBox="0 0 120 120" role="img" aria-label="App icon: a black ink block with two eyes, a pink proof layer offset behind it, crop marks on paper"><use href="#app-icon"/></svg>
+      <figcaption class="cap">The app icon: an ink block with eyes, printed slightly off its pink proof layer, inside crop marks. A sheet waiting for your signature.</figcaption>
+    </figure>
+  </div>
+
+  <div class="cast" aria-label="The team, printed in spot inks">
+    <figure><span class="ch-av" data-shape="blob" data-ink="violet" data-size="72" data-label="Atlas" style="--bd:.4s"></span><figcaption><b>Atlas</b><span>Violet · main</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="72" data-look="right" data-label="Noor" style="--bd:2.1s"></span><figcaption><b>Noor</b><span>Apricot · QA</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="square" data-ink="moss" data-size="72" data-label="Karim" style="--bd:1.2s"></span><figcaption><b>Karim</b><span>Moss · dev</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="droplet" data-ink="fern" data-size="72" data-label="Maya" style="--bd:3.3s"></span><figcaption><b>Maya</b><span>Fern · PM</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="cloud" data-ink="ochre" data-size="72" data-label="Lumen" style="--bd:.9s"></span><figcaption><b>Lumen</b><span>Ochre · writer</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="pill" data-ink="teal" data-size="72" data-label="Sam" style="--bd:2.7s"></span><figcaption><b>Sam</b><span>Teal · research</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="triangle" data-ink="cocoa" data-size="72" data-label="Omar" style="--bd:1.7s"></span><figcaption><b>Omar</b><span>Cocoa · ops</span></figcaption></figure>
+    <figure><span class="ch-av" data-shape="sphere" data-ink="sage" data-size="72" data-label="Iris" style="--bd:3.9s"></span><figcaption><b>Iris</b><span>Sage · design</span></figcaption></figure>
+  </div>
+</header>
+
+<!-- ============ 1. CONCEPT ============ -->
+<section class="ch">
+  <div class="wrap concept">
+    <div>
+      <p class="folio"><i>01</i>The concept</p>
+      <h2 class="ch-title" style="margin-bottom:28px">The Proof</h2>
+      <p class="essence">"Signed by you." A studio that prints its work where you can read it, and runs nothing until you sign.</p>
+      <dl class="fits">
+        <div class="fit"><dt>The glass box</dt><dd>In print, nothing goes to press until the client signs the proof. Bench's promise is the same rule: every step, prompt and token is on the proof, and outward actions wait for your signature.</dd></div>
+        <div class="fit"><dt>The team</dt><dd>A studio of specialists, each with their own spot ink. Many inks on one sheet still read as one publication: one team.</dd></div>
+        <div class="fit"><dt>The cost</dt><dd>Every print job carries a docket slip: time, stock, run size. Every Bench job carries its slip too: minutes, % of your week, files touched, who gets notified.</dd></div>
+        <div class="fit"><dt>Your call</dt><dd>Proofreaders mark in one colour. Here that colour is pink, and it appears once per screen, on the decision that is yours.</dd></div>
+      </dl>
+    </div>
+    <div>
+      <div class="traits">
+        <div class="trait"><b>Candid</b><i>not clinical</i><p>Prints the numbers on the slip. Says what it did and couldn't do.</p></div>
+        <div class="trait"><b>Crafted</b><i>not precious</i><p>Paper, ink, crop marks: made by hand, used every day.</p></div>
+        <div class="trait"><b>Warm</b><i>not cute</i><p>Characters with eyes, printed slightly imperfect. No jokes, no emoji.</p></div>
+        <div class="trait"><b>Exact</b><i>not technical</i><p>Exact times and counts. The machinery stays on the proof, one click away.</p></div>
+        <div class="trait" style="grid-column:1 / -1"><b>Deferential</b><i>not passive</i><p>You're the client and the editor. The studio drafts, proofs and asks; it never runs outward on its own.</p></div>
+      </div>
+      <table class="vs" aria-label="How board B differs from board A">
+        <thead><tr><th></th><th>Board A · In plain sight</th><th>Board B · The Proof</th></tr></thead>
+        <tbody>
+          <tr><td>Material</td><td>Glass, porcelain, night</td><td>Paper, spot ink, daylight</td></tr>
+          <tr><td>Signature</td><td>The Look (slanted eyes)</td><td>The register (ink settles when work is done)</td></tr>
+          <tr><td>Action</td><td>Cobalt (a blue)</td><td>Proofing pink, ink-outlined</td></tr>
+          <tr><td>Type</td><td>Platform grotesk</td><td>Newsreader + Schibsted Grotesk</td></tr>
+          <tr><td>Depth</td><td>Soft shadows, squircles</td><td>Hard print offsets, cut-paper corners</td></tr>
+          <tr><td>Sound</td><td>Silent by default</td><td>On: paper, stamp, felt</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. MARK ============ -->
+<section class="ch sheet">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>02</i>Mark, wordmark, icon</p><h2 class="ch-title">An ink block that looks back, <em>printed off-register</em></h2></div>
+      <p class="lead">The mark is a character from the studio's own family: a black ink block with paper eyes, and the pink proof layer peeking out underneath. It survives any rename: the name is a slot, the block is the brand.</p>
+    </div>
+    <div class="mark-grid">
+      <div class="plate">
+        <div class="stage">
+          <span class="lockup" style="--h:72px"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm" data-name="bench">bench</span></span>
+        </div>
+        <div><b class="h3">Primary lockup</b><p class="cap">Mark + name in Schibsted Grotesk 800, lowercase, −0.05em, with a pink proof shadow offset by 0.04em. Above 32 px only.</p></div>
+      </div>
+      <div class="plate dark">
+        <div class="stage">
+          <span class="lockup" style="--h:72px;color:#f3ece0"><svg aria-hidden="true"><use href="#mark-inv"/></svg><span class="wm" data-name="bench" style="color:#f3ece0">bench</span></span>
+        </div>
+        <div><b class="h3">On ink</b><p class="cap">The block turns to paper, the eyes to ink. The pink layer never changes: it's the sign-off.</p></div>
+      </div>
+      <div class="plate">
+        <div class="stage">
+          <div class="sizes">
+            <figure><svg width="16" height="16" aria-hidden="true"><use href="#mark-mono"/></svg><span class="cap">16</span></figure>
+            <figure><svg width="24" height="24" aria-hidden="true"><use href="#mark"/></svg><span class="cap">24</span></figure>
+            <figure><svg width="32" height="32" viewBox="0 0 120 120" aria-hidden="true"><use href="#app-icon"/></svg><span class="cap">32</span></figure>
+            <figure><svg width="64" height="64" viewBox="0 0 120 120" aria-hidden="true"><use href="#app-icon"/></svg><span class="cap">64</span></figure>
+            <figure><svg width="96" height="96" viewBox="0 0 120 120" aria-hidden="true"><use href="#app-icon"/></svg><span class="cap">96</span></figure>
+          </div>
+        </div>
+        <div><b class="h3">Sizes</b><p class="cap">At 16 px the pink layer and crop marks drop (they turn to mud); the block and eyes stay. The taskbar icon reads as a face at every size.</p></div>
+      </div>
+    </div>
+    <div class="mark-grid" style="margin-top:16px;grid-template-columns:minmax(0,2fr) minmax(0,1fr)">
+      <div class="plate" style="min-height:0">
+        <div class="slots">
+          <div class="slot"><span class="lockup" style="--h:44px"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm" data-name="kin">kin</span></span><span class="cap">3 letters</span></div>
+          <div class="slot"><span class="lockup" style="--h:44px"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm" data-name="bench">bench</span></span><span class="cap">5 letters · codename</span></div>
+          <div class="slot" style="border:0;padding:0"><span class="lockup" style="--h:44px"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm" data-name="workroom">workroom</span></span><span class="cap">8 letters</span></div>
+        </div>
+      </div>
+      <div class="plate" style="min-height:0">
+        <div><b class="h3">Rename grammar</b><p class="cap" style="margin-top:6px">[mark] + gap 0.3 × mark height + [name, 3–8 lowercase letters] at 0.72 × mark height, baselines on the block's lower third. The brand vocabulary (proof, slip, studio, register) never uses the name, so a rename touches one slot.</p></div>
+        <p class="cap">Placeholders "kin" and "workroom" only test widths; they are not name proposals.</p>
+      </div>
+    </div>
+    <div class="rules">
+      <div><b>Never</b><p class="cap">A gradient, a glow, an agent ink on the block, the pink as the block colour, an outline-only mark.</p></div>
+      <div><b>The offset is fixed</b><p class="cap">Pink sits 6/64 right and 6/64 down. It is the only place pink appears outside a decision: the mark says "you sign".</p></div>
+      <div><b>Clear space</b><p class="cap">One eye height around the lockup. Crop marks belong to the app icon only.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. CHARACTERS ============ -->
+<section class="ch">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>03</i>The characters</p><h2 class="ch-title">Same family, <em>printed in spot ink</em></h2></div>
+      <p class="lead">The shapes with eyes stay. Here they're printed: one flat spot ink per agent, a halftone shade on the far side, and paper showing through as the eyes. Working agents print a little off-register; done work snaps into place.</p>
+    </div>
+    <div class="cast-big">
+      <div class="card"><span class="ch-av" data-shape="blob" data-ink="violet" data-size="64" style="--bd:1s"></span><div><b>Atlas</b><span class="meta"><span class="swatch-dot" style="background:var(--a-violet)"></span>Violet · blob</span></div></div>
+      <div class="card"><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="64" style="--bd:2s"></span><div><b>Noor</b><span class="meta"><span class="swatch-dot" style="background:var(--a-apricot)"></span>Apricot · egg</span></div></div>
+      <div class="card"><span class="ch-av" data-shape="square" data-ink="moss" data-size="64" style="--bd:3s"></span><div><b>Karim</b><span class="meta"><span class="swatch-dot" style="background:var(--a-moss)"></span>Moss · block (was Periwinkle, now no blue)</span></div></div>
+      <div class="card"><span class="ch-av" data-shape="droplet" data-ink="fern" data-size="64" style="--bd:4s"></span><div><b>Maya</b><span class="meta"><span class="swatch-dot" style="background:var(--a-fern)"></span>Fern · droplet</span></div></div>
+    </div>
+    <div class="anatomy">
+      <div class="card anat">
+        <div class="layers">
+          <figure><svg width="58" height="58" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-cloud" style="fill:var(--a-ochre)"/></svg><span class="cap">1 · spot ink</span></figure>
+          <figure><svg width="58" height="58" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-cloud" fill="url(#ht)" mask="url(#shade)" opacity=".6"/></svg><span class="cap">2 · halftone</span></figure>
+          <figure><svg width="58" height="58" viewBox="0 0 100 100" aria-hidden="true"><use href="#s-cloud" fill="none" stroke="#d9cfbd" stroke-width="2" stroke-dasharray="3 3"/><ellipse cx="40" cy="66" rx="6.6" ry="9" fill="#fffcf6" stroke="#cfc4b1"/><ellipse cx="60" cy="66" rx="6.6" ry="9" fill="#fffcf6" stroke="#cfc4b1"/><circle cx="40.6" cy="67" r="3.6" fill="#1f1c19"/><circle cx="60.6" cy="67" r="3.6" fill="#1f1c19"/></svg><span class="cap">3 · paper eyes</span></figure>
+        </div>
+        <span class="ch-av" data-shape="cloud" data-ink="ochre" data-size="96" style="--bd:.6s"></span>
+        <p class="cap" style="text-align:center;max-width:36ch">Eight shapes × eight inks, no pair twice in a project. Halftone appears from 32 px up; below it the body is flat ink.</p>
+      </div>
+      <div class="card states" aria-label="Status states, each with a word">
+        <figure><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="64" data-badge="idle"></span><figcaption><b>Idle</b><span>Slow blink, in register</span></figcaption></figure>
+        <figure><span class="ch-av" data-shape="blob" data-ink="violet" data-size="64" data-state="thinking" data-look="up" data-badge="thinking"></span><figcaption><b>Thinking</b><span>Eyes up, halftone dots</span></figcaption></figure>
+        <figure><span class="ch-av" data-shape="square" data-ink="moss" data-size="64" data-state="working" data-look="down" data-badge="working"></span><figcaption><b>Working</b><span>Prints off-register</span></figcaption></figure>
+        <figure><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="64" data-look="right" data-badge="needs"></span><figcaption><b>Needs you</b><span>Looks at the decision</span></figcaption></figure>
+        <figure><span class="ch-av" data-shape="droplet" data-ink="fern" data-size="64" data-look="up" data-badge="done"></span><figcaption><b>Done</b><span>Snaps into register</span></figcaption></figure>
+        <figure><span class="ch-av" data-shape="pill" data-ink="teal" data-size="64" data-state="error" data-look="down" data-badge="error"></span><figcaption><b>Error</b><span>Circled in correction red</span></figcaption></figure>
+        <figure><span class="ch-av" data-shape="cloud" data-ink="ochre" data-size="64" data-state="paused" data-badge="paused"></span><figcaption><b>Paused</b><span>Eyes closed, resumes on time</span></figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. PALETTE ============ -->
+<section class="ch sheet">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>04</i>Colour</p><h2 class="ch-title">Paper, ink, <em>and one pink that's yours</em></h2></div>
+      <p class="lead">60 % paper, 30 % sheet and ink, 10 % meaning. Agent inks live only on their own characters and names. Nothing in the palette is blue. Ratios below are computed live from the hex values.</p>
+    </div>
+    <div class="pal">
+      <div class="sw-card"><div class="chip" style="background:var(--paper)"><span>Paper</span><span>60 %</span></div><div class="info"><b>#f7f2e8</b><br>The canvas. Warm newsprint with a faint grain.</div></div>
+      <div class="sw-card"><div class="chip" style="background:var(--sheet);border-bottom:1px solid var(--rule)"><span>Sheet</span><span>cards</span></div><div class="info"><b>#fffcf6</b><br>Tickets, chat, anything you read closely.</div></div>
+      <div class="sw-card"><div class="chip" style="background:var(--ink);color:#f3ece0"><span>Press ink</span><span>text</span></div><div class="info"><b>#1f1c19</b><br>Text, outlines, the print offset on what you can press.</div></div>
+      <div class="sw-card"><div class="chip" style="background:var(--pink);box-shadow:inset 0 0 0 1.5px var(--ink)"><span>Proofing pink</span><span>your call</span></div><div class="info"><b>#ff4fa3</b> fill · <b>#b8005f</b> as text and focus<br>Once per screen, on your decision. Always ink-outlined.</div></div>
+    </div>
+    <div class="ratio-row">
+      <div class="card" style="padding:18px 22px">
+        <b class="h3">Text and UI on paper</b>
+        <table class="ratio-table" style="margin-top:8px">
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#1f1c19">Aa</span>Press ink on paper</td><td><span class="cr" data-cr="#1f1c19 #f7f2e8 7">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#4f4a43">Aa</span>Ink 2 (secondary)</td><td><span class="cr" data-cr="#4f4a43 #f7f2e8 7">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#6e675d">Aa</span>Ink 3 (meta)</td><td><span class="cr" data-cr="#6e675d #f7f2e8 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;box-shadow:inset 0 0 0 2px #8d8577"></span>Control edge (UI, 3:1)</td><td><span class="cr" data-cr="#8d8577 #f7f2e8 3">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#ff4fa3;color:#1f1c19">Aa</span>Ink on proofing pink</td><td><span class="cr" data-cr="#1f1c19 #ff4fa3 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#b8005f">Aa</span>Pink ink (focus, text)</td><td><span class="cr" data-cr="#b8005f #f7f2e8 4.5">–</span></td></tr>
+        </table>
+      </div>
+      <div class="card" style="padding:18px 22px">
+        <b class="h3">Meaning (always with a word)</b>
+        <table class="ratio-table" style="margin-top:8px">
+          <tr><td><span class="pair" style="background:#ffe14d;color:#1f1c19">!</span>Needs you: highlighter + ink</td><td><span class="cr" data-cr="#1f1c19 #ffe14d 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#7a5a00">Aa</span>Needs you as text</td><td><span class="cr" data-cr="#7a5a00 #f7f2e8 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#1e7a46">Aa</span>Done green</td><td><span class="cr" data-cr="#1e7a46 #f7f2e8 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#f7f2e8;color:#b42318">Aa</span>Correction red (errors)</td><td><span class="cr" data-cr="#b42318 #f7f2e8 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#ffe3f0;color:#b8005f">Aa</span>Pink ink on pink tint</td><td><span class="cr" data-cr="#b8005f #ffe3f0 4.5">–</span></td></tr>
+          <tr><td><span class="pair" style="background:#fffcf6;color:#1f1c19">Aa</span>Press ink on sheet</td><td><span class="cr" data-cr="#1f1c19 #fffcf6 7">–</span></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card" style="padding:18px 22px;margin-top:16px">
+      <b class="h3">Agent spot inks</b> <span class="cap">· body ink above, name ink below with its ratio on paper. No blue, no pink: pink is yours, blue is nobody's.</span>
+      <div class="inks" id="inks"></div>
+    </div>
+    <div class="night">
+      <div><b class="h3">The press room after hours</b><p class="cap" style="margin-top:4px">Light is home. Dark mode is the same studio at night: warm black, never inverted, the pink unchanged on its ink outline (now paper).</p></div>
+      <div class="night-sw" aria-label="Dark mapping swatches">
+        <i style="background:#1b1815" title="Night paper #1b1815"></i><i style="background:#25211d" title="Night sheet #25211d"></i><i style="background:#efe7da" title="Night text #efe7da"></i><i style="background:#ff5aaa;box-shadow:inset 0 0 0 1.5px #efe7da" title="Pink #ff5aaa"></i><i style="background:#f2d64a" title="Highlighter #f2d64a"></i><i style="background:#ff9d63" title="Apricot lifted #ff9d63"></i><i style="background:#b1bd55" title="Moss lifted #b1bd55"></i><i style="background:#9a82e4" title="Violet lifted #9a82e4"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. TYPE ============ -->
+<section class="ch">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>05</i>Typefaces</p><h2 class="ch-title">An editor's serif, <em>a newsroom grotesk</em></h2></div>
+      <p class="lead">Newsreader (Production Type, OFL) speaks for the studio: headings, greetings, the essence. Schibsted Grotesk (Schibsted, OFL; drawn for a newspaper group) does every working word: UI, numbers, agents. Both bundled, two weights each in a view.</p>
+    </div>
+    <div class="type-grid">
+      <div class="card spec">
+        <div class="big">Signed <em>by you.</em></div>
+        <p class="cap" style="margin-top:16px">Newsreader 500 / 400 italic · optical sizes 6–72 · tracking −0.034em at display, −0.02em at 30 px</p>
+        <div class="ui-big" style="margin-top:34px">0.9 % · 09:20</div>
+        <p class="cap" style="margin-top:12px">Schibsted Grotesk 400 / 600 (800 for the wordmark only) · tabular figures for every number</p>
+      </div>
+      <div class="card spec">
+        <table class="scale">
+          <tr><td>Display</td><td style="font:500 44px/48px var(--display);letter-spacing:-.03em">Good morning</td><td>44 / 48 · serif</td></tr>
+          <tr><td>Heading</td><td style="font:500 30px/34px var(--display);letter-spacing:-.02em">Two things need you</td><td>30 / 34 · serif</td></tr>
+          <tr><td>Title</td><td style="font:600 17px/23px var(--ui)">Noor asks to run a command</td><td>17 / 23 · 600</td></tr>
+          <tr><td>Body</td><td style="font:400 14px/21px var(--ui)">done. swapped in date-fns, 41 lines removed.</td><td>14 / 21 · 400</td></tr>
+          <tr><td>Meta</td><td style="font:400 12px/18px var(--ui);color:var(--ink-3)">About 3 min · 0.9 % of your week</td><td>12 / 18 · 400</td></tr>
+          <tr><td>Label</td><td style="font:600 10.5px/14px var(--ui);letter-spacing:.1em;text-transform:uppercase">Needs you · outward</td><td>10.5 caps · 600</td></tr>
+        </table>
+        <p class="cap" style="margin-top:14px">Six steps; any one app view uses at most four. Code in chat uses the platform mono (Cascadia on Windows), never a third brand face.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. APP FRAME ============ -->
+<section class="ch sheet">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>06</i>In the app</p><h2 class="ch-title">Home and a chat, <em>on the proof</em></h2></div>
+      <p class="lead">One pink on the whole screen: <b>Allow once</b> on Noor's ticket. Send, Deny and everything else stays in ink. The ticket is a perforated slip; its cost is printed on it before you press.</p>
+    </div>
+
+    <div class="app" role="img" aria-label="App frame: Home with the What needs you ticket, and the team chat">
+      <div class="tb">
+        <span class="lockup" style="--h:18px"><svg aria-hidden="true"><use href="#mark-mono"/></svg><span class="wm flat" data-name="bench" style="font-size:13px;letter-spacing:-.03em">bench</span></span>
+        <span class="crumb">Home</span>
+        <span class="grow"></span>
+        <span class="win" aria-hidden="true">
+          <span><svg viewBox="0 0 10 10"><path d="M1 5h8" stroke="currentColor" stroke-width="1.2"/></svg></span>
+          <span><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span>
+          <span><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke="currentColor" stroke-width="1.2"/></svg></span>
+        </span>
+      </div>
+
+      <aside class="side">
+        <div class="nav on"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 7.5 8 3l5.5 4.5V13H2.5z"/></svg>Home<span class="badge num">2</span></div>
+        <div class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg>Chats</div>
+        <div class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg>Projects</div>
+        <div class="nav"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.5 2.5h9v11h-9zM6 5.5h4M6 8h4M6 10.5h2.5"/></svg>Memory</div>
+        <p class="lbl">Your team</p>
+        <div class="mate"><span class="ch-av" data-shape="blob" data-ink="violet" data-size="28" data-badge="idle"></span><div><b>Atlas</b><small>Idle</small></div></div>
+        <div class="mate"><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="28" data-look="right" data-badge="needs"></span><div><b>Noor</b><small class="needs">Needs you</small></div></div>
+        <div class="mate"><span class="ch-av" data-shape="square" data-ink="moss" data-size="28" data-state="working" data-badge="working"></span><div><b>Karim</b><small>Working · date utils</small></div></div>
+        <div class="mate"><span class="ch-av" data-shape="droplet" data-ink="fern" data-size="28" data-badge="done"></span><div><b>Maya</b><small>Done · sprint notes</small></div></div>
+        <div class="mate"><span class="ch-av" data-shape="cloud" data-ink="ochre" data-size="28" data-state="thinking" data-badge="thinking"></span><div><b>Lumen</b><small>Thinking</small></div></div>
+        <div class="usage">
+          <div style="display:flex;justify-content:space-between;font-size:12px"><b>Your week</b><span class="num">62 %</span></div>
+          <div class="meter" role="img" aria-label="62 percent of your week used"><i></i></div>
+          <small class="cap" style="font-size:12px">Resets Mon 26 Oct, 09:00</small>
+        </div>
+      </aside>
+
+      <main class="home">
+        <p class="date">Thursday 22 October</p>
+        <h2>Good morning. <em>Two things need you.</em></h2>
+        <div class="sec">What needs you <span class="n num">2</span></div>
+
+        <article class="ticket" aria-label="Ticket: Noor asks to run a command">
+          <span class="no num">No. 014</span>
+          <div class="t-head">
+            <span class="ch-av" data-shape="egg" data-ink="apricot" data-size="40" data-look="right" data-badge="needs"></span>
+            <div>
+              <h3>Noor asks to run a command</h3>
+              <p class="prov">Atlas passed it to you: it's a new command pattern · 08:41 &nbsp;<span class="tag needs">Needs you</span></p>
+            </div>
+          </div>
+          <div class="t-body">
+            <div class="cmd"><code>npm test --workspace bench</code><span>in bench/</span></div>
+            <div class="conseq"><span>About <b class="num">3 min</b></span><span><b class="num">0.9 %</b> of your week</span><span>Changes <b class="num">0</b> files</span><span>Nobody is notified</span></div>
+            <div class="acts">
+              <button class="btn primary" type="button">Allow once <span class="est num">· 0.9 %</span></button>
+              <button class="btn" type="button">Deny</button>
+              <span class="grow"></span>
+              <a class="link" href="#proof">See the proof</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="ticket closed" aria-label="Ticket: Lumen's draft is held">
+          <span class="ch-av" data-shape="cloud" data-ink="ochre" data-size="32" data-badge="needs"></span>
+          <div class="tx"><b>Lumen drafted the Friday note to Dana</b><small>Held. Nothing sends until you've read it.</small></div>
+          <span class="tag">Outward</span>
+          <button class="btn sm" type="button">Read</button>
+        </article>
+
+        <div class="learned">
+          <span class="ch-av" data-shape="square" data-ink="moss" data-size="24"></span>
+          <span style="flex:1">Your team learned <b class="num">3</b> things this week.</span>
+          <span class="chipl">Applied your PR style · Karim, 14 Oct</span>
+        </div>
+
+        <div class="working">
+          <div class="sec">Working now <span class="n num">2</span></div>
+          <div class="wrow"><span class="ch-av" data-shape="square" data-ink="moss" data-size="24" data-state="working"></span><div class="tx"><b>Karim</b> · replacing moment with date-fns</div><div class="bar"><i style="width:57%"></i></div><small class="num">4 of 7</small></div>
+          <div class="wrow"><span class="ch-av" data-shape="cloud" data-ink="ochre" data-size="24" data-state="thinking"></span><div class="tx"><b>Lumen</b> · outlining the release note</div><div class="bar"><i style="width:20%"></i></div><small class="num">1 of 5</small></div>
+        </div>
+      </main>
+
+      <section class="chat" aria-label="Team chat">
+        <div class="chat-h">
+          <span class="stack"><span class="ch-av" data-shape="square" data-ink="moss" data-size="26"></span><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="26"></span><span class="ch-av" data-shape="droplet" data-ink="fern" data-size="26"></span></span>
+          <div><b>Team · bench</b><small>Karim, Noor, Maya</small></div>
+        </div>
+        <div class="msgs">
+          <p class="sys">Atlas picked Karim</p>
+          <div class="m"><span class="ch-av" data-shape="square" data-ink="moss" data-size="28"></span><div class="body"><p class="who" style="color:var(--d-moss)">Karim</p><p class="txt">done. swapped in date-fns across 12 files, 41 lines removed.</p><p class="meta"><span class="num">1.2k tokens · 0.3 %</span><a href="#proof">See the proof</a></p></div></div>
+          <div class="slip"><div class="route"><span style="color:var(--d-moss)">Karim</span><svg width="14" height="8" viewBox="0 0 14 8" aria-hidden="true"><path d="M0 4h12M9 1l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span style="color:var(--d-apricot)">Noor</span></div>Brief: run the tests on the date change. <b>3 checks</b> to pass. No transcript passed.</div>
+          <div class="m"><span class="ch-av" data-shape="egg" data-ink="apricot" data-size="28" data-look="right"></span><div class="body"><p class="who" style="color:var(--d-apricot)">Noor</p><p class="txt">got it. i need your ok to run npm test. it's on Home.</p><p class="meta"><span class="tag needs" style="height:18px">Needs you</span></p></div></div>
+          <div class="you"><span class="bub">Fine. Keep Friday's note on hold until I've read it.</span><p class="meta" style="font-size:11.5px;color:var(--ink-3);margin-top:4px">Seen by Noor · 08:52</p></div>
+        </div>
+        <div class="compose"><span>Message the team · @ to pick someone</span><span class="send" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></span></div>
+      </section>
+    </div>
+
+    <div class="annot">
+      <div><i>a</i><b>One pink</b>Allow once is the only filled colour on screen. Pink always means a decision that's yours.</div>
+      <div><i>b</i><b>Cost on the slip</b>Minutes, % of your week, files and recipients are printed before you press.</div>
+      <div><i>c</i><b>Eyes on the decision</b>Noor looks at her ticket. The yellow highlighter and the words carry the meaning.</div>
+      <div><i>d</i><b>See the proof</b>The glass-box handle on every ticket and message opens the full trace.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. MOTION ============ -->
+<section class="ch" id="proof">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>07</i>Motion personality</p><h2 class="ch-title">Printed, <em>not animated</em></h2></div>
+      <p class="lead">Things move the way paper and ink do: sheets feed in, slips slide, stamps land, ink settles into register. Short, weighted, a touch mechanical. With reduced motion, each one rests on its final frame and the words still say it.</p>
+    </div>
+    <div class="mo-grid">
+      <div class="card mo">
+        <div class="stage reg-demo">
+          <span class="ch-av" data-shape="square" data-ink="moss" data-size="96"></span>
+          <span class="reg-check stamp ok" style="--b:26px;position:absolute"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>
+          <span class="reg-word"><span class="a">Working · 4 of 7</span><span class="b">Done · all green</span></span>
+        </div>
+        <div class="txt"><b>Into register</b><p>While an agent works, its ink jitters a pixel off. When the work lands, the layers snap together and a green stamp appears. The signature moment.</p><small>Jitter: steps(1) at 1.3 s · snap 120 ms · reduced: registered + "Done"</small></div>
+      </div>
+      <div class="card mo">
+        <div class="stage">
+          <div class="rail">
+            <span class="ch-av from" data-shape="square" data-ink="moss" data-size="52"></span>
+            <span class="line"></span>
+            <span class="flying">Brief · 3 checks</span>
+            <span class="ch-av to" data-shape="egg" data-ink="apricot" data-size="52" data-look="left"></span>
+            <span class="names"><span>Karim</span><span>Noor</span></span>
+          </div>
+        </div>
+        <div class="txt"><b>The slip travels</b><p>A handoff is a paper slip sliding from one agent to the next, tilting as it goes and squaring when it lands.</p><small>620 ms · feed curve · reduced: slip shown at Noor</small></div>
+      </div>
+      <div class="card mo">
+        <div class="stage hl-demo">
+          <span class="ch-av glance" data-shape="egg" data-ink="apricot" data-size="64"></span>
+          <span class="hl-text">Noor needs you</span>
+        </div>
+        <div class="txt"><b>The highlighter</b><p>"Needs you" is marked like a proofreader would: a yellow swipe left to right, and the agent's eyes glance to the decision.</p><small>480 ms swipe · eyes 360 ms · reduced: marked at rest</small></div>
+      </div>
+      <div class="card mo">
+        <div class="stage stamp-demo">
+          <button class="btn primary" type="button" tabindex="-1">Allow once <span class="est num">· 0.9 %</span></button>
+          <span class="signed">Signed · 09:20</span>
+        </div>
+        <div class="txt"><b>The stamp</b><p>Your call is a press: the pink button sinks onto its ink offset, and the ticket gets stamped with the time. Undo sits beside it for 10 s.</p><small>Press 80 ms · stamp 220 ms, slight overshoot · reduced: stamp shown</small></div>
+      </div>
+      <div class="card mo">
+        <div class="stage ht-demo">
+          <span class="ch-av" data-shape="blob" data-ink="violet" data-size="72" data-look="up"></span>
+          <span class="ht-dots" aria-hidden="true"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i></span>
+        </div>
+        <div class="txt"><b>Thinking in halftone</b><p>Thinking is a few halftone dots in the agent's ink, pulsing like a screen being exposed. Calm, never a spinner.</p><small>1.6 s loop · reduced: static dots + "Thinking"</small></div>
+      </div>
+      <div class="card mo">
+        <div class="stage">
+          <div class="feed-demo"><div class="mini"><b>Lumen drafted the Friday note</b>Held. Nothing sends until you've read it.</div></div>
+        </div>
+        <div class="txt"><b>Off the press</b><p>New tickets and messages feed in from below with a slight tilt that squares as they settle, like a sheet leaving the rollers.</p><small>360 ms · feed curve · reduced: crossfade 0 ms</small></div>
+      </div>
+    </div>
+    <div class="tokens">
+      <div><b>Feed</b> (arrivals, slips)<code>cubic-bezier(.2,.9,.25,1)</code></div>
+      <div><b>Stamp</b> (your decisions)<code>cubic-bezier(.5,0,.2,1.4)</code></div>
+      <div><b>Durations</b><code>80 · 120 · 220 · 360 · 620 ms</code></div>
+      <div><b>Loops</b> (only characters)<code>blink 6.5 s · misreg 1.3 s · think 1.4 s</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. VOICE ============ -->
+<section class="ch sheet">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>08</i>Voice</p><h2 class="ch-title">Written like <em>a good job slip</em></h2></div>
+      <p class="lead">The app speaks to you as the main agent would: second person, numbers first, one next step. Agents write lowercase and short. Studio words (proof, slip, signed) are seasoning, used where they make things clearer, never as puns.</p>
+    </div>
+    <div class="voice">
+      <table class="vt">
+        <thead><tr><th>Write</th><th>Not</th></tr></thead>
+        <tbody>
+          <tr><td>What needs you · 2</td><td class="no">Pending items (2)</td></tr>
+          <tr><td>Noor asks to run <b>npm test</b>. About 3 min, 0.9 % of your week.</td><td class="no">Permission request: Bash tool. Approve?</td></tr>
+          <tr><td>Held. Nothing sends until you've read it.</td><td class="no">Are you sure you want to continue?</td></tr>
+          <tr><td>Signed at 09:20. Noor is running the tests. Undo</td><td class="no">Action approved successfully!</td></tr>
+          <tr><td>See the proof</td><td class="no">View logs</td></tr>
+          <tr><td>done. swapped in date-fns, 41 lines removed.</td><td class="no">Great news! I've completed the task!</td></tr>
+          <tr><td>You're all caught up. The team is working on 7 things.</td><td class="no">No items.</td></tr>
+        </tbody>
+      </table>
+      <div class="moments">
+        <div class="card moment"><p class="k">Usage limit (worst moment)</p><p>Paused: your weekly limit is reached. 2 of 2 runs resume Mon 26 Oct at 09:00. Nothing is lost.</p></div>
+        <div class="card moment"><p class="k">A run fails</p><p>The test run stopped: out of memory. Noor kept her changes and the 09:12 checkpoint. Retry with 2 workers?</p></div>
+        <div class="card moment"><p class="k">Denied</p><p>Denied at 09:24. Karim will open a pull request for you to merge instead. Nothing ran.</p></div>
+        <div class="card moment"><p class="k">Learning</p><p>Applied what Noor learned on 22 Oct: use the repo's date library.</p></div>
+        <div class="card moment"><p class="k">Agent, handing off</p><p class="agent">passing this to noor with a brief. 3 checks to pass.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. SOUND ============ -->
+<section class="ch">
+  <div class="wrap">
+    <div class="ch-head">
+      <div><p class="folio"><i>09</i>Sound personality</p><h2 class="ch-title">Paper, felt <em>and a rubber stamp</em></h2></div>
+      <p class="lead">Sounds are on, decided by you. They come from the studio's materials, not from a synth demo: soft, dry, close-miked, under 300 ms, pitched low. Press play to hear sketches synthesised in the browser.</p>
+    </div>
+    <div class="snd-grid">
+      <div class="card snd">
+        <div class="top"><b>Needs you</b><button class="play" type="button" data-sound="needs"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>Play</button></div>
+        <svg class="wave" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22h20l3-14 3 28 3-20 3 12 3-6h40l4-9 4 18 4-12 4 6h20l4-6 4 12 4-8 4 4H300" fill="none" stroke="var(--ink)" stroke-width="1.5"/></svg>
+        <dl><dt>Sounds like</dt><dd>A rubber stamp tapping the desk, then a felt-hammer note rising a fourth</dd><dt>Means</dt><dd>A decision is yours: a ticket joined What needs you</dd><dt>Length</dt><dd class="num">260 ms</dd></dl>
+      </div>
+      <div class="card snd">
+        <div class="top"><b>Done</b><button class="play" type="button" data-sound="done"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>Play</button></div>
+        <svg class="wave" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22h30l4-10 4 20 4-14 4 8 4-4h10l4-12 4 24 4-16 4 10 4-6 4 3H300" fill="none" stroke="var(--ink)" stroke-width="1.5"/></svg>
+        <dl><dt>Sounds like</dt><dd>A sheet landing on a stack, with one warm wooden note</dd><dt>Means</dt><dd>A task you asked for is finished and in register</dd><dt>Length</dt><dd class="num">220 ms</dd></dl>
+      </div>
+      <div class="card snd">
+        <div class="top"><b>Handoff</b><button class="play" type="button" data-sound="handoff"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.5v9l8-4.5z" fill="currentColor"/></svg>Play</button></div>
+        <svg class="wave" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22h40l3-2 3 4 3-4 3 5 3-6 3 7 3-8 3 9 3-8 3 7 3-6 3 5 3-4 3 3 3-2H300" fill="none" stroke="var(--ink)" stroke-width="1.5"/></svg>
+        <dl><dt>Sounds like</dt><dd>A paper slip sliding across a desk, panned in the direction it travels</dd><dt>Means</dt><dd>Work moved between agents in a chat you have open</dd><dt>Length</dt><dd class="num">200 ms</dd></dl>
+      </div>
+    </div>
+    <div class="snd-rules">
+      <div class="card">
+        <b class="h3">Rules</b>
+        <ul>
+          <li>Three sounds only. Never for typing, agents talking to each other, or errors you didn't cause.</li>
+          <li>Handoff plays only in a chat you're looking at; Needs you plays at most once a minute.</li>
+          <li>Focus and Do Not Disturb silence everything; the OS notification keeps its own sound setting.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <b class="h3">On by default, one switch to mute</b>
+        <p class="cap" style="margin-top:6px">Settings › Sound. The same switch is in the tray menu.</p>
+        <div class="mute-row"><span>Bench sounds</span><button class="toggle" id="muteToggle" type="button" aria-pressed="true"><span class="sw" aria-hidden="true"></span><span id="muteLabel">On</span></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap row">
+    <span class="lockup" style="--h:40px"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm" data-name="bench">bench</span></span>
+    <p class="cap" style="max-width:62ch">Board B · The Proof. One of three directions for your review; nothing here is decided. Fonts: Newsreader and Schibsted Grotesk, both SIL Open Font License, loaded from Google Fonts for this board and bundled in the app. Brand platform: board-b.md.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var EYE_Y={sphere:54,egg:60,droplet:62,pill:56,square:52,triangle:66,cloud:67,blob:52};
+  var LOOK={none:[.6,1],right:[2.6,1.4],left:[-2.2,1.4],up:[.4,-2.6],down:[.6,3]};
+  var GLYPH={
+    needs:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3.5v5.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="12.3" r="1.4" fill="currentColor"/></svg>',
+    done:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>',
+    error:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>',
+    working:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M8 3a5 5 0 0 1 5 5"/></svg>',
+    thinking:'<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="8" r="1.6" fill="currentColor"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/><circle cx="12" cy="8" r="1.6" fill="currentColor"/></svg>',
+    paused:'<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="4" width="2.4" height="8" rx="1" fill="currentColor"/><rect x="9.1" y="4" width="2.4" height="8" rx="1" fill="currentColor"/></svg>',
+    idle:'<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>'
+  };
+  var STAMP_CLASS={needs:"needs",done:"ok",error:"err",working:"",thinking:"",paused:"ink",idle:""};
+  var WORD={needs:"needs you",done:"done",error:"error",working:"working",thinking:"thinking",paused:"paused",idle:"idle"};
+
+  function build(el){
+    var shape=el.getAttribute("data-shape")||"sphere";
+    var ink=el.getAttribute("data-ink")||"violet";
+    var size=parseInt(el.getAttribute("data-size")||"40",10);
+    var state=el.getAttribute("data-state")||"";
+    var look=el.getAttribute("data-look")||(state==="error"?"down":"none");
+    var badge=el.getAttribute("data-badge")||"";
+    var y=EYE_Y[shape]||56, l=LOOK[look]||LOOK.none;
+    var s='<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">'+
+      '<g class="reg"><use href="#s-'+shape+'" style="fill:var(--a-'+ink+')"/></g>'+
+      '<use class="tone" href="#s-'+shape+'" fill="url(#ht)" mask="url(#shade)"/>'+
+      '<g class="face"><ellipse class="eye" cx="40" cy="'+y+'" rx="6.6" ry="9"/><ellipse class="eye" cx="60" cy="'+y+'" rx="6.6" ry="9"/>'+
+      '<g class="pupils" style="transform:translate('+l[0]+'px,'+l[1]+'px)"><circle cx="40" cy="'+y+'" r="3.6"/><circle cx="60" cy="'+y+'" r="3.6"/></g></g>';
+    if(state==="thinking"){s+='<g class="think" style="fill:var(--d-'+ink+')"><circle cx="86" cy="20" r="4"/><circle cx="96" cy="11" r="3.2"/><circle cx="104" cy="3" r="2.4"/></g>';}
+    if(state==="error"){s+='<path class="ring" d="M50 6C80 4 100 24 99 52C98 82 74 98 46 97C18 96 0 76 2 50C4 26 24 9 56 7"/>';}
+    s+='</svg>';
+    if(badge&&size>=24&&GLYPH[badge]){
+      var b=Math.max(12,Math.round(size*0.36));
+      s+='<span class="stamp '+(STAMP_CLASS[badge]||"")+'" style="--b:'+b+'px">'+GLYPH[badge]+'</span>';
+    }
+    el.style.width=size+"px"; el.style.height=size+"px";
+    if(size<32){el.classList.add("small");}
+    if(state){el.classList.add("is-"+state);}
+    el.innerHTML=s;
+    var name=el.getAttribute("data-label");
+    if(name){el.setAttribute("role","img");el.setAttribute("aria-label",name+(badge?", "+WORD[badge]:""));}
+    else{el.setAttribute("aria-hidden","true");}
+  }
+  var els=document.querySelectorAll(".ch-av[data-shape]");
+  for(var i=0;i<els.length;i++){build(els[i]);}
+
+  /* contrast, computed from the hex values */
+  function lin(c){c=c/255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+  function lum(hex){var n=parseInt(hex.replace("#",""),16);return 0.2126*lin((n>>16)&255)+0.7152*lin((n>>8)&255)+0.0722*lin(n&255);}
+  function ratio(a,b){var x=lum(a),y=lum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);}
+  var crs=document.querySelectorAll("[data-cr]");
+  for(var j=0;j<crs.length;j++){
+    var p=crs[j].getAttribute("data-cr").split(" ");
+    var r=ratio(p[0],p[1]), min=parseFloat(p[2]);
+    crs[j].textContent=r.toFixed(2)+":1 · "+(r>=min?(min>=7?"AAA":(min===3?"AA UI":"AA")):"below "+min);
+    if(r<min){crs[j].classList.add("fail");}
+  }
+
+  /* agent ink chips */
+  var INKS=[["Apricot","#ff8c4b","#a14a12","Noor"],["Ochre","#e0a429","#7a5600","Lumen"],["Moss","#9aa83a","#55621a","Karim"],["Fern","#3aa86b","#1f7044","Maya"],["Teal","#12a594","#0b6b61","Sam"],["Sage","#8db59a","#3f6b4e","Iris"],["Violet","#7a5cd0","#5a3fb0","Atlas"],["Cocoa","#a8694a","#7a4630","Omar"]];
+  var inkWrap=document.getElementById("inks");
+  if(inkWrap){
+    var html="";
+    for(var k=0;k<INKS.length;k++){
+      var v=INKS[k], rr=ratio(v[2],"#f7f2e8");
+      html+='<div class="ink-chip"><i style="background:'+v[1]+'"></i><span><b style="color:'+v[2]+'">'+v[0]+'</b>'+v[1]+' / '+v[2]+'<br><span class="cr" style="padding:0;display:inline">'+rr.toFixed(2)+':1</span> · '+v[3]+'</span></div>';
+    }
+    inkWrap.innerHTML=html;
+  }
+
+  /* reduced motion preview */
+  var rm=document.getElementById("rmToggle");
+  if(rm){rm.addEventListener("click",function(){var on=rm.getAttribute("aria-pressed")!=="true";rm.setAttribute("aria-pressed",String(on));document.documentElement.classList.toggle("rm",on);});}
+
+  /* sound sketches (Web Audio, created on first click) */
+  var ac=null, muted=false;
+  function ctx(){
+    if(!ac){var C=window.AudioContext||window.webkitAudioContext;if(!C){return null;}ac=new C();}
+    if(ac.state==="suspended"){ac.resume();}
+    return ac;
+  }
+  function out(a,pan){
+    if(pan!==undefined&&a.createStereoPanner){var p=a.createStereoPanner();p.pan.value=pan;p.connect(a.destination);return p;}
+    return a.destination;
+  }
+  function noise(a,dur){
+    var len=Math.max(1,Math.floor(a.sampleRate*dur)),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);
+    for(var i=0;i<len;i++){d[i]=Math.random()*2-1;}
+    var src=a.createBufferSource();src.buffer=buf;return src;
+  }
+  function env(a,t,peak,att,dur){var g=a.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+att);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);return g;}
+  function tone(a,t,f,dur,type,peak,dest){var o=a.createOscillator();o.type=type;o.frequency.setValueAtTime(f,t);var g=env(a,t,peak,0.006,dur);o.connect(g);g.connect(dest||a.destination);o.start(t);o.stop(t+dur+0.03);}
+  function thud(a,t,freq,q,dur,peak,dest){var n=noise(a,dur+0.02),f=a.createBiquadFilter();f.type="bandpass";f.frequency.value=freq;f.Q.value=q;var g=env(a,t,peak,0.003,dur);n.connect(f);f.connect(g);g.connect(dest||a.destination);n.start(t);n.stop(t+dur+0.03);}
+  var SOUNDS={
+    needs:function(a){var t=a.currentTime+0.02;thud(a,t,420,1.2,0.06,0.5);tone(a,t+0.07,523.25,0.16,"sine",0.18);tone(a,t+0.07,1046.5,0.08,"sine",0.03);tone(a,t+0.13,698.46,0.13,"sine",0.16);},
+    done:function(a){var t=a.currentTime+0.02;thud(a,t,900,0.7,0.09,0.35);tone(a,t+0.03,392,0.19,"triangle",0.2);tone(a,t+0.03,784,0.07,"sine",0.04);},
+    handoff:function(a){var t=a.currentTime+0.02,n=noise(a,0.24),f=a.createBiquadFilter();f.type="bandpass";f.Q.value=2.2;f.frequency.setValueAtTime(700,t);f.frequency.exponentialRampToValueAtTime(2600,t+0.2);var g=env(a,t,0.32,0.04,0.2);var dest=out(a,-0.6);if(dest!==a.destination&&dest.pan){dest.pan.setValueAtTime(-0.6,t);dest.pan.linearRampToValueAtTime(0.6,t+0.2);}n.connect(f);f.connect(g);g.connect(dest);n.start(t);n.stop(t+0.26);}
+  };
+  var plays=document.querySelectorAll("[data-sound]");
+  for(var m=0;m<plays.length;m++){
+    plays[m].addEventListener("click",function(ev){
+      var btn=ev.currentTarget;
+      if(muted){btn.lastChild.nodeValue="Muted";setTimeout(function(){btn.lastChild.nodeValue="Play";},900);return;}
+      var a=ctx();if(!a){return;}
+      try{SOUNDS[btn.getAttribute("data-sound")](a);}catch(e){return;}
+      btn.classList.add("on");setTimeout(function(){btn.classList.remove("on");},320);
+    });
+  }
+  var mute=document.getElementById("muteToggle"),muteLabel=document.getElementById("muteLabel");
+  if(mute&&muteLabel){mute.addEventListener("click",function(){var on=mute.getAttribute("aria-pressed")!=="true";mute.setAttribute("aria-pressed",String(on));muted=!on;muteLabel.textContent=on?"On":"Muted";});}
+})();
+</script>
+</body>
+</html>

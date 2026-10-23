@@ -1,0 +1,280 @@
+/*
+ * Bench design tokens · v1.0-draft (stage 1, 2026-10-22)
+ * Source of truth for the design system. Spec: ./DESIGN-SYSTEM.md
+ * Light theme is built. Dark is planned (see the mapping at the end and DESIGN-SYSTEM.md §9); do not ship it unverified.
+ *
+ * Naming: primitives (--porcelain-*, --cobalt-*, --hue-*) are the palette; components use only the semantic
+ * tokens (--bg-*, --text-*, --line-*, --action-*, --ok-*, --attn-*, --danger-*, --agent-*). A raw hex in a
+ * component is a second palette starting: don't.
+ *
+ * Contrast results quoted below are WCAG 2.x ratios, computed from these exact values.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ------------------------------------------------------------------ */
+  /* 1. Colour primitives                                                */
+  /* ------------------------------------------------------------------ */
+
+  /* Porcelain: the signature neutral. A faint blue undertone shared with Ink and Cobalt, so the chrome,
+     the text and the one action read as one material. (Proposal P-1, replaces Apple Frost/Carbon.) */
+  --porcelain-0: #ffffff;
+  --porcelain-25: #f9fafb;
+  --porcelain-50: #f3f4f7;   /* the ground */
+  --porcelain-100: #eceef2;  /* sunken, tracks, hover on ground */
+  --porcelain-150: #e4e6ec;  /* selected neutral, pressed */
+  --porcelain-200: #d8dbe2;  /* strong divider on ground */
+  --porcelain-300: #c4c8d1;  /* decorative only, never text, never a control edge */
+  --porcelain-500: #868b97;  /* control edge: 3.41:1 on white, 3.11:1 on ground */
+  --porcelain-600: #646976;  /* text-3: 5.49 white · 4.99 ground · 4.73 sunken */
+  --porcelain-700: #474b57;  /* text-2: 8.71 white */
+  --porcelain-900: #15171d;  /* Ink: 17.9 white · 16.3 ground */
+
+  /* Cobalt: the one action colour. (Proposal P-2, replaces Apple Blue #0071e3.) */
+  --cobalt-50: #ebf0ff;      /* action tint (selected, info) */
+  --cobalt-300: #8fa8ff;     /* links and focus on Ink: 7.86:1 on #15171d */
+  --cobalt-500: #2e5bff;     /* white on it 5.17:1 · as text on white 5.17 · on ground 4.71 */
+  --cobalt-600: #2550eb;     /* hover: white on it 6.13:1 */
+  --cobalt-700: #1f45d1;     /* pressed */
+
+  /* Feedback. Always with a word or a glyph, never colour alone. */
+  --green-50: #e3f5ea;  --green-500: #22a35a;  --green-700: #1b7a45;   /* 700 on white 5.36 · on 50 4.73 */
+  --amber-50: #fff1d9;  --amber-500: #f5a20a;  --amber-700: #8a5300;   /* 700 on white 6.33 · on 50 5.68 · Ink on 500 8.58 */
+  --red-50:   #fdeaea;  --red-500:   #e5383b;  --red-700:   #c0262d;   /* 700 on white 5.90 · on 50 5.10 · white on 700 5.90 */
+
+  /* Agent hues: ten identities. Identity = hue × shape (D-UI8). Never on a button, never for status.
+     base: flat avatar body (white eyes ≥ 1.8:1, decorative) · light/deep: hero render gradient
+     ink: name tags, mention text (AA on white and on tint) · tint: the client's bubble in that agent's chat,
+     mention chips · wash: the canvas behind that agent's conversation. */
+  --hue-coral-base: #ff5f73;     --hue-coral-light: #ffb8c1;     --hue-coral-deep: #e0364f;     --hue-coral-ink: #c4283f;     --hue-coral-tint: #ffe6e9;     --hue-coral-wash: #fff8f9;
+  --hue-tangerine-base: #ff8a3d; --hue-tangerine-light: #ffc9a3; --hue-tangerine-deep: #e0601a; --hue-tangerine-ink: #b04a00; --hue-tangerine-tint: #ffeee2; --hue-tangerine-wash: #fffaf6;
+  --hue-honey-base: #f2ab1d;     --hue-honey-light: #ffe2a0;     --hue-honey-deep: #cf8600;     --hue-honey-ink: #8a5a00;     --hue-honey-tint: #fff4dc;     --hue-honey-wash: #fffcf4;
+  --hue-pear-base: #96bf2c;      --hue-pear-light: #d6ec9a;      --hue-pear-deep: #6c9410;      --hue-pear-ink: #4d6a00;      --hue-pear-tint: #f0f7dc;      --hue-pear-wash: #fbfdf4;
+  --hue-mint-base: #3cc47c;      --hue-mint-light: #aeedc9;      --hue-mint-deep: #1f9658;      --hue-mint-ink: #1d7a43;      --hue-mint-tint: #e5f7ec;      --hue-mint-wash: #f6fcf8;
+  --hue-teal-base: #1fb5a3;      --hue-teal-light: #9ee8dc;      --hue-teal-deep: #0c8a7c;      --hue-teal-ink: #00756a;      --hue-teal-tint: #e1f6f2;      --hue-teal-wash: #f5fcfb;
+  --hue-aqua-base: #2db4dc;      --hue-aqua-light: #a6e6f7;      --hue-aqua-deep: #0e86b0;      --hue-aqua-ink: #006b85;      --hue-aqua-tint: #e3f6fb;      --hue-aqua-wash: #f6fcfe;
+  --hue-lavender-base: #8e6cf0;  --hue-lavender-light: #cbbcff;  --hue-lavender-deep: #5f3fd0;  --hue-lavender-ink: #5a3dc8;  --hue-lavender-tint: #efeaff;  --hue-lavender-wash: #faf8ff;
+  --hue-orchid-base: #e05cb4;    --hue-orchid-light: #f6b6e1;    --hue-orchid-deep: #b8358d;    --hue-orchid-ink: #b0287f;    --hue-orchid-tint: #fbe7f4;    --hue-orchid-wash: #fef8fc;
+  --hue-cocoa-base: #a66e4e;     --hue-cocoa-light: #dcb59d;     --hue-cocoa-deep: #7d4c31;     --hue-cocoa-ink: #7a4a2e;     --hue-cocoa-tint: #f5ebe4;     --hue-cocoa-wash: #fcf8f5;
+  --hue-none-base: #b4b7bf;      --hue-none-light: #dfe1e6;     --hue-none-deep: #8b8f99;      --hue-none-ink: #474b57;      --hue-none-tint: #eceef2;      --hue-none-wash: #f9fafb;
+
+  /* ------------------------------------------------------------------ */
+  /* 2. Colour roles (use these in components)                           */
+  /* ------------------------------------------------------------------ */
+  --bg-ground: var(--porcelain-50);     /* 60 %: canvas, sidebar */
+  --bg-surface: var(--porcelain-0);     /* 30 %: content sheets, cards, bubbles */
+  --bg-sunken: var(--porcelain-100);    /* tracks, wells, inputs at rest on white */
+  --bg-inverse: var(--porcelain-900);   /* toasts, tooltips, the mark */
+
+  /* State overlays: ink at low alpha, so hover/press work on any ground, wash or tint. */
+  --state-hover: rgb(21 23 29 / 0.045);
+  --state-press: rgb(21 23 29 / 0.085);
+  --state-selected: rgb(21 23 29 / 0.07);
+
+  --text-1: var(--porcelain-900);
+  --text-2: var(--porcelain-700);
+  --text-3: var(--porcelain-600);       /* also placeholders and disabled labels: still 4.5:1 */
+  --text-inverse: #eceef3;
+  --text-inverse-2: #a9adb8;            /* 7.98:1 on Ink */
+  --text-on-action: #ffffff;
+
+  --line-subtle: rgb(21 23 29 / 0.07);  /* card ring on ground */
+  --line: rgb(21 23 29 / 0.11);         /* dividers inside a surface */
+  --line-control: var(--porcelain-500); /* input and switch edges (≥ 3:1) */
+
+  --action: var(--cobalt-500);
+  --action-hover: var(--cobalt-600);
+  --action-press: var(--cobalt-700);
+  --action-tint: var(--cobalt-50);      /* cobalt text on it 4.54:1 */
+  --action-text: var(--cobalt-500);     /* links */
+  --focus: var(--cobalt-500);
+
+  --ok-ink: var(--green-700);   --ok-tint: var(--green-50);   --ok-fill: var(--green-500);
+  --attn-ink: var(--amber-700); --attn-tint: var(--amber-50); --attn-fill: var(--amber-500);  /* "needs you" */
+  --danger-ink: var(--red-700); --danger-tint: var(--red-50); --danger-fill: var(--red-500);
+
+  /* The current agent. Set data-hue on any container; everything inside inherits its identity. */
+  --agent-base: var(--hue-none-base);
+  --agent-light: var(--hue-none-light);
+  --agent-deep: var(--hue-none-deep);
+  --agent-ink: var(--hue-none-ink);
+  --agent-tint: var(--hue-none-tint);
+  --agent-wash: var(--hue-none-wash);
+
+  /* ------------------------------------------------------------------ */
+  /* 3. Type                                                             */
+  /* ------------------------------------------------------------------ */
+  /* The platform's own grotesk (Proposal P-3): SF Pro on macOS, Segoe UI Variable on Windows, Inter on Linux.
+     Identity lives in the drawn wordmark, the eyes and the colour, not in a downloaded face. */
+  --font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", Inter, system-ui, sans-serif;
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", Inter, system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "Cascadia Code", "Cascadia Mono", Consolas, monospace;
+
+  --weight-regular: 400;
+  --weight-strong: 600;   /* the only other weight */
+
+  /* Six steps, far apart. Any one view uses four at most. */
+  --fs-meta: 12px;      --lh-meta: 16px;     --ls-meta: 0.005em;    /* timestamps, tags, token counts */
+  --fs-sub: 13px;       --lh-sub: 18px;      --ls-sub: 0;           /* snippets, descriptions, helper text */
+  --fs-body: 15px;      --lh-body: 22px;     --ls-body: -0.006em;   /* body, chat, inputs, names (D-UI1) */
+  --fs-title: 20px;     --lh-title: 26px;    --ls-title: -0.014em;  /* pane, card-hero and dialog titles */
+  --fs-headline: 28px;  --lh-headline: 34px; --ls-headline: -0.022em; /* one per screen: the h1 */
+  --fs-display: 44px;   --lh-display: 48px;  --ls-display: -0.032em;  /* first run and brand only */
+
+  --measure-chat: 34em;   /* ≈ 60 characters at 15px */
+  --measure-prose: 62ch;
+
+  /* ------------------------------------------------------------------ */
+  /* 4. Space (4-pt; spacing by relationship)                            */
+  /* ------------------------------------------------------------------ */
+  --sp-0: 0;
+  --sp-1: 4px;    /* icon to label, badge offset */
+  --sp-2: 8px;    /* related: lines in a group, chip gap */
+  --sp-3: 12px;   /* element gap in a row */
+  --sp-4: 16px;   /* group: card padding (dense), between fields */
+  --sp-5: 20px;   /* card padding (default) */
+  --sp-6: 24px;   /* pane padding, between cards */
+  --sp-8: 32px;   /* section */
+  --sp-10: 40px;
+  --sp-12: 48px;  /* screen gutter */
+  --sp-16: 64px;
+
+  /* ------------------------------------------------------------------ */
+  /* 5. Shape: one continuous-corner family                              */
+  /* ------------------------------------------------------------------ */
+  /* Visual radii. Where the engine supports corner-shape (Chromium/Electron), the same visual size is drawn
+     as a squircle at about 1.6× the number, which is how Apple's continuous corners read. Pills stay round. */
+  --corner: round;
+  --r-xs: 6px;     /* tags, checkbox, code chips */
+  --r-sm: 10px;    /* inputs, menu items, small wells */
+  --r-md: 14px;    /* cards, menus, popovers */
+  --r-lg: 18px;    /* bubbles and tickets (decided 18) */
+  --r-xl: 24px;    /* dialogs, panes, sheets */
+  --r-full: 999px; /* buttons, pills, switches, badges */
+
+  /* ------------------------------------------------------------------ */
+  /* 6. Elevation: tone first, shadow only for what floats               */
+  /* ------------------------------------------------------------------ */
+  --shadow-color: 228 16% 10%;
+  --elev-0: none;                                                                   /* on ground: tone step only */
+  --elev-1: 0 0 0 1px var(--line-subtle);                                           /* resting card: a ring, no shadow */
+  --elev-2: 0 0 0 1px var(--line-subtle), 0 1px 2px hsl(var(--shadow-color) / 0.05), 0 4px 12px hsl(var(--shadow-color) / 0.05); /* composer, open ticket */
+  --elev-3: 0 0 0 1px hsl(var(--shadow-color) / 0.07), 0 4px 10px hsl(var(--shadow-color) / 0.08), 0 16px 40px hsl(var(--shadow-color) / 0.10); /* menu, popover, toast */
+  --elev-4: 0 0 0 1px hsl(var(--shadow-color) / 0.06), 0 12px 32px hsl(var(--shadow-color) / 0.14), 0 40px 96px hsl(var(--shadow-color) / 0.18); /* dialog */
+  --scrim: rgb(21 23 29 / 0.32);
+
+  /* ------------------------------------------------------------------ */
+  /* 7. Motion: physics, not timelines                                   */
+  /* ------------------------------------------------------------------ */
+  --dur-micro: 140ms;     /* press, hover, focus */
+  --dur-short: 200ms;     /* crossfades, message in, badge swap */
+  --dur-move: 320ms;      /* ticket expand, toggles with springs, menus */
+  --dur-scene: 420ms;     /* panes, dialogs, split view */
+  --dur-character: 640ms; /* avatars: birth, glance, handoff landing */
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* default for anything ≤ 240 ms */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* things that travel while visible */
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45);     /* leaving for good, at 70 % of the entrance */
+  --ease-color: ease;
+
+  /* Springs, sampled into linear(). Formula and parameters in DESIGN-SYSTEM.md §6.
+     smooth  = critically damped (ζ 1.0): panes, tickets, sheets. No overshoot.
+     snappy  = ζ 0.8: switch knobs, chips, segmented thumb. 1.5 % settle, felt not seen.
+     gentle  = ζ 0.55: characters only (avatars, handoff chip). Never on chrome. */
+  --spring-smooth: linear(0, 0.078 5%, 0.235 10%, 0.401 15%, 0.549 20%, 0.669 25%, 0.762 30%, 0.831 35%, 0.882 40%, 0.944 50%, 0.974 60%, 0.988 70%, 0.995 80%, 1);
+  --spring-snappy: linear(0, 0.061 5%, 0.198 10%, 0.36 15%, 0.518 20%, 0.656 25%, 0.768 30%, 0.854 35%, 0.917 40%, 0.987 50%, 1.012 60%, 1.015 70%, 1.011 80%, 1.006 90%, 1);
+  --spring-gentle: linear(0, 0.074 5%, 0.249 10%, 0.463 15%, 0.673 20%, 0.85 25%, 0.983 30%, 1.069 35%, 1.114 40%, 1.127 45%, 1.117 50%, 1.068 60%, 1.019 70%, 0.991 80%, 0.984 90%, 1);
+
+  --press-scale: 0.97;
+  --rise: 8px;            /* message-in travel */
+
+  /* ------------------------------------------------------------------ */
+  /* 8. Layers                                                           */
+  /* ------------------------------------------------------------------ */
+  --z-base: 0;
+  --z-sticky: 10;      /* sticky headers, composer */
+  --z-sidebar: 20;
+  --z-pane: 30;        /* workspace pane, split divider */
+  --z-dropdown: 100;   /* select lists, autocomplete */
+  --z-popover: 200;    /* popovers, context menus */
+  --z-toast: 300;
+  --z-scrim: 400;
+  --z-dialog: 410;
+  --z-tooltip: 500;
+  --z-drag: 600;       /* drag ghost (project to split) */
+
+  /* ------------------------------------------------------------------ */
+  /* 9. Sizes                                                            */
+  /* ------------------------------------------------------------------ */
+  --control-sm: 28px;
+  --control-md: 32px;   /* desktop click-target floor */
+  --control-lg: 40px;   /* primary actions */
+  --row-1: 40px;        /* one-line list row */
+  --row-2: 56px;        /* two-line row with a 32 avatar */
+  --icon-sm: 14px;      /* inline with 12–13px text */
+  --icon-md: 16px;      /* with 15px text and in nav */
+  --icon-lg: 20px;      /* toolbar */
+  --stroke-icon: 1.5px;
+
+  --av-xs: 16px;   /* mention chips (no badge) */
+  --av-sm: 24px;   /* collapsed tickets, stacks, board cards */
+  --av-md: 32px;   /* chat, sidebar, headers */
+  --av-lg: 40px;   /* lists, approval cards */
+  --av-xl: 64px;   /* settings, profile */
+  --av-hero: 96px; /* top of an agent's chat; status as a line under the name */
+
+  --focus-ring: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--focus);
+}
+
+/* Continuous corners where the engine draws them. Same visual size, smoother curvature. */
+@supports (corner-shape: squircle) {
+  :root {
+    --corner: squircle;
+    --r-xs: 9px;
+    --r-sm: 16px;
+    --r-md: 22px;
+    --r-lg: 28px;
+    --r-xl: 38px;
+  }
+}
+
+/* Agent identity scopes */
+[data-hue="coral"]     { --agent-base: var(--hue-coral-base);     --agent-light: var(--hue-coral-light);     --agent-deep: var(--hue-coral-deep);     --agent-ink: var(--hue-coral-ink);     --agent-tint: var(--hue-coral-tint);     --agent-wash: var(--hue-coral-wash); }
+[data-hue="tangerine"] { --agent-base: var(--hue-tangerine-base); --agent-light: var(--hue-tangerine-light); --agent-deep: var(--hue-tangerine-deep); --agent-ink: var(--hue-tangerine-ink); --agent-tint: var(--hue-tangerine-tint); --agent-wash: var(--hue-tangerine-wash); }
+[data-hue="honey"]     { --agent-base: var(--hue-honey-base);     --agent-light: var(--hue-honey-light);     --agent-deep: var(--hue-honey-deep);     --agent-ink: var(--hue-honey-ink);     --agent-tint: var(--hue-honey-tint);     --agent-wash: var(--hue-honey-wash); }
+[data-hue="pear"]      { --agent-base: var(--hue-pear-base);      --agent-light: var(--hue-pear-light);      --agent-deep: var(--hue-pear-deep);      --agent-ink: var(--hue-pear-ink);      --agent-tint: var(--hue-pear-tint);      --agent-wash: var(--hue-pear-wash); }
+[data-hue="mint"]      { --agent-base: var(--hue-mint-base);      --agent-light: var(--hue-mint-light);      --agent-deep: var(--hue-mint-deep);      --agent-ink: var(--hue-mint-ink);      --agent-tint: var(--hue-mint-tint);      --agent-wash: var(--hue-mint-wash); }
+[data-hue="teal"]      { --agent-base: var(--hue-teal-base);      --agent-light: var(--hue-teal-light);      --agent-deep: var(--hue-teal-deep);      --agent-ink: var(--hue-teal-ink);      --agent-tint: var(--hue-teal-tint);      --agent-wash: var(--hue-teal-wash); }
+[data-hue="aqua"]      { --agent-base: var(--hue-aqua-base);      --agent-light: var(--hue-aqua-light);      --agent-deep: var(--hue-aqua-deep);      --agent-ink: var(--hue-aqua-ink);      --agent-tint: var(--hue-aqua-tint);      --agent-wash: var(--hue-aqua-wash); }
+[data-hue="lavender"]  { --agent-base: var(--hue-lavender-base);  --agent-light: var(--hue-lavender-light);  --agent-deep: var(--hue-lavender-deep);  --agent-ink: var(--hue-lavender-ink);  --agent-tint: var(--hue-lavender-tint);  --agent-wash: var(--hue-lavender-wash); }
+[data-hue="orchid"]    { --agent-base: var(--hue-orchid-base);    --agent-light: var(--hue-orchid-light);    --agent-deep: var(--hue-orchid-deep);    --agent-ink: var(--hue-orchid-ink);    --agent-tint: var(--hue-orchid-tint);    --agent-wash: var(--hue-orchid-wash); }
+[data-hue="cocoa"]     { --agent-base: var(--hue-cocoa-base);     --agent-light: var(--hue-cocoa-light);     --agent-deep: var(--hue-cocoa-deep);     --agent-ink: var(--hue-cocoa-ink);     --agent-tint: var(--hue-cocoa-tint);     --agent-wash: var(--hue-cocoa-wash); }
+
+/* Reduced motion: the same information, without travel. Opacity and colour changes stay. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-move: 1ms;
+    --dur-scene: 1ms;
+    --dur-character: 1ms;
+    --press-scale: 1;
+    --rise: 0px;
+  }
+}
+
+/*
+ * Dark theme: PLANNED, NOT BUILT (Phase 5b). Mapping only; every pair must be re-verified before use.
+ * Depth comes from lighter surfaces, not shadows. No pure white text. Same brand: Ink, Porcelain, Cobalt, the eyes.
+ *
+ * :root[data-theme="dark"] {
+ *   color-scheme: dark;
+ *   --bg-ground: #0f1014;  --bg-surface: #17181d;  --bg-sunken: #1e2026;  --bg-inverse: #eceef3;
+ *   --state-hover: rgb(255 255 255 / 0.05);  --state-press: rgb(255 255 255 / 0.09);  --state-selected: rgb(255 255 255 / 0.08);
+ *   --text-1: #eceef3;  --text-2: #b3b6c0;  --text-3: #8c909b;  --text-inverse: #15171d;
+ *   --line-subtle: rgb(255 255 255 / 0.06);  --line: rgb(255 255 255 / 0.10);  --line-control: #6b707c;
+ *   --action: #3d66ff;  --action-hover: #5277ff;  --action-press: #2e5bff;  --action-tint: #1a2140;  --action-text: #8fa8ff;  --focus: #8fa8ff;
+ *   --ok-ink: #5fd08f;  --ok-tint: #11291c;  --attn-ink: #ffc35c;  --attn-tint: #2e2210;  --danger-ink: #ff8a8c;  --danger-tint: #33171a;
+ *   per hue: --agent-ink → the hue's light step · --agent-tint → base at 16 % over --bg-surface · --agent-wash → base at 5 % over --bg-ground
+ *   --elev-1: 0 0 0 1px var(--line-subtle);  --elev-3/4: lighter surface (#23252c) + ring, shadows at 0.5 alpha black.
+ * }
+ */
