@@ -1,8 +1,74 @@
 # UI Direction: "Apple built a Grok Bot × Dots" (draft for client review)
 
-**Status:** **v0.3**, updated **2026-10-23** with the client's brand round 2 ([notes](../../requirements/interviews/2026-10-23-brand-decisions.md)): every brand decision is now closed except the name (§0.1, §0.2). v0.3 rebuilds the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec. **§0 below is the current state**; §1–§5 are kept as the v0.1/v0.2 history. v0.1 was the PM synthesis of the client's references; v0.2 applied the first round of UI feedback (U1–U8, [interview notes](../../requirements/interviews/2026-10-22-ui-feedback-1.md)). ADR-0001 is accepted, and the name is still deferred ("bench" stays the codename). The low-fi flows (UX prototype v0.4) stay the structure; this defines the look and feel.
+**Status:** **v0.4, the calm pass**, 2026-10-23, from the client's round-3 feedback ([C1–C7](../../requirements/interviews/2026-10-23-ui-feedback-3.md)): v0.3 looked "wow" but was overwhelming to use. **§00 below is the current state.** The brand is unchanged (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, the three sounds, shape agents with eyes). §0 is v0.3, kept as history: it rebuilt the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec; every brand decision is closed except the name. §1–§5 are the v0.1/v0.2 history.
 
-## 0. Direction v0.3 (current)
+## 00. Direction v0.4: the calm pass (current)
+
+**Artifact:** [`prototype/direction.html`](prototype/direction.html) (the same file, evolved; every v0.3 route still works). **Rules that changed:** [DESIGN-SYSTEM.md](system/DESIGN-SYSTEM.md) (Addendum v0.4, and §11.2, 11.7, 11.8, 11.9, 11.12, 11.17, 12).
+
+**The headline:** on entering you should feel relief. The first thing you do is talk to Atlas. Per screen we asked "what must be visible right now?" and put the rest one click away (a disclosure, a tooltip, hover, or a closed panel). Kept visible everywhere: costs before a click, outward and reserved consequences, an error's cause and next step, status words, and the one blue (your call).
+
+### 00.1 Client feedback → what v0.4 does
+
+| # | Feedback | v0.4 |
+|---|---|---|
+| C1 | The Send arrow "disappeared" while typing | Root cause: `.btn.icon` (Text 2) overrode `.inkbtn`'s white, 2.1:1 on Ink. Now pinned white with a 2 px stroke: 17.9:1, hover 13.6:1, pressed 21:1, disabled 4.7:1. Applies to every composer (Home, agents, team, new agent) |
+| C2 | Handoff not as smooth as the brand page | The brand board's motion: the brief chip (sender's face + "Brief · S1-6") rises, flies an arc (`offset-path`, ease-in-out), is absorbed at Karim, who squashes once. Plays on arrival in the team chat; the Play button replays it; reduced motion keeps the chip at rest on the arc. Sound unchanged |
+| C3 | "Optional" looked like a grey box | Root cause: the label used `.opt`, the ticket-option card. Now "Goal (Optional)", 12/400 Text 3, everywhere (New project ×2, Settings › Title, the deny reason) |
+| C4 | Rename the new agent | After Atlas drafts it, the name pill has a pencil: click it to rename in place (Enter keeps, Esc reverts, blur keeps). Taken names get an inline error ("Noor already works on Bench. Pick another name."). Create, the draft's checklist, the toast and the new room all use your name |
+| C5 | Agent screen panel closed by default (Grok reference) | The agent page opens as just the chat. A screen icon (with a live dot) opens a 360 px panel: a compact live preview of the screen (click: the full view with diff, files, terminal and Take over), **Routines** under it as compact rows, **Settings** behind the gear beside ×. The approval moved out of the panel into the chat (inline Ticket) and the overlay. Big empty boxes became one quiet line ("Nothing on Iris's screen right now.", "No routines yet.") |
+| C6 | Home = the chat with Atlas; "N things need you" as a pop-up | Home is a calm conversation: Atlas's face, one message ("morning. 7 things need you. want to see them?"), one action ("Show them"), one composer. **What needs you is an overlay** over whatever screen you're on, from Atlas's button, the top bar's count, a project's line or an agent's pointer; same tickets and actions, counts tick; Esc/×/scrim return you where you were |
+| C7 | Overwhelming: colours, text, everything open | The calm pass on every screen (00.2) |
+
+### 00.2 Before → after, per screen
+
+- **Home:** greeting + date + summary + ask bar + Atlas line + 5 open tickets + project cards + learned strip → Atlas's face, one question with one action, one composer, white space. Projects stay in the sidebar; "learned this week" moved to Memory; tickets moved to the overlay. Your messages get Atlas's reply in place (no toast).
+- **What needs you:** a full page with 5 filter chips → an overlay anchored under the count: Decide · Meet · For your info labels, top ticket open, "Decided by Atlas · 4" in the footer, "Show all 7" when filtered to a project. Kind tags (Proposal, Meeting, Work request…) removed; consequences are one quiet line instead of four pills.
+- **Sidebar:** Home + What needs you + Company(Atlas, Iris) + 56 px rows with time and snippet → Atlas first (it is Home), 40 px rows with face, badge and name (what they're doing is in the tooltip), no sprint line on project headers, team-tree and sessions icons on hover only, "3 more" without the names.
+- **Agent page (Noor):** white header (avatar, name, status tag, role line, 1 needs you, context, run receipt, toggle) + open workspace pane with a segmented control, docked approval, pointer line and an inline workspace card → no header bar, two floating tools (context, screen icon), chat only. The request is an inline Ticket in the chat; resolved anywhere, it folds and the chat's own line says what happened. Receipts show on the latest message of each sender, the rest on hover.
+- **Agent panel (open):** preview + routines; the full view (diff, files, terminal, Take over); Settings behind the gear. Routine cards → compact rows (name, "Every weekday at 08:00 · ≈ 0.20 % a run", switch; click for next/last/per-run figures, permission tag, Run now). In the guard routes the waiting routine opens with its reason and "Run now · ≈ 0.30 %".
+- **Settings:** two-line nav (name + summary) → one word per row (summary in the tooltip); Autonomy's "Per-tool overrides" and "Always asks you" collapse into disclosures (grants stay visible: they're what you revoke); Profile loses "Coral pill"; the lead's privacy note is now the Lead field's help; the Memory header box is gone.
+- **Other agents' rooms:** same as Noor: no header, panel closed; open, it says "Nothing on Iris's screen right now." and "No routines yet." in one line each.
+- **Team chat:** white header with role meta and a 7-row roster with status tags → a plain header with "here now" faces that open the roster (closed by default). The debate card (Live tag, title, sub line, timer bar, Watch, Join) → one pill line: dot, "Debate: where does Stop live? · Maya decides", the time, **Join and decide**. The memo the same. Messages show the name only; 5 system lines → 2 (earlier messages, Bench picked Karim) plus the handoff. The routing hint appears while you type ("Karim replies · ≈ 0.3k tokens to route").
+- **Project dashboard / split view:** white header with team stack, "Needs you on Bench" with full tickets, a board heading, cards with id · name · Working tag, boxed empty columns → a plain header (name + sprint line + menu), the progress bar, **one line "3 things here need you →"** that opens the overlay filtered to the project, the board with title + face + id, tags only for Blocked and Needs you, "Nothing yet." as text.
+- **Memory:** a long subline with location → "Your team knows 214 things about how you work."; Open folder is an icon; "Your team learned 7 things this week" (Open, Forget, Undo) sits above the browser, collapsed; frontmatter behind a disclosure.
+- **Usage:** two columns of six cards → one column: the week (ring, figure, forecast, status, your 70 % line), what's paused or waiting (only in those scenarios), by agent, then **More** (model tiers, what the glass box saved, trends).
+- **Look inside (trace):** subtitle removed; step detail lines only for memory and the approval gate (the others in the tooltip).
+- **First run:** the green "found" box and the grey API-key box → a checked line and a quiet note; the connectors row → one note; shorter step 3 copy.
+- **New agent:** 19 shape and colour chips + caption → one "Change shape or colour" button that reveals them; the name is editable (C4).
+- **New project:** "(Optional)" labels (C3); team description shortened; "Or pitch it to Atlas" removed (Home is now the conversation with Atlas, so that's where a pitch goes); the team preview's help line removed.
+- **Worst moments:** banners cut to one sentence + one action (the "checking every 15 s" moved to the Try now tooltip); the failed run's three "kept" pills → one line; the connector card's footnote moved into the How to reconnect toast; Home's endings (signed in again, your week reset) are now Atlas's first message, with the waking faces.
+
+### 00.3 Routes
+
+All v0.3 routes still work. **New:** `#agent-panel` (panel open: preview + routines), `#agent-screen` (panel open: the full screen). **Changed:** `#agent` opens with the panel closed; `#needs` opens the overlay over Home (from inside the app it opens over the current screen); `#home-ticket-open` → `#needs`; `#agent-routines` → `#agent-panel`; `#room-atlas` → `#home`; `#needs-conflict`, `#needs-conflict-resolved` and `#long-names` open the overlay; `#agent-takeover` returns to `#agent-screen`; the worst-moment agent routes (`#run-failed`, `#offline`, `#slow`…) open with the panel closed; `#guard`, `#guard-exempt` and `#agent-routines-empty` open the panel. The demo bar's jump list has the new entries; Play works on `#needs` (open/close) and `#agent-panel` (open the screen).
+
+### 00.4 Premium-craft output
+
+**State matrix:** unchanged from v0.3 except: Home (default · first use · caught up · paused by limit/login · back after a worst moment, each one Atlas message), the overlay (open · filtered to a project · Decided by Atlas · all caught up), the panel (closed · preview + routines · routines empty · full screen · settings · offline "As of 10:24").
+**Emotional moments (2–3 per flow, unchanged in number):** Home: Atlas looks up, blinks and asks (the morning open); the overlay's last ticket resolves into "You're all caught up" and Atlas is pleased; handoff: the brief's arc flight and the receiver's squash (C2).
+**Worst-moment pass:** every v0.3 worst-moment route re-checked in the calmer layout; each keeps cause, what's safe and one next step (00.2, last bullet).
+**Coherence:** one place for decisions (the Ticket, in the overlay and inline in the agent's chat), one panel pattern for every agent, one quiet empty state, one disclosure pattern (chevron + label + quiet count).
+
+| Axis | Level | Evidence |
+|---|---|---|
+| Copy | **Staff** | The removal test run again on every screen: subtitles that restate a title, caption lines, "Coral pill", the API-key and connector boxes, the debate's sub line, receipts on old messages and role lines are gone or one hover away; costs before a click, outward/reserved consequences and recovery copy stay. Atlas's one question is the screen |
+| Visuals | **Staff** | The face is the Home screen; the handoff is the brand board's motion; nothing decorative was added |
+| Color | **Staff** | Kind tags and "Working"/"All clear" tags removed; status colour only where it changes what you do; one blue per screen (the open ticket, Join and decide, Create) |
+| Type | **Senior** | Same 6-step scale; Home uses 12 · 15 · 20 at rest |
+| Structure | **Staff** | Fewer boxes: headers lost fills and borders, empty states are lines, secondary content sits behind one disclosure; the hierarchy test passes in one breath on Home (Atlas → the question → Show them) |
+| States and recovery | **Staff** | Unchanged guarantees, calmer delivery; endings are Atlas's first message |
+| Motion and emotion | **Senior** (Staff candidate) | Springs, the overlay grows from the count, the panel slides from where it lives, the handoff arc; reduced motion keeps every state |
+| Coherence | **Senior** | One Ticket in two places, one panel for every agent, one quiet empty, one disclosure |
+| Intelligence | **Senior** | Ledger under every agent, Applied chips, learned lines; "learned this week" moved to Memory (collapsed), still with Forget/Undo/Export |
+
+**Blockers:** none. **Not done here:** this session could not render; the PM renders every route at 1440×900 and 1280×800 next (watch: the overlay's max height at 800, the floating tools beside the hero with the wide panel open, and the 360 px panel's routine figures). `system/components.html` still shows the v0.3 sidebar row, routine card and settings nav (update with the next system pass). Dark mode is still Phase 5b.
+
+---
+
+## 0. Direction v0.3 (history)
+
+v0.1 was the PM synthesis of the client's references; v0.2 applied the first round of UI feedback (U1–U8, [interview notes](../../requirements/interviews/2026-10-22-ui-feedback-1.md)). ADR-0001 is accepted, and the name is still deferred ("bench" stays the codename). The low-fi flows (UX prototype v0.4) stay the structure; this defines the look and feel.
 
 **Artifact:** [`prototype/direction.html`](prototype/direction.html), one file; its only network use is Google Fonts for review (the app bundles the OFL files). **Logo files:** [`brand/logo/`](brand/logo/). **Brand:** [`brand/BRAND.md`](brand/BRAND.md) and [`brand/brand-board.html`](brand/brand-board.html). **System:** [`system/DESIGN-SYSTEM.md`](system/DESIGN-SYSTEM.md), [`system/tokens.css`](system/tokens.css), [`system/components.html`](system/components.html). **UX spec:** [`../ux/premium/`](../ux/premium/README.md). The 3D office concept was explored and dropped by the client; it is archived and plays no part in v0.3.
 

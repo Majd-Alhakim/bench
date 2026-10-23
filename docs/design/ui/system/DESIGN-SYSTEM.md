@@ -282,10 +282,11 @@ Each one is rendered in [components.html](components.html) in every applicable s
 
 ### 11.2 Inputs and selects
 - 40 px, `--r-sm`, white, 1 px control edge (3.41:1). Label above (13/600), help below (12, Text 3). Never a placeholder as the label.
+- **Optional fields (v0.4, C3):** a small "(Optional)" right after the label, 12/400 Text 3 (`.optl`): "Goal (Optional)". No box, no pill, no separate line. (v0.3 drew a grey box because the label used `.opt`, the ticket-option class.)
 - **States:** default, hover (Text 2 edge), focus (2 px Cobalt inside), filled ("Saved" stamp when it saves itself, D-UI10), error (2 px red edge + cause and fix: "Noor already works on Bench. Pick another name or rename Noor first."), disabled (sunken fill, a lock glyph and why: "Set by the project"), loading ("Checking" with dots, inside the field).
 - **Search:** 32 px, leading icon, shortcut hint at the end.
 - **Select:** the same field with a chevron. The open list (`--elev-3`) shows the cost of each option ("≈ 2.1k / turn") and a reason on disabled options ("Off for routines in this project").
-- **Composer:** `--r-lg` (same family as bubbles), control edge plus `--elev-2`. Resting: Send disabled. With a draft: focus ring, Send in Ink (dark, not blue: R1, blue means "your call"), the token estimate under it. While the agent works: Send becomes **Stop** (secondary, in place), and the placeholder says when she'll read it.
+- **Composer:** `--r-lg` (same family as bubbles), control edge plus `--elev-2`. Resting: Send disabled. With a draft: focus ring, Send in Ink (dark, not blue: R1, blue means "your call"), the token estimate under it. **Send states (v0.4, C1):** default Ink `#15171d` with a white 2 px arrow (17.9:1) · hover `#2b2e37` (13.6:1) · pressed black (21:1) · disabled sunken pill with a Text 3 arrow (4.7:1). The icon-button rule must never recolour the arrow (`.btn.icon.inkbtn` pins it white). While the agent works: Send becomes **Stop** (secondary, in place), and the placeholder says when she'll read it.
 
 ### 11.3 Switches
 - 36 × 22 track, 16 knob. **On is Ink**, not Cobalt (a setting is not the screen's action). The knob moves on `--spring-snappy`.
@@ -293,7 +294,7 @@ Each one is rendered in [components.html](components.html) in every applicable s
 - Every settings row: title (15/600), one-line description (13, Text 2), the switch at the right, the "Saved" stamp beside it.
 
 ### 11.4 Segmented and tabs
-- **Segmented** switches views of one object (Screen · Routines · Settings): sunken track, white thumb with a hairline and soft shadow, labels 13/600. The thumb slides on `--spring-smooth`. Arrow keys move.
+- **Segmented** switches views of one object (v0.4: the agent panel no longer uses one; its views are preview + routines, the full screen, and Settings behind the gear): sunken track, white thumb with a hairline and soft shadow, labels 13/600. The thumb slides on `--spring-smooth`. Arrow keys move.
 - **Underline tabs** split long pages into sections: a 2 px Ink underline on the selected tab, counts in Text 3.
 - **States:** selected, hover, focus, disabled. Selection is never blue.
 
@@ -316,25 +317,27 @@ Each one is rendered in [components.html](components.html) in every applicable s
 
 ### 11.7 Messages
 - **Your bubble:** right, the agent's tint, no ring, `--r-lg` with `--r-xs` bottom right. Under it: "Seen by Noor · 08:52" with the eyes glyph; "Sending" with dots; failed: red edge and "Not sent: you're offline. Kept here. Retry".
-- **Agent bubble:** left, white, `--elev-1`, 32 px avatar with its status badge. Under it the meta line: time · tokens · % of your week · **Look inside**.
+- **Agent bubble:** left, white, `--elev-1`, 32 px avatar with its status badge. Under it the meta line: time · tokens · % of your week · **Look inside**. **Receipts are quiet (v0.4):** the latest message of each sender shows its receipt; older ones show it on hover or keyboard focus (CSS `:has()`; nothing is removed from the DOM or the accessibility tree). In team chats the name stands alone over the bubble; role and time are in its tooltip and the receipt.
 - **Run summary:** the checklist "✓ **key** → result · detail" (from the Grok Bot teardown) inside the bubble.
 - **System line:** centred, 13 px, Text 3, with a glyph: "Memory updated · lesson: …", "Renamed to Lumen", "Bench picked Karim".
-- **Handoff chip:** sender avatar → receiver avatar · "brief: QA-3 retry". It travels on `--ease-in-out` and lands on `--spring-gentle`.
+- **Handoff chip (v0.4, C2: the brand board's motion):** a white chip with the sender's 18 px face and "Brief · S1-6" rises (fade + scale .7 → 1), flies an arc between the two faces (`offset-path`, `--ease-in-out`), is absorbed at the receiver (fade, scale → .4), and the receiver squashes once (1.1 × .92, then .97 × 1.03) as it lands. 1.3 s, played once on arrival. At rest and under reduced motion the chip waits at the top of the arc. The line under it is only "Maya handed **S1-6 SQLite persistence** to Karim · Look inside".
 - **Thinking:** three dots in the agent's ink plus the word and what it's doing. After 10 s: "Still thinking · 14 s · reading 3 files" with a Stop.
 - **Applied chip:** "**Applied** what Noor learned on 22 Oct: use the repo's date library". It glows once in the agent's tint the first time.
 - **Recovery card** (failed run): cause in plain words first ("The test run stopped: out of memory."), what was kept (chips: "3 files changed, kept", "checkpoint 09:12"), one primary (Retry with 2 workers), a secondary (Ask Karim) and Look inside. Never a stack trace first.
 - **Long content:** collapsed at about 6 lines with a fade and "Show all 512 lines".
 
 ### 11.8 Side-panel rows
-- Nav rows 36 px (Home, Approvals with count). Group headers 32 px, 12 px Text 3, with 24 px icon actions and a visible "…" (same menu on right-click).
-- **Agent row:** 56 px, avatar 32 with badge, name 15/600, time 12, snippet 13 Text 2, ellipsis on overflow.
+- Nav rows 36 px. **v0.4:** the first row is **Atlas** (its face, "Atlas"), which is Home; What needs you is no longer a row (it is the top bar's count and an overlay). Group headers 32 px, 12 px Text 3, with 24 px icon actions that **show on hover or focus only**, and a visible "…" (same menu on right-click).
+- **Agent row (v0.4, calm):** 40 px, avatar 28 with its status badge, name 15/400 (600 when selected), ellipsis on overflow. The snippet, time and "Typing" line moved to the row's tooltip ("Noor · Developer / Working · running pnpm test chat") and its screen-reader text keeps the status word. The project header drops the sprint line (tooltip) and keeps the amber count.
 - **States:** default, hover (overlay), **selected (neutral pill, never a colour)**, focus (inset ring), working ("Typing" plus dots in the agent's ink), needs you (amber snippet + amber count), blocked, paused (faded avatar, "paused by you · resumes on Send"), long name (ellipsis; the full name in the tooltip).
 - **Rail:** 56 px, 44 px targets, the same selected pill, avatars with badges, a tooltip on each.
 
 ### 11.9 Tickets ("What needs you", U6, D-UI7)
 - **Collapsed:** 52 px, `--r-lg`, white, avatar 24, title (ellipsis), one tag (Outward, Reserved, Needs you, Meet), chevron. Hover darkens the ring; focus ring; Enter or Space opens; ↑/↓ move.
 - **Open:** `--elev-2`, padding 20/22, avatar 32 with badge, title 20/600, status tag and meta, the explanation (≤ 60 characters per line), the evidence (options as selectable cards, the draft, the command), **the one primary** plus a secondary, provenance ("Escalated by Karim at 07:45 after two failed attempts").
-- **Open by default:** the top ticket (D-UI7), so Home's one Cobalt is the top ticket's action.
+- **Open by default:** the top ticket (D-UI7). **v0.4:** tickets live in the **What needs you overlay**, not on Home, so the open ticket's action is the overlay's one Cobalt.
+- **Tags (v0.4, calm):** only a gate (Outward, Reserved, Payment: outline + lock) or a state (Blocked). Kind tags (Proposal, Meeting, Work request…) are gone; the group label says Decide, Meet or For your info.
+- **Consequences (v0.4):** one quiet 13 px Text 2 line separated by dots ("214 tests · about 3 min · ≈ 0.08 % of your week · stays inside bench/"), not a row of estimate pills.
 - **Resolved:** stays 10 s at 60 % with Undo, then leaves on `--ease-exit`; every count updates at once.
 
 ### 11.10 Project card (U5)
@@ -347,7 +350,7 @@ Each one is rendered in [components.html](components.html) in every applicable s
 - **States:** on, running (the agent's working badge in the header), off (Text 2, "Off since you paused it on Tue. Nothing is scheduled."), last run failed (red inline alert with the cause, "Logs kept" and Retry now), paused by the limit ("Paused until Mon 09:00").
 
 ### 11.12 Approval card
-- One pattern in the inbox, the workspace pane and the ticket; allowing in one place clears all of them.
+- One pattern in the inbox, the workspace pane and the ticket; allowing in one place clears all of them. **v0.4:** the agent's request appears **inline in its chat** (the open Ticket, aligned with the bubbles) and in the What needs you overlay; it is no longer docked in the side panel. Resolved anywhere, the inline ticket folds away and the chat's own system line says what happened ("You allowed `pnpm test` in bench once", "You stopped Noor · her request is withdrawn; nothing ran").
 - **Head:** avatar 40 with Needs you badge, "Noor asks to run a command", provenance ("Atlas passed it to you: it's a new command pattern"), the risk tag.
 - **Evidence:** the command (mono) and where it runs, or the email draft (To, Subject, body).
 - **Consequence chips** before the buttons: what it does, ≈ time, ≈ % of your week, the scope ("Stays inside bench/").
@@ -373,7 +376,8 @@ Each one is rendered in [components.html](components.html) in every applicable s
 - **Context meter:** the bar, a tick at your checkpoint (50–85 %, default 70 %) and the **fixed 90 % ceiling** as a hatched end. States: normal, approaching ("checkpoint soon", amber text), checkpointing (the working badge), checkpoint failed (amber inline alert: "Checkpoint incomplete. Noor kept the good one from 09:12 and is waiting." + Retry).
 
 ### 11.17 Empty, loading and error
-- **Empty** (first use, cleared, no results): headline (20/600), one sentence of why, one next step; an avatar only where an agent is the subject. "You're all caught up. The team is working on 7 things." · "No routines yet" with two examples that draft on click · "Nothing matches 'deploy'" with a way to widen the search.
+- **Quiet empty (v0.4):** inside a panel or a list that is not the screen's subject, an empty state is **one line of Text 3** ("No routines yet.", "Nothing on Iris's screen right now.") with the create action in the section header. No dashed box, no illustration.
+- **Empty** (the screen's own subject: first use, cleared, no results): headline (20/600), one sentence of why, one next step; an avatar only where an agent is the subject. "You're all caught up. The team is working on 7 things." · "No routines yet" with two examples that draft on click · "Nothing matches 'deploy'" with a way to widen the search.
 - **Loading:** the final layout with flat Porcelain 100 bars at their real size; rows keep their pitch; no shimmer; no layout shift when data lands.
 - **Error:** inside the block that failed, one sentence with the cause and the last good time, Retry. Never a full-screen error for a part of a screen.
 
@@ -383,7 +387,8 @@ Each one is rendered in [components.html](components.html) in every applicable s
 
 | Situation | The one pattern |
 |---|---|
-| Something needs your decision | Approval card (inbox, pane, ticket); amber "Needs you"; Cobalt primary |
+| Something needs your decision | The Ticket, in the What needs you overlay and inline in the agent's chat; amber "Needs you" count in the top bar; Cobalt primary |
+| Something is secondary on this screen (v0.4) | Collapsed behind one click: a disclosure ("More", "Per-tool overrides", "Frontmatter"), a tooltip, hover, or a closed panel. Never a second card competing with the first |
 | What something will cost | Estimate chip "≈ x % of your week", or the consequence on the button |
 | Open the glass box | "Look inside" with the eyes |
 | What an agent is doing | Avatar badge + status word; at hero size, the status line |
@@ -504,3 +509,27 @@ Also from BRAND: B-1 direction A (decided), **B-2 logo = Quartet** (decided 23 O
 
 ## Addendum (v0.3)
 - **C-29:** the agent's tint on your bubbles appears only in one-to-one chats with that agent; team chats and meeting sessions use the neutral bubble so no agent's colour dominates a shared space.
+
+## Addendum (v0.4, the calm pass: client feedback round 3, C1–C7)
+The principle: **on entering any screen you should feel relief.** Per screen ask "what must be visible right now?"; everything else is one click away (a disclosure, a tooltip, hover, or a closed panel). What always stays visible: costs before a click, outward and reserved consequences, an error's cause and next step, status words, and the one blue (your call).
+- **Home is the chat with Atlas (C6).** One centred column (max 680), Atlas's face and name, one message ("morning. 7 things need you. want to see them?") with one secondary action ("Show them"), one composer. Projects, "your team learned" and the ticket list are no longer on Home: projects live in the sidebar, "learned this week" moved to the top of Memory (collapsed), tickets moved to the overlay. In a 1:1 chat (Home included) the top bar sits on the agent's wash, so there is no band.
+- **What needs you is an overlay (C6)**, anchored under the top bar's count, over whatever screen you are on (`--elev-4`, 16 % scrim, `--r-xl`, max 600 px; opens on `--spring-smooth` from the count's corner). Grouped Decide · Meet · For your info, top ticket open, counts tick everywhere as you resolve. "Decided by Atlas" is its footer link. A project shows "3 things here need you" as one line that opens the overlay filtered to that project. Esc, × or the scrim close it and focus returns to what opened it.
+- **The agent page starts as just the chat (C5).** No header bar: the face, name and status are the hero; two tools float top-right (the context meter, hidden when the chat is under 620 px, and a screen icon with a live dot). The icon opens a 360 px **panel**: a compact live preview of the agent's screen (click it for the full view: diff, files, terminal, Take over) with **Routines** under it as compact rows (name, when and cost per run; click a row for its figures and actions). **Settings opens from the gear** in the panel header, beside ×. The full view and Settings widen the panel.
+- **Colour budget:** status colour only where it carries meaning (Blocked, Needs you, Error, Done) and never as a decoration on a row that already has a word; neutral tags that repeat a heading are removed.
+- **Meta text budget:** at most one meta line per object at rest; receipts quiet (see 11.7).
+- **Fewer boxes:** a group is shown by spacing and one heading before a container; headers lost their fills and borders (agent page, project dashboard, team chat); empty columns and panels use quiet one-line states.
+
+### Calm pass: component changes in this version
+| Component | v0.3 | v0.4 |
+|---|---|---|
+| Send button (C1) | Text 2 arrow on Ink (2.1:1, looked empty) | White arrow, 17.9:1; hover 13.6:1; pressed 21:1 |
+| Optional label (C3) | Grey "optional" box (class collision) | "(Optional)" after the label, 12/400 Text 3 |
+| Agent row | 56 px: name, time, snippet | 40 px: face with badge, name; the rest in the tooltip |
+| Ticket tags | Kind + gate + state | Gate or state only |
+| Ticket consequences | 4 estimate pills | One quiet line |
+| Receipts | Under every bubble | Latest per sender; the rest on hover/focus |
+| Approval in the agent page | Docked in the workspace pane | Inline in the chat; the panel is closed by default |
+| Routine card | Card with 3 figures, tag, switch, menu | Row: name, when · cost per run, switch; figures on click |
+| Settings nav | Two lines (name + summary) | One word; the summary is the tooltip |
+| Handoff (C2) | A dark chip sliding on a dashed line | The brand board's arc flight, absorb and squash |
+| New-agent name (C4) | Fixed "Lumen" | Atlas's suggestion; click the pill to rename (validated) |
