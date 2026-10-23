@@ -84,6 +84,7 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 - Phase commands: `/discovery` → `/brd` → `/teardown` → `/prd` → `/specs` → `/design-ux` → `/design-ui` → `/plan-sprint` → (`/standup`, `/qa`, `/bug`, `/sprint-review`) → `/release`. Plus `/gate` and `/change-request`.
 - UI/UX work (Phases 4–5, and UI reviews) follows the `ui-ux-guide` skill (`.claude/skills/ui-ux-guide/`).
 - **No implementation before Gate 6.** Templates are in `docs/templates/`.
+- **Sessions:** at ~80% context or when ending a session, run `/save-checkpoint`; start a new session with `/resume-checkpoint` (checkpoints in `docs/process/checkpoints/`).
 - **Lean mode:** documents cover only the MVP use cases, and the UX prototype is shown early, then the documents are corrected from it. Sprints are **3 days**, goal-boxed. The founder is the only user (a personal project for now).
 
 ## Project Status & Open Decisions
