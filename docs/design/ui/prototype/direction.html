@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>bench · UI direction v0.6.1 · dark first</title>
+<title>bench · UI direction v0.7 · dark first</title>
 <script>
 /* Dark first (client, 23 Oct). The theme is set before the first paint so nothing flashes.
    Pref: "dark" (default) · "light" · "system". Kept for this browser tab only, so a fresh load is always dark;
@@ -739,7 +739,6 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 .mine .bubble{background:var(--agent-tint);box-shadow:none;border-bottom-right-radius:var(--r-xs)}
 .mine.neutral .bubble{background:var(--porcelain-150)}
 .mine .bubble.is-queued{background:var(--bg-surface);box-shadow:inset 0 0 0 1px var(--line-control)}
-.mine .thread{max-width:100%;font-size:12px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .msg-meta{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:2px 4px 0;font-size:12px;line-height:16px;color:var(--text-3);font-variant-numeric:tabular-nums}
 .msg-meta .sp{color:var(--porcelain-500)}
 /* Calm: a receipt shows under the latest message of each sender; older ones appear on hover or keyboard focus.
@@ -1388,6 +1387,58 @@ table.spec td{padding:10px 12px 10px 0;box-shadow:inset 0 -1px 0 var(--line-subt
   .chat-scroll::before,.hero-wrap::after{-webkit-backdrop-filter:none;backdrop-filter:none;-webkit-mask-image:none;mask-image:none;background:linear-gradient(var(--edge-bg) 20%,transparent)}
 }
 
+/* ---------- v0.7 · reply to a message (client, 23 Oct) ----------
+   Nothing shows at rest. Hover or focus a message and one small Reply button appears on its bubble's top corner
+   (or press R on a focused message, or right-click it). Select part of a message and Reply and Copy float by the
+   selection. Either way a one-line preview joins the composer: face, name, excerpt, × (Esc cancels). Once sent, the
+   quote sits at the top of your bubble and takes you back to the original, which glows once where it lives. */
+:root{--rp-hit:rgb(46 91 255 / .2)}
+:root[data-theme="dark"]{--rp-hit:rgb(143 168 255 / .3)}
+.rp-vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.rp-msg{scroll-margin:96px 0}
+.rp-msg:focus-visible{outline:2px solid var(--focus);outline-offset:4px;border-radius:var(--r-in)}
+.rp-anchor{position:relative}
+/* The hover action: a 28 px circle (32 px hit area) on the bubble's outer top corner, off the text */
+.rp-act{position:absolute;z-index:2;top:-14px;right:-10px;display:grid;place-items:center;width:28px;height:28px;border-radius:999px;background:var(--bg-raised);color:var(--text-2);box-shadow:0 0 0 1px var(--line),0 2px 8px hsl(var(--shadow-color) / .14);opacity:0;transform:translateY(3px) scale(.92);pointer-events:none;transition:opacity var(--dur-micro) ease,transform var(--dur-short) var(--spring-snappy),color var(--dur-micro) ease,box-shadow var(--dur-micro) ease}
+.rp-act::after{content:"";position:absolute;inset:-2px}
+.rp-act svg{width:16px;height:16px}
+.mine .rp-act{right:auto;left:-10px}
+.rp-msg:hover .rp-act,.rp-msg:focus-within .rp-act{opacity:1;transform:none;pointer-events:auto}
+.rp-act:hover{color:var(--text-1);box-shadow:0 0 0 1px rgb(var(--ink-rgb) / .24),0 2px 8px hsl(var(--shadow-color) / .14)}
+.rp-msg .rp-act:active{transform:scale(var(--press-scale))}
+.rp-act:focus-visible{outline-offset:1px}
+/* The preview joins the composer as its first row, so the focus ring wraps both and nothing floats over the chat */
+.composer.rp-on{flex-wrap:wrap;row-gap:4px}
+.composer>.rp-bar:first-child+.btn.icon{margin-bottom:4px}
+.rp-bar{flex:1 0 100%;display:flex;align-items:center;gap:8px;min-width:0;height:32px;padding:0 2px 0 10px;border-radius:var(--r-in);corner-shape:var(--corner);background:rgb(var(--ink-rgb) / .05);box-shadow:inset 2px 0 0 var(--agent-base);font-size:13px;line-height:18px}
+.rp-bar.anim{animation:rpIn var(--dur-short) var(--spring-smooth) both}
+.rp-bar>.av,.rp-bar>.me-av{flex:none}
+.rp-me{width:20px;height:20px;font-size:10px}
+.rp-bar-tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-2)}
+.rp-bar-tx b{margin-right:6px;color:var(--agent-ink);font-weight:600}
+.rp-bar .rp-x{flex:none}
+/* The sent quote: inside your bubble, above your words. A button: it takes you to the original */
+.rp-quote{display:grid;gap:1px;width:100%;margin:-2px 0 8px;padding:6px 10px 7px 12px;border-radius:var(--r-in);corner-shape:var(--corner);background:rgb(var(--ink-rgb) / .06);box-shadow:inset 2px 0 0 var(--agent-base);text-align:left;font-size:13px;line-height:18px;color:var(--text-2);transition:background-color var(--dur-micro) ease}
+.rp-quote:hover{background:rgb(var(--ink-rgb) / .1)}
+.rp-quote b{font-size:12px;line-height:16px;font-weight:600;color:var(--agent-ink)}
+.rp-q-x{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+/* Back at the original: one glow on the bubble (the whole message), or a band under the exact words (a part) */
+.rp-flash .bubble{animation:rpFlash 1600ms var(--ease-out) both}
+.rp-hold .bubble{box-shadow:0 0 0 2px var(--agent-base)}
+::highlight(rp-hit){background-color:var(--rp-hit);color:var(--text-1)}
+/* Selection: Reply and Copy float just above what you selected (below it near the top edge) */
+.rp-sel{position:fixed;z-index:590;display:flex;gap:2px;padding:3px;border-radius:999px;background:var(--bg-raised);box-shadow:var(--elev-3);transform-origin:50% 100%}
+.rp-sel.below{transform-origin:50% 0}
+.rp-sel.anim{animation:rpSelIn var(--dur-short) var(--spring-snappy) both}
+.rp-sel button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 10px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-1);transition:background-color var(--dur-micro) ease}
+.rp-sel button:hover{background:var(--state-hover)}
+.rp-sel button:active{background:var(--state-press)}
+.rp-sel button svg{width:16px;height:16px;color:var(--text-2)}
+.rp-sel button:focus-visible{outline-offset:-2px}
+@keyframes rpIn{from{opacity:0;transform:translateY(6px)}}
+@keyframes rpSelIn{from{opacity:0;transform:scale(.94)}}
+@keyframes rpFlash{0%,35%{box-shadow:0 0 0 2px var(--agent-base),0 0 0 6px var(--agent-tint)}100%{box-shadow:0 0 0 0 transparent,0 0 0 0 transparent}}
+
 /* ---------- keyframes ---------- */
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes dotp{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
@@ -1440,7 +1491,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.6.1 · dark first</b></div>
+  <div class="demo-id"><b>Direction v0.7 · dark first</b></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -1775,6 +1826,8 @@ IC.gear = (() => {
   for (let i = 0; i < 6; i++) { const a = i * 60; p.push(pt(7.3, a - 19), pt(9.8, a - 10), pt(9.8, a + 10), pt(7.3, a + 19)); }
   return `<polygon points="${p.join(" ")}"/><circle cx="12" cy="12" r="2.8"/>`;
 })();
+/* v0.7: reply. Points back (left) and the tail runs on to the right and down: an answer, not an undo */
+IC.reply = '<path d="M9.5 7 4.5 12l5 5"/><path d="M4.5 12h9a6 6 0 0 1 6 6v1"/>';
 function ic(name, size = 16){ return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IC[name] || ""}</svg>`; }
 /* The Look as a glyph: it opens the glass box (Look inside) or marks who saw something. Never decoration. */
 function eyes(size = 14){ return `<svg width="${size}" height="${size}" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><g fill="currentColor"><rect x="3.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 7)"/><rect x="8.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 7)"/></g></svg>`; }
@@ -2411,7 +2464,7 @@ function addH(html){
   const s = $("#hScroll"); if (s) s.scrollTop = s.scrollHeight;
 }
 function homeSend(v){
-  const body = mnBody(v, "askIn"), ids = mnInfo(v, "askIn").ids;
+  const body = rpTake("askIn") + mnBody(v, "askIn"), ids = mnInfo(v, "askIn").ids;
   const i = HOME_CHAT.push(meM(body, `<span class="receipt">${ic("check", 13)}Sent</span>`)) - 1;
   addH(HOME_CHAT[i]);
   addH(`<div class="thinking" id="hThink"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Atlas · Thinking</span></div>`);
@@ -2977,10 +3030,11 @@ function miniHTML(){ return DIFF.slice(1, 15).map(r => `<div class="${r[0] === "
 
 /* ---------- message builders (one Receipt, one recovery card, one learned line) ---------- */
 function agM(inner, meta, extra, o = {}){
-  return `<div class="msg${o.cls ? " " + o.cls : ""}"${o.id ? ` id="${o.id}"` : ""}>${avatar(o.who || "noor", 32, {nobadge:true, hidden:true, expr:o.expr})}<div class="stackb">${[].concat(inner).map(b => `<div class="bubble">${b}</div>`).join("")}${extra || ""}${meta ? `<div class="msg-meta">${meta}</div>` : ""}</div></div>`;
+  const who = typeof o.who === "string" ? o.who : o.who ? "atlas" : "noor";
+  return `<div class="msg${o.cls ? " " + o.cls : ""}"${o.id ? ` id="${o.id}"` : ""} data-who="${who}">${avatar(o.who || "noor", 32, {nobadge:true, hidden:true, expr:o.expr})}<div class="stackb">${[].concat(inner).map(b => `<div class="bubble">${b}</div>`).join("")}${extra || ""}${meta ? `<div class="msg-meta">${meta}</div>` : ""}</div></div>`;
 }
 function meM(text, meta, o = {}){
-  return `<div class="mine${o.cls ? " " + o.cls : ""}">${o.thread ? `<div class="thread">${esc(o.thread)}</div>` : ""}<div class="bubble${o.queued ? " is-queued" : ""}">${text}</div>${meta ? `<div class="msg-meta">${meta}</div>` : ""}</div>`;
+  return `<div class="mine${o.cls ? " " + o.cls : ""}"><div class="bubble${o.queued ? " is-queued" : ""}">${text}</div>${meta ? `<div class="msg-meta">${meta}</div>` : ""}</div>`;
 }
 function sysL(html, icon, cls){ return `<div class="sys${cls ? " " + cls : ""}">${icon ? ic(icon, 14) : ""}<span>${html}</span></div>`; }
 function learnL(text, key){ return `<div class="sys learn" data-learnline="${key}">${ic("memory", 14)}<span>${text}</span><button type="button" class="linkbtn" data-unlearn="${key}">Undo</button></div>`; }
@@ -2995,8 +3049,9 @@ function noorBase(full){
     meM("Noor, use the existing date library for the timestamps, please. No new dependency.", seen("Noor", "08:52")),
     agM(`<p>done.</p>${checklist([["date-fns","swapped in · 41 lines removed"],["formatTime.ts","now a thin wrapper"],["dependencies","none added"]])}`, rcpt(["08:58","2.1k tokens","0.07 % of your week"], "n0858")),
     learnL("Noor learned: prefer the date library already in the repo.", "datelib"),
-    agM("the Stop button now sits in the composer and replaces Send while i'm running. i split the composer in two to stay under 200 lines; it's in the diff on the right.", rcpt(["09:04","1.8k tokens","0.06 % of your week"], "n0904"), appliedChip("keep components under 200 lines", "lesson from Karim's review, 19 Oct", "components")),
-    meM("Good. Keep it there for now; Maya's debate decides the rest.", seen("Noor", "09:06"), {thread:"↳ the Stop button now sits in the composer and replaces Send…"})
+    agM("the Stop button now sits in the composer and replaces Send while i'm running. i split the composer in two to stay under 200 lines; it's in the diff on the right.", rcpt(["09:04","1.8k tokens","0.06 % of your week"], "n0904"), appliedChip("keep components under 200 lines", "lesson from Karim's review, 19 Oct", "components"), {id:"nStopMsg"}),
+    /* v0.7: the old "↳ thread" line is now the one reply pattern: a quote inside your bubble that leads back */
+    meM(rpQuoteHTML({who:"noor", text:"the Stop button now sits in the composer and replaces Send while i'm running. i split the composer in two to stay under 200 lines; it's in the diff on the right.", target:"nStopMsg"}) + "Good. Keep it there for now; Maya's debate decides the rest.", seen("Noor", "09:06"))
   ];
   if (full !== false) m.push(AUTO_LINE(), agM("the Stop button is ready for you to try. three steps, about 3 minutes. i'm checking Stop's timing on Windows meanwhile.", rcpt(["09:12","1.2k tokens","0.04 % of your week"], "n0912")));
   return m;
@@ -3713,7 +3768,7 @@ $("#nIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKe
 $("#nForm").addEventListener("submit", e => {
   e.preventDefault();
   const v = $("#nIn").value.trim(), mn = mnInfo(v, "nIn"); if (!v || mn.only) return;
-  const body = mnBody(v, "nIn");
+  const body = rpTake("nIn") + mnBody(v, "nIn");
   $("#nIn").value = ""; mnMirror($("#nIn")); updateComposer();
   if (S.scen === "offline") { addN(meM(body, `<span class="receipt">${ic("clock", 13)}Queued · sends when you're back online</span>`, {queued:true})); return; }
   if (N.appr === "testing" && !N.stopped) { reportTest(v); return; }
@@ -3754,6 +3809,11 @@ const ROOMMSG = {
   karim:() => {
     const merged = t => sysL(`Karim merged PR #41 to main by itself · ${t} · <button type="button" class="linkbtn" data-act="revert">Revert</button></span>${lookBtn("merge41")}<span>`, "branch");
     if (ROOM.v === "conflict") return agM("PR #41 conflicts with main in 2 files (<code>Composer.tsx</code>, <code>run.ts</code>) since Noor's PR #44 merged at 09:30. nothing was merged. Noor and i are fixing it; it merges by itself once CI and the reviewer check pass again.", rcpt(["09:34","1.1k tokens","0.04 % of your week"], "atlas"), "", {who:"karim", expr:"focused"});
+    /* v0.7 #reply-sent: a reply to part of an earlier message; its quote leads back to the exact words */
+    if (ROOM.v === "reply-sent") return agM("PR #41 is on main. CI passed on Windows and Ubuntu, the secret scan is clean and the reviewer check passed, so it merged by itself.", rcpt(["08:41","1.3k tokens","0.04 % of your week"], "atlas"), "", {who:"karim", id:"kMerged"}) + merged("08:41")
+      + agM("starting S1-6 SQLite persistence: migrations first, then the message store. i'll post the schema here before i write any of it.", rcpt(["09:10","0.8k tokens","0.03 % of your week"], "atlas"), "", {who:"karim"})
+      + meM(rpQuoteHTML({who:"karim", text:"the secret scan is clean", part:true, target:"kMerged"}) + "Which scanner ran it? Link the report in the PR, please.", seen("Karim", "09:21"))
+      + agM("gitleaks, on every PR. the 08:39 report is linked in #41 now.", rcpt(["09:22","0.5k tokens","0.02 % of your week"], "atlas"), "", {who:"karim"});
     if (ROOM.v === "resolved") return agM("conflict fixed at 09:52. CI and the reviewer check passed again.", rcpt(["09:58","0.6k tokens","0.02 % of your week"], "atlas"), "", {who:"karim"}) + merged("09:58");
     return agM("PR #41 is on main. CI passed on Windows and Ubuntu, the secret scan is clean and the reviewer check passed, so it merged by itself.", rcpt(["08:41","1.3k tokens","0.04 % of your week"], "atlas"), "", {who:"karim"}) + merged("08:41");
   },
@@ -3787,7 +3847,7 @@ function renderRoom(id){
       $("#rHint").innerHTML = mn.only ? `<span>Add what you want ${esc(mn.names)} to do</span>` : v ? `<span>${mn.ids.length ? `${nm} loops in ${esc(mn.names)} · ` : ""}≈ ${(0.3 + v.length / 400).toFixed(1)}k tokens · ${(0.01 + v.length / 12000).toFixed(2)} % of your week</span>` : "";
     });
     $("#rIn").addEventListener("keydown", ev => { if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); $("#rForm").requestSubmit(); } });
-    $("#rForm").addEventListener("submit", ev => { ev.preventDefault(); const v = $("#rIn").value.trim(); if (!v || mnInfo(v, "rIn").only) return; const body = mnBody(v, "rIn"); $("#rIn").value = ""; mnMirror($("#rIn")); $("#rSend").disabled = true; $("#rHint").innerHTML = ""; $("#rMsgs").insertAdjacentHTML("beforeend", meM(body, `<span class="receipt">${ic("check", 13)}Sent</span>`)); const s = $("#rScroll"); s.scrollTop = s.scrollHeight; });
+    $("#rForm").addEventListener("submit", ev => { ev.preventDefault(); const v = $("#rIn").value.trim(); if (!v || mnInfo(v, "rIn").only) return; const body = rpTake("rIn") + mnBody(v, "rIn"); $("#rIn").value = ""; mnMirror($("#rIn")); $("#rSend").disabled = true; $("#rHint").innerHTML = ""; $("#rMsgs").insertAdjacentHTML("beforeend", meM(body, `<span class="receipt">${ic("check", 13)}Sent</span>`)); const s = $("#rScroll"); s.scrollTop = s.scrollHeight; });
     /* The same panel as Noor's, closed by default; quiet one-line states instead of empty boxes */
     sec.addEventListener("click", ev => { if (ev.target.closest("#rPaneToggle")) apAct("toggle"); });
   }
@@ -3800,7 +3860,7 @@ function renderRoom(id){
   $("#rHero").innerHTML = `${idHero(id, a, st, {id:"rHeroAv"})}<div class="statusline">${badge(st)}<span>${ST[st].l} · ${esc(live)}</span></div>`;
   $("#rMsgs").innerHTML = roomMsgs(id);
   $("#rIn").placeholder = `Message ${a.name}`; $("#rIn").setAttribute("aria-label", `Message ${a.name}`);
-  $("#rIn").value = ""; $("#rSend").disabled = true; mnClose(); mnMirror($("#rIn"));
+  $("#rIn").value = ""; $("#rSend").disabled = true; mnClose(); mnMirror($("#rIn")); rpClear("rIn", true);
   $("#rHint").innerHTML = "";
   $("#rPane").setAttribute("aria-label", `${a.name}'s panel: screen, routines and settings`);
   $("#rPane").innerHTML = apHTML(id);
@@ -3875,7 +3935,7 @@ const fmtT = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
 function gm(id, time, bubbles, parts, look, extra){
   const a = AG[id];
   /* Calm: just the name over the bubbles; role and time are in the tooltip and the receipt */
-  return `<div class="msg" data-hue="${a.hue}">${avatar(id, 32, {nobadge:true, hidden:true})}<div class="stackb"><div class="who" title="${esc(a.role)} · ${time}"><b>${a.name}</b></div>${bubbles.map(b => `<div class="bubble">${b}</div>`).join("")}${extra || ""}<div class="msg-meta">${rcpt(parts, look)}</div></div></div>`;
+  return `<div class="msg" data-hue="${a.hue}" data-who="${id}">${avatar(id, 32, {nobadge:true, hidden:true})}<div class="stackb"><div class="who" title="${esc(a.role)} · ${time}"><b>${a.name}</b></div>${bubbles.map(b => `<div class="bubble">${b}</div>`).join("")}${extra || ""}<div class="msg-meta">${rcpt(parts, look)}</div></div></div>`;
 }
 /* C2: the brand board's handoff, played once when you arrive (see .ho-chip) */
 function handoffHTML(){
@@ -3918,12 +3978,14 @@ function renderTeam(){
   $("#tIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#tForm").requestSubmit(); } });
   $("#tForm").addEventListener("submit", e => { e.preventDefault(); teamSend($("#tIn").value.trim(), false); });
 }
-/* Who replies, before you send: the @mentioned agents, or Maya (the lead) when the router decides */
+/* Who replies, before you send: the @mentioned agents, the agent you're replying to (v0.7), or Maya (the lead)
+   when the router decides. A reply skips the router like a mention does, so it has no routing cost. */
 function teamHint(){
-  const ta = $("#tIn"), v = ta.value.trim(), mn = mnInfo(v, "tIn");
+  const ta = $("#tIn"), v = ta.value.trim(), mn = mnInfo(v, "tIn"), rw = rpTeamTarget();
   $("#tSend").disabled = !v || mn.only;
-  $("#tHint").innerHTML = !v ? "" : mn.only ? `<span>Add what you want ${esc(mn.names)} to do</span>`
+  $("#tHint").innerHTML = !v ? (rw ? `<span>${esc(AG[rw].name)} replies · @ picks someone else</span>` : "") : mn.only ? `<span>Add what you want ${esc(mn.names)} to do</span>`
     : mnTrigger(ta) ? "<span>Pick who replies</span>"
+    : !mn.ids.length && rw ? `<span>${esc(AG[rw].name)} replies</span>`
     : `<span>${esc(mn.ids.length ? mn.names : "Maya")} ${mn.ids.length > 1 ? "reply" : "replies"} · ≈ 0.3k tokens to route</span>`;
 }
 /* v0.6.1 (client screenshot): a message with a mention is a normal message with the chip inline, never a lone chip.
@@ -3931,12 +3993,15 @@ function teamHint(){
    mention the router picks, and says so. A mention on its own can't be sent: the hint asks what you want. */
 function teamSend(v, instant){
   const mn = mnInfo(v, "tIn"); if (!v || mn.only) return;
-  const ta = $("#tIn"); ta.value = ""; mnMirror(ta); mnClose(); $("#tSend").disabled = true; $("#tHint").innerHTML = "";
-  const who = mn.ids[0] || "maya", a = AG[who], anim = !instant && animate() ? " arrive" : "";
-  const routed = mn.ids.length ? "" : `<div class="sys${anim}">${avatar("maya", 16, {nobadge:true, hidden:true})}<span>Bench picked Maya · she leads Bench</span>${lookBtn("teamRoute")}</div>`;
+  const ta = $("#tIn"); ta.value = ""; mnMirror(ta); mnClose(); $("#tSend").disabled = true;
+  /* v0.7: a reply goes to the agent you replied to, unless an @mention names someone else */
+  const rw = rpTeamTarget(), quote = rpTake("tIn"); $("#tHint").innerHTML = "";
+  const direct = mn.ids.length > 0 || !!rw;
+  const who = mn.ids[0] || rw || "maya", a = AG[who], anim = !instant && animate() ? " arrive" : "";
+  const routed = direct ? "" : `<div class="sys${anim}">${avatar("maya", 16, {nobadge:true, hidden:true})}<span>Bench picked Maya · she leads Bench</span>${lookBtn("teamRoute")}</div>`;
   const box = $("#tMsgs"), sc = $("#tScroll");
-  const reply = () => gm(who, "now", [mn.ids.length ? "on it. i'll check and come back to you here before 11:00." : "got it. i'll take it, or hand it to the right person and tell you who."], ["now","0.9k tokens","0.03 % of your week"], mn.ids.length ? "team1" : "teamRoute");
-  const mine = meM(mnBody(v, "tIn"), instant ? seen(a.name, "now") : `<span class="receipt">${ic("check", 13)}Sent</span>`, {cls:"neutral" + anim});
+  const reply = () => gm(who, "now", [direct ? "on it. i'll check and come back to you here before 11:00." : "got it. i'll take it, or hand it to the right person and tell you who."], ["now","0.9k tokens","0.03 % of your week"], direct ? "team1" : "teamRoute");
+  const mine = meM(quote + mnBody(v, "tIn"),instant ? seen(a.name, "now") : `<span class="receipt">${ic("check", 13)}Sent</span>`, {cls:"neutral" + anim});
   if (instant) { box.insertAdjacentHTML("beforeend", mine + routed + reply()); sc.scrollTop = sc.scrollHeight; return; }
   box.insertAdjacentHTML("beforeend", mine + routed + `<div class="thinking${anim}" id="tThink" data-hue="${a.hue}"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span><b style="color:var(--agent-ink);font-weight:600">${esc(a.name)}</b> · Thinking</span></div>`);
   sc.scrollTop = sc.scrollHeight;
@@ -4469,12 +4534,16 @@ const MOMENTS = {
   "guard-exempt":["let it run", () => { const b = $('[data-act="exemptYes"]'); if (b) b.click(); }],
   slow:["a minute later", () => { if (nTick) { clearInterval(nTick); nTick = null; } slowText(60); }],
   "long-message":["show all 500 lines", () => { const b = $('[data-n="showlog"]'); if (b) b.click(); }],
-  "agent-checkpoint":["the fresh start", () => { const h = $("#hero"); if (h) { h.dataset.expr = "sleepy"; setTimeout(() => { h.dataset.expr = "focused"; blinkOnce(h); }, 600); } }]
+  reply:["send the reply", () => { if (!$("#tIn")) return; if (!RP.to.tIn) rpDemo("reply"); teamSend("Go with nightly E2E on your machine until v0.1 ships.", false); }],
+  "reply-selection":["reply to the selection", () => { if (!RP.sel) rpDemo("reply-selection"); if (RP.sel) rpStart(RP.sel.m, RP.sel.text); }],
+  "reply-sent":["back to the words", () => { const q = $("#rMsgs .rp-quote"); if (q) rpJump(q); }],
+  "agent-checkpoint":["the fresh start",() => { const h = $("#hero"); if (h) { h.dataset.expr = "sleepy"; setTimeout(() => { h.dataset.expr = "focused"; blinkOnce(h); }, 600); } }]
 };
 
 /* ---------- demo chrome ---------- */
 const JUMP = [
   ["Screens", [["home","Home · Atlas asks one thing"],["atlas-profile","Atlas › Profile (click its name)"],["needs","What needs you · the overlay"],["ready-to-test","What needs you · Ready to test"],["agent","Noor · ready for you to test"],["agent-panel","Noor · panel: screen + routines"],["agent-screen","Noor · panel: the full screen"],["agent-settings","Noor › Settings (her name or the gear)"],["settings","Settings · the app, Appearance (bottom left)"],["agent-settings-autonomy","Noor › Settings › Autonomy"],["agent-settings-memory","Noor › Settings › Memory"],["agent-takeover","Noor · take over"],["team","Bench team chat"],["team-mention","Team chat · @ lists who can reply"],["team-mention-sent","Team chat · a message with a mention"],["agent-mention","Noor · @ lists her teammates"],["home-mention","Home · @ lists everyone Atlas can bring in"],["agent-scrolled","Noor · scrolled: the blurred edge"],["split","Split view"],["project-bench","Bench dashboard"],["project-ik","InterviewKit dashboard"],["room-maya","Maya's room · changing rooms"],["memory","Memory · the Ledger"],["usage","Usage"],["trace","Look inside · the trace"],["tokens","System sheet"]]],
+  ["Reply (v0.7)", [["reply","Reply · to a whole message (goes to Karim)"],["reply-selection","Reply · to the part you select"],["reply-sent","Reply · sent, leads back to the words"]]],
   ["Flows and moments", [["first-run","First run · four steps"],["first-run-name","First run · your main agent (name and look)"],["home-first","Home · first use"],["new-agent","New agent · birth"],["agent-first","Lumen's first room"],["new-project","New project"],["project-new","Field Notes is set up"],["agent-green","All green · after your test"],["team-memo","The debate becomes a memo"],["project-sprint-done","Sprint done · the team gathers"],["home-empty","All caught up"]]],
   ["Worst moments", [["offline","Offline mid-run"],["offline-back","Back online · the digest"],["usage-limit","Weekly limit reached"],["limit-forecast","Limit forecast · Saturday"],["limit-reset","Monday reset · a new sprint end date"],["login-expired","Claude login expired"],["login-back","Signed in again"],["run-failed","A run failed"],["agent-error-retried","Retried, and learned"],["approval-denied","Approval denied · Jade keeps her files"],["agent-checkpoint","Checkpoint at the 90 % ceiling"],["agent-checkpoint-incomplete","Checkpoint incomplete"],["connector-revoked","Connector revoked"],["connector-back","Connector back"],["needs-conflict","Merge conflict · Karim fixes it"],["needs-conflict-resolved","Conflict fixed · merged by itself"],["guard","Guard defers a routine"],["guard-exempt","Guard · let one routine run"],["slow","Slow response · 14 s"],["long-message","A 500-line log"],["long-names","Very long names"],["agent-routines-empty","No routines yet"]]]
 ];
@@ -4577,7 +4646,7 @@ const ALIAS = {"atlas-settings":"atlas-profile","app-settings":"settings","home-
 function resetWorld(){
   S.scen = "normal"; H.variant = "default"; H.openKey = null; H.showAll = false; PV.sprintDone = false; T.memo = false;
   RT.suggest = true; RT.open = undefined; RT.list.forEach(r => { r.exempt = false; });
-  HOME_CHAT.length = 0; ND.proj = null; ROOM.v = "";
+  HOME_CHAT.length = 0; ND.proj = null; ROOM.v = ""; rpReset();
   if (DENY.routed) { H.done.delete("e2e"); DENY.routed = false; }
   PROJ.ik.name = IK_NAME; NEEDS0.find(n => n.k === "yusuf").who = "Yusuf · BA · " + IK_NAME;
 }
@@ -4626,6 +4695,10 @@ const ROUTES = {
   "team-mention-sent":() => { teamScreen("team-mention-sent"); teamSend("@Maya can you check the onboarding copy before I test it?", true); },
   "agent-mention":() => { noorScreen(null, null, "agent-mention"); mnDemo("nIn", "check with @ma"); },
   "home-mention":() => { homeScreen("home-mention"); mnDemo("askIn", "@"); },
+  /* v0.7: reply to a whole message (team chat: it goes to Karim), to the part you selected (Noor), and a sent reply (Karim's room) */
+  "reply":() => { teamScreen("reply"); rpDemo("reply"); },
+  "reply-selection":() => { noorScreen("long", null, "reply-selection"); rpDemo("reply-selection"); },
+  "reply-sent":() => { ROOM.v = "reply-sent"; roomScreen("karim", "reply-sent"); },
   "agent-scrolled":() => {
     noorScreen(null, null, "agent-scrolled");
     const s = $("#convScroll"), hero = $("#nHero"), t = $$("#nMsgs > .msg")[1];
@@ -4914,6 +4987,270 @@ document.addEventListener("keydown", e => {
 }, true);
 /* Demo routes: a composer with @ typed and the list open (static, so a screenshot shows the resting state) */
 function mnDemo(id, text){ const ta = $("#" + id); if (!ta) return; ta.focus(); ta.value = text; ta.setSelectionRange(text.length, text.length); ta.dispatchEvent(new Event("input", {bubbles:true})); }
+
+/* ---------- v0.7 · reply to a message (client, 23 Oct) ----------
+   Every chat (Home, an agent's chat, a room, a team chat), agent messages and your own. Nothing shows at rest.
+   Whole message: hover or focus it and press its Reply button, press R, or right-click › Reply.
+   Part of it: select the words, and Reply and Copy float by the selection (R and right-click work too).
+   Either way the composer gets a one-line preview (face, name, excerpt, ×) and focus; Esc or × cancels.
+   Sent: the quote sits at the top of your bubble and leads back to the original, which glows once where it lives
+   (only the exact words, for a part). In a team chat the reply goes to the agent you replied to; an @mention overrides.
+   Keyboard: a chat's messages are one Tab stop (the latest); ↑ ↓ Home End move between them. */
+const RP = {to:{}, sel:null, glowT:0, q:0};
+const RP_BOX = {hMsgs:"askIn", nMsgs:"nIn", rMsgs:"rIn", tMsgs:"tIn"};
+function rpSquash(s){ return String(s || "").replace(/\s+/g, " ").trim(); }
+function rpCut(t, n){ return t.length > n ? t.slice(0, n - 1).trimEnd() + "…" : t; }
+function rpAgent(id){ return id === "you" ? null : id === "atlas" ? atlasNow() : AG[id] || (id === "lumen" ? LUMEN : null); }
+function rpName(id){ const a = rpAgent(id); return a ? a.name : "You"; }
+function rpHue(id){ const a = rpAgent(id); return a ? a.hue : "none"; }
+function rpFace(id){ const a = rpAgent(id); return a ? avatar(id === "atlas" ? a : id, 20, {nobadge:true, hidden:true}) : '<span class="me-av rp-me" aria-hidden="true">M</span>'; }
+/* The sent quote. q = {who, text, part, target}: target is the original's id, so the quote can lead back to it */
+function rpQuoteHTML(q){
+  const nm = rpName(q.who), x = rpSquash(q.text), shown = q.part ? "“" + x + "”" : x;
+  const lab = `${q.part ? "Quoting part of" : "Replying to"} ${q.who === "you" ? "your" : nm + "'s"} message: ${shown}. Go to it`;
+  return `<button type="button" class="rp-quote" data-hue="${rpHue(q.who)}" data-rp-jump="${esc(q.target || "")}" data-rp-part="${q.part ? 1 : 0}" data-rp-text="${esc(x)}" aria-label="${esc(lab)}"><b>${esc(nm)}</b><span class="rp-q-x">${esc(shown)}</span></button>`;
+}
+/* Plain words of a message: no buttons, quotes, line numbers or receipts; blocks keep a space between them */
+function rpPlain(el){
+  if (!el) return "";
+  const c = el.cloneNode(true);
+  $$(".rp-act,.rp-quote,.rp-vh,.sr,.ln,.lookin,.msg-meta", c).forEach(x => x.remove());
+  $$("p,div,li,br", c).forEach(x => x.after(" "));
+  return rpSquash(c.textContent);
+}
+function rpMsgText(m){ return rpSquash($$(".bubble", m).map(rpPlain).join(" ")) || rpPlain($(".stackb", m) || m); }
+function rpWho(m){
+  if (m.classList.contains("mine")) return "you";
+  if (m.dataset.who) return m.dataset.who;
+  const b = m.parentElement && m.parentElement.id;
+  return b === "hMsgs" ? "atlas" : b === "rMsgs" ? ROOM.id : "noor";
+}
+/* Every message in the four chats becomes an article with a hidden Reply button; the latest is the chat's Tab stop */
+function rpScan(){
+  Object.keys(RP_BOX).forEach(bid => {
+    const box = document.getElementById(bid); if (!box) return;
+    const list = $$(":scope > .msg, :scope > .mine", box);
+    list.forEach((m, i) => {
+      if (!m.id) m.id = bid + "-" + i;
+      const who = rpWho(m), nm = rpName(who), b = $(".bubble", m);
+      if (!m.classList.contains("rp-msg")) {
+        m.classList.add("rp-msg"); m.setAttribute("role", "article"); m.setAttribute("aria-keyshortcuts", "R");
+        m.setAttribute("aria-label", who === "you" ? "Your message" : "Message from " + nm);
+        m.tabIndex = -1;
+      }
+      /* (re)attach: some bubbles rewrite their own content, e.g. Atlas's question when a count changes */
+      if (b && !$(".rp-act", b)) { b.classList.add("rp-anchor"); b.insertAdjacentHTML("beforeend", `<button type="button" class="rp-act" tabindex="-1" data-rp-act aria-label="Reply to ${esc(who === "you" ? "your message" : nm)}" title="Reply · R">${ic("reply")}</button>`); }
+    });
+    if (list.length && !box.contains(document.activeElement)) list.forEach((m, i) => { m.tabIndex = i === list.length - 1 ? 0 : -1; });
+  });
+  /* A chat that re-rendered its composer dropped its draft, and its reply with it */
+  Object.keys(RP.to).forEach(t => { const ta = document.getElementById(t), f = ta && ta.closest("form"); if (!f || !f.querySelector(".rp-bar")) delete RP.to[t]; });
+}
+new MutationObserver(() => { if (RP.q) return; RP.q = requestAnimationFrame(() => { RP.q = 0; rpScan(); }); }).observe($("#main"), {childList:true, subtree:true});
+
+/* The preview: the composer's first row. Its text is the textarea's description, so a screen reader hears it on focus */
+function rpBar(taId, anim){
+  const ta = document.getElementById(taId), form = ta && ta.closest("form"); if (!form) return;
+  const old = form.querySelector(".rp-bar"); if (old) old.remove();
+  const r = RP.to[taId];
+  form.classList.toggle("rp-on", !!r);
+  if (!r) { ta.removeAttribute("aria-describedby"); return; }
+  const shown = r.part ? "“" + r.text + "”" : r.text;
+  form.insertAdjacentHTML("afterbegin", `<div class="rp-bar${anim && animate() ? " anim" : ""}" data-hue="${rpHue(r.who)}">${rpFace(r.who)}<span class="rp-bar-tx" id="rpDesc-${taId}"><span class="rp-vh">Replying to </span><b>${esc(rpName(r.who))}</b><span class="rp-vh">: </span>${esc(shown)}<span class="rp-vh">. Escape cancels the reply.</span></span><button type="button" class="btn icon sm rp-x" data-rp-cancel aria-label="Cancel the reply" title="Cancel · Esc">${ic("x", 14)}</button></div>`);
+  ta.setAttribute("aria-describedby", "rpDesc-" + taId);
+}
+function rpStart(m, part){
+  const box = m && m.parentElement, taId = box && RP_BOX[box.id], ta = taId && document.getElementById(taId);
+  if (!ta) return;
+  const who = rpWho(m), text = part ? rpCut(rpSquash(part), 300) : rpCut(rpMsgText(m), 280);
+  if (!text) return;
+  RP.to[taId] = {who, text, part:!!part, target:m.id};
+  rpBar(taId, true);
+  if (part) { const s = getSelection(); if (s) s.removeAllRanges(); }
+  rpSelHide();
+  ta.focus();
+  if (taId === "tIn") teamHint();
+  announce(`Replying to ${who === "you" ? "your message" : rpName(who)}${part ? ", the part you selected" : ""}. Escape cancels.`);
+}
+function rpClear(taId, quiet){
+  if (!RP.to[taId]) return;
+  delete RP.to[taId]; rpBar(taId);
+  if (taId === "tIn" && $("#tIn")) teamHint();
+  if (!quiet) announce("Reply cancelled");
+}
+/* On send: the quote for the bubble, and the composer is clear again */
+function rpTake(taId){ const r = RP.to[taId]; if (!r) return ""; rpClear(taId, true); return rpQuoteHTML(r); }
+function rpReset(){ Object.keys(RP.to).forEach(t => rpClear(t, true)); RP.to = {}; rpSelHide(); }
+/* Team chat: who a reply goes to (an agent you replied to; a reply to your own message goes through the router) */
+function rpTeamTarget(){ const r = RP.to.tIn; return r && r.who !== "you" && AG[r.who] ? r.who : null; }
+
+/* Scroll inside the chat only (never the app frame): centre for a jump, nearest for arrow keys */
+function rpScrollTo(el, center, smooth){
+  const s = el.closest(".chat-scroll"); if (!s) return;
+  const r = el.getBoundingClientRect(), sr = s.getBoundingClientRect();
+  let d = 0;
+  if (center) d = (r.top - sr.top) - (sr.height - Math.min(r.height, sr.height)) / 2;
+  else if (r.top < sr.top + 56) d = r.top - sr.top - 56;
+  else if (r.bottom > sr.bottom - 12) d = r.bottom - sr.bottom + 12;
+  if (Math.abs(d) > 1) s.scrollTo({top:s.scrollTop + d, behavior:smooth ? "smooth" : "auto"});
+}
+function rpFocus(m){
+  $$(":scope > .rp-msg", m.parentElement).forEach(x => { x.tabIndex = x === m ? 0 : -1; });
+  m.focus({preventScroll:true}); rpScrollTo(m, false, false);
+}
+/* Find quoted words in a message, ignoring spacing and case; returns a Range over exactly those words */
+function rpFind(m, text){
+  const want = String(text || "").replace(/…$/, "").replace(/\s+/g, "").toLowerCase(); if (!want) return null;
+  const skip = ".rp-quote,.rp-act,.rp-vh,.msg-meta,.ln";
+  const w = document.createTreeWalker(m, NodeFilter.SHOW_TEXT, {acceptNode:n => n.parentElement && n.parentElement.closest(skip) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT});
+  let flat = ""; const map = [];
+  for (let n = w.nextNode(); n; n = w.nextNode()) { const s = n.nodeValue; for (let i = 0; i < s.length; i++) if (!/\s/.test(s[i])) { flat += s[i].toLowerCase(); map.push([n, i]); } }
+  const at = flat.indexOf(want); if (at < 0) return null;
+  const a = map[at], b = map[at + want.length - 1], r = document.createRange();
+  r.setStart(a[0], a[1]); r.setEnd(b[0], b[1] + 1);
+  return r;
+}
+/* The quote leads back: the original scrolls to the middle, takes focus and glows once (a band under the words for a part) */
+function rpJump(q){
+  const m = document.getElementById(q.dataset.rpJump);
+  if (!m || !m.isConnected) { toast("That message isn't in this chat anymore.", {icon:"info"}); return; }
+  const part = q.dataset.rpPart === "1", range = part ? rpFind(m, q.dataset.rpText) : null, smooth = !reduced();
+  rpScrollTo(range ? range.startContainer.parentElement : m, true, smooth);
+  $$(":scope > .rp-msg", m.parentElement).forEach(x => { x.tabIndex = x === m ? 0 : -1; });
+  m.focus({preventScroll:true});
+  announce(`Back at ${m.classList.contains("mine") ? "your message" : rpName(rpWho(m)) + "'s message"}`);
+  setTimeout(() => rpGlow(m, range), smooth ? 320 : 0);
+}
+function rpGlow(m, range){
+  const hl = range && window.Highlight && window.CSS && CSS.highlights;
+  clearTimeout(RP.glowT);
+  $$(".rp-flash,.rp-hold").forEach(x => x.classList.remove("rp-flash", "rp-hold"));
+  void m.offsetWidth;
+  if (hl) CSS.highlights.set("rp-hit", new Highlight(range));
+  else m.classList.add(reduced() ? "rp-hold" : "rp-flash");
+  RP.glowT = setTimeout(() => { m.classList.remove("rp-flash", "rp-hold"); if (hl) CSS.highlights.delete("rp-hit"); }, 1800);
+}
+function rpCopy(text, fromSel){
+  const ok = () => { toast("Copied", {icon:"copy"}); rpSelHide(); }, fail = () => toast("Couldn't copy here. Select the text and press Ctrl+C.", {icon:"info"});
+  if (fromSel) { try { if (document.execCommand("copy")) { ok(); return; } } catch (err) { /* fall back to the clipboard API */ } }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fail); else fail();
+}
+
+/* ---- the selection: one message, words inside its bubbles only ---- */
+function rpClamp(r, m){
+  const bs = $$(".bubble", m); if (!bs.length) return null;
+  const last = bs[bs.length - 1], c = r.cloneRange();
+  const lim = document.createRange(); lim.setStart(bs[0], 0); lim.setEnd(last, last.childNodes.length);
+  if (c.compareBoundaryPoints(Range.START_TO_START, lim) < 0) c.setStart(lim.startContainer, lim.startOffset);
+  if (c.compareBoundaryPoints(Range.END_TO_END, lim) > 0) c.setEnd(lim.endContainer, lim.endOffset);
+  return c.collapsed ? null : c;
+}
+function rpSelInfo(){
+  const s = getSelection(); if (!s || s.isCollapsed || !s.rangeCount) return null;
+  const r = s.getRangeAt(0), el = n => n && (n.nodeType === 1 ? n : n.parentElement);
+  const a = el(r.startContainer), b = el(r.endContainer); if (!a || !b || !a.closest || !b.closest) return null;
+  const ma = a.closest(".rp-msg"), mb = b.closest(".rp-msg");
+  let m = ma || mb; if (!m) return null;
+  /* a triple-click ends at the start of the next message: that's still one message */
+  if (ma && mb && ma !== mb) { const tb = rpClamp(r, mb); if (tb && rpSquash(tb.toString())) return null; m = ma; }
+  if (a.closest(".rp-quote") && b.closest(".rp-quote")) return null;
+  const c = rpClamp(r, m); if (!c) return null;
+  const text = rpSquash(c.toString()); if (!text) return null;
+  return {m, r:c, text};
+}
+function rpSelEl(){
+  let el = $("#rpSel"); if (el) return el;
+  document.body.insertAdjacentHTML("beforeend", `<div class="rp-sel" id="rpSel" role="toolbar" aria-label="Selected text" hidden><button type="button" data-rp-sel="reply" title="Reply to the selection · R">${ic("reply")}Reply</button><button type="button" data-rp-sel="copy" title="Copy · Ctrl+C">${ic("copy")}Copy</button></div>`);
+  el = $("#rpSel");
+  el.addEventListener("mousedown", e => e.preventDefault());   /* the selection survives the click */
+  el.addEventListener("click", e => { const b = e.target.closest("[data-rp-sel]"), s = RP.sel; if (!b || !s) return; if (b.dataset.rpSel === "reply") rpStart(s.m, s.text); else rpCopy(s.text, true); });
+  el.addEventListener("keydown", e => {
+    const bs = $$("button", el), i = bs.indexOf(document.activeElement);
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); bs[(i + 1) % bs.length].focus(); }
+    else if (e.key === "Escape") { e.preventDefault(); const m = RP.sel && RP.sel.m; rpSelHide(); if (m) rpFocus(m); }
+  });
+  return el;
+}
+function rpSelShow(info){
+  RP.sel = info;
+  const el = rpSelEl(), was = !el.hidden;
+  el.hidden = false; rpSelPlace();
+  if (!was && animate()) { el.classList.remove("anim"); void el.offsetWidth; el.classList.add("anim"); }
+}
+function rpSelPlace(){
+  const el = $("#rpSel"), s = RP.sel; if (!el || el.hidden || !s) return;
+  if (!s.m.isConnected) { rpSelHide(); return; }
+  const br = s.r.getBoundingClientRect(), sc = s.m.closest(".chat-scroll"), sr = sc ? sc.getBoundingClientRect() : {top:0, bottom:innerHeight};
+  el.style.visibility = br.bottom < sr.top || br.top > sr.bottom ? "hidden" : "";
+  const w = el.offsetWidth, h = el.offsetHeight;
+  let top = br.top - h - 8, below = false;
+  if (top < sr.top + 4) { top = br.bottom + 8; below = true; }
+  el.style.left = Math.round(Math.max(8, Math.min(innerWidth - w - 8, br.left + br.width / 2 - w / 2))) + "px";
+  el.style.top = Math.round(top) + "px";
+  el.classList.toggle("below", below);
+}
+function rpSelHide(){ RP.sel = null; const el = $("#rpSel"); if (el) el.hidden = true; }
+function rpSelSync(){ const i = rpSelInfo(); if (i) rpSelShow(i); else rpSelHide(); }
+document.addEventListener("mouseup", e => { if (e.button !== 0 || (e.target.closest && e.target.closest("#rpSel"))) return; setTimeout(rpSelSync, 0); });
+document.addEventListener("keyup", e => { if (e.shiftKey || e.key === "Shift") rpSelSync(); });
+document.addEventListener("selectionchange", () => { if (RP.sel && !rpSelInfo()) rpSelHide(); });
+document.addEventListener("scroll", () => rpSelPlace(), {capture:true, passive:true});
+window.addEventListener("resize", rpSelPlace);
+
+/* ---- wiring: clicks, keys, right-click ---- */
+document.addEventListener("click", e => {
+  const t = e.target; if (!t.closest) return;
+  const act = t.closest("[data-rp-act]"); if (act) { e.preventDefault(); rpStart(act.closest(".rp-msg")); return; }
+  const x = t.closest("[data-rp-cancel]"); if (x) { const ta = x.closest("form").querySelector("textarea"); rpClear(ta.id); ta.focus(); return; }
+  const q = t.closest(".rp-quote"); if (q) { e.preventDefault(); rpJump(q); }
+});
+function rpEditable(t){ return !!(t && t.closest && t.closest("input,textarea,select,[contenteditable='true']")); }
+document.addEventListener("keydown", e => {
+  const t = e.target;
+  if (e.key === "Escape") {
+    if (t && RP.to[t.id] && !mnOpenNow()) { e.preventDefault(); rpClear(t.id); return; }
+    if (RP.sel && !rpEditable(t) && !MENU) { const m = RP.sel.m; rpSelHide(); const s = getSelection(); if (s) s.removeAllRanges(); if (m && m.contains(t)) rpFocus(m); }
+    return;
+  }
+  if (rpEditable(t) || e.ctrlKey || e.metaKey || e.altKey || MENU) return;
+  if (e.key === "r" || e.key === "R") {
+    const info = rpSelInfo();
+    if (info) { e.preventDefault(); rpStart(info.m, info.text); return; }
+    const m = t && t.closest && t.closest(".rp-msg");
+    if (m) { e.preventDefault(); rpStart(m); }
+    return;
+  }
+  if (t && t.classList && t.classList.contains("rp-msg") && ["ArrowUp","ArrowDown","Home","End"].indexOf(e.key) >= 0) {
+    const list = $$(":scope > .rp-msg", t.parentElement), i = list.indexOf(t);
+    const n = e.key === "Home" ? 0 : e.key === "End" ? list.length - 1 : Math.max(0, Math.min(list.length - 1, i + (e.key === "ArrowDown" ? 1 : -1)));
+    e.preventDefault(); rpFocus(list[n]);
+  }
+});
+document.addEventListener("contextmenu", e => {
+  const m = e.target.closest && e.target.closest(".rp-msg"); if (!m) return;
+  e.preventDefault();
+  const info = rpSelInfo(), sel = info && info.m === m ? info : null, kb = !e.clientX && !e.clientY;
+  rpSelHide();
+  const items = (sel ? [{act:"sel", icon:"reply", label:"Reply to selection"}, {act:"copysel", icon:"copy", label:"Copy selection"}, {sep:true}] : [])
+    .concat([{act:"reply", icon:"reply", label:"Reply"}, {act:"copy", icon:"copy", label:"Copy message"}]);
+  openMenu(items, $(".rp-act", m), kb ? null : {x:e.clientX, y:e.clientY}, a => {
+    if (a === "sel") rpStart(m, sel.text); else if (a === "copysel") rpCopy(sel.text, true);
+    else if (a === "reply") rpStart(m); else if (a === "copy") rpCopy(rpMsgText(m), false);
+  }, "Message");
+  const ri = $(`#menu [data-mi="${sel ? "sel" : "reply"}"]`); if (ri) ri.insertAdjacentHTML("beforeend", '<span class="why" aria-hidden="true">R</span>');
+});
+/* Demo routes: a reply waiting in the team chat; a selection with its Reply and Copy (static, for screenshots) */
+function rpDemo(k){
+  rpScan();
+  if (k === "reply") { const m = $('#tMsgs .rp-msg[data-who="karim"]'); if (m) rpStart(m); return; }
+  if (k === "reply-selection") {
+    const m = $$("#nMsgs .rp-msg").find(x => x.textContent.indexOf("VCRUNTIME140_1.dll") >= 0); if (!m) return;
+    const r = rpFind(m, "the Windows runner is missing VCRUNTIME140_1.dll"); if (!r) return;
+    rpScrollTo(r.startContainer.parentElement, true, false);
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    rpSelShow({m, r:r.cloneRange(), text:rpSquash(r.toString())});
+  }
+}
 
 /* ---------- blurred scroll edge: on while something is under the top edge of a chat ---------- */
 function edgeSync(s){ if (s && s.classList) s.classList.toggle("is-scrolled", s.scrollTop > 2); }
