@@ -55,7 +55,7 @@ Score each axis at its level. **Any axis below Senior blocks hand-off.** Fix it,
 
 | Axis | Junior | Mid | Senior (minimum) | Staff |
 |---|---|---|---|---|
-| **Copy** | Labels are vague or repeated | Clear, written for a user | Says more with less; never repeats a label the heading already gives; second-person voice | Copy anticipates the next question and frames warmly ("guest pass", not "trial") |
+| **Copy** | Labels are vague or repeated | Clear, written for a user | Says more with less; every line passes the removal test ("would the user be confused without it?"); never repeats a label the heading already gives; second-person voice | Copy anticipates the next question and frames warmly ("guest pass", not "trial") |
 | **Visuals** | Decorative effects, layered shadows | Polished but overworked | Emphasis only where it matters; visual patterns reused to connect related parts | Custom visual language (shapes, avatars, icons) that is unmistakably Bench |
 | **Color** | Too much or too little brand color | Tints and shades of one hue | 60-30-10, color only for meaning, one blue action | Color carries identity (agent hues) and state, with nothing decorative |
 | **Type** | 5+ sizes, 3+ weights | Fewer sizes, some off | ≤ 4 sizes and 2 weights per view, tight tracking on large type, tabular figures | Type does the hierarchy with no extra chrome needed |

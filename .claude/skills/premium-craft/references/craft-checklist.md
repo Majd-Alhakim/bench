@@ -40,6 +40,7 @@ Rules of thumb drawn from the source videos. They are starting points, not laws.
 - Dark mode gets depth from **lighter surfaces as elevation rises**, lower-contrast borders, and desaturated chips. Shadows don't work there.
 
 ## Copy
+- **The removal test (client rule, 2026-10-23):** for every piece of visible text ask *"If I removed it, would the user be confused?"* Yes → keep it (and tighten it). No → remove it. Captions that restate a heading or button, explanations next to obvious controls, repeated reassurance and footnotes go. Costs before a click, what an outward action will do, error cause + next step, status words, counts and names stay. Accessible names (aria-labels) stay even when visible text goes.
 - Shortest clear wording. Don't repeat what the heading already says ("Rewards" heading → "Claim", not "Claim rewards").
 - Second person, from the main agent's voice (Bench rule U8).
 - Plain states, reassurance at risky moments ("nothing sends until you've read it"), and the next step after every outcome.
