@@ -13,3 +13,7 @@
 ## Laws of UX audit: client decisions (2026-10-23)
 All four confirmed ("yes"): context meter in the agent panel and in the chat only from 60 % · For-your-info items move into Atlas's chat as a quiet line · Noor's demo moment is "Ready to test" (a file deletion shown elsewhere) · footer reads "Settings" next to the client's initial.
 Also: sending emails and posts as the client is automatic (CR-007 updated).
+
+## Theme: dark first (2026-10-23)
+Client: *"I am someone who like all of his apps to be dark themed first and so any developer or builder, so make the app dark first and option to switch to white"*.
+**Decision:** Bench ships **dark first**; light ("white") is an option in Settings › Appearance (plus "Match system"). Supersedes D-UI6 (light first, dark later). The brand stays (Porcelain/Ink/Cobalt mapped to a dark scheme; agent hues and Quartet adjusted for dark); dark-mode rules from the design skills apply (depth by lighter surfaces, not shadows; desaturated accents; AA contrast).
