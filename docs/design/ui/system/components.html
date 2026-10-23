@@ -145,7 +145,7 @@ main{margin-left:232px;padding:40px 48px 120px}
 .btn.quiet-danger{color:var(--danger-ink)}
 .btn.quiet-danger:hover,.btn.quiet-danger.is-hover{background:var(--danger-tint)}
 .btn.quiet-danger:active,.btn.quiet-danger.is-press{background:color-mix(in srgb,var(--danger-tint),var(--danger-ink) 12%);transform:scale(var(--press-scale))}
-/* Ink: Send and the "Got it" class of actions. The fill is Text 1, so it flips with the theme (Ink on Porcelain, soft light on Graphite). */
+/* Ink: Send and the "Got it" class of actions. The fill is Text 1, so it flips with the theme (Ink on Porcelain, soft light on Charcoal). */
 .btn.ink{background:var(--text-1);color:var(--text-on-ink)}
 .btn.ink:hover,.btn.ink.is-hover{background:var(--ink-hover)}
 .btn.ink:active,.btn.ink.is-press{background:var(--ink-press);transform:scale(var(--press-scale))}
@@ -586,12 +586,12 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
   <!-- ===================== COLOUR ===================== -->
   <section class="sec" id="colour">
-    <div class="sec-h"><h2>Colour</h2><p>60 % ground (Graphite on dark, Porcelain on light), 30 % surfaces and Ink text, 10 % meaning: one Cobalt action per screen, amber for what needs you, agent hues on their own things. Values and ratios are read live from the tokens for the theme that’s on.</p></div>
+    <div class="sec-h"><h2>Colour</h2><p>60 % ground (neutral Charcoal on dark, Porcelain on light), 30 % surfaces and Ink text, 10 % meaning: one Cobalt action per screen, amber for what needs you, agent hues on their own things. Values and ratios are read live from the tokens for the theme that’s on.</p></div>
     <div class="board"><div class="swatches" id="neutralSw"></div><div class="swatches" id="roleSw" style="margin-top:12px"></div></div>
   </section>
 
   <section class="sec" id="hues">
-    <div class="sec-h"><h2>Agent hues</h2><p>Ten identities. Base for the avatar body, light and deep for the hero render, ink for name tags and mentions, tint for your bubbles in that agent’s chat, wash for its canvas. Never on a button, never a status.</p></div>
+    <div class="sec-h"><h2>Agent hues</h2><p>Ten identities. Base for the avatar body, light and deep for the hero render, ink for name tags and mentions, tint for your bubbles in that agent’s chat, wash for its canvas on light (on dark the wash is the plain charcoal ground). Never on a button, never a status.</p></div>
     <div class="board" id="hueTable"></div>
   </section>
 
@@ -792,7 +792,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
   <!-- ===================== MESSAGES ===================== -->
   <section class="sec" id="messages">
-    <div class="sec-h"><h2>Messages</h2><p>Your bubbles take the agent’s tint; the agent’s sit on the surface over its wash. Every agent message carries its cost and a way to look inside. System lines are centred and quiet.</p></div>
+    <div class="sec-h"><h2>Messages</h2><p>Your bubbles take the agent’s tint; the agent’s sit on the surface over its wash (plain charcoal on dark). Every agent message carries its cost and a way to look inside. System lines are centred and quiet.</p></div>
     <div class="cols-2">
       <div class="chat" data-hue="coral" id="chatA"></div>
       <div class="chat" data-hue="coral" id="chatB"></div>
@@ -1053,7 +1053,7 @@ function hexOf(v){PROBE.style.color="";PROBE.style.color=v;const c=getComputedSt
 function paintColour(){
   const dark=document.documentElement.getAttribute("data-theme")!=="light",surf=hexOf("var(--bg-surface)"),gr=hexOf("var(--bg-ground)"),t1=hexOf("var(--text-1)");
   const sw=(n,h,u,r)=>`<div class="swatch"><i style="background:${h}"></i><div><b>${n}</b><span class="meta num">${h}</span><span class="meta">${u}</span><span class="meta">${r}</span></div></div>`;
-  const neutrals=[["Text 1","--text-1",dark?"Soft light, not white":"Ink: text, the mark"],["Text 2","--text-2","Secondary text"],["Text 3","--text-3","Meta, placeholders"],["Control edge","--line-control","Inputs, switch edges"],["Sunken","--bg-sunken","Tags, counts, tracks"],["Ground","--bg-ground",dark?"Graphite: the canvas":"Porcelain: the canvas"]];
+  const neutrals=[["Text 1","--text-1",dark?"Soft light, not white":"Ink: text, the mark"],["Text 2","--text-2","Secondary text"],["Text 3","--text-3","Meta, placeholders"],["Control edge","--line-control","Inputs, switch edges"],["Sunken","--bg-sunken","Tags, counts, tracks"],["Ground","--bg-ground",dark?"Charcoal: the canvas":"Porcelain: the canvas"]];
   $("#neutralSw").innerHTML=neutrals.map(([n,t,u],i)=>{const h=hexOf(`var(${t})`);return sw(n,h,u,i<3?`surface ${aa(cr(h,surf))} · ground ${aa(cr(h,gr))}`:i===3?`on surface ${aa(cr(h,surf))}`:`Text 1 on it ${aa(cr(t1,h))}`)}).join("");
   const roles=[["Action","--action","The one action · its label on it","--text-on-action"],["Action text","--action-text","Links on hover, focus ring",null],["Done","--ok-ink","On the surface · on its tint","--ok-tint"],["Needs you","--attn-ink","On the surface · on its tint","--attn-tint"],["Error","--danger-ink","On the surface · on its tint","--danger-tint"],["Needs-you fill","--attn-fill","Count badges · Ink on it","--on-attn"]];
   $("#roleSw").innerHTML=roles.map(([n,t,u,p],i)=>{const h=hexOf(`var(${t})`);let r;

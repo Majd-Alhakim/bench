@@ -126,50 +126,51 @@ window.addEventListener("error", function (e) {
 }
 @supports (corner-shape:squircle){:root{--corner:squircle;--r-in:16px;--r-obj:28px}}
 /* ---------- Dark (the default, 23 Oct) ----------
-   Graphite: a near-black ground with a faint cool undertone, never #000. Depth comes from lighter steps
-   (ground → surface → raised → fill), not shadows; only what floats keeps a soft black shadow under a 1px light ring.
-   Ink becomes a soft light (#e8e9ed, not white). Cobalt brightens to #3a64ff so white text on it still passes,
-   and links/focus use Cobalt 300. Status colours are desaturated light inks on dark tints of themselves.
-   Agent hues keep their bodies; their ink becomes the hue's light step, the tint an 18 % wash over the surface,
-   the chat wash a 6 % breath over the ground. Every text pair is AA (the System sheet computes them live). */
+   Charcoal (v0.6.2, client: "actually dark charcoal and grey"): a neutral near-black ground, R = G = B, no blue
+   or purple cast, never #000. Depth comes from lighter grey steps (ground → surface → raised → fill), not shadows;
+   only what floats keeps a soft black shadow under a 1px light ring. Ink is a soft light grey (#ebebeb, not white).
+   Cobalt brightens to #3a64ff so white text on it still passes, and links/focus use Cobalt 300. Status colours are
+   desaturated light inks on dark tints of themselves. Agent hues stay on the avatar, name, mention chip and a
+   subtle 12 % bubble tint; the chat canvas is plain charcoal (no wash). Every text pair is AA (the System sheet computes them live). */
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --ink-rgb:232 233 237;
-  --porcelain-25:#202227; --porcelain-150:#33353d; --porcelain-200:#34363e; --porcelain-300:#3e4149; --porcelain-500:#6b707c;
-  --graphite-0:#101114; --graphite-1:#1b1c21; --graphite-2:#24262c; --graphite-3:#2b2d34; --graphite-4:#2e3038;
+  --ink-rgb:235 235 235;
+  --porcelain-25:#222222; --porcelain-150:#353535; --porcelain-200:#363636; --porcelain-300:#404040; --porcelain-500:#737373;
+  --graphite-0:#161616; --graphite-1:#1f1f1f; --graphite-2:#282828; --graphite-3:#2f2f2f; --graphite-4:#333333;
   --bg-ground:var(--graphite-0); --bg-surface:var(--graphite-1); --bg-raised:var(--graphite-2); --bg-sunken:var(--graphite-3); --bg-inverse:var(--graphite-4);
-  --seg-on:#3a3d45;
-  --text-1:#e8e9ed; --text-2:#b4b8c2; --text-3:#8e93a0;
-  --text-inverse:#eceef3; --text-inverse-2:#a9adb8; --text-on-action:#fff;
-  --text-on-ink:#101114; --ink-hover:#f4f5f7; --ink-press:#d6d8de; --mark:#e8e9ed;
-  --line-subtle:rgb(232 233 237 / .07); --line:rgb(232 233 237 / .11); --line-control:#6b707c;
-  --state-hover:rgb(232 233 237 / .045); --state-press:rgb(232 233 237 / .085); --state-selected:rgb(232 233 237 / .07);
+  --seg-on:#3d3d3d;
+  --text-1:#ebebeb; --text-2:#b8b8b8; --text-3:#989898;
+  --text-inverse:#ededed; --text-inverse-2:#adadad; --text-on-action:#fff;
+  --text-on-ink:#161616; --ink-hover:#f5f5f5; --ink-press:#d9d9d9; --mark:#ebebeb;
+  --line-subtle:rgb(235 235 235 / .07); --line:rgb(235 235 235 / .11); --line-control:#737373;
+  --state-hover:rgb(235 235 235 / .045); --state-press:rgb(235 235 235 / .085); --state-selected:rgb(235 235 235 / .07);
   --action:#3a64ff; --action-hover:#2e5bff; --action-press:#2550eb; --action-tint:rgb(58 100 255 / .18); --action-text:#8fa8ff; --focus:#8fa8ff;
   --ok-ink:#6fd09a; --ok-tint:#13261b; --ok-fill:#3c9e66; --ok-solid:#1b7a45;
-  --attn-ink:#f0b45a; --attn-tint:#2c2213; --attn-fill:#e8a33a; --on-attn:#15171d;
+  --attn-ink:#f0b45a; --attn-tint:#2c2213; --attn-fill:#e8a33a; --on-attn:#161616;
   --danger-ink:#ff8a85; --danger-tint:#2e1517; --danger-fill:#d9474a; --danger-solid:#c0262d; --danger-solid-hover:#a81f26;
-  --sw-track:#3e4149; --sw-track-hover:#4a4d56; --sw-knob:#c9ccd4; --sw-knob-on:#101114;
-  --cut-hover:#1a1b1e; --cut-selected:#1f2023;
-  --ring-track:#34363e;
+  --sw-track:#404040; --sw-track-hover:#4d4d4d; --sw-knob:#cccccc; --sw-knob-on:#161616;
+  --cut-hover:#202020; --cut-selected:#252525;
+  --ring-track:#363636;
   --diff-add:rgb(63 185 110 / .14); --diff-del:rgb(255 100 100 / .13); --mini-add:rgb(63 185 110 / .2); --mini-del:rgb(255 100 100 / .18);
   --scrim:rgb(0 0 0 / .55); --scrim-soft:rgb(0 0 0 / .35);
   --shadow-color:0 0% 0%;
-  --elev-1:0 0 0 1px rgb(232 233 237 / .055);
-  --elev-2:0 0 0 1px rgb(232 233 237 / .08);
-  --elev-3:0 0 0 1px rgb(232 233 237 / .09),0 16px 40px rgb(0 0 0 / .45);
-  --elev-4:0 0 0 1px rgb(232 233 237 / .1),0 24px 64px rgb(0 0 0 / .55);
-  /* agent hues on dark: ink = the hue's light step; tint and wash are washes of the body colour */
-  --hue-coral-ink:var(--hue-coral-light); --hue-coral-tint:color-mix(in srgb,var(--hue-coral-base) 18%,#1b1c21); --hue-coral-wash:color-mix(in srgb,var(--hue-coral-base) 6%,#101114);
-  --hue-tangerine-ink:var(--hue-tangerine-light); --hue-tangerine-tint:color-mix(in srgb,var(--hue-tangerine-base) 18%,#1b1c21); --hue-tangerine-wash:color-mix(in srgb,var(--hue-tangerine-base) 6%,#101114);
-  --hue-honey-ink:var(--hue-honey-light); --hue-honey-tint:color-mix(in srgb,var(--hue-honey-base) 16%,#1b1c21); --hue-honey-wash:color-mix(in srgb,var(--hue-honey-base) 5%,#101114);
-  --hue-pear-ink:var(--hue-pear-light); --hue-pear-tint:color-mix(in srgb,var(--hue-pear-base) 16%,#1b1c21); --hue-pear-wash:color-mix(in srgb,var(--hue-pear-base) 5%,#101114);
-  --hue-mint-ink:var(--hue-mint-light); --hue-mint-tint:color-mix(in srgb,var(--hue-mint-base) 16%,#1b1c21); --hue-mint-wash:color-mix(in srgb,var(--hue-mint-base) 5%,#101114);
-  --hue-teal-ink:var(--hue-teal-light); --hue-teal-tint:color-mix(in srgb,var(--hue-teal-base) 16%,#1b1c21); --hue-teal-wash:color-mix(in srgb,var(--hue-teal-base) 5%,#101114);
-  --hue-aqua-ink:var(--hue-aqua-light); --hue-aqua-tint:color-mix(in srgb,var(--hue-aqua-base) 16%,#1b1c21); --hue-aqua-wash:color-mix(in srgb,var(--hue-aqua-base) 5%,#101114);
-  --hue-lavender-ink:var(--hue-lavender-light); --hue-lavender-tint:color-mix(in srgb,var(--hue-lavender-base) 20%,#1b1c21); --hue-lavender-wash:color-mix(in srgb,var(--hue-lavender-base) 7%,#101114);
-  --hue-orchid-ink:var(--hue-orchid-light); --hue-orchid-tint:color-mix(in srgb,var(--hue-orchid-base) 18%,#1b1c21); --hue-orchid-wash:color-mix(in srgb,var(--hue-orchid-base) 6%,#101114);
-  --hue-cocoa-ink:var(--hue-cocoa-light); --hue-cocoa-tint:color-mix(in srgb,var(--hue-cocoa-base) 20%,#1b1c21); --hue-cocoa-wash:color-mix(in srgb,var(--hue-cocoa-base) 6%,#101114);
-  --hue-none-ink:var(--hue-none-light); --hue-none-tint:#2b2d34; --hue-none-wash:#121317;
+  --elev-1:0 0 0 1px rgb(235 235 235 / .055);
+  --elev-2:0 0 0 1px rgb(235 235 235 / .08);
+  --elev-3:0 0 0 1px rgb(235 235 235 / .09),0 16px 40px rgb(0 0 0 / .45);
+  --elev-4:0 0 0 1px rgb(235 235 235 / .1),0 24px 64px rgb(0 0 0 / .55);
+  /* agent hues on dark: ink = the hue's light step; tint = 12 % of the body over the surface (14 % for the two
+     dim hues) for the bubble and mention chip; no canvas wash: every chat sits on the charcoal ground */
+  --hue-coral-ink:var(--hue-coral-light); --hue-coral-tint:color-mix(in srgb,var(--hue-coral-base) 12%,#1f1f1f); --hue-coral-wash:var(--graphite-0);
+  --hue-tangerine-ink:var(--hue-tangerine-light); --hue-tangerine-tint:color-mix(in srgb,var(--hue-tangerine-base) 12%,#1f1f1f); --hue-tangerine-wash:var(--graphite-0);
+  --hue-honey-ink:var(--hue-honey-light); --hue-honey-tint:color-mix(in srgb,var(--hue-honey-base) 12%,#1f1f1f); --hue-honey-wash:var(--graphite-0);
+  --hue-pear-ink:var(--hue-pear-light); --hue-pear-tint:color-mix(in srgb,var(--hue-pear-base) 12%,#1f1f1f); --hue-pear-wash:var(--graphite-0);
+  --hue-mint-ink:var(--hue-mint-light); --hue-mint-tint:color-mix(in srgb,var(--hue-mint-base) 12%,#1f1f1f); --hue-mint-wash:var(--graphite-0);
+  --hue-teal-ink:var(--hue-teal-light); --hue-teal-tint:color-mix(in srgb,var(--hue-teal-base) 12%,#1f1f1f); --hue-teal-wash:var(--graphite-0);
+  --hue-aqua-ink:var(--hue-aqua-light); --hue-aqua-tint:color-mix(in srgb,var(--hue-aqua-base) 12%,#1f1f1f); --hue-aqua-wash:var(--graphite-0);
+  --hue-lavender-ink:var(--hue-lavender-light); --hue-lavender-tint:color-mix(in srgb,var(--hue-lavender-base) 14%,#1f1f1f); --hue-lavender-wash:var(--graphite-0);
+  --hue-orchid-ink:var(--hue-orchid-light); --hue-orchid-tint:color-mix(in srgb,var(--hue-orchid-base) 12%,#1f1f1f); --hue-orchid-wash:var(--graphite-0);
+  --hue-cocoa-ink:var(--hue-cocoa-light); --hue-cocoa-tint:color-mix(in srgb,var(--hue-cocoa-base) 14%,#1f1f1f); --hue-cocoa-wash:var(--graphite-0);
+  --hue-none-ink:var(--hue-none-light); --hue-none-tint:#2f2f2f; --hue-none-wash:var(--graphite-0);
 }
 [data-hue="coral"]{--agent-base:var(--hue-coral-base);--agent-light:var(--hue-coral-light);--agent-deep:var(--hue-coral-deep);--agent-ink:var(--hue-coral-ink);--agent-tint:var(--hue-coral-tint);--agent-wash:var(--hue-coral-wash)}
 [data-hue="tangerine"]{--agent-base:var(--hue-tangerine-base);--agent-light:var(--hue-tangerine-light);--agent-deep:var(--hue-tangerine-deep);--agent-ink:var(--hue-tangerine-ink);--agent-tint:var(--hue-tangerine-tint);--agent-wash:var(--hue-tangerine-wash)}
@@ -212,7 +213,7 @@ code,.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
 #errBox{position:fixed;left:12px;bottom:12px;z-index:9999;max-width:640px;padding:10px 12px;border-radius:8px;background:#c0262d;color:#fff;font:12px/16px var(--font-mono);white-space:pre-wrap}
 
 /* ---------- prototype chrome (not part of the UI) ---------- */
-.demo{height:48px;display:flex;align-items:center;gap:12px;padding:0 12px 0 16px;background:#0b0c10;color:var(--text-inverse);position:relative;z-index:700;font-size:13px;white-space:nowrap;box-shadow:inset 0 -1px 0 rgb(255 255 255 / .08)}
+.demo{height:48px;display:flex;align-items:center;gap:12px;padding:0 12px 0 16px;background:#0e0e0e;color:var(--text-inverse);position:relative;z-index:700;font-size:13px;white-space:nowrap;box-shadow:inset 0 -1px 0 rgb(255 255 255 / .08)}
 .demo-theme{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:999px;background:rgb(255 255 255 / .1);color:var(--text-inverse);flex:none;transition:background-color var(--dur-micro) ease}
 .demo-theme:hover{background:rgb(255 255 255 / .18)}
 .demo-theme svg{width:16px;height:16px}
@@ -223,10 +224,10 @@ code,.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
 .demo-tabs{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:rgb(255 255 255 / .08);flex:none}
 .demo-tabs button{height:28px;padding:0 12px;border-radius:999px;color:var(--text-inverse-2);font-size:13px;font-weight:600;transition:background-color var(--dur-micro) var(--ease-out),color var(--dur-micro) var(--ease-out)}
 .demo-tabs button:hover{color:var(--text-inverse)}
-.demo-tabs button[aria-selected="true"]{background:var(--text-inverse);color:#15171d}
+.demo-tabs button[aria-selected="true"]{background:var(--text-inverse);color:#161616}
 .demo select{height:30px;max-width:230px;border:0;border-radius:8px;background:rgb(255 255 255 / .1);color:var(--text-inverse);padding:0 8px;font-size:13px}
 .demo select option,.demo select optgroup{color:#15171d;background:#fff}
-.demo-play{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:var(--text-inverse);color:#15171d;font-size:13px;font-weight:600;flex:none}
+.demo-play{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:var(--text-inverse);color:#161616;font-size:13px;font-weight:600;flex:none}
 .demo-play svg{width:12px;height:12px}
 .demo-rm{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:12px;color:var(--text-inverse-2);cursor:pointer;flex:none}
 .demo-rm input{appearance:none;width:30px;height:18px;border-radius:999px;background:rgb(255 255 255 / .18);position:relative;margin:0;cursor:pointer;transition:background-color var(--dur-short) ease}
@@ -279,7 +280,7 @@ code,.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
 .lookin::after{inset:-5px -2px}
 .secbtn::after{inset:-4px -2px}
 /* C1: Send with a draft. .btn.icon's Text 2 colour used to win over .inkbtn, so the arrow sank into the Ink fill (2.1:1).
-   Light: white on Ink 17.9:1. Dark: the Ink fill is the soft light (#e8e9ed) and the arrow is the ground (15.5:1). */
+   Light: white on Ink 17.9:1. Dark: the Ink fill is the soft light (#ebebeb) and the arrow is the ground (15.2:1). */
 .btn.icon.inkbtn{background:var(--text-1);color:var(--text-on-ink)}
 .btn.icon.inkbtn:hover{background:var(--ink-hover);color:var(--text-on-ink)}
 .btn.icon.inkbtn:active{background:var(--ink-press);color:var(--text-on-ink)}
@@ -4350,10 +4351,10 @@ function cr(a, b){ const x = lum(a), y = lum(b); return (Math.max(x, y) + .05) /
 function aa(r, min){ min = min || 4.5; return `<span class="aa${r < min ? " fail" : ""}">${r.toFixed(2)}:1 ${r >= 7 ? "AAA" : r >= min ? "AA" : "fail"}</span>`; }
 let SHEET_BUILT = false;
 /* Dark hue pairs, computed the way the CSS does it (color-mix of the body colour over the surface) so the table is honest */
-const DARK_TINT = {honey:.16, pear:.16, mint:.16, teal:.16, aqua:.16, lavender:.2, cocoa:.2};
+const DARK_TINT = {lavender:.14, cocoa:.14};
 function mixHex(a, b, p){ const A = parseInt(a.slice(1), 16), B = parseInt(b.slice(1), 16); return "#" + [16, 8, 0].map(s => Math.round(((A >> s) & 255) * p + ((B >> s) & 255) * (1 - p)).toString(16).padStart(2, "0")).join(""); }
-function huePair(h){ const P = HUE[h]; if (themeNow() !== "dark") return {ink:P.ink, tint:P.tint, ground:"#ffffff", text:"#15171d"}; return {ink:P.light, tint:mixHex(P.base, "#1b1c21", DARK_TINT[h] || .18), ground:"#1b1c21", text:"#e8e9ed"}; }
-const CORE_DARK = [["Ink","#e8e9ed","Text and the mark: a soft light, not white",["#101114","#1b1c21"]],["Graphite","#101114","The ground: near-black, a cool hint",["#e8e9ed","#8e93a0"]],["Surface","#1b1c21","Cards, bubbles, panels: one step up",["#e8e9ed","#b4b8c2"]],["Raised","#24262c","Menus, dialogs, popovers",["#e8e9ed","#8e93a0"]],["Fill","#2b2d34","Tags, wells, disabled",["#b4b8c2","#8e93a0"]],["Cobalt","#3a64ff","The one action, with white text",["#ffffff"]],["Cobalt 300","#8fa8ff","Links on hover, focus ring",["#101114","#1b1c21"]],["Text 2","#b4b8c2","Secondary text",["#101114","#2b2d34"]],["Text 3","#8e93a0","Meta, placeholders",["#101114","#2b2d34"]],["Control edge","#6b707c","Inputs, switches (3:1)",["#1b1c21","#24262c"]],["Needs you","#f0b45a","Amber ink · tint #2c2213",["#101114","#2c2213"]],["Done","#6fd09a","Green ink · tint #13261b",["#101114","#13261b"]],["Error","#ff8a85","Red ink · tint #2e1517",["#101114","#2e1517"]]];
+function huePair(h){ const P = HUE[h]; if (themeNow() !== "dark") return {ink:P.ink, tint:P.tint, ground:"#ffffff", text:"#15171d"}; return {ink:P.light, tint:mixHex(P.base, "#1f1f1f", DARK_TINT[h] || .12), ground:"#1f1f1f", text:"#ebebeb"}; }
+const CORE_DARK = [["Ink","#ebebeb","Text and the mark: a soft light grey, not white",["#161616","#1f1f1f"]],["Charcoal","#161616","The ground: neutral near-black, no cast",["#ebebeb","#989898"]],["Surface","#1f1f1f","Cards, bubbles, panels: one step up",["#ebebeb","#b8b8b8"]],["Raised","#282828","Menus, dialogs, popovers",["#ebebeb","#989898"]],["Fill","#2f2f2f","Tags, wells, disabled",["#b8b8b8","#989898"]],["Cobalt","#3a64ff","The one action, with white text",["#ffffff"]],["Cobalt 300","#8fa8ff","Links on hover, focus ring",["#161616","#1f1f1f"]],["Text 2","#b8b8b8","Secondary text",["#161616","#2f2f2f"]],["Text 3","#989898","Meta, placeholders",["#161616","#2f2f2f"]],["Control edge","#737373","Inputs, switches (3:1)",["#1f1f1f","#282828"]],["Needs you","#f0b45a","Amber ink · tint #2c2213",["#161616","#2c2213"]],["Done","#6fd09a","Green ink · tint #13261b",["#161616","#13261b"]],["Error","#ff8a85","Red ink · tint #2e1517",["#161616","#2e1517"]]];
 function renderSheet(){
   if (SHEET_BUILT) return; SHEET_BUILT = true;
   const dark = themeNow() === "dark";
@@ -4363,13 +4364,13 @@ function renderSheet(){
   const states = ["idle","thinking","working","waiting","blocked","paused","error","done"];
   $("#sheet").innerHTML = `<div class="row" style="gap:12px">${lockupHTML(40)}</div>
     <h1 class="t-head" style="font-size:44px;line-height:48px;letter-spacing:-.032em;margin-top:28px">The system under direction v0.6.</h1>
-    <p class="lede">${dark ? "Dark first: Graphite, a soft Ink light and Cobalt, the same brand mapped to night. Switch to Light in the demo bar to see the Porcelain values." : "Light: Ink, Porcelain and Cobalt. Dark is the default; switch back in the demo bar."} One continuous-corner family, Instrument Sans, springs, the Look and three sounds. This page computes its contrast ratios live from the same values the screens use. The full gallery is <code>system/components.html</code>; the brand is <code>brand/brand-board.html</code>; the tokens are <code>system/tokens.css</code>; the logo files are in <code>brand/logo/</code>.</p>
+    <p class="lede">${dark ? "Dark first: neutral Charcoal greys, a soft Ink light and Cobalt, the same brand mapped to night. Switch to Light in the demo bar to see the Porcelain values." : "Light: Ink, Porcelain and Cobalt. Dark is the default; switch back in the demo bar."} One continuous-corner family, Instrument Sans, springs, the Look and three sounds. This page computes its contrast ratios live from the same values the screens use. The full gallery is <code>system/components.html</code>; the brand is <code>brand/brand-board.html</code>; the tokens are <code>system/tokens.css</code>; the logo files are in <code>brand/logo/</code>.</p>
     <section><h2>The mark and the Look</h2><div class="gallery" style="margin-top:20px">
       <figure>${markSVG(64)}<figcaption><b>The mark: Quartet</b>the team as a whole</figcaption></figure>
       <figure>${avatar("noor", 64, {nobadge:true})}<figcaption><b>The Look: a face</b>every agent</figcaption></figure>
       <figure><span class="lookin" style="background:var(--action-tint);height:32px;font-size:13px">${eyes(16)}Look inside</span><figcaption><b>The glass-box handle</b>on every cost, file and note</figcaption></figure>
       <figure><span class="tk-av glance" style="width:64px;height:64px;display:block">${avatar("karim", 64, {fluid:true, status:"waiting"})}</span><figcaption><b>Attention</b>the eyes go to the decision</figcaption></figure></div></section>
-    <section><h2>Colour</h2><p class="lede">${dark ? "60 % Graphite, 30 % lighter surfaces and soft Ink, 10 % meaning. Depth is a lighter step, never a shadow or a glow." : "60 % Porcelain, 30 % white and Ink, 10 % meaning."} One Cobalt control per screen; amber only means needs you; hues only mean an agent.</p>
+    <section><h2>Colour</h2><p class="lede">${dark ? "60 % Charcoal, 30 % lighter greys and soft Ink, 10 % meaning. Depth is a lighter step, never a shadow or a glow." : "60 % Porcelain, 30 % white and Ink, 10 % meaning."} One Cobalt control per screen; amber only means needs you; hues only mean an agent.</p>
       <div class="swatches" style="margin-top:20px">${core.map(c => `<div class="swatch"><i style="background:${c[1]}"></i><div><b>${c[0]}</b><span class="num">${c[1]} · ${c[2]}</span>${c[3].map(bg => `<span>on ${bg}: ${aa(cr(c[1], bg), c[0] === "Control edge" ? 3 : 4.5)}</span>`).join("")}</div></div>`).join("")}</div>
       <h3>Agent hues: ink on ${dark ? "the surface" : "white"}, ink on its own tint, ${dark ? "text" : "Ink text"} on the tint</h3>
       <table class="spec"><thead><tr><th>Hue</th><th>Avatar</th><th>Mention</th><th>Ink on ${dark ? "surface" : "white"}</th><th>Ink on tint</th><th>Text on tint</th></tr></thead><tbody>${HUE_ORDER.map(h => { const P = HUE[h], D = huePair(h), who = Object.keys(AG).find(k => AG[k].hue === h && k !== "lea") || "noor"; return `<tr><td><b>${P.n}</b></td><td>${avatar({name:P.n, shape:AG[who].shape, hue:h}, 32, {nobadge:true})}</td><td><span class="mention" data-hue="${h}">${avatar({name:P.n, shape:AG[who].shape, hue:h}, 16, {nobadge:true, hidden:true})}${AG[who].name}</span></td><td class="num">${aa(cr(D.ink, D.ground))}</td><td class="num">${aa(cr(D.ink, D.tint))}</td><td class="num">${aa(cr(D.text, D.tint))}</td></tr>`; }).join("")}</tbody></table></section>

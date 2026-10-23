@@ -76,7 +76,7 @@ Rules: one filled Cobalt per screen. Cobalt is never a status, never an agent, n
 The amber fill on white is 2.09:1; it's never the only signal (the "!" glyph inside is 8.58:1 and the word sits beside it). The danger *button* fills with the ink, not the fill, because white on `#e5383b` is 4.23:1 (below 4.5 for 13 px text).
 
 ### 3.4 Agent hues
-Ten identities, ordered around the wheel. Each has six steps: **base** (flat avatar body), **light** and **deep** (hero render gradient), **ink** (name tags, mention text), **tint** (your bubbles in that agent's chat, mention chips), **wash** (the canvas behind the conversation).
+Ten identities, ordered around the wheel. Each has six steps: **base** (flat avatar body), **light** and **deep** (hero render gradient), **ink** (name tags, mention text), **tint** (your bubbles in that agent's chat, mention chips), **wash** (the canvas behind the conversation, light theme only; on dark it resolves to the charcoal ground, §10).
 
 | Hue | Base | Ink | Tint | Wash | Ink on white | Ink on tint | Ink text on tint | Cast |
 |---|---|---|---|---|---|---|---|---|
@@ -95,7 +95,7 @@ Every agent ink passes AA on white and on its own tint; Ink text passes AAA on e
 
 - **Pear replaces Periwinkle** because Periwinkle's ink (`#3c4bc4`) next to Cobalt read like a link, and blue must mean "action" only.
 - **Eyes:** white on every base, 1.9 to 4:1 (honey is the lowest). The eyes are expression, not information; status is always a badge and a word.
-- **Where a hue may appear:** avatar · name tag · mention chip · your bubble in that agent's chat · the faint wash behind that chat · the agent's thinking dots · the "Applied" chip's glyph. **Never** on buttons, links, status, selection or charts of anything but that agent.
+- **Where a hue may appear:** avatar · name tag · mention chip · your bubble in that agent's chat · the faint wash behind that chat (light only) · the agent's thinking dots · the "Applied" chip's glyph. **Never** on buttons, links, status, selection or charts of anything but that agent.
 - **Hue reuse (D-UI8):** identity is hue × shape. A pair is never used twice inside one project; hues may repeat across projects with a different shape.
 - **Unassigned:** `--hue-none-*` (grey, closed eyes) while an agent is being drafted.
 
@@ -247,35 +247,36 @@ Three sounds from one family, as designed on the explorations page and heard on 
 
 ---
 
-## 10. Dark theme: the default (v2.0, 2026-10-23)
+## 10. Dark theme: the default (v2.1, 2026-10-23)
 
-The client works dark ("like all of his apps … and so any developer or builder"), so Bench ships **dark first** and light is the option. Rules (ui-ux-guide, design-taste-frontend colour §6, premium-craft depth): don't invert; a near-black ground with a faint cool tint, never `#000`; the ink is a soft light, never pure white; depth comes from a **lighter step**, never a shadow or a glow; secondary text checked against every surface; status desaturated on dark tints of itself; the same brand.
+The client works dark ("like all of his apps … and so any developer or builder"), so Bench ships **dark first** and light is the option. Rules (ui-ux-guide, design-taste-frontend colour §6, premium-craft depth): don't invert; a near-black ground, never `#000`; the ink is a soft light, never pure white; depth comes from a **lighter step**, never a shadow or a glow; secondary text checked against every surface; status desaturated on dark tints of itself; the same brand.
 
-**Graphite**, the dark neutral, carries Porcelain's cool undertone (hue ≈ 228°) into the dark, so Ink, Graphite and Cobalt still read as one material.
+**Charcoal** (v2.1). The v2.0 Graphite carried Porcelain's cool undertone (hue ≈ 228°) into the dark; on screen, with the agent washes behind chats, it read purple ("it looks more of purple than dark, make it actually dark charcoal color and grey", client, 2026-10-23). Every dark neutral is now a pure grey (R = G = B), and chats on dark sit on the plain ground: no per-agent wash. Colour on dark now means something: Cobalt is your call, a hue is an agent (avatar, name tag, mention chip, a 12 % bubble tint), and amber, green and red are status. The `--graphite-*` token names stay for import stability.
 
 | Role | Light (option) | Dark (default) | Dark contrast (WCAG 2.x) |
 |---|---|---|---|
-| Ground `--bg-ground` | `#f3f4f7` | `#101114` | Ink 15.5 · Text 2 8.6 · Text 3 6.29 |
-| Surface `--bg-surface` (cards, bubbles, panels) | `#ffffff` | `#1b1c21` | Ink 13.4 · Text 3 5.54 |
-| Raised `--bg-raised` (menus, dialogs, popovers) | `#ffffff` | `#24262c` | Ink 12.6 · Text 3 5.10 |
-| Fill `--bg-sunken` (tags, counts, disabled) | `#eceef2` | `#2b2d34` | Text 2 6.92 · Text 3 4.58 |
-| Inverse `--bg-inverse` (toasts, ink banners) | `#15171d` | `#2e3038` | `#a9adb8` 5.8 · Cobalt 300 5.8 |
-| Text 1 / 2 / 3 | `#15171d` / `#474b57` / `#646976` | `#e8e9ed` / `#b4b8c2` / `#8e93a0` | see rows above |
-| Lines (subtle / divider) | Ink at 7 % / 11 % | Ink light at 7 % / 11 % (same rule, `--ink-rgb`) | decorative |
-| Control edge | `#868b97` | `#6b707c` | 3.35 on surface · 3.08 on raised (1.4.11) |
-| Action fill / hover / press | `#2e5bff` / `#2550eb` / `#1f45d1` | `#3a64ff` / `#2e5bff` / `#2550eb` | white on `#3a64ff` 4.72 · edge 3.99 on ground |
-| Link and focus | `#2e5bff` | Cobalt 300 `#8fa8ff` | 8.27 on ground · 6.2 on the action tint |
-| Done ink / tint / fill | `#1b7a45` / `#e3f5ea` / `#22a35a` | `#6fd09a` / `#13261b` / `#3c9e66` | ink on tint 8.5 · on surface 8.8 |
-| Needs you ink / tint / fill | `#8a5300` / `#fff1d9` / `#f5a20a` | `#f0b45a` / `#2c2213` / `#e8a33a` | ink on tint 8.49 · Ink `#15171d` on fill 8.3 |
-| Error ink / tint / fill | `#c0262d` / `#fdeaea` / `#e5383b` | `#ff8a85` / `#2e1517` / `#d9474a` | ink on tint 7.47 · on surface 7.3 |
+| Ground `--bg-ground` | `#f3f4f7` | `#161616` | Ink 15.2 · Text 2 9.12 · Text 3 6.27 |
+| Surface `--bg-surface` (cards, bubbles, panels) | `#ffffff` | `#1f1f1f` | Ink 13.4 · Text 2 8.05 · Text 3 5.54 |
+| Raised `--bg-raised` (menus, dialogs, popovers, @-mention list) | `#ffffff` | `#282828` | Ink 12.4 · Text 2 7.43 · Text 3 5.11 |
+| Fill `--bg-sunken` (tags, counts, disabled) | `#eceef2` | `#2f2f2f` | Ink 11.2 · Text 2 6.71 · Text 3 4.62 |
+| Inverse `--bg-inverse` (toasts, ink banners) | `#15171d` | `#333333` | `#ededed` 10.8 · `#adadad` 5.63 · Cobalt 300 5.54 |
+| Text 1 / 2 / 3 | `#15171d` / `#474b57` / `#646976` | `#ebebeb` / `#b8b8b8` / `#989898` | see rows above |
+| Lines (subtle / divider) | Ink at 7 % / 11 % | Ink light at 7 % / 11 % (same rule, `--ink-rgb` 235 235 235) | decorative |
+| Control edge | `#868b97` | `#737373` | 3.82 on ground · 3.37 on surface · 3.11 on raised (1.4.11) |
+| Segmented thumb / switch track | | `#3d3d3d` / `#404040` (knob `#cccccc`) | |
+| Action fill / hover / press | `#2e5bff` / `#2550eb` / `#1f45d1` | `#3a64ff` / `#2e5bff` / `#2550eb` | white on `#3a64ff` 4.72 · edge 3.83 on ground (3:1) |
+| Link and focus | `#2e5bff` | Cobalt 300 `#8fa8ff` | 7.94 on ground · 7.01 on surface · 5.84 on fill · 6.09 on the action tint |
+| Done ink / tint / fill | `#1b7a45` / `#e3f5ea` / `#22a35a` | `#6fd09a` / `#13261b` / `#3c9e66` | ink on tint 8.5 · on surface 8.48 |
+| Needs you ink / tint / fill | `#8a5300` / `#fff1d9` / `#f5a20a` | `#f0b45a` / `#2c2213` / `#e8a33a` | ink on tint 8.49 · on surface 8.66 · `#161616` on fill 8.39 |
+| Error ink / tint / fill | `#c0262d` / `#fdeaea` / `#e5383b` | `#ff8a85` / `#2e1517` / `#d9474a` | ink on tint 7.47 · on surface 7.02 |
 | Solid danger / done buttons | `#c0262d` / `#1b7a45` | same (white text 5.9 / 5.4) | |
-| Text on an Ink fill (Send, counts, Blocked) | white | `#101114` | 15.5 |
-| Agent ink | hue's ink (`#c4283f`…) | the hue's **light** step (`#ffb8c1`…) | ≥ 7 on its tint (Cocoa, the lowest, 7.2) |
-| Agent tint (your bubble, mentions) | hue's tint | base at 16–20 % over the surface | Ink on it ≥ 10.9 |
-| Agent wash (the chat canvas) | hue's wash | base at 5–7 % over the ground | Text 3 on it ≥ 5.8 |
+| Text on an Ink fill (Send, counts, Blocked) | white | `#161616` | 15.2 |
+| Agent ink | hue's ink (`#c4283f`…) | the hue's **light** step (`#ffb8c1`…) | ≥ 7 on its tint (Cocoa, the lowest, 7.45) |
+| Agent tint (your bubble, mentions) | hue's tint | base at 12 % over the surface (Lavender, Cocoa 14 %) | Ink on it ≥ 10.9 (Honey) |
+| Agent wash (the chat canvas) | hue's wash | none: resolves to the ground `#161616` | as the ground |
 | Diff added / removed | `#e9f6ee` / `#fdeeee` | green / red at 13–14 % | the +/− sign carries meaning too |
 | Elevation | ring, then soft Ink shadows | ring of Ink light at 5.5–10 %; floats add black 45–55 % | |
-| The mark (Quartet) | Ink `#15171d` | Ink light `#e8e9ed` (`currentColor` in the UI; `brand/logo/mark-on-dark.svg`) | |
+| The mark (Quartet) | Ink `#15171d` | Ink light `#ebebeb` (`currentColor` in the UI; `brand/logo/mark-on-dark.svg`) | |
 | Avatars | unchanged | unchanged: bodies, gradients and white eyes read on both | |
 
 **Switching.** Settings › Appearance has **Dark** (default) · **Light** · **Match system**, a segmented control; the change is live on every screen, no reload. The prototype also has a quick sun/moon toggle in the demo bar. Ring meters, the mark and every SVG take colour from role tokens (`style="stroke:var(--…)"`, `currentColor`), so nothing is drawn per theme in code.

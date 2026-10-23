@@ -1,5 +1,5 @@
 /*
- * Bench design tokens · v2.0 (2026-10-23: dark first)
+ * Bench design tokens · v2.1 (2026-10-23: dark first; v2.1 = dark neutrals are true charcoal grey, no blue cast)
  * Source of truth for the design system. Spec: ./DESIGN-SYSTEM.md
  *
  * Dark is the default theme (client, 2026-10-23: "make the app dark first and option to switch to white").
@@ -35,23 +35,24 @@
   --porcelain-700: #474b57;  /* light text-2: 8.71 on white */
   --porcelain-900: #15171d;  /* Ink: 17.9 on white */
 
-  /* Graphite: the dark neutral. Near-black with the same faint cool undertone, never #000.
+  /* Graphite (now charcoal, v2.1): the dark neutral. Pure grey, R = G = B, no blue or purple cast, never #000
+     (client, 2026-10-23: "make it actually dark charcoal color and grey"). The names stay for import stability.
      Depth is a lighter step: ground → surface → raised → fill. */
-  --graphite-0: #101114;     /* dark ground */
-  --graphite-1: #1b1c21;     /* surface: cards, bubbles, panels, sidebar sheets */
-  --graphite-2: #24262c;     /* raised: menus, dialogs, popovers */
-  --graphite-3: #2b2d34;     /* fill: tags, counts, disabled, segmented track */
-  --graphite-4: #2e3038;     /* inverse on dark: toasts, ink banners */
-  --graphite-5: #3a3d45;     /* segmented thumb, switch track */
-  --graphite-6: #6b707c;     /* dark control edge: 3.35 on surface, 3.08 on raised */
-  --graphite-7: #8e93a0;     /* dark text-3: 6.29 ground · 5.54 surface · 4.58 fill */
-  --graphite-8: #b4b8c2;     /* dark text-2: 8.6 ground · 6.92 fill */
-  --graphite-9: #e8e9ed;     /* dark Ink: a soft light, not white. 15.5 ground · 13.4 surface */
+  --graphite-0: #161616;     /* dark ground (charcoal) */
+  --graphite-1: #1f1f1f;     /* surface: cards, bubbles, panels, sidebar sheets */
+  --graphite-2: #282828;     /* raised: menus, dialogs, popovers, @-mention list */
+  --graphite-3: #2f2f2f;     /* fill: tags, counts, disabled, segmented track */
+  --graphite-4: #333333;     /* inverse on dark: toasts, ink banners */
+  --graphite-5: #3d3d3d;     /* segmented thumb */
+  --graphite-6: #737373;     /* dark control edge: 3.82 ground · 3.37 surface · 3.11 raised */
+  --graphite-7: #989898;     /* dark text-3: 6.27 ground · 5.54 surface · 5.11 raised · 4.62 fill */
+  --graphite-8: #b8b8b8;     /* dark text-2: 9.12 ground · 8.05 surface · 6.71 fill */
+  --graphite-9: #ebebeb;     /* dark Ink: a soft light grey, not white. 15.2 ground · 13.4 surface · 11.2 fill */
 
   /* Cobalt: the one action colour (P-2). On dark the fill lifts one step so white text still passes. */
   --cobalt-50: #ebf0ff;
-  --cobalt-300: #8fa8ff;     /* links and focus on dark: 8.27 on graphite-0, 6.03 on graphite-3 */
-  --cobalt-400: #3a64ff;     /* dark action fill: white on it 4.72 · edge 3.99 on graphite-0 */
+  --cobalt-300: #8fa8ff;     /* links and focus on dark: 7.94 on graphite-0, 7.01 on graphite-1, 5.84 on graphite-3 */
+  --cobalt-400: #3a64ff;     /* dark action fill: white on it 4.72 · edge 3.83 on graphite-0 (non-text 3:1) */
   --cobalt-500: #2e5bff;     /* light action: white on it 5.17 · on white 5.17 */
   --cobalt-600: #2550eb;
   --cobalt-700: #1f45d1;
@@ -85,7 +86,7 @@
 :root,
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ink-rgb: 232 233 237;
+  --ink-rgb: 235 235 235;
 
   --bg-ground: var(--graphite-0);       /* 60 %: canvas, sidebar */
   --bg-surface: var(--graphite-1);      /* 30 %: cards, bubbles, panels */
@@ -101,11 +102,11 @@
   --text-1: var(--graphite-9);
   --text-2: var(--graphite-8);
   --text-3: var(--graphite-7);
-  --text-inverse: #eceef3;
-  --text-inverse-2: #a9adb8;            /* 5.8 on graphite-4 */
+  --text-inverse: #ededed;              /* 10.8 on graphite-4 */
+  --text-inverse-2: #adadad;            /* 5.63 on graphite-4 */
   --text-on-action: #ffffff;            /* 4.72 on cobalt-400 */
-  --text-on-ink: var(--graphite-0);     /* text on an Ink fill (Send, counts, Blocked tag) */
-  --ink-hover: #f4f5f7;  --ink-press: #d6d8de;
+  --text-on-ink: var(--graphite-0);     /* text on an Ink fill (Send, counts, Blocked tag): 15.2 */
+  --ink-hover: #f5f5f5;  --ink-press: #d9d9d9;
   --mark: var(--graphite-9);            /* the Quartet mark in the interface */
 
   --line-subtle: rgb(var(--ink-rgb) / 0.07);
@@ -115,30 +116,31 @@
   --action: var(--cobalt-400);
   --action-hover: var(--cobalt-500);
   --action-press: var(--cobalt-600);
-  --action-tint: rgb(58 100 255 / 0.18);  /* cobalt-300 text on it 6.2 */
+  --action-tint: rgb(58 100 255 / 0.18);  /* cobalt-300 text on it (over the surface) 6.09 */
   --action-text: var(--cobalt-300);       /* links on hover/focus only (Von Restorff) */
   --focus: var(--cobalt-300);
 
   --ok-ink: var(--green-d-ink);    --ok-tint: var(--green-d-tint);    --ok-fill: var(--green-d-fill);   --ok-solid: var(--green-700);
-  --attn-ink: var(--amber-d-ink);  --attn-tint: var(--amber-d-tint);  --attn-fill: var(--amber-d-fill); --on-attn: #15171d;
+  --attn-ink: var(--amber-d-ink);  --attn-tint: var(--amber-d-tint);  --attn-fill: var(--amber-d-fill); --on-attn: #161616;
   --danger-ink: var(--red-d-ink);  --danger-tint: var(--red-d-tint);  --danger-fill: var(--red-d-fill); --danger-solid: var(--red-700); --danger-solid-hover: #a81f26;
 
-  --sw-track: var(--graphite-5);  --sw-track-hover: #4a4d56;  --sw-knob: #c9ccd4;  --sw-knob-on: var(--graphite-0);
+  --sw-track: #404040;  --sw-track-hover: #4d4d4d;  --sw-knob: #cccccc;  --sw-knob-on: var(--graphite-0);
   --diff-add: rgb(63 185 110 / 0.14);  --diff-del: rgb(255 100 100 / 0.13);
 
-  /* Agent hues on dark: ink = the hue's light step (≥ 7:1 on its tint); tint = the body colour at 16–20 % over the
-     surface (the client's bubble, mention chips); wash = 5–7 % over the ground (the canvas of that agent's chat). */
-  --hue-coral-ink: var(--hue-coral-light);         --hue-coral-tint: color-mix(in srgb, var(--hue-coral-base) 18%, #1b1c21);         --hue-coral-wash: color-mix(in srgb, var(--hue-coral-base) 6%, #101114);
-  --hue-tangerine-ink: var(--hue-tangerine-light); --hue-tangerine-tint: color-mix(in srgb, var(--hue-tangerine-base) 18%, #1b1c21); --hue-tangerine-wash: color-mix(in srgb, var(--hue-tangerine-base) 6%, #101114);
-  --hue-honey-ink: var(--hue-honey-light);         --hue-honey-tint: color-mix(in srgb, var(--hue-honey-base) 16%, #1b1c21);         --hue-honey-wash: color-mix(in srgb, var(--hue-honey-base) 5%, #101114);
-  --hue-pear-ink: var(--hue-pear-light);           --hue-pear-tint: color-mix(in srgb, var(--hue-pear-base) 16%, #1b1c21);           --hue-pear-wash: color-mix(in srgb, var(--hue-pear-base) 5%, #101114);
-  --hue-mint-ink: var(--hue-mint-light);           --hue-mint-tint: color-mix(in srgb, var(--hue-mint-base) 16%, #1b1c21);           --hue-mint-wash: color-mix(in srgb, var(--hue-mint-base) 5%, #101114);
-  --hue-teal-ink: var(--hue-teal-light);           --hue-teal-tint: color-mix(in srgb, var(--hue-teal-base) 16%, #1b1c21);           --hue-teal-wash: color-mix(in srgb, var(--hue-teal-base) 5%, #101114);
-  --hue-aqua-ink: var(--hue-aqua-light);           --hue-aqua-tint: color-mix(in srgb, var(--hue-aqua-base) 16%, #1b1c21);           --hue-aqua-wash: color-mix(in srgb, var(--hue-aqua-base) 5%, #101114);
-  --hue-lavender-ink: var(--hue-lavender-light);   --hue-lavender-tint: color-mix(in srgb, var(--hue-lavender-base) 20%, #1b1c21);   --hue-lavender-wash: color-mix(in srgb, var(--hue-lavender-base) 7%, #101114);
-  --hue-orchid-ink: var(--hue-orchid-light);       --hue-orchid-tint: color-mix(in srgb, var(--hue-orchid-base) 18%, #1b1c21);       --hue-orchid-wash: color-mix(in srgb, var(--hue-orchid-base) 6%, #101114);
-  --hue-cocoa-ink: var(--hue-cocoa-light);         --hue-cocoa-tint: color-mix(in srgb, var(--hue-cocoa-base) 20%, #1b1c21);         --hue-cocoa-wash: color-mix(in srgb, var(--hue-cocoa-base) 6%, #101114);
-  --hue-none-ink: var(--hue-none-light);           --hue-none-tint: var(--graphite-3);                                              --hue-none-wash: #121317;
+  /* Agent hues on dark: ink = the hue's light step (≥ 7:1 on its tint); tint = the body colour at 12 % over the
+     surface, 14 % for the two dim hues (the client's bubble, mention chips). No canvas wash on dark (v2.1): the
+     wash resolves to the charcoal ground, so the agent's colour lives on its avatar, name and bubble only. */
+  --hue-coral-ink: var(--hue-coral-light);         --hue-coral-tint: color-mix(in srgb, var(--hue-coral-base) 12%, #1f1f1f);         --hue-coral-wash: var(--graphite-0);
+  --hue-tangerine-ink: var(--hue-tangerine-light); --hue-tangerine-tint: color-mix(in srgb, var(--hue-tangerine-base) 12%, #1f1f1f); --hue-tangerine-wash: var(--graphite-0);
+  --hue-honey-ink: var(--hue-honey-light);         --hue-honey-tint: color-mix(in srgb, var(--hue-honey-base) 12%, #1f1f1f);         --hue-honey-wash: var(--graphite-0);
+  --hue-pear-ink: var(--hue-pear-light);           --hue-pear-tint: color-mix(in srgb, var(--hue-pear-base) 12%, #1f1f1f);           --hue-pear-wash: var(--graphite-0);
+  --hue-mint-ink: var(--hue-mint-light);           --hue-mint-tint: color-mix(in srgb, var(--hue-mint-base) 12%, #1f1f1f);           --hue-mint-wash: var(--graphite-0);
+  --hue-teal-ink: var(--hue-teal-light);           --hue-teal-tint: color-mix(in srgb, var(--hue-teal-base) 12%, #1f1f1f);           --hue-teal-wash: var(--graphite-0);
+  --hue-aqua-ink: var(--hue-aqua-light);           --hue-aqua-tint: color-mix(in srgb, var(--hue-aqua-base) 12%, #1f1f1f);           --hue-aqua-wash: var(--graphite-0);
+  --hue-lavender-ink: var(--hue-lavender-light);   --hue-lavender-tint: color-mix(in srgb, var(--hue-lavender-base) 14%, #1f1f1f);   --hue-lavender-wash: var(--graphite-0);
+  --hue-orchid-ink: var(--hue-orchid-light);       --hue-orchid-tint: color-mix(in srgb, var(--hue-orchid-base) 12%, #1f1f1f);       --hue-orchid-wash: var(--graphite-0);
+  --hue-cocoa-ink: var(--hue-cocoa-light);         --hue-cocoa-tint: color-mix(in srgb, var(--hue-cocoa-base) 14%, #1f1f1f);         --hue-cocoa-wash: var(--graphite-0);
+  --hue-none-ink: var(--hue-none-light);           --hue-none-tint: var(--graphite-3);                                              --hue-none-wash: var(--graphite-0);
 
   /* Elevation on dark: a lighter surface and a 1px light ring; only what floats adds a soft black shadow. No glows. */
   --shadow-color: 0 0% 0%;

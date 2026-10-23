@@ -4,6 +4,12 @@
 
 ## 0000. Direction v0.6: dark first, and the Laws of UX applied (current)
 
+### v0.6.2 (2026-10-23, client: "it looks more of purple than dark, make it actually dark charcoal color and grey")
+
+- **Charcoal, not Graphite.** Every dark neutral is now a pure grey (R = G = B, no blue or purple cast): ground `#161616`, surface `#1f1f1f`, raised `#282828` (menus, dialogs, the @-mention list), fill `#2f2f2f`, inverse `#333333`, segmented thumb `#3d3d3d`, switch track `#404040`. Text `#ebebeb` / `#b8b8b8` / `#989898` (15.2 / 9.12 / 6.27 on the ground; Text 3 4.62 on the fill), control edge `#737373` (3.11 on raised), hairlines and hovers from `--ink-rgb` 235 235 235. The demo bar is `#0e0e0e`.
+- **No agent wash on dark.** Chats, the sticky hero, the top bar and the blurred edge sit on the plain charcoal ground, so Noor's room no longer reads pink-purple. The agent's colour stays on its avatar, name tag, mention chip and a subtle bubble tint (12 % of the body over the surface, 14 % for Lavender and Cocoa; agent ink ≥ 7.45:1 on it, Ink ≥ 10.9).
+- **Cobalt unchanged** and re-checked on the new ground: white on `#3a64ff` 4.72, its edge 3.83 on the ground; Cobalt 300 links/focus 7.94 on the ground, 5.84 on the fill. Status colours unchanged. Light is unchanged. Tables: [DESIGN-SYSTEM.md](system/DESIGN-SYSTEM.md) §10; tokens: [tokens.css](system/tokens.css) v2.1. The bullets in §0000.1 below describe v0.6.0 (Graphite) and are superseded on colour.
+
 ### v0.6.1 (2026-10-23, client requests)
 
 - **@-mention picker in every composer** (Home, Noor, any agent's room, team chat). `@` opens a small list above the composer of who's reachable from that chat (team chat: its 7 members; an agent's chat: its teammates; Home: anyone Atlas can bring in, grouped by team) with face, name, title and status word. It filters as you type; ↑ ↓, Enter/Tab, click, Esc. The pick is a tinted pill in the draft and an inline chip in the sent message; the hint under the composer names who replies. Spec: [DESIGN-SYSTEM.md](system/DESIGN-SYSTEM.md), v0.6.1 addendum.
