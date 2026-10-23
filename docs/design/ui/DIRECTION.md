@@ -1,8 +1,63 @@
 # UI Direction: "Apple built a Grok Bot × Dots" (draft for client review)
 
-**Status:** **v0.5, round 4** (2026-10-23, F1–F6 and CR-007; **§000 is the current state**), on top of **v0.4, the calm pass**, 2026-10-23, from the client's round-3 feedback ([C1–C7](../../requirements/interviews/2026-10-23-ui-feedback-3.md)): v0.3 looked "wow" but was overwhelming to use. §00 is v0.4. The brand is unchanged (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, the three sounds, shape agents with eyes). §0 is v0.3, kept as history: it rebuilt the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec; every brand decision is closed except the name. §1–§5 are the v0.1/v0.2 history.
+**Status:** **v0.6, dark first + the Laws of UX fixes** (2026-10-23; **§0000 is the current state**), on top of **v0.5, round 4** (F1–F6 and CR-007, §000), on top of **v0.4, the calm pass**, 2026-10-23, from the client's round-3 feedback ([C1–C7](../../requirements/interviews/2026-10-23-ui-feedback-3.md)): v0.3 looked "wow" but was overwhelming to use. §00 is v0.4. The brand is unchanged (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, the three sounds, shape agents with eyes). §0 is v0.3, kept as history: it rebuilt the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec; every brand decision is closed except the name. §1–§5 are the v0.1/v0.2 history.
 
-## 000. Direction v0.5: round 4 (current)
+## 0000. Direction v0.6: dark first, and the Laws of UX applied (current)
+
+**Artifact:** [`prototype/direction.html`](prototype/direction.html), the same file evolved; every v0.5 route still works. **Inputs:** the [Laws of UX audit](../ux/laws-of-ux-audit.md) (fixes 1–18), the client's four calls on it and the dark-first decision ([ui-feedback-4](../../requirements/interviews/2026-10-23-ui-feedback-4.md)), and two client-reported bugs. **Rules that changed:** [DESIGN-SYSTEM.md](system/DESIGN-SYSTEM.md) §10 (dark, now the default) and the v2.0 addendum; [tokens.css](system/tokens.css) v2.0 (dark at `:root`, light at `[data-theme="light"]`). The calm direction, the brand and every decided item stay: Quartet, Instrument Sans + JetBrains Mono, Cobalt = your call, shape agents with eyes, the three sounds.
+
+### 0000.1 Dark first
+
+The default route loads **dark**. **Settings › Appearance**: Dark (default) · Light · Match system, a segmented control that changes every screen live (no reload); the demo bar has a sun/moon quick toggle. The choice lasts for the browser tab (a fresh load is dark again); `?theme=light|dark|system` in the URL sets it for screenshots.
+
+The brand mapped to night, not inverted:
+- **Graphite** ground `#101114`, near-black with Porcelain's cool undertone (no navy, no slate, never `#000`). Depth is a lighter step: surface `#1b1c21` (cards, bubbles, panels), raised `#24262c` (menus, dialogs, popovers), fill `#2b2d34` (tags, counts, disabled). Only what floats keeps a soft black shadow under a 1px light ring; nothing glows.
+- **Ink** becomes a soft light `#e8e9ed` (15.5:1 on the ground), Text 2 `#b4b8c2` (8.6), Text 3 `#8e93a0` (6.29 on the ground, 4.58 on the lightest fill: every text pair AA).
+- **Cobalt** fills `#3a64ff` (white on it 4.72; one step brighter than light's `#2e5bff` so it holds on dark), still one per view; links and focus use Cobalt 300 `#8fa8ff` (8.27). Send and other Ink-filled controls invert: a soft-light circle with a Graphite arrow (15.5).
+- **Status** desaturated, light inks on dark tints of themselves: done `#6fd09a` on `#13261b` (8.5), needs you `#f0b45a` on `#2c2213` (8.49) with a `#e8a33a` count, error `#ff8a85` on `#2e1517` (7.47).
+- **Agent hues:** bodies, hero gradients and white eyes are unchanged. Their ink becomes the hue's light step (`#ffb8c1`…, ≥ 7:1 on its tint); the tint (your bubble, mentions) is the body colour at 16–20 % over the surface; the chat wash is a 5–7 % breath over the ground, so Noor's room is faintly coral and Atlas's faintly lavender without any glow.
+- **Quartet** is drawn in `currentColor`: Ink on Porcelain, the soft light on Graphite. **Code and diffs:** added/removed lines at 13–14 % green/red, the +/− signs in the status inks.
+- **Light** is the v0.5 look, unchanged and still fully correct (every colour is a role token; `--ink-rgb` turns each hairline, hover and press into the right alpha for the theme).
+
+### 0000.2 Laws of UX: what v0.6 changes
+
+| Fix | Law | v0.6 |
+|---|---|---|
+| 1 | Mental model, Tesler, Flow | No merge, test-run or "always allow" tickets (v0.5) verified. Groups are **Decide · Test · Answer**. **Noor's demo moment is Ready to test** (client call D-C): a quiet line "Noor ran the full suite on her own · 214 of 214 passed · your rule: tests run without asking", then the ticket "The Stop button is ready for you to try" (3 steps, **Start testing** · about 3 min, Later today). Start testing → "the test build is open" → whatever you type next is your test note → **all green**. The file deletion moved to **Jade**: "Jade asks to delete `e2e/legacy/`" (14 files, outside her scratch area, **Delete 14 files** / **Keep them**, "Deleting can't be undone from Bench"). Maya's ticket reads "Onboarding and the agent runner are ready to try" · about 10 min. Count: 6 (Bench 5, InterviewKit 1). "Merged PR #41" sits first in Decided by Atlas with Revert |
+| 2 | Jakob, Proximity | Face and name open the profile (v0.5), and now the **last breadcrumb** ("Noor", any agent) does too. The monitor icon is "screen and routines" only |
+| 3 | Choice overload, Occam | **For your info left the overlay** (client call D-B). The live debate is one quiet line under Atlas's question on Home: "Maya, Sam and Noor are debating where Stop lives · Maya decides by 09:15 · Watch". The forecast and the pause are said by their banner (and on Home by Atlas) |
+| 4 | Peak-end, Occam | On **Home only**, the weekly limit and the expired login drop the banner and the status line; Atlas's message leads with the moment ("your week is used up. 3 runs paused safely and resume Mon 26 Oct at 09:00; nothing is lost. 6 things still need you…" with Show them + See paused work; login: Copy command + Check again). The top-bar ring stays. Other screens keep the banner |
+| 5 | Von Restorff, Similarity | Look inside is Text 3 at rest, Cobalt on hover/focus. Text links are Ink with an underline, Cobalt on hover. At rest Cobalt is the one primary |
+| 6 | Von Restorff, Selective attention | Project counts in the sidebar and on the dashboard are the neutral count; amber is the top bar's (and the overlay header's) only. The collapsed rail shows the neutral count on each project's Dashboard icon |
+| 7 | Jakob, Similarity | The footer is one button: your initial **M** and **Settings** (client call D-D). No gear there; a gear means an agent's settings |
+| 8 | Mental model | Atlas's profile (v0.5) verified: what makes it special, Change shape or colour, model, "can't be deleted" |
+| 9 | Mental model, Tesler | Presets: **Ask every time** · **Trusted** (default, tagged) · **Autonomous** "Everything except the five things that always need you" (the phrase opens the list in place) |
+| 10 | Hick, Cognitive bias | New project preselects **Product + Dev team · Atlas recommends**; first run step 4 preselects **Just Atlas for now** with Finish ready. "Choose how to start the team" is gone |
+| 11 | Von Restorff | Team chat's debate strip: secondary **Watch** (Maya decides); the clock stays |
+| 12 | Cognitive load, Tesler | The ledger line left the chat hero (it lives in Profile and Memory). The **context meter lives in the panel** and shows in the chat only from **60 %** (client call D-A); `#agent-checkpoint-incomplete` (90 %) shows it |
+| 13 | Fitts | Send is a 40 px circle with an 18 px arrow; Stop stays a 32 px pill |
+| 14 | Occam, Tesler | First run: no API-key note when no key is set; step 3 is Name + Look (no model; Balanced, changeable later) |
+| 15 | Fitts | Small icon buttons, "New project" and Look inside keep their look and get a 32 px hit area |
+| 16 | Occam, Common region | Memory lost the "learned 7 things" accordion |
+| 17 | Mental model | New agent: a quiet **Add a title** link under the drafted name that becomes the field. Sidebar titles (expanded only) verified |
+| 18 | Aesthetic-usability | Not done here: the `screens/*.png` need regenerating from v0.6 in both themes (no browser in this session) |
+
+### 0000.3 Bugs fixed
+
+- **Atlas's empty name pill** (Home, every width, worst with the panel open at 1280). The hero is a centred grid, so the heading shrank to its pill and the pill's `max-width: calc(100% - 48px)` resolved against that shrunk width, squeezing the name to nothing. The heading now carries the limit against the column; the pill keeps its name and ellipsizes only when the column truly runs out. Same fix for every agent's hero.
+- **Misaligned two-column fields** (Settings › Profile: Home team vs Lead). Field rows no longer stretch (`.field{align-content:start}`, `.f2{align-items:start}`), so helper text sits under its own control and both selects line up. Applies to every two-column row (New project Name/Goal; first run step 3 no longer has two columns).
+
+### 0000.4 Routes
+
+All v0.5 routes still work. **Changed:** `#agent` is Noor's Ready to test (Play: "test it, then all green"); `#agent-green` is the win after your test; `#approval-denied` opens **Jade's chat** after you kept `e2e/legacy/` (her lesson saved; Play: "keep them, with a reason" in the overlay); `#settings` has Appearance (Dark · Light · Match system). Every route renders in both themes.
+
+### 0000.5 Premium-craft output
+
+**Rubric:** Color moves to **Staff** for both themes (one Cobalt per view at rest, one amber per view, depth by tone on dark); Structure to **Staff** (FYI out of the overlay, the hero down to three things). Others unchanged from v0.5. **Blockers:** none. **Not done here:** no shell or browser in this session, so nothing was rendered: render every route at 1440×900 and 1280×800 in both themes (watch: Home at 1280 with Atlas's panel open, the New project dialog at 800 with the team preview, the demo bar at 1280 with Noor's state picker, the dark agent washes on a calibrated screen); regenerate `screens/*.png`; `system/components.html` is pinned to light and still needs the v0.6 components and a dark pass.
+
+---
+
+## 000. Direction v0.5: round 4
 
 **Artifact:** [`prototype/direction.html`](prototype/direction.html), the same file evolved; every v0.4 route still works. **Inputs:** [round-4 feedback F1–F6](../../requirements/interviews/2026-10-23-ui-feedback-4.md), [CR-007](../../requirements/change-requests/CR-007.md) plus the client's later decision that **sending emails and posts as the client is automatic too**, and the taste skill's app-screen rules, applied where they don't contradict the brand (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, shape agents, R1–R11). The calm direction (v0.4) is kept: Home is the chat with Atlas, little is on screen, the rest is one click away. The Laws of UX audit (F5) is a separate pass and isn't applied here.
 

@@ -1,9 +1,9 @@
 # Design system
 
-**Status:** v1.1, 2026-10-23. Light theme built, dark planned. Brand round 2 applied: P-1, P-2, P-3 (Instrument Sans + JetBrains Mono), P-4 and P-7 (sound on) are decided ([client notes](../../../requirements/interviews/2026-10-23-brand-decisions.md)). Brand platform: [../brand/BRAND.md](../brand/BRAND.md).
-**Files:** [tokens.css](tokens.css) (the source of truth, importable as is) · [components.html](components.html) (every core component in every state, links `tokens.css` locally; fonts from Google Fonts for review) · [../brand/brand-board.html](../brand/brand-board.html) · logo files in [../brand/logo/](../brand/logo/).
+**Status:** v2.0, 2026-10-23. **Dark first** (client: "make the app dark first and option to switch to white"): dark is the default theme, light is the option (Settings › Appearance: Dark · Light · Match system). Both are built in `tokens.css` and live in the prototype; see §10. Brand round 2 applied: P-1, P-2, P-3 (Instrument Sans + JetBrains Mono), P-4 and P-7 (sound on) are decided ([client notes](../../../requirements/interviews/2026-10-23-brand-decisions.md)). Brand platform: [../brand/BRAND.md](../brand/BRAND.md).
+**Files:** [tokens.css](tokens.css) (the source of truth, importable as is; dark at `:root`, light at `[data-theme="light"]`) · [components.html](components.html) (every core component in every state, links `tokens.css` locally and is pinned to light until it is redrawn for dark; fonts from Google Fonts for review) · [../brand/brand-board.html](../brand/brand-board.html) · logo files in [../brand/logo/](../brand/logo/).
 **Skills applied:** premium-craft (gates, rubric), ui-ux-guide (rules, checklist), design-taste-frontend (app-screen rules, tells).
-**Proposals** that change approved values are marked **P-n** and listed in §14. Everything else keeps the confirmed base: Apple foundation, light first, one blue action per screen, agent identity = hue × non-human shape with eyes only, soft dimensional hero avatar, 15 px body, 18 px bubbles, second-person voice, lowercase agent voice.
+**Proposals** that change approved values are marked **P-n** and listed in §14. Everything else keeps the confirmed base: Apple foundation, dark first since v2.0 (light until then; D-UI6 superseded), one blue action per screen, agent identity = hue × non-human shape with eyes only, soft dimensional hero avatar, 15 px body, 18 px bubbles, second-person voice, lowercase agent voice.
 
 ---
 
@@ -24,8 +24,9 @@
 ```
 
 Three tiers:
-- **Primitives:** `--porcelain-*`, `--cobalt-*`, `--green-*`, `--amber-*`, `--red-*`, `--hue-<name>-<step>`. Palette only. Components never read them, except the hue table.
-- **Roles:** `--bg-*`, `--text-*`, `--line-*`, `--action-*`, `--ok-*`, `--attn-*`, `--danger-*`, `--state-*`. Components read only these.
+- **Primitives:** `--porcelain-*`, `--graphite-*`, `--cobalt-*`, `--green-*`, `--amber-*`, `--red-*` (and their `-d-` dark steps), `--hue-<name>-base/light/deep`. Palette only, fixed in both themes. Components never read them, except the avatar renderer.
+- **Roles:** `--bg-*` (ground, surface, raised, sunken, inverse), `--text-*`, `--line-*`, `--action-*`, `--ok-*`, `--attn-*`, `--danger-*`, `--state-*`, `--hue-<name>-ink/tint/wash`. Components read only these; they change with `data-theme`.
+- **Theme:** the app writes `data-theme="dark"` (default) or `"light"` on `<html>`; Match system is resolved in main and written as one of the two. Every hairline, hover and press is `rgb(var(--ink-rgb) / α)`, so one rule is a dark line on Porcelain and a light line on Graphite.
 - **Agent scope:** put `data-hue="coral"` on any container and everything inside reads `--agent-base`, `--agent-ink`, `--agent-tint`, `--agent-wash`. A chat, a mention chip and an avatar all inherit from the nearest scope.
 
 A raw hex in a component is a second palette starting: don't. The only exceptions are the avatar renderer (it needs the base, light and deep steps as SVG paint) and the danger button's hover and press shades, which are listed in `components.html`.
@@ -246,27 +247,40 @@ Three sounds from one family, as designed on the explorations page and heard on 
 
 ---
 
-## 10. Dark theme (planned, not built: Phase 5b)
+## 10. Dark theme: the default (v2.0, 2026-10-23)
 
-Rules: don't invert. Depth comes from lighter surfaces, not shadows. No pure white text. Accents slightly brighter. Same brand: Ink, Porcelain, Cobalt and the eyes.
+The client works dark ("like all of his apps … and so any developer or builder"), so Bench ships **dark first** and light is the option. Rules (ui-ux-guide, design-taste-frontend colour §6, premium-craft depth): don't invert; a near-black ground with a faint cool tint, never `#000`; the ink is a soft light, never pure white; depth comes from a **lighter step**, never a shadow or a glow; secondary text checked against every surface; status desaturated on dark tints of itself; the same brand.
 
-| Role | Light | Dark (planned) |
-|---|---|---|
-| Ground | `#f3f4f7` | `#0f1014` |
-| Surface | `#ffffff` | `#17181d` |
-| Sunken | `#eceef2` | `#1e2026` |
-| Floating surface | white + `--elev-3` | `#23252c` + ring, shadows at 50 % black |
-| Text 1 / 2 / 3 | `#15171d` / `#474b57` / `#646976` | `#eceef3` / `#b3b6c0` / `#8c909b` |
-| Lines | Ink at 7 % / 11 % | white at 6 % / 10 % |
-| Control edge | `#868b97` | `#6b707c` |
-| Action / hover / text | `#2e5bff` / `#2550eb` / `#2e5bff` | `#3d66ff` / `#5277ff` / `#8fa8ff` |
-| Done / Needs you / Error ink | `#1b7a45` / `#8a5300` / `#c0262d` | `#5fd08f` / `#ffc35c` / `#ff8a8c` |
-| Agent ink | hue's ink | hue's light step |
-| Agent tint | hue's tint | base at 16 % over surface |
-| Agent wash | hue's wash | base at 5 % over ground |
-| The mark (Quartet) | Ink `#15171d` | Porcelain white `#eceef3` (`brand/logo/mark-on-dark.svg`) |
+**Graphite**, the dark neutral, carries Porcelain's cool undertone (hue ≈ 228°) into the dark, so Ink, Graphite and Cobalt still read as one material.
 
-Every pair is re-verified when 5b is built; the commented block at the end of `tokens.css` holds these values so nobody ships them by accident.
+| Role | Light (option) | Dark (default) | Dark contrast (WCAG 2.x) |
+|---|---|---|---|
+| Ground `--bg-ground` | `#f3f4f7` | `#101114` | Ink 15.5 · Text 2 8.6 · Text 3 6.29 |
+| Surface `--bg-surface` (cards, bubbles, panels) | `#ffffff` | `#1b1c21` | Ink 13.4 · Text 3 5.54 |
+| Raised `--bg-raised` (menus, dialogs, popovers) | `#ffffff` | `#24262c` | Ink 12.6 · Text 3 5.10 |
+| Fill `--bg-sunken` (tags, counts, disabled) | `#eceef2` | `#2b2d34` | Text 2 6.92 · Text 3 4.58 |
+| Inverse `--bg-inverse` (toasts, ink banners) | `#15171d` | `#2e3038` | `#a9adb8` 5.8 · Cobalt 300 5.8 |
+| Text 1 / 2 / 3 | `#15171d` / `#474b57` / `#646976` | `#e8e9ed` / `#b4b8c2` / `#8e93a0` | see rows above |
+| Lines (subtle / divider) | Ink at 7 % / 11 % | Ink light at 7 % / 11 % (same rule, `--ink-rgb`) | decorative |
+| Control edge | `#868b97` | `#6b707c` | 3.35 on surface · 3.08 on raised (1.4.11) |
+| Action fill / hover / press | `#2e5bff` / `#2550eb` / `#1f45d1` | `#3a64ff` / `#2e5bff` / `#2550eb` | white on `#3a64ff` 4.72 · edge 3.99 on ground |
+| Link and focus | `#2e5bff` | Cobalt 300 `#8fa8ff` | 8.27 on ground · 6.2 on the action tint |
+| Done ink / tint / fill | `#1b7a45` / `#e3f5ea` / `#22a35a` | `#6fd09a` / `#13261b` / `#3c9e66` | ink on tint 8.5 · on surface 8.8 |
+| Needs you ink / tint / fill | `#8a5300` / `#fff1d9` / `#f5a20a` | `#f0b45a` / `#2c2213` / `#e8a33a` | ink on tint 8.49 · Ink `#15171d` on fill 8.3 |
+| Error ink / tint / fill | `#c0262d` / `#fdeaea` / `#e5383b` | `#ff8a85` / `#2e1517` / `#d9474a` | ink on tint 7.47 · on surface 7.3 |
+| Solid danger / done buttons | `#c0262d` / `#1b7a45` | same (white text 5.9 / 5.4) | |
+| Text on an Ink fill (Send, counts, Blocked) | white | `#101114` | 15.5 |
+| Agent ink | hue's ink (`#c4283f`…) | the hue's **light** step (`#ffb8c1`…) | ≥ 7 on its tint (Cocoa, the lowest, 7.2) |
+| Agent tint (your bubble, mentions) | hue's tint | base at 16–20 % over the surface | Ink on it ≥ 10.9 |
+| Agent wash (the chat canvas) | hue's wash | base at 5–7 % over the ground | Text 3 on it ≥ 5.8 |
+| Diff added / removed | `#e9f6ee` / `#fdeeee` | green / red at 13–14 % | the +/− sign carries meaning too |
+| Elevation | ring, then soft Ink shadows | ring of Ink light at 5.5–10 %; floats add black 45–55 % | |
+| The mark (Quartet) | Ink `#15171d` | Ink light `#e8e9ed` (`currentColor` in the UI; `brand/logo/mark-on-dark.svg`) | |
+| Avatars | unchanged | unchanged: bodies, gradients and white eyes read on both | |
+
+**Switching.** Settings › Appearance has **Dark** (default) · **Light** · **Match system**, a segmented control; the change is live on every screen, no reload. The prototype also has a quick sun/moon toggle in the demo bar. Ring meters, the mark and every SVG take colour from role tokens (`style="stroke:var(--…)"`, `currentColor`), so nothing is drawn per theme in code.
+
+The prototype's System sheet recomputes every pair above live for whichever theme is on.
 
 ---
 
@@ -533,3 +547,27 @@ The principle: **on entering any screen you should feel relief.** Per screen ask
 | Settings nav | Two lines (name + summary) | One word; the summary is the tooltip |
 | Handoff (C2) | A dark chip sliding on a dashed line | The brand board's arc flight, absorb and squash |
 | New-agent name (C4) | Fixed "Lumen" | Atlas's suggestion; click the pill to rename (validated) |
+
+## Addendum (v2.0 / prototype v0.6: dark first and the Laws of UX fixes)
+Source: [laws-of-ux-audit.md](../../ux/laws-of-ux-audit.md) fixes 1–17 and the client's calls in [ui-feedback-4](../../../requirements/interviews/2026-10-23-ui-feedback-4.md). Standing rules 1–19 of the audit apply to every component.
+
+| Component | v0.5 | v0.6 |
+|---|---|---|
+| Theme | Light only; Settings › Theme a stub | Dark default; Light and Match system live (§10) |
+| Send (Fitts) | 32 px icon | 40 px circle, 18 px arrow; Stop stays a 32 px secondary pill |
+| Small icon buttons, "New project", Look inside (Fitts) | 22–28 px targets | Same look, 32 px hit area (a transparent `::after`) |
+| Look inside (Von Restorff) | Cobalt text | Text 3 at rest, Cobalt on hover and focus |
+| Text links (`.linkbtn`) | Cobalt | Ink, underlined at 30 %; Cobalt on hover and focus. At rest Cobalt is the one primary. |
+| Counts | Amber on the top bar and every project row | Amber only on the top bar and the overlay header; projects use the neutral count (also on the collapsed rail's Dashboard icon) |
+| Sidebar footer (Jakob, Similarity) | Initial + "You" + a gear | One button: your initial and "Settings". The gear means an agent's settings only. |
+| Agent hero (Cognitive load) | Face, name, status, ledger line; context meter always on | Face, name, status. The ledger lives in Profile and Memory; the context meter lives in the panel and joins the chat from 60 % |
+| Breadcrumb (Jakob) | Agent name as text | The agent's crumb opens its profile and settings, like its face and name |
+| What needs you (Mental model, Choice overload) | Decide · Test · Answer · For your info | Decide · Test · Answer only. For your info is one quiet line in Atlas's chat. |
+| Ticket kinds | — | Only CR-007's five: deletes, payments, questions, undecided decisions, ready to test |
+| Autonomy presets | Careful · Trusted · Autonomous | Ask every time · **Trusted** (default) · Autonomous; "the five things that always need you" opens the list in place |
+| Two-column field rows (bug) | Helper text under one control pushed its neighbour down | Rows align to the top; helper text sits under its own control (`.f2{align-items:start}`, `.field{align-content:start}`) |
+| Name pill under a centred hero (bug) | Squeezed to a circle and a chevron on Home | The heading carries the width limit; the pill keeps its name and only ellipsizes when the column runs out |
+| New project, first run (Hick) | Nothing preselected, disabled button, "Choose how to start" | The recommended option is preselected and named ("Atlas recommends"); first run preselects "Just Atlas for now" |
+| First run step 3 (Tesler) | Name + Model + Look | Name + Look; Balanced by default, changeable in the profile |
+| New agent title (Occam) | Title field always visible | A quiet "Add a title" link that becomes the field |
+| Memory (Occam, Common region) | "Learned 7 things" accordion over the browser | Removed; one header line |
