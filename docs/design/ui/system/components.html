@@ -544,6 +544,32 @@ main{margin-left:232px;padding:40px 48px 120px}
 .ed-msgs{display:grid;gap:12px;padding:16px 20px 24px}
 .edge-cap{display:block;margin-top:8px;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
 
+/* Reply to a message (v0.7): the same classes as the prototype (rp-), forced states drawn side by side */
+:root{--rp-hit:rgb(143 168 255 / .3)}
+:root[data-theme="light"]{--rp-hit:rgb(46 91 255 / .2)}
+.rp-anchor{position:relative}
+.rp-act{position:absolute;top:-14px;right:-10px;display:grid;place-items:center;width:28px;height:28px;border-radius:var(--r-full);background:var(--bg-raised);color:var(--text-2);box-shadow:0 0 0 1px var(--line),0 2px 8px hsl(var(--shadow-color) / .14)}
+.rp-act svg{width:16px;height:16px}
+.rp-act.is-hover{color:var(--text-1);box-shadow:0 0 0 1px rgb(var(--ink-rgb) / .24),0 2px 8px hsl(var(--shadow-color) / .14)}
+.mine .rp-act{right:auto;left:-10px}
+.rp-focus{outline:2px solid var(--focus);outline-offset:4px;border-radius:var(--r-sm)}
+.rp-selected{background:var(--action);color:var(--text-on-action)}
+.rp-sel{position:absolute;z-index:5;display:flex;gap:2px;padding:3px;border-radius:var(--r-full);background:var(--bg-raised);box-shadow:var(--elev-3)}
+.rp-sel button{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 10px;border-radius:var(--r-full);font-size:var(--fs-sub);font-weight:var(--weight-strong);color:var(--text-1)}
+.rp-sel button svg{width:16px;height:16px;color:var(--text-2)}
+.rp-sel button.is-hover{background:var(--state-hover)}
+.composer.rp-on{flex-wrap:wrap;row-gap:4px}
+.rp-bar{flex:1 0 100%;display:flex;align-items:center;gap:8px;min-width:0;height:32px;padding:0 2px 0 10px;border-radius:var(--r-sm);corner-shape:var(--corner);background:rgb(var(--ink-rgb) / .05);box-shadow:inset 2px 0 0 var(--agent-base);font-size:var(--fs-sub);line-height:var(--lh-sub)}
+.rp-bar-tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-2)}
+.rp-bar-tx b{margin-right:6px;color:var(--agent-ink);font-weight:var(--weight-strong)}
+.rp-bar .rp-x{display:grid;place-items:center;width:28px;height:28px;border-radius:var(--r-full);color:var(--text-2);flex:none}
+.rp-me{width:20px;height:20px;font-size:10px}
+.rp-quote{display:grid;gap:1px;width:100%;margin:-2px 0 8px;padding:6px 10px 7px 12px;border-radius:var(--r-sm);corner-shape:var(--corner);background:rgb(var(--ink-rgb) / .06);box-shadow:inset 2px 0 0 var(--agent-base);text-align:left;font-size:var(--fs-sub);line-height:var(--lh-sub);color:var(--text-2)}
+.rp-quote b{font-size:var(--fs-meta);line-height:var(--lh-meta);font-weight:var(--weight-strong);color:var(--agent-ink)}
+.rp-q-x{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rp-hold .bubble{box-shadow:0 0 0 2px var(--agent-base),0 0 0 6px var(--agent-tint)}
+.rp-band{background:var(--rp-hit);color:var(--text-1);border-radius:3px}
+
 /* reduced motion */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition:none!important}
@@ -555,13 +581,13 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
 <nav class="toc" aria-label="Sections">
   <div class="brand" id="tocBrand"></div>
-  <div class="brand-sub meta">Design system · v1.2 · dark first</div>
+  <div class="brand-sub meta">Design system · v1.3 · dark first</div>
   <div class="grp">Foundations</div>
   <a href="#colour">Colour</a><a href="#hues">Agent hues</a><a href="#type">Type</a><a href="#space">Space, shape, depth</a><a href="#motion">Motion and layers</a>
   <div class="grp">Controls</div>
   <a href="#buttons">Buttons</a><a href="#fields">Inputs, composer, Send</a><a href="#switches">Switches</a><a href="#tabs">Tabs and segmented</a><a href="#tags">Tags and badges</a>
   <div class="grp">Agents</div>
-  <a href="#avatars">Avatars and status</a><a href="#identity">Name and face</a><a href="#messages">Messages</a><a href="#mention">@-mention picker</a><a href="#edge">Blurred scroll edge</a><a href="#sidebar">Side-panel rows</a>
+  <a href="#avatars">Avatars and status</a><a href="#identity">Name and face</a><a href="#messages">Messages</a><a href="#mention">@-mention picker</a><a href="#reply">Reply to a message</a><a href="#edge">Blurred scroll edge</a><a href="#sidebar">Side-panel rows</a>
   <div class="grp">Work</div>
   <a href="#needs">What needs you</a><a href="#tickets">Tickets</a><a href="#panel">Agent panel</a><a href="#cards">Project and routine cards</a><a href="#approval">Approval card</a><a href="#meters">Usage and context</a>
   <div class="grp">App</div>
@@ -817,6 +843,28 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
         <span class="rl">Order<span>while filtering</span></span><span class="sub">Names that start with what you typed, then names and titles that contain it. The highlighted row stays highlighted while it still matches.</span>
         <span class="rl">After the pick<span>draft and message</span></span><span class="sub">The draft keeps plain text (<span class="mono">@Maya</span>) painted as a chip by a mirror behind the field, so undo, paste and IME still work. A mention on its own can’t be sent; the hint asks what you want. Sent, it is your words with the chip inline. A mention skips the router, so there is no “Bench picked” line; that line appears only when the router chose.</span>
         <span class="rl">Screen readers<span>combobox pattern</span></span><span class="sub">A textarea keeps its textbox role (HTML doesn’t allow role=combobox on it), so it carries the combobox’s attributes: <span class="mono">aria-autocomplete="list"</span>, <span class="mono">aria-haspopup="listbox"</span>, <span class="mono">aria-controls</span> and <span class="mono">aria-activedescendant</span> pointing at the active <span class="mono">role="option"</span>. Opening announces the count.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== REPLY TO A MESSAGE (v0.7) ===================== -->
+  <section class="sec" id="reply">
+    <div class="sec-h"><h2>Reply to a message <span class="tag action new">New in v0.7</span></h2><p>Every chat, agent messages and your own. Reply to the whole message (its button, R, or right-click), or select words and reply to just those. The preview joins the composer; sent, the quote leads back to the original.</p></div>
+    <div class="cols-3">
+      <div class="chat" data-hue="pear" style="background:var(--bg-ground);align-content:start" id="rpHover"></div>
+      <div class="chat" data-hue="coral" style="align-content:start" id="rpSelDemo"></div>
+      <div class="board ground"><span class="cap-top">The preview is the composer’s first row: face, name, excerpt, ×. Esc cancels.</span><div class="stack" style="gap:12px" id="rpComp"></div></div>
+    </div>
+    <div class="cols-2" style="margin-top:12px">
+      <div class="chat" data-hue="pear" style="background:var(--bg-ground);align-content:start" id="rpSent"></div>
+      <div class="chat" data-hue="coral" style="align-content:start" id="rpBack"></div>
+    </div>
+    <div class="board" style="margin-top:12px">
+      <div class="mx" style="grid-template-columns:160px minmax(0,1fr);align-items:start">
+        <span class="rl">Keyboard<span>both paths</span></span><span class="sub">A chat’s messages are one Tab stop (the latest); ↑ ↓ Home End move between them. R replies to the focused message, or to your selection if there is one. Shift+F10 opens the same menu as right-click. In the selection toolbar ← → move and Esc closes.</span>
+        <span class="rl">Team chat<span>who replies</span></span><span class="sub">A reply goes to the agent you replied to and skips the router, so the hint says “Karim replies” before you send and no “Bench picked” line follows. An @mention overrides. A reply to your own message goes through the router.</span>
+        <span class="rl">Back to the original<span>the pinned moment</span></span><span class="sub">The original scrolls to the middle of its chat and takes focus. A whole message rings once (1.6 s); a part gets a Cobalt band under exactly those words. Reduced motion: no smooth scroll, a static ring. If it’s gone: “That message isn’t in this chat anymore.”</span>
+        <span class="rl">Removal test<span>what’s not there</span></span><span class="sub">No visible “Replying to” (face, name and the hue rule say it; screen readers hear it as the field’s description), no shortcut chips at rest, two words in the toolbar.</span>
       </div>
     </div>
   </section>
@@ -1227,6 +1275,33 @@ $("#mnSent").innerHTML=`<span class="cap-top" style="margin:0">Sent: your words 
   <div class="mine"><div class="bubble" style="background:var(--bg-sunken)">${mentionChip("maya")} can you check the onboarding copy before I test it?</div><span class="receipt">${EYES}Seen by Maya · 09:21</span></div>
   <div class="msg" data-hue="mint">${av("maya",32)}<div><div class="bubble">on it. i’ll check and come back to you here before 11:00.</div>${meta("09:21","0.9k","0.03")}</div></div>
   <div class="sys">${av("maya",16)}Bench picked Maya · she leads Bench <span class="meta">(only when you didn’t mention anyone)</span></div>`;
+
+/* Reply to a message (v0.7): the same markup the prototype builds, states forced */
+IP.reply='<path d="M9.5 7 4.5 12l5 5"/><path d="M4.5 12h9a6 6 0 0 1 6 6v1"/>';
+IP.copy='<rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6A1.5 1.5 0 0 0 14 4.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5"/>';
+const RPA=hov=>`<span class="rp-act${hov?" is-hover":""}" aria-hidden="true">${ic("reply")}</span>`;
+const rpQ=(id,text,part)=>`<span class="rp-quote" data-hue="${CAST[id].hue}"><b>${CAST[id].name}</b><span class="rp-q-x">${part?"“"+text+"”":text}</span></span>`;
+const KARIM_Q="yes. QA-3 failed twice on the Windows runners. two ways out: a paid runner, or nightly E2E on my machine.";
+$("#rpHover").innerHTML=`<span class="cap-top" style="margin:0">At rest: nothing.</span>
+  <div class="msg">${av("karim",32)}<div><div class="bubble rp-anchor">${KARIM_Q}</div></div></div>
+  <span class="cap-top" style="margin:8px 0 0">Hover: one button on the outer top corner, off the words.</span>
+  <div class="msg">${av("karim",32)}<div><div class="bubble rp-anchor">${KARIM_Q}${RPA(true)}</div></div></div>
+  <span class="cap-top" style="margin:8px 0 0">Focus (↑ ↓ to get here, R to reply): yours, button on the left.</span>
+  <div class="mine rp-focus"><div class="bubble rp-anchor" style="background:var(--bg-sunken)">is the Windows CI blocker something I need to decide?${RPA(false)}</div></div>`;
+$("#rpSelDemo").innerHTML=`<span class="cap-top" style="margin:0 0 40px">Select words in one message: Reply and Copy float above them.</span>
+  <div class="msg">${av("noor",32)}<div><div class="bubble rp-anchor">it’s Jade’s CI log from 07:39. the cause is on line 411: <span class="rp-selected">the Windows runner is missing <code>VCRUNTIME140_1.dll</code></span>, so Electron never opens a window.<div class="rp-sel" role="toolbar" aria-label="Selected text" style="left:24px;top:-44px"><button type="button" class="is-hover">${ic("reply")}Reply</button><button type="button">${ic("copy")}Copy</button></div></div></div></div>
+  <span class="cap-top" style="margin:8px 0 0">Across two messages: nothing appears. Near the top edge it sits below the selection.</span>`;
+const rpBarH=(id,text,part)=>`<div class="rp-bar" data-hue="${CAST[id].hue}">${av(id,20)}<span class="rp-bar-tx"><b>${CAST[id].name}</b>${part?"“"+text+"”":text}</span><span class="rp-x" aria-hidden="true">${ic("x",14)}</span></div>`;
+$("#rpComp").innerHTML=`<div><div class="composer is-focus rp-on">${rpBarH("karim",KARIM_Q,false)}${ATTACH}<div class="ta">Message the team · @ picks who replies${CARET}</div>${SEND(true)}</div><div class="comp-hint">Karim replies · @ picks someone else</div></div>
+  <div><div class="composer is-focus rp-on" data-hue="coral">${rpBarH("noor","the Windows runner is missing VCRUNTIME140_1.dll",true)}${ATTACH}<div class="ta filled">is that on Karim’s runner image or ours?${CARET}</div>${SEND(false)}</div><div class="comp-hint num">≈ 0.4k tokens · 0.01 % of your week</div></div>`;
+$("#rpSent").innerHTML=`<span class="cap-top" style="margin:0">Sent: the quote sits at the top of your bubble. It’s a button that leads back.</span>
+  <div class="mine"><div class="bubble" style="background:var(--bg-sunken)">${rpQ("karim",KARIM_Q,false)}Go with nightly E2E on your machine until v0.1 ships.</div><span class="receipt">${EYES}Seen by Karim · 09:24</span></div>
+  <div class="msg" data-hue="pear">${av("karim",32)}<div><div class="bubble">on it. i’ll check and come back to you here before 11:00.</div>${meta("09:24","0.9k","0.03")}</div></div>
+  <div class="mine"><div class="bubble" style="background:var(--bg-sunken)">${rpQ("karim","the secret scan is clean",true)}Which scanner ran it? Link the report in the PR, please.</div><span class="receipt">${EYES}Seen by Karim · 09:21</span></div>`;
+$("#rpBack").innerHTML=`<span class="cap-top" style="margin:0">Back at the original: a whole message rings once…</span>
+  <div class="msg rp-hold">${av("noor",32)}<div><div class="bubble">the Stop button now sits in the composer and replaces Send while i’m running.</div></div></div>
+  <span class="cap-top" style="margin:8px 0 0">…a part gets a band under exactly those words.</span>
+  <div class="msg">${av("noor",32)}<div><div class="bubble">it’s Jade’s CI log from 07:39. the cause is on line 411: <span class="rp-band">the Windows runner is missing <code>VCRUNTIME140_1.dll</code></span>, so Electron never opens a window.</div></div></div>`;
 
 /* Blurred scroll edge: three live samples, each scrolled so a message sits under the edge */
 const edMsgs=[["mine","Noor, use the existing date library for the timestamps, please. No new dependency."],["msg","done. date-fns swapped in, 41 lines removed, formatTime.ts is now a thin wrapper, and no dependency was added."],["mine","Good. Keep Stop in the composer for now; Maya’s debate decides the rest."],["msg","the Stop button now sits in the composer and replaces Send while i’m running."],["mine","Can you run the suite once more on Windows?"],["msg","running it now. 12 of 12 runs under 2 s so far."]];
