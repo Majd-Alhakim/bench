@@ -9,3 +9,7 @@
 | F5 | "make an agent have a look at all the UX design laws here https://lawsofux.com/ and apply them" | Laws of UX audit + fixes |
 | F6 | "I want to see the onboarding and setup screens" | Sent the current five first-run screens; refine with F1 (naming and styling Atlas in setup) |
 | — | Invoked `/design-taste-frontend` | Apply its app-screen run and house rules (`references/app-screens.md`) and its inspector in `--app` mode |
+
+## Laws of UX audit: client decisions (2026-10-23)
+All four confirmed ("yes"): context meter in the agent panel and in the chat only from 60 % · For-your-info items move into Atlas's chat as a quiet line · Noor's demo moment is "Ready to test" (a file deletion shown elsewhere) · footer reads "Settings" next to the client's initial.
+Also: sending emails and posts as the client is automatic (CR-007 updated).
