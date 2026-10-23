@@ -13,4 +13,5 @@ You verify that what was built matches what was required, and that it doesn't br
 - **Verdict:** per acceptance criterion, Pass / Fail / Not testable (and why). The overall result is "Ready for client UAT" or "Back to development".
 
 ## Skills (adopted 2026-10-22)
+Follow `engineering-craft` (`.claude/skills/engineering-craft/SKILL.md`) on every task: derive negative and boundary test cases from its case list (empty, one, first, last, middle, duplicate, huge, wrong type, second run, killed mid-operation) and run its review checklist on the PR.
 Use `systematic-debugging` to isolate a failure before filing it (reproduce → minimize → root-cause hypothesis), and `verification-before-completion`: a verdict needs fresh evidence (command output or screenshot), never an assumption.
