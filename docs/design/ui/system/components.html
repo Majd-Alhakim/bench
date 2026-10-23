@@ -1,11 +1,22 @@
 <!doctype html>
-<!-- Pinned to the light theme: this gallery predates dark first (v0.6) and draws some light-only details.
-     The dark mapping is live in prototype/direction.html (System sheet) and in tokens.css (the default). -->
-<html lang="en" data-theme="light">
+<!-- v1.2 (2026-10-23): dark first, like the app. Light is one click away (the Theme switch at the top).
+     Every component below reads role tokens only, so both themes come from tokens.css. -->
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Components · bench (codename) design system · v1.1</title>
+<meta name="color-scheme" content="dark light">
+<title>Components · bench (codename) design system · v1.2</title>
+<script>
+/* Theme before first paint. Dark by default; kept for this tab only; ?theme=light|dark overrides (for screenshots). */
+(function () {
+  var t = "dark";
+  try { t = sessionStorage.getItem("bench-gallery-theme") || "dark"; } catch (e) { /* storage blocked: stay dark */ }
+  var q = /[?&]theme=(dark|light)\b/.exec(location.search); if (q) t = q[1];
+  document.documentElement.setAttribute("data-theme", t);
+})();
+window.addEventListener("error", function (e) { var b = document.getElementById("errBox"); if (b) { b.hidden = false; b.textContent = "Gallery error: " + (e.message || e) + (e.lineno ? " (line " + e.lineno + ")" : ""); } });
+</script>
 <link rel="icon" type="image/svg+xml" href="../brand/logo/favicon.svg">
 <!-- Review page: Instrument Sans and JetBrains Mono come from Google Fonts here; the app bundles the same OFL files. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,7 +85,7 @@ main{margin-left:232px;padding:40px 48px 120px}
 .aa.ui{color:var(--text-2)}
 .hue-row{display:grid;grid-template-columns:110px repeat(6,minmax(0,1fr)) 150px 92px 92px;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
 .hue-row.hd{border-top:0;font-size:var(--fs-meta);color:var(--text-3)}
-.hue-row i{display:block;height:28px;border-radius:var(--r-xs);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px rgb(21 23 29 / .06)}
+.hue-row i{display:block;height:28px;border-radius:var(--r-xs);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .08)}
 .type-row{display:grid;grid-template-columns:150px minmax(0,1fr) 220px;gap:16px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)}
 .spaces{display:flex;align-items:flex-end;gap:16px}
 .spaces div{display:grid;justify-items:center;gap:6px}
@@ -98,8 +109,8 @@ main{margin-left:232px;padding:40px 48px 120px}
 .av.is-paused>svg{opacity:.45}
 .bdg{position:absolute;right:-2px;bottom:-2px;width:var(--b);height:var(--b);border-radius:50%;display:grid;place-items:center;background:var(--bg-surface);color:var(--text-2);box-shadow:0 0 0 2px var(--bg-surface),inset 0 0 0 1px var(--line)}
 .bdg svg{width:70%;height:70%}
-.bdg.attn{background:var(--attn-fill);color:var(--text-1);box-shadow:0 0 0 2px var(--bg-surface)}
-.bdg.solid{background:var(--text-1);color:#fff;box-shadow:0 0 0 2px var(--bg-surface)}
+.bdg.attn{background:var(--attn-fill);color:var(--on-attn);box-shadow:0 0 0 2px var(--bg-surface)}
+.bdg.solid{background:var(--text-1);color:var(--text-on-ink);box-shadow:0 0 0 2px var(--bg-surface)}
 .bdg.err{background:var(--danger-fill);color:#fff;box-shadow:0 0 0 2px var(--bg-surface)}
 .bdg.ok{background:var(--ok-fill);color:#fff;box-shadow:0 0 0 2px var(--bg-surface)}
 .bdg.working svg{animation:spin 1.6s linear infinite}
@@ -122,18 +133,24 @@ main{margin-left:232px;padding:40px 48px 120px}
 .btn.primary{background:var(--action);color:var(--text-on-action)}
 .btn.primary:hover,.btn.primary.is-hover{background:var(--action-hover)}
 .btn.primary:active,.btn.primary.is-press{background:var(--action-press);transform:scale(var(--press-scale))}
-.btn.secondary{background:var(--bg-surface);color:var(--text-1);box-shadow:inset 0 0 0 1px rgb(21 23 29 / .16)}
-.btn.secondary:hover,.btn.secondary.is-hover{background:var(--porcelain-25);box-shadow:inset 0 0 0 1px rgb(21 23 29 / .26)}
+.btn.secondary{background:var(--bg-surface);color:var(--text-1);box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .16)}
+.btn.secondary:hover,.btn.secondary.is-hover{background:color-mix(in srgb,var(--bg-surface),rgb(var(--ink-rgb)) 4%);box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .26)}
 .btn.secondary:active,.btn.secondary.is-press{background:var(--bg-sunken);transform:scale(var(--press-scale))}
 .btn.tertiary{color:var(--text-2)}
 .btn.tertiary:hover,.btn.tertiary.is-hover{background:var(--state-hover);color:var(--text-1)}
 .btn.tertiary:active,.btn.tertiary.is-press{background:var(--state-press);color:var(--text-1);transform:scale(var(--press-scale))}
-.btn.danger{background:var(--danger-ink);color:#fff}
-.btn.danger:hover,.btn.danger.is-hover{background:#a81f26}
+.btn.danger{background:var(--danger-solid);color:#fff}
+.btn.danger:hover,.btn.danger.is-hover{background:var(--danger-solid-hover)}
 .btn.danger:active,.btn.danger.is-press{background:#8f1a20;transform:scale(var(--press-scale))}
 .btn.quiet-danger{color:var(--danger-ink)}
 .btn.quiet-danger:hover,.btn.quiet-danger.is-hover{background:var(--danger-tint)}
-.btn.quiet-danger:active,.btn.quiet-danger.is-press{background:#f9d9da;transform:scale(var(--press-scale))}
+.btn.quiet-danger:active,.btn.quiet-danger.is-press{background:color-mix(in srgb,var(--danger-tint),var(--danger-ink) 12%);transform:scale(var(--press-scale))}
+/* Ink: Send and the "Got it" class of actions. The fill is Text 1, so it flips with the theme (Ink on Porcelain, soft light on Graphite). */
+.btn.ink{background:var(--text-1);color:var(--text-on-ink)}
+.btn.ink:hover,.btn.ink.is-hover{background:var(--ink-hover)}
+.btn.ink:active,.btn.ink.is-press{background:var(--ink-press);transform:scale(var(--press-scale))}
+.btn.send{--h:var(--control-lg)}
+.btn.send svg{width:18px;height:18px}
 .btn:focus-visible,.btn.is-focus{outline:2px solid var(--focus);outline-offset:2px}
 .btn:disabled,.btn.is-disabled{background:var(--bg-sunken);color:var(--text-3);box-shadow:none;cursor:not-allowed;transform:none}
 .btn.tertiary:disabled,.btn.tertiary.is-disabled,.btn.quiet-danger.is-disabled{background:transparent}
@@ -159,44 +176,46 @@ main{margin-left:232px;padding:40px 48px 120px}
 .input:hover,.input.is-hover{box-shadow:inset 0 0 0 1px var(--text-2)}
 .input:focus-within,.input.is-focus{box-shadow:inset 0 0 0 2px var(--focus)}
 .input.is-error{box-shadow:inset 0 0 0 2px var(--danger-ink)}
-.input.is-disabled{background:var(--bg-sunken);box-shadow:inset 0 0 0 1px var(--porcelain-200);color:var(--text-3)}
+.input.is-disabled{background:var(--bg-sunken);box-shadow:inset 0 0 0 1px var(--line);color:var(--text-3)}
 .input.sm{height:var(--control-md)}
 .input .trail{font-size:var(--fs-meta);color:var(--text-3);white-space:nowrap}
 .select{justify-content:space-between;cursor:pointer}
 .select .chev{color:var(--text-2)}
-.listbox{margin-top:6px;background:var(--bg-surface);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3);padding:6px}
+.listbox{margin-top:6px;background:var(--bg-raised);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3);padding:6px}
 .opt{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 10px;border-radius:var(--r-sm);corner-shape:var(--corner)}
 .opt.is-hover{background:var(--state-hover)}
 .opt .check{width:16px;height:16px;color:var(--text-1)}
 .opt b{display:block;font-weight:var(--weight-strong);font-size:var(--fs-sub);line-height:var(--lh-sub)}
 .opt.is-disabled{color:var(--text-3)}
-.composer{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:end;padding:8px 8px 8px 12px;min-height:52px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-surface);box-shadow:inset 0 0 0 1px var(--line-control),0 1px 2px hsl(var(--shadow-color) / .05),0 4px 12px hsl(var(--shadow-color) / .05)}
-.composer.is-focus{box-shadow:inset 0 0 0 2px var(--focus),0 4px 12px hsl(var(--shadow-color) / .06)}
-.composer .ta{min-height:36px;padding:7px 0;color:var(--text-3)}
+/* v0.6 composer: 6 px inset, the attach icon 32, the draft, then Stop (32 pill, only while the agent runs) and Send (40 Ink circle, fix 13) */
+.composer{position:relative;display:flex;align-items:flex-end;gap:6px;padding:6px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-surface);box-shadow:inset 0 0 0 1px var(--line-control),var(--elev-2)}
+.composer.is-focus{box-shadow:inset 0 0 0 2px var(--focus),var(--elev-2)}
+.composer>.btn.icon:first-child,.composer>.btn.secondary{margin-bottom:4px}
+.composer .ta{position:relative;flex:1;min-width:0;min-height:36px;padding:7px 4px;font-size:var(--fs-body);line-height:22px;color:var(--text-3)}
 .composer .ta.filled{color:var(--text-1)}
-.composer-foot{display:flex;justify-content:space-between;align-items:center;padding:6px 6px 0}
 
 /* ---------- switch ---------- */
 .switch{display:inline-flex;align-items:center;gap:10px;min-height:var(--control-md);cursor:pointer}
-.sw{position:relative;width:36px;height:22px;border-radius:var(--r-full);background:var(--porcelain-300);box-shadow:inset 0 0 0 1px rgb(21 23 29 / .12);transition:background-color var(--dur-short) var(--ease-color);flex:none}
-.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(21 23 29 / .25),0 0 0 .5px rgb(21 23 29 / .08);transition:transform var(--dur-move) var(--spring-snappy)}
+.sw{position:relative;width:36px;height:22px;border-radius:var(--r-full);background:var(--sw-track);box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .12);transition:background-color var(--dur-short) var(--ease-color);flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--sw-knob);box-shadow:0 1px 2px rgb(0 0 0 / .25),0 0 0 .5px rgb(0 0 0 / .08);transition:transform var(--dur-move) var(--spring-snappy)}
 .switch[aria-checked="true"] .sw{background:var(--text-1)}
-.switch[aria-checked="true"] .sw::after{transform:translateX(14px)}
-.switch.is-hover .sw{background:#b3b8c3}
-.switch.is-hover[aria-checked="true"] .sw{background:#2b2e37}
+.switch[aria-checked="true"] .sw::after{transform:translateX(14px);background:var(--sw-knob-on)}
+.switch.is-hover .sw{background:var(--sw-track-hover)}
+.switch.is-hover[aria-checked="true"] .sw{background:var(--ink-hover)}
 .switch.is-focus .sw{outline:2px solid var(--focus);outline-offset:2px}
 .switch.is-disabled{cursor:not-allowed;color:var(--text-3)}
-.switch.is-disabled .sw{background:var(--porcelain-150);box-shadow:inset 0 0 0 1px var(--porcelain-200)}
-.switch.is-disabled[aria-checked="true"] .sw{background:var(--porcelain-500)}
-.switch.is-loading .sw::after{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='none' stroke='%23646976' stroke-width='1.6' stroke-dasharray='14 20'/%3E%3C/svg%3E") center/12px no-repeat}
+.switch.is-disabled .sw{background:var(--bg-sunken);box-shadow:inset 0 0 0 1px var(--line)}
+.switch.is-disabled[aria-checked="true"] .sw{background:var(--line-control)}
+.switch.is-loading .sw::after{background:var(--sw-knob-on) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='none' stroke='%23646976' stroke-width='1.6' stroke-dasharray='14 20'/%3E%3C/svg%3E") center/12px no-repeat}
 .saved{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-meta);color:var(--ok-ink)}
 .saved svg{width:12px;height:12px}
 
 /* ---------- segmented and tabs ---------- */
 .seg{display:inline-flex;padding:3px;gap:2px;border-radius:var(--r-full);background:var(--bg-sunken)}
 .seg button{height:28px;padding:0 14px;border-radius:var(--r-full);font-size:var(--fs-sub);font-weight:var(--weight-strong);color:var(--text-2);transition:background-color var(--dur-micro) ease,color var(--dur-micro) ease}
-.seg button.is-hover{color:var(--text-1);background:rgb(255 255 255 / .55)}
-.seg button[aria-selected="true"]{background:var(--bg-surface);color:var(--text-1);box-shadow:0 0 0 .5px rgb(21 23 29 / .1),0 1px 3px rgb(21 23 29 / .1)}
+.seg button:hover,.seg button.is-hover{color:var(--text-1)}
+.seg button.is-hover:not([aria-selected="true"]):not([aria-checked="true"]){background:var(--state-hover)}
+.seg button[aria-selected="true"],.seg button[aria-checked="true"]{background:var(--seg-on);color:var(--text-1);box-shadow:0 0 0 .5px rgb(var(--ink-rgb) / .1),0 1px 3px hsl(var(--shadow-color) / .1)}
 .seg button.is-focus{outline:2px solid var(--focus);outline-offset:1px}
 .seg button:disabled{color:var(--text-3);cursor:not-allowed}
 .tabs{display:flex;gap:24px;box-shadow:inset 0 -1px 0 var(--line)}
@@ -215,23 +234,24 @@ main{margin-left:232px;padding:40px 48px 120px}
 .tag.attn{background:var(--attn-tint);color:var(--attn-ink)}
 .tag.ok{background:var(--ok-tint);color:var(--ok-ink)}
 .tag.danger{background:var(--danger-tint);color:var(--danger-ink)}
-.tag.ink{background:var(--text-1);color:#fff}
-.tag.risk{background:transparent;color:var(--text-1);box-shadow:inset 0 0 0 1px rgb(21 23 29 / .32)}
+.tag.ink{background:var(--text-1);color:var(--text-on-ink)}
+.tag.risk{background:transparent;color:var(--text-1);box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .32)}
 .tag.action{background:var(--action-tint);color:var(--action-text)}
 .count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:var(--r-full);font-size:var(--fs-meta);font-weight:var(--weight-strong)}
-.count.attn{background:var(--attn-fill);color:var(--text-1)}
-.count.ink{background:var(--text-1);color:#fff}
+.count.attn{background:var(--attn-fill);color:var(--on-attn)}
+.count.ink{background:var(--text-1);color:var(--text-on-ink)}
 .count.soft{background:var(--bg-sunken);color:var(--text-2)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--attn-fill);display:inline-block}
 .est{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:var(--r-full);background:var(--bg-sunken);font-size:var(--fs-meta);color:var(--text-2);white-space:nowrap}
 .mention{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px 0 3px;border-radius:var(--r-full);background:var(--agent-tint);color:var(--agent-ink);font-weight:var(--weight-strong);font-size:var(--fs-sub);vertical-align:middle}
-.filter{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:var(--r-full);font-size:var(--fs-sub);color:var(--text-2);box-shadow:inset 0 0 0 1px rgb(21 23 29 / .14)}
+.filter{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:var(--r-full);font-size:var(--fs-sub);color:var(--text-2);box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .14)}
 .filter.is-hover{background:var(--state-hover);color:var(--text-1)}
-.filter[aria-pressed="true"]{background:var(--text-1);color:#fff;box-shadow:none}
-.filter.is-disabled{color:var(--text-3);box-shadow:inset 0 0 0 1px var(--porcelain-200)}
-.lookin{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px 0 6px;border-radius:var(--r-full);color:var(--action-text);font-size:var(--fs-meta);font-weight:var(--weight-strong)}
+.filter[aria-pressed="true"]{background:var(--text-1);color:var(--text-on-ink);box-shadow:none}
+.filter.is-disabled{color:var(--text-3);box-shadow:inset 0 0 0 1px var(--line)}
+/* Von Restorff (v0.6 fix 5): Look inside is a passive handle, Text 3 at rest; Cobalt only on hover and focus */
+.lookin{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px 0 6px;border-radius:var(--r-full);color:var(--text-3);font-size:var(--fs-meta);font-weight:var(--weight-strong)}
 .lookin svg{width:14px;height:14px}
-.lookin.is-hover{background:var(--action-tint)}
+.lookin:hover,.lookin.is-hover,.lookin.is-focus{background:var(--action-tint);color:var(--action-text)}
 .lookin.is-focus{outline:2px solid var(--focus);outline-offset:1px}
 
 /* ---------- messages ---------- */
@@ -272,7 +292,7 @@ main{margin-left:232px;padding:40px 48px 120px}
 .ticket .t{min-width:0;display:flex;align-items:center;gap:8px}
 .ticket .t b{flex:0 1 auto;min-width:0;font-weight:var(--weight-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ticket .chev{width:16px;height:16px;color:var(--text-3)}
-.ticket.is-hover{box-shadow:0 0 0 1px rgb(21 23 29 / .12),0 2px 6px hsl(var(--shadow-color) / .06)}
+.ticket.is-hover{box-shadow:0 0 0 1px rgb(var(--ink-rgb) / .13),0 2px 6px hsl(var(--shadow-color) / .06)}
 .ticket.is-focus{outline:2px solid var(--focus);outline-offset:2px}
 .ticket.open{grid-template-columns:auto minmax(0,1fr);align-items:start;padding:20px 22px;box-shadow:var(--elev-2);gap:14px}
 .ticket.open .head{display:grid;gap:4px}
@@ -285,7 +305,7 @@ main{margin-left:232px;padding:40px 48px 120px}
 
 /* ---------- cards ---------- */
 .pcard{position:relative;background:var(--bg-surface);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-1);padding:20px;display:grid;gap:14px;transition:box-shadow var(--dur-short) ease}
-.pcard.is-hover{box-shadow:0 0 0 1px rgb(21 23 29 / .12),0 2px 8px hsl(var(--shadow-color) / .06)}
+.pcard.is-hover{box-shadow:0 0 0 1px rgb(var(--ink-rgb) / .13),0 2px 8px hsl(var(--shadow-color) / .06)}
 .pcard.is-focus{outline:2px solid var(--focus);outline-offset:2px}
 .pcard .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .pcard h3{font-size:var(--fs-body);font-weight:var(--weight-strong)}
@@ -294,7 +314,7 @@ main{margin-left:232px;padding:40px 48px 120px}
 .bar{position:relative;height:6px;border-radius:var(--r-full);background:var(--bg-sunken);overflow:visible}
 .bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:var(--r-full);background:var(--text-1)}
 .bar>.mark{position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:1px;background:var(--text-2)}
-.bar>.ceiling{position:absolute;top:0;bottom:0;right:0;border-radius:0 999px 999px 0;background:repeating-linear-gradient(135deg,rgb(21 23 29 / .22) 0 2px,transparent 2px 5px)}
+.bar>.ceiling{position:absolute;top:0;bottom:0;right:0;border-radius:0 999px 999px 0;background:repeating-linear-gradient(135deg,rgb(var(--ink-rgb) / .3) 0 2px,transparent 2px 5px)}
 .activity{display:flex;align-items:center;gap:10px;font-size:var(--fs-sub);color:var(--text-2);min-width:0}
 .activity span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .skel{display:block;background:var(--bg-sunken);border-radius:var(--r-xs)}
@@ -358,17 +378,17 @@ main{margin-left:232px;padding:40px 48px 120px}
 .dialog-stage{position:relative;height:420px;border-radius:var(--r-lg);corner-shape:var(--corner);overflow:hidden;background:var(--bg-ground)}
 .dialog-stage .fake{position:absolute;inset:0;padding:24px;display:grid;gap:12px;align-content:start}
 .dialog-stage .scrim{position:absolute;inset:0;background:var(--scrim)}
-.dialog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:460px;background:var(--bg-surface);border-radius:var(--r-xl);corner-shape:var(--corner);box-shadow:var(--elev-4);padding:24px;display:grid;gap:16px}
+.dialog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:460px;background:var(--bg-raised);border-radius:var(--r-xl);corner-shape:var(--corner);box-shadow:var(--elev-4);padding:24px;display:grid;gap:16px}
 .dialog h3{font:var(--weight-strong) var(--fs-title)/var(--lh-title) var(--font-display);letter-spacing:var(--ls-title)}
 .dialog .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
-.menu{width:260px;background:var(--bg-surface);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3);padding:6px}
+.menu{width:260px;background:var(--bg-raised);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3);padding:6px}
 .mi{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:10px;align-items:center;height:32px;padding:0 10px;border-radius:var(--r-sm);corner-shape:var(--corner);font-size:var(--fs-sub)}
 .mi svg{width:16px;height:16px;color:var(--text-2)}
 .mi kbd{font:inherit;font-size:var(--fs-meta);color:var(--text-3)}
 .mi.is-hover{background:var(--state-hover)}
 .mi.is-focus{background:var(--state-hover);outline:2px solid var(--focus);outline-offset:-2px}
 .mi.is-disabled{color:var(--text-3)}
-.mi.is-disabled svg{color:var(--porcelain-300)}
+.mi.is-disabled svg{color:var(--text-3)}
 .mi.danger,.mi.danger svg{color:var(--danger-ink)}
 .msep{height:1px;margin:6px 10px;background:var(--line)}
 
@@ -387,6 +407,143 @@ main{margin-left:232px;padding:40px 48px 120px}
 .empty .acts{display:flex;gap:8px;margin-top:6px}
 .examples{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 
+/* ==================== v0.6 and v0.6.1 components (same recipes as prototype/direction.html) ==================== */
+#errBox{position:fixed;left:12px;bottom:12px;z-index:9999;max-width:640px;padding:10px 12px;border-radius:8px;background:#c0262d;color:#fff;font:12px/16px var(--font-mono)}
+.page-tools{display:flex;align-items:center;gap:20px}
+.page-tools .lab{font-size:var(--fs-sub);color:var(--text-2)}
+.kbd{display:inline-grid;place-items:center;height:20px;padding:0 6px;border-radius:var(--r-xs);corner-shape:var(--corner);background:var(--bg-sunken);font:600 11px/1 var(--font-text);color:var(--text-3)}
+.mono{font-family:var(--font-mono);font-size:.92em;letter-spacing:0}
+.new{margin-left:8px;vertical-align:2px}
+
+/* Agent name and face: one control. The face is a pointer target, the name pill is the tab stop; the chevron says it opens. */
+.id-demo{display:grid;justify-items:center;align-content:start;gap:6px;padding:20px 12px 16px;border-radius:var(--r-md);corner-shape:var(--corner);background:var(--agent-wash);text-align:center}
+.id-face{display:block;width:fit-content;padding:0;border-radius:var(--r-md);cursor:pointer}
+.nametag{display:inline-flex;align-items:center;gap:4px;max-width:100%;height:26px;padding:0 8px 0 12px;border-radius:var(--r-full);background:var(--bg-surface);box-shadow:var(--elev-1);color:var(--agent-ink);font-size:var(--fs-body);font-weight:var(--weight-strong);white-space:nowrap;cursor:pointer;transition:box-shadow var(--dur-micro) ease,background-color var(--dur-micro) ease}
+.nametag svg{width:14px;height:14px;flex:none;color:var(--text-3)}
+.nametag:hover,.nametag.is-hover{background:color-mix(in srgb,var(--bg-surface),rgb(var(--ink-rgb)) 5%);box-shadow:0 0 0 1px rgb(var(--ink-rgb) / .2),var(--elev-1)}
+.nametag:hover svg,.nametag.is-hover svg{color:var(--text-1)}
+.nametag.is-focus{outline:2px solid var(--focus);outline-offset:3px}
+.id-nm{min-width:1.5em;overflow:hidden;text-overflow:ellipsis}
+.id-sub{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
+.statusline{display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--fs-sub);line-height:var(--lh-sub);color:var(--text-2)}
+.statusline .bdg{position:static;width:16px;height:16px;box-shadow:inset 0 0 0 1px var(--line)}
+
+/* Sidebar row with the optional title: name, then the title in Text 3, which truncates first */
+.srow.v06{min-height:40px;grid-template-columns:28px minmax(0,1fr);padding:6px 10px}
+.srow.v06 .n{justify-content:flex-start;gap:6px}
+.nmt{display:flex;align-items:baseline;gap:6px;min-width:0}
+.nmt .ag-nm{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ag-ttl{flex:0 100 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--fs-meta);line-height:var(--lh-meta);font-weight:400;color:var(--text-3)}
+.srow.v06 .n b{font-weight:400}
+.srow.v06 .n .nmt{flex:1 1 auto;min-width:0;font-size:inherit;color:inherit}
+.srow.v06 .n .ag-ttl{flex:0 100 auto;font-size:var(--fs-meta);color:var(--text-3)}
+.ws-quiet{margin:6px 20px 0;font-size:var(--fs-sub);line-height:var(--lh-sub);color:var(--text-3)}
+.srow.v06.is-selected .n b{font-weight:var(--weight-strong)}
+
+/* App Settings: the sidebar footer is one button (your initial + Settings); Appearance is a segmented choice */
+.foot-demo{width:280px;display:grid;gap:4px;padding:8px;border-radius:var(--r-md);corner-shape:var(--corner);background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-subtle)}
+.foot-btn{display:flex;align-items:center;gap:10px;width:100%;height:40px;padding:0 10px 0 6px;border-radius:var(--r-sm);corner-shape:var(--corner);text-align:left;font-size:var(--fs-sub);font-weight:var(--weight-strong);color:var(--text-1)}
+.foot-btn:hover,.foot-btn.is-hover{background:var(--state-hover)}
+.foot-btn.is-selected{background:var(--state-selected)}
+.foot-btn.is-focus{outline:2px solid var(--focus);outline-offset:-2px}
+.me-av{width:28px;height:28px;border-radius:50%;background:var(--text-1);color:var(--text-on-ink);display:grid;place-items:center;font-size:var(--fs-meta);font-weight:var(--weight-strong);flex:none}
+.set-g>h4{margin-bottom:4px;font-size:var(--fs-meta);font-weight:var(--weight-strong);color:var(--text-3)}
+.setrow{display:flex;align-items:center;gap:12px;padding:10px 0;box-shadow:inset 0 1px 0 var(--line-subtle)}
+.set-g>h4+.setrow{box-shadow:none}
+.setrow-m{flex:1;min-width:0}
+.setrow-t{font-weight:var(--weight-strong);line-height:20px}
+.setrow-d{margin-top:2px;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
+
+/* What needs you: an overlay over the current screen, anchored under the top bar's count; Ready to test inside */
+.nd-stage{position:relative;height:640px;border-radius:var(--r-lg);corner-shape:var(--corner);overflow:hidden;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-subtle)}
+.nd-fake{position:absolute;inset:0;padding:24px;display:grid;gap:12px;align-content:start}
+.nd-scrim{position:absolute;inset:0;background:var(--scrim-soft)}
+.needs-ov{position:absolute;top:16px;right:16px;width:min(560px,calc(100% - 32px));max-height:calc(100% - 32px);display:flex;flex-direction:column;background:var(--bg-ground);border-radius:var(--r-xl);corner-shape:var(--corner);box-shadow:var(--elev-4);overflow:hidden}
+.nd-h{flex:none;display:flex;align-items:center;gap:8px;padding:14px 12px 10px 24px}
+.nd-h h3{font:var(--weight-strong) var(--fs-title)/var(--lh-title) var(--font-display);letter-spacing:var(--ls-title)}
+.nd-h .btn{margin-left:auto}
+.nd-body{flex:1;min-height:0;overflow:auto;display:grid;gap:8px;align-content:start;padding:2px 16px 16px}
+.nd-grp{display:flex;gap:6px;margin:4px 4px 0;font-size:var(--fs-meta);font-weight:var(--weight-strong);color:var(--text-3)}
+.nd-grp span{font-weight:400}
+.nd-f{flex:none;display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 16px 8px 24px;box-shadow:inset 0 1px 0 var(--line-subtle);font-size:var(--fs-meta);color:var(--text-3)}
+.try{padding:12px 14px;border-radius:var(--r-sm);corner-shape:var(--corner);background:var(--bg-ground)}
+.try>b{display:block;margin-bottom:8px;font-size:var(--fs-meta);line-height:var(--lh-meta);font-weight:var(--weight-strong);color:var(--text-3)}
+.try ol{list-style:none;display:grid;gap:8px;counter-reset:r}
+.try li{display:flex;gap:10px;align-items:flex-start;font-size:var(--fs-sub);line-height:20px}
+.try li::before{counter-increment:r;content:counter(r);display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--bg-sunken);font-size:var(--fs-meta);font-weight:var(--weight-strong);flex:none}
+
+/* The agent panel: compact live screen preview, the context meter, compact routine rows */
+.ws-mock{width:360px;flex:none;padding-bottom:12px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-surface);box-shadow:var(--elev-1);overflow:hidden}
+.ws-head{display:flex;align-items:center;gap:6px;min-height:52px;padding:8px 10px 4px 16px}
+.ws-head b{font-size:var(--fs-body);font-weight:var(--weight-strong)}
+.ws-head .grow{flex:1}
+.scr-prev{display:block;width:calc(100% - 32px);margin:4px 16px 0;padding:0;text-align:left;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-surface);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;cursor:pointer}
+.scr-prev:hover,.scr-prev.is-hover{box-shadow:inset 0 0 0 1px rgb(var(--ink-rgb) / .22)}
+.scr-thumb{display:block;height:128px;overflow:hidden;background:var(--bg-ground);box-shadow:inset 0 -1px 0 var(--line-subtle)}
+.mini{display:block;padding:8px 10px;font:400 7px/10px var(--font-mono);white-space:pre;color:var(--text-2)}
+.mini .a{background:var(--diff-add)}.mini .r{background:var(--diff-del)}
+.scr-cap{display:flex;align-items:center;gap:6px;min-width:0;padding:8px 12px;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-2)}
+.scr-cap .mono{color:var(--text-1)}
+.plus{color:var(--ok-ink)}.minus{color:var(--danger-ink)}
+.scr-live{margin-left:auto;display:inline-flex;align-items:center;gap:5px;color:var(--text-3);white-space:nowrap}
+.scr-live i{width:6px;height:6px;border-radius:50%;background:var(--agent-ink)}
+.ws-ctx{display:flex;align-items:center;gap:8px;margin:12px 20px 0;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
+.ws-ctx .bar,.ctx .bar{flex:1;height:4px}
+.ws-ctx .bar>.mark,.ctx .bar>.mark{top:-3px;bottom:-3px}
+.ws-ctx b,.ctx b{color:var(--text-1);font-weight:var(--weight-strong)}
+.ctx{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-meta);color:var(--text-2);white-space:nowrap}
+.ctx .bar{flex:none;width:64px}
+.rt-head{display:flex;align-items:center;gap:8px;padding:20px 12px 6px 20px}
+.rt-head h4{font-size:var(--fs-body);font-weight:var(--weight-strong)}
+.rt-head .btn{margin-left:auto}
+.rt-list{list-style:none;display:grid;gap:2px;padding:0 8px}
+.rt-row{border-radius:var(--r-sm);corner-shape:var(--corner)}
+.rt-row.is-hover,.rt-row.is-open{background:var(--bg-ground)}
+.rt-top{display:flex;align-items:center;gap:8px;padding:2px 8px 2px 0}
+.rt-name{flex:1;min-width:0;display:grid;gap:1px;padding:8px 4px 8px 12px;text-align:left}
+.rt-name b{font-size:var(--fs-sub);line-height:var(--lh-sub);font-weight:var(--weight-strong)}
+.rt-when{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt-row.is-off .rt-name b{color:var(--text-2)}
+.rt-more{display:grid;gap:10px;padding:2px 12px 12px}
+.rt-more .figs{padding-top:8px;box-shadow:inset 0 1px 0 var(--line-subtle)}
+.rt-row .switch{gap:8px;font-size:var(--fs-meta);color:var(--text-3)}
+
+/* @-mention picker (v0.6.1) */
+.mn-stage{position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;height:468px;padding:16px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-subtle)}
+.mn-stage .composer{width:100%}
+.comp-hint{display:flex;align-items:center;gap:6px;min-height:28px;padding:4px 8px 0;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
+.mn-hl{border-radius:6px;background:var(--agent-tint);box-shadow:0 0 0 2px var(--agent-tint);color:inherit}
+.caret{display:inline-block;width:1.5px;height:18px;margin-left:1px;vertical-align:-3px;background:var(--text-1)}
+.mn-pop{position:absolute;z-index:40;left:40px;bottom:calc(100% + 8px);width:min(320px,calc(100% - 48px));padding:6px;background:var(--bg-raised);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3)}
+.mn-cap{padding:4px 8px 6px;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mn-list{position:relative;display:grid;gap:2px;max-height:calc(6 * 42px);overflow-y:auto;overscroll-behavior:contain}
+.mn-grp{padding:8px 8px 2px;font-size:var(--fs-meta);line-height:var(--lh-meta);font-weight:var(--weight-strong);color:var(--text-3)}
+.mn-grp:first-child{padding-top:0}
+.mn-opt{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:40px;padding:6px 10px 6px 8px;border-radius:var(--r-sm);corner-shape:var(--corner);cursor:pointer}
+.mn-opt:hover,.mn-opt.is-hover{background:var(--state-hover)}
+.mn-opt[aria-selected="true"]{background:var(--state-selected)}
+.mn-opt .ag-nm{font-size:var(--fs-sub);line-height:var(--lh-sub);font-weight:var(--weight-strong)}
+.mn-st{font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3);white-space:nowrap}
+.mn-none{padding:8px 8px 10px;font-size:var(--fs-sub);line-height:var(--lh-sub);color:var(--text-2)}
+.mn-keys{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;padding:8px 8px 2px;box-shadow:inset 0 1px 0 var(--line-subtle);font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
+.mn-keys .kbd{height:18px;padding:0 5px;margin-right:2px}
+.mention{vertical-align:-4px}
+
+/* Blurred scroll edge (v0.6.1): a 40 px strip under a sticky header or hero; blur strongest at the edge, zero at its foot */
+.edge-demo{position:relative;display:flex;flex-direction:column;height:360px;border-radius:var(--r-lg);corner-shape:var(--corner);overflow:hidden;background:var(--agent-wash);box-shadow:inset 0 0 0 1px var(--line-subtle);--edge-bg:var(--agent-wash);--edge-h:40px;--edge-blur:6px}
+.ed-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.ed-hero{position:sticky;top:0;z-index:3;display:grid;justify-items:center;gap:6px;padding:14px 0 12px;background:var(--agent-wash)}
+.ed-hero::after{content:"";position:absolute;left:0;right:0;top:100%;height:var(--edge-h);pointer-events:none;
+  background:linear-gradient(var(--edge-bg),color-mix(in srgb,var(--edge-bg) 45%,transparent) 40%,transparent 80%);
+  -webkit-backdrop-filter:blur(var(--edge-blur));backdrop-filter:blur(var(--edge-blur));
+  -webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent)}
+.edge-demo.is-cut .ed-hero::after{height:16px;-webkit-backdrop-filter:none;backdrop-filter:none;-webkit-mask-image:none;mask-image:none;background:linear-gradient(var(--edge-bg),transparent)}
+.ed-scroll:not(.is-scrolled) .ed-hero::after{opacity:0}
+.edge-demo.is-flat .ed-hero::after{-webkit-backdrop-filter:none;backdrop-filter:none;-webkit-mask-image:none;mask-image:none;background:linear-gradient(var(--edge-bg) 20%,transparent)}
+@media (prefers-reduced-transparency:reduce){.ed-hero::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;-webkit-mask-image:none!important;mask-image:none!important;background:linear-gradient(var(--edge-bg) 20%,transparent)!important}}
+.ed-msgs{display:grid;gap:12px;padding:16px 20px 24px}
+.edge-cap{display:block;margin-top:8px;font-size:var(--fs-meta);line-height:var(--lh-meta);color:var(--text-3)}
+
 /* reduced motion */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition:none!important}
@@ -394,18 +551,21 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 </style>
 </head>
 <body>
+<div id="errBox" role="alert" hidden></div>
 
 <nav class="toc" aria-label="Sections">
   <div class="brand" id="tocBrand"></div>
-  <div class="brand-sub meta">Design system · v1.1 · light</div>
+  <div class="brand-sub meta">Design system · v1.2 · dark first</div>
   <div class="grp">Foundations</div>
   <a href="#colour">Colour</a><a href="#hues">Agent hues</a><a href="#type">Type</a><a href="#space">Space, shape, depth</a><a href="#motion">Motion and layers</a>
   <div class="grp">Controls</div>
-  <a href="#buttons">Buttons</a><a href="#fields">Inputs and selects</a><a href="#switches">Switches</a><a href="#tabs">Tabs and segmented</a><a href="#tags">Tags and badges</a>
+  <a href="#buttons">Buttons</a><a href="#fields">Inputs, composer, Send</a><a href="#switches">Switches</a><a href="#tabs">Tabs and segmented</a><a href="#tags">Tags and badges</a>
   <div class="grp">Agents</div>
-  <a href="#avatars">Avatars and status</a><a href="#messages">Messages</a><a href="#sidebar">Side-panel rows</a>
+  <a href="#avatars">Avatars and status</a><a href="#identity">Name and face</a><a href="#messages">Messages</a><a href="#mention">@-mention picker</a><a href="#edge">Blurred scroll edge</a><a href="#sidebar">Side-panel rows</a>
   <div class="grp">Work</div>
-  <a href="#tickets">Tickets</a><a href="#cards">Project and routine cards</a><a href="#approval">Approval card</a><a href="#meters">Usage and context</a>
+  <a href="#needs">What needs you</a><a href="#tickets">Tickets</a><a href="#panel">Agent panel</a><a href="#cards">Project and routine cards</a><a href="#approval">Approval card</a><a href="#meters">Usage and context</a>
+  <div class="grp">App</div>
+  <a href="#appset">Settings and Appearance</a>
   <div class="grp">Overlays and states</div>
   <a href="#toasts">Toasts and tooltips</a><a href="#dialog">Dialog</a><a href="#menu">Context menu</a><a href="#empty">Empty, loading, error</a>
 </nav>
@@ -414,15 +574,19 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
   <header class="page-h">
     <div>
       <h1>Components</h1>
-      <p>Every core component in every state it can be in, built only from <span class="num">tokens.css</span>. Forced states are rendered side by side; the live ones also respond to your pointer and keyboard.</p>
+      <p>Every core component in every state it can be in, built only from <span class="num">tokens.css</span>. Dark first, like the app; switch to Light at the right. Forced states are rendered side by side; the live ones also respond to your pointer and keyboard. <span class="tag action">New in v0.6</span> marks what the prototype added since v1.1.</p>
       <div class="legend"><span class="tag neutral">Default</span><span class="tag neutral">Hover</span><span class="tag neutral">Pressed</span><span class="tag neutral">Focus</span><span class="tag neutral">Disabled</span><span class="tag neutral">Loading</span><span class="tag neutral">Error</span></div>
     </div>
-    <button class="rm-toggle switch" id="rmToggle" role="switch" aria-checked="false"><span class="sw" aria-hidden="true"></span>Reduce motion</button>
+    <div class="page-tools">
+      <span class="lab" id="themeLab">Theme</span>
+      <div class="seg" role="radiogroup" aria-labelledby="themeLab" id="themeSeg"><button type="button" role="radio" data-theme-set="dark" aria-checked="true">Dark</button><button type="button" role="radio" data-theme-set="light" aria-checked="false">Light</button></div>
+      <button class="rm-toggle switch" id="rmToggle" role="switch" aria-checked="false"><span class="sw" aria-hidden="true"></span>Reduce motion</button>
+    </div>
   </header>
 
   <!-- ===================== COLOUR ===================== -->
   <section class="sec" id="colour">
-    <div class="sec-h"><h2>Colour</h2><p>60 % Porcelain ground, 30 % white surfaces and Ink text, 10 % meaning: one Cobalt action per screen, amber for what needs you, agent hues on their own things. Ratios are computed live from the tokens.</p></div>
+    <div class="sec-h"><h2>Colour</h2><p>60 % ground (Graphite on dark, Porcelain on light), 30 % surfaces and Ink text, 10 % meaning: one Cobalt action per screen, amber for what needs you, agent hues on their own things. Values and ratios are read live from the tokens for the theme that’s on.</p></div>
     <div class="board"><div class="swatches" id="neutralSw"></div><div class="swatches" id="roleSw" style="margin-top:12px"></div></div>
   </section>
 
@@ -530,13 +694,14 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
         </div>
       </div>
       <div class="board">
-        <span class="cap-top">Composer · resting, focused with a draft, and while the agent works</span>
+        <span class="cap-top">Composer and the 40 px Send <span class="tag action new">New in v0.6</span> · empty, a draft with its cost, while the agent works</span>
         <div class="stack" style="gap:12px">
-          <div class="composer"><button class="btn tertiary icon" aria-label="Attach"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button><div class="ta">Message Noor</div><button class="btn primary icon is-disabled" disabled aria-label="Send"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3.5M4 7l4-4 4 4"/></svg></button></div>
-          <div><div class="composer is-focus"><button class="btn tertiary icon" aria-label="Attach"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button><div class="ta filled">use the existing date library for the timestamps, please</div><button class="btn primary icon" aria-label="Send"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3.5M4 7l4-4 4 4"/></svg></button></div>
-            <div class="composer-foot"><span class="meta">Enter to send · Shift Enter for a new line</span><span class="est num">≈ 1.2k tokens</span></div></div>
-          <div class="composer" data-hue="coral"><button class="btn tertiary icon" aria-label="Attach"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button><div class="ta">Noor reads it after the current step</div><button class="btn secondary" style="gap:6px"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="4" width="8" height="8" rx="1.5"/></svg>Stop</button></div>
+          <div class="composer"><button class="btn tertiary icon" aria-label="Attach a file"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button><div class="ta">Message Noor</div><button class="btn ink icon send is-disabled" disabled aria-label="Send to Noor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button></div>
+          <div><div class="composer is-focus"><button class="btn tertiary icon" aria-label="Attach a file"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button><div class="ta filled">use the existing date library for the timestamps, please</div><button class="btn ink icon send" aria-label="Send to Noor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button></div>
+            <div class="comp-hint num">≈ 0.4k tokens · 0.01 % of your week</div></div>
+          <div class="composer" data-hue="coral"><button class="btn tertiary icon" aria-label="Attach a file"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></button><div class="ta">Message Noor · after this step</div><button class="btn secondary" style="gap:6px"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="4" width="8" height="8" rx="1.5"/></svg>Stop</button><button class="btn ink icon send is-disabled" disabled aria-label="Send to Noor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button></div>
         </div>
+        <p class="note">Fitts (fix 13): Send is the most frequent action, so it is a 40 px Ink circle with an 18 px arrow, inside the composer’s 6 px inset. It is Ink, not Cobalt: Send is constant, not the screen’s one decision. Stop is a 32 px pill beside it while the agent runs. The cost shows under the draft before you send.</p>
       </div>
     </div>
   </section>
@@ -564,7 +729,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
 
   <!-- ===================== TABS ===================== -->
   <section class="sec" id="tabs">
-    <div class="sec-h"><h2>Tabs and segmented</h2><p>Segmented switches views of one object (Screen, Routines, Settings). Underline tabs split a long page into sections. The selected state is white or Ink, never blue.</p></div>
+    <div class="sec-h"><h2>Tabs and segmented</h2><p>Segmented switches views of one object (Screen, Routines, Settings). Underline tabs split a long page into sections. The selected state is a raised thumb or Ink, never blue.</p></div>
     <div class="cols-2">
       <div class="board">
         <span class="cap-top">Segmented · selected, hover, focus, disabled</span>
@@ -618,13 +783,53 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
     </div>
   </section>
 
+  <!-- ===================== NAME AND FACE (v0.6) ===================== -->
+  <section class="sec" id="identity">
+    <div class="sec-h"><h2>Name and face <span class="tag action new">New in v0.6</span></h2><p>An agent’s face and name are one door to its profile and settings, Atlas’s too. The chevron says it opens; hovering the face lights the pill, so the two read as one control. The face is a pointer target only; the pill is the tab stop.</p></div>
+    <div class="board"><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px" id="idCells"></div>
+      <p class="note">One way in everywhere: the face, the name, or the last breadcrumb all open the same panel on Settings › Profile. A long name ellipsizes inside the pill; the pill never shrinks below its name’s first letters.</p></div>
+  </section>
+
   <!-- ===================== MESSAGES ===================== -->
   <section class="sec" id="messages">
-    <div class="sec-h"><h2>Messages</h2><p>Your bubbles take the agent’s tint; the agent’s are white on its wash. Every agent message carries its cost and a way to look inside. System lines are centred and quiet.</p></div>
+    <div class="sec-h"><h2>Messages</h2><p>Your bubbles take the agent’s tint; the agent’s sit on the surface over its wash. Every agent message carries its cost and a way to look inside. System lines are centred and quiet.</p></div>
     <div class="cols-2">
       <div class="chat" data-hue="coral" id="chatA"></div>
       <div class="chat" data-hue="coral" id="chatB"></div>
     </div>
+  </section>
+
+  <!-- ===================== @-MENTION PICKER (v0.6.1) ===================== -->
+  <section class="sec" id="mention">
+    <div class="sec-h"><h2>@-mention picker <span class="tag action new">New in v0.6.1</span></h2><p>Type @ in any composer and a small list of who’s reachable from that chat rises above it: face, name, title, status word. It filters as you type. ↑ ↓ move, Enter or Tab picks, a click picks, Esc closes. The pick is a chip in the draft and in the sent message.</p></div>
+    <div class="cols-3">
+      <div><div class="mn-stage" id="mnA"></div><span class="edge-cap">Team chat, just “@”: the 7 people in this chat. The list shows 6 and scrolls.</span></div>
+      <div><div class="mn-stage" data-hue="coral" id="mnB"></div><span class="edge-cap">Noor’s chat, “@ma”: names that start with it first (Maya), then names and titles that contain it (Omar).</span></div>
+      <div><div class="mn-stage" id="mnC"></div><span class="edge-cap">No match: it says so in plain words. Enter sends the text as typed.</span></div>
+    </div>
+    <div class="cols-2" style="margin-top:12px">
+      <div class="board"><span class="cap-top">Picked: the token is a chip in the draft; the hint names who replies before you send</span><div class="stack" style="gap:12px" id="mnPicked"></div></div>
+      <div class="chat" style="background:var(--bg-ground);align-content:start" id="mnSent"></div>
+    </div>
+    <div class="board" style="margin-top:12px">
+      <div class="mx" style="grid-template-columns:160px minmax(0,1fr);align-items:start">
+        <span class="rl">Who’s listed<span>reachable from this chat</span></span><span class="sub">Team chat: its members. An agent’s chat: that agent’s teammates. Home: anyone Atlas can bring in, grouped by team. Nobody outside the chat’s reach is offered, so a mention never quietly widens who sees the thread.</span>
+        <span class="rl">Order<span>while filtering</span></span><span class="sub">Names that start with what you typed, then names and titles that contain it. The highlighted row stays highlighted while it still matches.</span>
+        <span class="rl">After the pick<span>draft and message</span></span><span class="sub">The draft keeps plain text (<span class="mono">@Maya</span>) painted as a chip by a mirror behind the field, so undo, paste and IME still work. A mention on its own can’t be sent; the hint asks what you want. Sent, it is your words with the chip inline. A mention skips the router, so there is no “Bench picked” line; that line appears only when the router chose.</span>
+        <span class="rl">Screen readers<span>combobox pattern</span></span><span class="sub">A textarea keeps its textbox role (HTML doesn’t allow role=combobox on it), so it carries the combobox’s attributes: <span class="mono">aria-autocomplete="list"</span>, <span class="mono">aria-haspopup="listbox"</span>, <span class="mono">aria-controls</span> and <span class="mono">aria-activedescendant</span> pointing at the active <span class="mono">role="option"</span>. Opening announces the count.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BLURRED SCROLL EDGE (v0.6.1) ===================== -->
+  <section class="sec" id="edge">
+    <div class="sec-h"><h2>Blurred scroll edge <span class="tag action new">New in v0.6.1</span></h2><p>Older messages don’t stop at a hard line under a sticky hero or header. They soften into a short progressive blur and fade into the canvas. Scroll each sample.</p></div>
+    <div class="cols-3">
+      <div><div class="edge-demo is-cut" data-hue="coral"><div class="ed-scroll" tabindex="0" aria-label="Before: hard cut"></div></div><span class="edge-cap">Before (v0.6): a 16 px fade, so lines look cut off mid-word.</span></div>
+      <div><div class="edge-demo" data-hue="coral"><div class="ed-scroll" tabindex="0" aria-label="The blurred edge"></div></div><span class="edge-cap">v0.6.1: a 40 px strip, blur 6 px at the edge to 0 at its foot, over a fade to the wash.</span></div>
+      <div><div class="edge-demo is-flat" data-hue="coral"><div class="ed-scroll" tabindex="0" aria-label="Reduced transparency"></div></div><span class="edge-cap">Reduced transparency: the same edge as a plain fade, no blur.</span></div>
+    </div>
+    <p class="note">One strip per scroller, never a full-area blur: <span class="mono">backdrop-filter: blur(var(--edge-blur))</span> on a <span class="mono">var(--edge-h)</span> pseudo-element with a <span class="mono">mask-image</span> from opaque to transparent, over a gradient of the canvas colour. It appears only while something is under the edge (scrollTop &gt; 0). Works on both themes because the canvas colour is a role token.</p>
   </section>
 
   <!-- ===================== SIDEBAR ===================== -->
@@ -638,6 +843,17 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
         <p class="sub" style="margin-top:12px">States in order on the left: default, hover, selected, focus. On the right: working (typing), needs you, blocked, paused, and a long name truncated with an ellipsis.</p>
         <p class="sub" style="margin-top:12px">Group headers carry their actions as 24 px icon buttons (Dashboard, Team chat, New) and a visible “…” menu; the same menu opens on right-click.</p></div>
     </div>
+    <div class="row" style="align-items:flex-start;gap:16px;margin-top:12px">
+      <div class="side" id="sideT"></div>
+      <div class="board" style="flex:1;align-self:stretch"><span class="cap-top">Row with a title <span class="tag action new">New in v0.6</span></span><p class="sub">40 px, avatar 28 with its badge, the name in 15 and, after it, the agent’s optional short title in 12 Text 3. The title truncates first (it shrinks 100× faster than the name), so a long name still reads. No title is fine: Iris has none. Titles show in the expanded sidebar only; the collapsed rail is faces.</p>
+        <p class="sub" style="margin-top:12px">States in order: default, hover, selected (name in 600), focus, no title, and a long name with its title squeezed out.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== WHAT NEEDS YOU (v0.6) ===================== -->
+  <section class="sec" id="needs">
+    <div class="sec-h"><h2>What needs you <span class="tag action new">New in v0.6</span></h2><p>An overlay over whatever you’re looking at, anchored under the top bar’s amber count; close returns you where you were. Grouped Decide, Test, Answer. Ready to test (CR-007) says what to try, how, in order, and costs the time up front.</p></div>
+    <div class="nd-stage" id="ndStage"></div>
   </section>
 
   <!-- ===================== TICKETS ===================== -->
@@ -646,6 +862,19 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
     <div class="cols-2">
       <div class="board ground"><span class="cap-top">Open (top ticket, D-UI7) with the others collapsed</span><div class="tickets" id="ticketsA"></div></div>
       <div class="board ground"><span class="cap-top">Collapsed: default, hover, focus, resolved</span><div class="tickets" id="ticketsB"></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== AGENT PANEL (v0.6) ===================== -->
+  <section class="sec" id="panel">
+    <div class="sec-h"><h2>Agent panel <span class="tag action new">New in v0.6</span></h2><p>Closed by default; the screen icon opens it. It starts with a compact live preview of the agent’s screen (click to enter the full view), the context meter, then routines as compact rows: name, when, and the cost per run. A row opens to its figures.</p></div>
+    <div class="row" style="align-items:flex-start;gap:16px;flex-wrap:wrap" data-hue="coral">
+      <div class="ws-mock" id="wsA"></div>
+      <div class="ws-mock" id="wsB"></div>
+      <div class="board" style="flex:1 1 300px;min-width:0"><span class="cap-top">Anatomy</span>
+        <p class="sub">Preview: a 128 px thumbnail of the live diff (7 px mono, add and delete tints from the diff tokens), then the file, its +/− and the live word with a dot in the agent’s ink. Hover darkens the ring. With nothing on screen it is one quiet line, not an empty box.</p>
+        <p class="sub" style="margin-top:12px">Context: “Context”, a 4 px bar with your checkpoint tick and the hatched 90 % ceiling, the percent in 600. In the chat it joins the top-right tools only from 60 %.</p>
+        <p class="sub" style="margin-top:12px">Routine rows: name 13/600, when and ≈ cost a run in 12 Text 3, a switch on the right. Hover and open share the ground fill; an off routine’s name drops to Text 2. Left: default with one row hovered. Right: one row open, one off.</p></div>
     </div>
   </section>
 
@@ -667,6 +896,23 @@ html.rm *,html.rm *::before,html.rm *::after{animation:none!important;transition
     <div class="sec-h"><h2>Usage and context meters</h2><p>Bars at the true ratio with both ends labelled. The limit is a calm state with a time, not an alarm. The context meter draws your checkpoint and the fixed ceiling.</p></div>
     <div class="board"><span class="cap-top">Top-bar usage ring · normal, hover, getting close, limit reached</span><div class="row" style="gap:20px" id="rings"></div></div>
     <div class="cols-3" style="margin-top:12px" id="meterCards"></div>
+    <div class="board" style="margin-top:12px"><span class="cap-top">Context meter, compact <span class="tag action new">New in v0.6</span> · in the agent panel always; in the chat’s top-right only from 60 % (Tesler)</span><div class="row" style="gap:40px;align-items:center;flex-wrap:wrap" id="ctxRow"></div></div>
+  </section>
+
+  <!-- ===================== APP SETTINGS (v0.6) ===================== -->
+  <section class="sec" id="appset">
+    <div class="sec-h"><h2>Settings and Appearance <span class="tag action new">New in v0.6</span></h2><p>The sidebar footer is one button: your initial and the word Settings. No gear there: a gear means an agent’s settings. Appearance is a segmented choice that applies live: Dark (the default), Light, Match system.</p></div>
+    <div class="row" style="align-items:flex-start;gap:16px">
+      <div class="stack" style="gap:8px"><div class="foot-demo" id="footDemo"></div><span class="meta">Default, hover, selected (you’re in Settings), focus. Collapsed, it is the 28 px initial alone.</span></div>
+      <div class="board" style="flex:1;min-width:0">
+        <div class="set-g"><h4>Appearance</h4>
+          <div class="setrow"><div class="setrow-m"><div class="setrow-t">Theme</div><div class="setrow-d">Dark is the default. Applies at once, on every screen.</div></div><div class="seg" role="radiogroup" aria-label="Theme" id="themeSeg2"><button type="button" role="radio" data-theme-set="dark" aria-checked="true">Dark</button><button type="button" role="radio" data-theme-set="light" aria-checked="false">Light</button><button type="button" role="radio" data-theme-set="system" aria-checked="false">Match system</button></div></div>
+          <div class="setrow"><div class="setrow-m"><div class="setrow-t">Sound</div><div class="setrow-d">Needs you, Done and Handoff. Only when Bench isn’t the window you’re in.</div></div><button class="switch" role="switch" aria-checked="true" aria-label="Sound" data-live><span class="sw"></span></button></div>
+          <div class="setrow"><div class="setrow-m"><div class="setrow-t">Reduce motion</div><div class="setrow-d">Follows your system setting. The same changes arrive at once.</div></div><span class="meta">Follows Windows</span></div>
+        </div>
+        <p class="note">The segmented control here is live: it switches this page too. Match system resolves to Dark or Light from your OS.</p>
+      </div>
+    </div>
   </section>
 
   <!-- ===================== TOASTS ===================== -->
@@ -785,7 +1031,7 @@ function glyph(st){const g={idle:'<circle cx="6" cy="6" r="2.6" fill="none" stro
 function av(id,size,o={}){const a=typeof id==="string"?CAST[id]:id;const st=o.status;const b=size>=64?20:size>=40?16:size>=32?14:12;const label=a.name+(st?` · ${ST[st].l}`:"");const expr=o.expr||(st?ST[st].e:"calm");
   return `<span class="av${o.hero?" hero":""}${st==="paused"?" is-paused":""}" role="img" aria-label="${label}" title="${label}" style="--s:${size}px;--b:${b}px">${avatarSVG(a,{hero:o.hero,expr})}${st&&size>=24&&!o.hero?`<span class="bdg ${ST[st].c}">${glyph(st)}</span>`:""}</span>`;}
 /* Quartet (B-2, decided 23 Oct), one colour; the same paths as brand/logo/mark.svg */
-const mark=s=>`<svg viewBox="0 0 100 100" width="${s}" height="${s}" aria-hidden="true" focusable="false"><g fill="#15171d"><circle cx="26" cy="26" r="20"/><path d="M74 10 L91 43 L57 43 Z" stroke="#15171d" stroke-width="6" stroke-linejoin="round"/><rect x="7" y="55" width="38" height="38" rx="12"/><path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/></g></svg>`;
+const mark=s=>`<svg viewBox="0 0 100 100" width="${s}" height="${s}" aria-hidden="true" focusable="false"><g fill="currentColor"><circle cx="26" cy="26" r="20"/><path d="M74 10 L91 43 L57 43 Z" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><rect x="7" y="55" width="38" height="38" rx="12"/><path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/></g></svg>`;
 const EYES='<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 6.1)" fill="currentColor"/><rect x="8.2" y="2.5" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 6.1)" fill="currentColor"/></svg>';
 const CHECK='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg>';
 const CHEV='<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5L8 10l3.5-3.5"/></svg>';
@@ -799,16 +1045,24 @@ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim
 
 $("#tocBrand").innerHTML = mark(24)+`<span class="wm">bench</span>`;
 
-/* ---------- foundations ---------- */
-const neutrals=[["Ink","--porcelain-900","Text 1, the mark"],["Text 2","--porcelain-700","Secondary text"],["Text 3","--porcelain-600","Meta, placeholders"],["Control edge","--porcelain-500","Input, switch edges"],["Porcelain 100","--porcelain-100","Sunken, tracks"],["Porcelain","--porcelain-50","The ground"]];
-$("#neutralSw").innerHTML = neutrals.map(([n,t,u])=>{const h=css(t);const on=lum(h)>.3;return `<div class="swatch"><i style="background:${h}"></i><div><b>${n}</b><span class="meta num">${h} · ${t.replace("--","")}</span><span class="meta">${u}</span><span class="meta">${on?"Ink on it":"on white"} ${aa(on?cr(h,"#15171d"):cr(h,"#ffffff"))}${on?"":" · on ground "+aa(cr(h,"#f3f4f7"))}</span></div></div>`}).join("");
-const roles=[["Cobalt","--cobalt-500","The one action · white on it"],["Cobalt tint","--cobalt-50","Selected, info · Cobalt text on it"],["Done","--green-700","Ink on white · on its tint"],["Needs you","--amber-700","Ink on white · on its tint"],["Error","--red-700","Ink on white · on its tint"],["Needs-you fill","--amber-500","Badges · Ink on it"]];
-$("#roleSw").innerHTML = roles.map(([n,t,u],i)=>{const h=css(t);let r;
-  if(i===0) r=`${aa(cr(h,"#ffffff"))}`; else if(i===1) r=`${aa(cr(css("--cobalt-500"),h))}`; else if(i===5) r=`${aa(cr(h,"#15171d"))}`;
-  else {const tint=css(t.replace("700","50"));r=`${aa(cr(h,"#ffffff"))} · ${aa(cr(h,tint))}`}
-  return `<div class="swatch"><i style="background:${h}"></i><div><b>${n}</b><span class="meta num">${h}</span><span class="meta">${u}</span><span class="meta">${r}</span></div></div>`}).join("");
-$("#hueTable").innerHTML = `<div class="hue-row hd"><span>Hue</span><span>base</span><span>light</span><span>deep</span><span>ink</span><span>tint</span><span>wash</span><span>In use</span><span>ink / white</span><span>ink / tint</span></div>`+
-  HUE_ORDER.map(h=>{const P=HUE[h];const who=Object.values(CAST).find(c=>c.hue===h);return `<div class="hue-row" data-hue="${h}"><b class="sub strong" style="color:var(--text-1)">${P.n}</b>${["base","light","deep","ink","tint","wash"].map(k=>`<i style="background:var(--hue-${h}-${k})" title="${P[k]}"></i>`).join("")}<span><span class="mention">${av(who,16)}${who.name}</span></span><span class="num">${aa(cr(P.ink,"#ffffff"))}</span><span class="num">${aa(cr(P.ink,P.tint))}</span></div>`}).join("");
+/* ---------- foundations: read from the tokens for whichever theme is on ---------- */
+/* Any CSS colour (hex, var(), color-mix) → #rrggbb, via a probe element, so ratios are real on both themes */
+const PROBE=document.createElement("i");PROBE.style.display="none";document.body.appendChild(PROBE);
+function hexOf(v){PROBE.style.color="";PROBE.style.color=v;const c=getComputedStyle(PROBE).color;let n=(c.match(/[\d.]+/g)||[0,0,0]).map(Number);
+  if(c.indexOf("color(")===0)n=n.slice(0,3).map(x=>x*255);return "#"+n.slice(0,3).map(x=>Math.round(Math.max(0,Math.min(255,x))).toString(16).padStart(2,"0")).join("")}
+function paintColour(){
+  const dark=document.documentElement.getAttribute("data-theme")!=="light",surf=hexOf("var(--bg-surface)"),gr=hexOf("var(--bg-ground)"),t1=hexOf("var(--text-1)");
+  const sw=(n,h,u,r)=>`<div class="swatch"><i style="background:${h}"></i><div><b>${n}</b><span class="meta num">${h}</span><span class="meta">${u}</span><span class="meta">${r}</span></div></div>`;
+  const neutrals=[["Text 1","--text-1",dark?"Soft light, not white":"Ink: text, the mark"],["Text 2","--text-2","Secondary text"],["Text 3","--text-3","Meta, placeholders"],["Control edge","--line-control","Inputs, switch edges"],["Sunken","--bg-sunken","Tags, counts, tracks"],["Ground","--bg-ground",dark?"Graphite: the canvas":"Porcelain: the canvas"]];
+  $("#neutralSw").innerHTML=neutrals.map(([n,t,u],i)=>{const h=hexOf(`var(${t})`);return sw(n,h,u,i<3?`surface ${aa(cr(h,surf))} · ground ${aa(cr(h,gr))}`:i===3?`on surface ${aa(cr(h,surf))}`:`Text 1 on it ${aa(cr(t1,h))}`)}).join("");
+  const roles=[["Action","--action","The one action · its label on it","--text-on-action"],["Action text","--action-text","Links on hover, focus ring",null],["Done","--ok-ink","On the surface · on its tint","--ok-tint"],["Needs you","--attn-ink","On the surface · on its tint","--attn-tint"],["Error","--danger-ink","On the surface · on its tint","--danger-tint"],["Needs-you fill","--attn-fill","Count badges · Ink on it","--on-attn"]];
+  $("#roleSw").innerHTML=roles.map(([n,t,u,p],i)=>{const h=hexOf(`var(${t})`);let r;
+    if(i===0||i===5)r=aa(cr(hexOf(`var(${p})`),h));else if(i===1)r=`on surface ${aa(cr(h,surf))}`;else r=`${aa(cr(h,surf))} · ${aa(cr(h,hexOf(`var(${p})`)))}`;
+    return sw(n,h,u,r)}).join("");
+  $("#hueTable").innerHTML=`<div class="hue-row hd"><span>Hue</span><span>base</span><span>light</span><span>deep</span><span>ink</span><span>tint</span><span>wash</span><span>In use</span><span>ink / surface</span><span>ink / tint</span></div>`+
+    HUE_ORDER.map(h=>{const P=HUE[h],who=Object.values(CAST).find(c=>c.hue===h),ink=hexOf(`var(--hue-${h}-ink)`),tint=hexOf(`var(--hue-${h}-tint)`);return `<div class="hue-row" data-hue="${h}"><b class="sub strong" style="color:var(--text-1)">${P.n}</b>${["base","light","deep","ink","tint","wash"].map(k=>`<i style="background:var(--hue-${h}-${k})" title="${hexOf(`var(--hue-${h}-${k})`)}"></i>`).join("")}<span><span class="mention" data-hue="${h}">${av(who,16)}${who.name}</span></span><span class="num">${aa(cr(ink,surf))}</span><span class="num">${aa(cr(ink,tint))}</span></div>`}).join("");
+}
+paintColour();
 
 const types=[["Display","--fs-display","--lh-display","--ls-display",600,"In plain sight","First run, brand only"],["Headline","--fs-headline","--lh-headline","--ls-headline",600,"What needs you","The one h1 per screen"],["Title","--fs-title","--lh-title","--ls-title",600,"Noor’s screen","Pane, dialog, open ticket"],["Body","--fs-body","--lh-body","--ls-body",400,"Noor wants to run the full suite before she opens the pull request.","Body, chat, inputs, names (600)"],["Sub","--fs-sub","--lh-sub","--ls-sub",400,"Runs 214 tests, about 3 minutes · stays inside bench/","Snippets, help, buttons (600)"],["Meta","--fs-meta","--lh-meta","--ls-meta",400,"09:04 · 1.8k tokens · 0.06 % of your week","Times, tags, costs"]];
 $("#typeRows").innerHTML = types.map(([n,f,l,s,w,t,u],i)=>`<div class="type-row" style="${i===0?"border-top:0":""}"><span class="meta"><b class="sub strong" style="color:var(--text-1)">${n}</b><br><span class="num">${css(f)} / ${css(l)} · ${w}</span></span><span class="num" style="font-family:${parseInt(css(f))>=20?"var(--font-display)":"var(--font-text)"};font-size:var(${f});line-height:var(${l});letter-spacing:var(${s});font-weight:${w}">${t}</span><span class="meta">${u}</span></div>`).join("");
@@ -912,7 +1166,7 @@ $("#approvals").innerHTML = `
   </div>`;
 
 /* ---------- meters ---------- */
-const ring=(p,c)=>{const r=7,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="${r}" fill="none" stroke="var(--porcelain-150)" stroke-width="2.5"/><circle cx="9" cy="9" r="${r}" fill="none" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="${(C*p).toFixed(2)} ${C.toFixed(2)}" transform="rotate(-90 9 9)"/></svg>`};
+const ring=(p,c)=>{const r=7,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="${r}" fill="none" style="stroke:rgb(var(--ink-rgb) / .14)" stroke-width="2.5"/><circle cx="9" cy="9" r="${r}" fill="none" style="stroke:${c}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="${(C*p).toFixed(2)} ${C.toFixed(2)}" transform="rotate(-90 9 9)"/></svg>`};
 $("#rings").innerHTML = `<span class="usage num">${ring(.41,"var(--text-1)")}41 % of your week</span><span class="usage is-hover num">${ring(.41,"var(--text-1)")}41 % of your week</span><span class="usage num">${ring(.84,"var(--attn-fill)")}84 % · getting close</span><span class="usage num">${ring(1,"var(--text-1)")}<span><b>Paused</b> until Mon 09:00</span></span>`;
 $("#meterCards").innerHTML = `
   <div class="meter"><div class="top"><span class="sub">This week</span><span class="meta">Resets Mon 26 Oct, 09:00</span></div><div class="row" style="justify-content:space-between;align-items:baseline"><span class="big num">41 %</span><span class="sub">about 59 % headroom</span></div>
@@ -936,6 +1190,104 @@ $("#empties").innerHTML = `
     <div><span class="cap-top">Loading · rows keep their pitch</span><div class="stack">${[70,52,64].map(w=>`<div class="row" style="gap:10px"><span class="skel" style="width:32px;height:32px;border-radius:50%"></span><div class="stack" style="gap:6px;flex:1"><span class="skel" style="width:${w}%;height:14px"></span><span class="skel" style="width:${w-20}%;height:12px"></span></div></div>`).join("")}</div></div>
     <div><span class="cap-top">Error inside the block</span><div class="inline-alert danger"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.4M8 10.6v.2" stroke-linecap="round"/></svg><span>Couldn’t load the trace. Last good at 09:14.</span><button class="btn tertiary sm" style="color:var(--danger-ink)">Retry</button></div></div>
   </div>`;
+
+/* ==================== v0.6 and v0.6.1 components ==================== */
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const IP={plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>',chevD:'<path d="m6 9 6 6 6-6"/>',up:'<path d="M12 19V5M6 11l6-6 6 6"/>'};
+IP.gear=(()=>{const pt=(r,d)=>{const t=(d-90)*Math.PI/180;return (12+r*Math.cos(t)).toFixed(2)+","+(12+r*Math.sin(t)).toFixed(2)};const p=[];for(let i=0;i<6;i++){const a=i*60;p.push(pt(7.3,a-19),pt(9.8,a-10),pt(9.8,a+10),pt(7.3,a+19))}return `<polygon points="${p.join(" ")}"/><circle cx="12" cy="12" r="2.8"/>`})();
+const ic=(n,s=16)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${n==="up"?2:1.5}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IP[n]}</svg>`;
+const TT={atlas:"Main agent",maya:"PM",omar:"BA lead",lina:"BA",sam:"UX/UI",karim:"Tech lead",noor:"Developer",jade:"QA",lumen:"Release notes"};
+const mentionChip=id=>`<span class="mention" data-hue="${CAST[id].hue}">${av(id,16)}${CAST[id].name}</span>`;
+
+/* Name and face */
+const idCell=(id,cls,sub,cap,expr)=>`<div class="stack" style="gap:8px"><div class="id-demo" data-hue="${CAST[id].hue}"><span class="id-face" aria-hidden="true">${av(id,72,{hero:true,expr})}</span><span class="nametag ${cls}" role="button" tabindex="0" aria-label="${CAST[id].name}: profile and settings"><span class="id-nm">${CAST[id].name}</span>${ic("chevD",14)}</span>${sub}</div><span class="meta">${cap}</span></div>`;
+const noorLine=`<div class="statusline"><span class="bdg working">${glyph("working")}</span><span>Working · running pnpm test chat</span></div>`;
+$("#idCells").innerHTML=idCell("noor","",noorLine,"Default: the face, the name pill with its chevron, one status line.","focused")+
+  idCell("noor","is-hover",noorLine,"Hover, on the face or the pill: the pill lifts and its chevron darkens.","focused")+
+  idCell("noor","is-focus",noorLine,"Focus: the pill is the tab stop; Enter opens Settings › Profile.","focused")+
+  idCell("atlas","",`<span class="id-sub">Your main agent</span>`,"Home: Atlas, with one quiet line on what it is.","calm");
+
+/* @-mention picker: the same markup the prototype builds */
+const ATTACH=`<button class="btn tertiary icon" aria-label="Attach a file">${ic("plus")}</button>`;
+const SEND=dis=>`<button class="btn ink icon send${dis?" is-disabled":""}"${dis?" disabled":""} aria-label="Send">${ic("up",18)}</button>`;
+const comp=(inner,dis,pop="")=>`<div class="composer is-focus">${ATTACH}<div class="ta filled">${inner}</div>${SEND(dis)}${pop}</div>`;
+const KEYS=`<div class="mn-keys" aria-hidden="true"><span><span class="kbd">↑</span><span class="kbd">↓</span> move</span><span><span class="kbd">Enter</span> pick</span><span><span class="kbd">Esc</span> close</span></div>`;
+const mnRow=(id,st,sel,cls="")=>`<div class="mn-opt ${cls}" role="option" aria-selected="${sel}">${av(id,24)}<span class="nmt"><b class="ag-nm">${CAST[id].name}</b>${TT[id]?`<span class="ag-ttl">${TT[id]}</span>`:""}</span><span class="mn-st">${ST[st].l}</span></div>`;
+const mnPop=(cap,body)=>`<div class="mn-pop">${`<div class="mn-cap">${cap}</div>`}${body}${KEYS}</div>`;
+const CARET=`<span class="caret" aria-hidden="true"></span>`;
+const TEAM=[["maya","working"],["omar","thinking"],["lina","idle"],["sam","working"],["karim","working"],["noor","working"],["jade","blocked"]];
+$("#mnA").innerHTML=comp("@"+CARET,false,mnPop("Who can reply in this chat · 7",`<div class="mn-list" role="listbox" aria-label="Mention someone">${TEAM.map(([id,st],i)=>mnRow(id,st,i===0,i===2?"is-hover":"")).join("")}</div>`))+`<div class="comp-hint">Pick who replies</div>`;
+$("#mnB").style.background="var(--agent-wash)";
+$("#mnB").innerHTML=comp("check with @ma"+CARET,false,mnPop("Noor’s teammates on Bench",`<div class="mn-list" role="listbox" aria-label="Mention someone">${mnRow("maya","working",true)+mnRow("omar","thinking",false)}</div>`))+`<div class="comp-hint num">≈ 0.3k tokens · 0.01 % of your week</div>`;
+$("#mnC").innerHTML=comp("@zed"+CARET,false,mnPop("Who can reply in this chat · 7",`<p class="mn-none">No one called “zed” in this chat.</p>`))+`<div class="comp-hint">Pick who replies</div>`;
+const HL=`<mark class="mn-hl" data-hue="mint">@Maya</mark>`;
+$("#mnPicked").innerHTML=`<div>${comp(HL+" can you check the onboarding copy before I test it?"+CARET,false)}<div class="comp-hint">Maya replies · ≈ 0.3k tokens to route</div></div>
+  <div>${comp(HL+" "+CARET,true)}<div class="comp-hint">Add what you want Maya to do</div></div>`;
+$("#mnSent").innerHTML=`<span class="cap-top" style="margin:0">Sent: your words with the chip inline, then the reply. No “Bench picked” line: nothing was routed.</span>
+  <div class="mine"><div class="bubble" style="background:var(--bg-sunken)">${mentionChip("maya")} can you check the onboarding copy before I test it?</div><span class="receipt">${EYES}Seen by Maya · 09:21</span></div>
+  <div class="msg" data-hue="mint">${av("maya",32)}<div><div class="bubble">on it. i’ll check and come back to you here before 11:00.</div>${meta("09:21","0.9k","0.03")}</div></div>
+  <div class="sys">${av("maya",16)}Bench picked Maya · she leads Bench <span class="meta">(only when you didn’t mention anyone)</span></div>`;
+
+/* Blurred scroll edge: three live samples, each scrolled so a message sits under the edge */
+const edMsgs=[["mine","Noor, use the existing date library for the timestamps, please. No new dependency."],["msg","done. date-fns swapped in, 41 lines removed, formatTime.ts is now a thin wrapper, and no dependency was added."],["mine","Good. Keep Stop in the composer for now; Maya’s debate decides the rest."],["msg","the Stop button now sits in the composer and replaces Send while i’m running."],["mine","Can you run the suite once more on Windows?"],["msg","running it now. 12 of 12 runs under 2 s so far."]];
+document.querySelectorAll(".ed-scroll").forEach(s=>{
+  s.innerHTML=`<div class="ed-hero"><span aria-hidden="true">${av("noor",48,{hero:true,expr:"focused"})}</span><span class="nametag"><span class="id-nm">Noor</span>${ic("chevD",14)}</span></div><div class="ed-msgs">${edMsgs.map(([k,t])=>k==="mine"?`<div class="mine"><div class="bubble">${t}</div></div>`:`<div class="msg">${av("noor",32)}<div><div class="bubble">${t}</div></div></div>`).join("")}</div>`;
+  const sync=()=>s.classList.toggle("is-scrolled",s.scrollTop>2);
+  s.addEventListener("scroll",sync,{passive:true});
+  s.scrollTop=150;sync();
+});
+
+/* Sidebar rows with titles */
+const trow=(id,st,snip,cls="",name)=>`<div class="srow v06 ${cls}" tabindex="-1">${av(id,28,{status:st})}<div style="min-width:0"><div class="n"><span class="nmt"><b class="ag-nm">${name||CAST[id].name}</b>${TT[id]?`<span class="ag-ttl">${TT[id]}</span>`:""}</span></div><div class="s">${snip}</div></div></div>`;
+$("#sideT").innerHTML=trow("maya","working","planning Sprint 2 follow-ups")+trow("karim","working","starting S1-6 SQLite persistence","is-hover")+trow("noor","working","running pnpm test chat","is-selected")+trow("omar","thinking","8 questions on memory filters","is-focus")+trow("iris","idle","Monday’s plan is ready when you are")+trow("lumen","idle","first draft due Friday","","Lumen, release notes and changelog writer");
+
+/* What needs you, with Ready to test open */
+$("#ndStage").innerHTML=`<div class="nd-fake" aria-hidden="true"><span class="skel" style="width:30%;height:28px"></span><span class="skel" style="width:58%;height:14px"></span><span class="skel" style="width:46%;height:14px"></span><span class="skel" style="width:100%;height:160px;border-radius:14px"></span><span class="skel" style="width:100%;height:120px;border-radius:14px"></span></div><div class="nd-scrim"></div>
+  <div class="needs-ov" role="dialog" aria-label="What needs you (sample)"><div class="nd-h"><h3>What needs you</h3><span class="count attn num">4</span><button class="btn tertiary icon" aria-label="Close What needs you">${ic("x")}</button></div>
+  <div class="nd-body"><div class="nd-grp">Decide <span>2</span></div>
+    ${tclosed("jade","QA-3 is blocked: E2E failed twice","",`<span class="tag ink">Blocked</span>`)}${tclosed("jade","Jade asks to delete e2e/legacy/","",`<span class="tag risk">Deletes</span>`)}
+    <div class="nd-grp">Test <span>1</span></div>
+    <div class="ticket open" aria-expanded="true">${av("noor",40,{status:"waiting"})}<div><div class="head"><h3>The Stop button is ready for you to try</h3><span class="meta">Noor · S1-4 · Bench · 2 min</span></div>
+      <div class="body"><p class="sub" style="color:var(--text-2)">Stop now sits in the composer and takes Send’s place while an agent runs. About 3 minutes; your own team isn’t touched.</p>
+      <div class="try"><b>How to test it</b><ol><li>Start the test build. It opens with a sample team.</li><li>Ask Noor something long, then press Stop while she answers.</li><li>Check she stops within 2 s and says what she kept.</li></ol></div>
+      <div class="row" style="gap:8px"><button class="btn primary lg">Start testing <span style="font-weight:400">· about 3 min</span></button><button class="btn tertiary">Later today</button></div>
+      <span class="meta">The full suite passed on its own at 09:12: 214 of 214.</span></div></div></div>
+    <div class="nd-grp">Answer <span>1</span></div>${tclosed("omar","Omar has 8 questions for you","",`<span class="tag neutral">Questions</span>`)}</div>
+  <div class="nd-f"><span>Merges, tests and runs in granted folders happen by themselves; they’re in the trace.</span></div></div>`;
+
+/* Agent panel */
+const MINI=['  const [text, setText] = useState("");','  const busy = run.state === "running";','-  return (','-    <form onSubmit={submit} className="composer">','+  const stop = () => run.stop({ reason: "client" });','+','+  return (','+    <form className="composer" aria-busy={busy}>','      <TextArea value={text} onChange={setText} />','-      <SendButton disabled={!text} />','+      {busy ? (','+        <StopButton onClick={stop} label="Stop Noor" />'];
+const miniHTML=MINI.map(l=>`<div class="${l[0]==="+"?"a":l[0]==="-"?"r":""}">${esc(l)}</div>`).join("");
+const wsHead=nm=>`<div class="ws-head"><span class="grow"></span><button class="btn tertiary icon" aria-label="${nm}’s settings">${ic("gear")}</button><button class="btn tertiary icon" aria-label="Close the panel">${ic("x")}</button></div>`;
+const wsCtx=p=>`<div class="ws-ctx"><span>Context</span><span class="bar" role="img" aria-label="Context ${p} percent used; checkpoint at 70 percent"><i style="width:${p}%"></i><span class="mark" style="left:70%"></span><span class="ceiling" style="width:10%"></span></span><b class="num">${p} %</b></div>`;
+const rtRow=(name,when,on,cls="",more="")=>`<li class="rt-row ${cls}"><div class="rt-top"><span class="rt-name"><b>${name}</b><span class="rt-when">${when}</span></span><button class="switch" role="switch" aria-checked="${on}" aria-label="${name}"><span class="sw"></span>${on?"On":"Off"}</button></div>${more}</li>`;
+const rtHead=`<div class="rt-head"><h4>Routines</h4><button class="btn tertiary sm">${ic("plus",14)}New</button></div>`;
+$("#wsA").innerHTML=wsHead("Noor")+`<button class="scr-prev" aria-label="Open Noor’s screen: Composer.tsx, Working"><span class="scr-thumb" aria-hidden="true"><span class="mini">${miniHTML}</span></span><span class="scr-cap"><span class="mono">Composer.tsx</span><span class="plus">+9</span><span class="minus">−3</span><span class="scr-live"><i></i>Working</span></span></button>`+wsCtx(34)+rtHead+
+  `<ul class="rt-list">${rtRow("Morning status","Every day at 08:00 · ≈ 0.04 % a run",true)+rtRow("Dependency check","Mondays at 09:00 · ≈ 0.3 % a run",true,"is-hover")+rtRow("Friday PR digest","Fridays at 16:00 · ≈ 0.1 % a run",false,"is-off")}</ul>`;
+$("#wsB").dataset.hue="aqua";
+$("#wsB").innerHTML=wsHead("Iris")+`<p class="ws-quiet" style="margin-top:4px">Nothing on Iris’s screen right now.</p>`+wsCtx(18)+rtHead+
+  `<ul class="rt-list">${rtRow("Morning briefing","Weekdays at 08:00 · ≈ 0.1 % a run",true,"is-open",`<div class="rt-more"><div class="figs num"><div><span class="meta">Next run</span><b>Fri 08:00</b></div><div><span class="meta">Last run</span><b>Thu · 0.1 %</b></div><div><span class="meta">Estimate</span><b>≈ 0.1 % a run</b></div></div><div class="row" style="gap:6px"><button class="btn secondary sm">Run now</button><button class="btn tertiary sm">Edit</button></div></div>`)+rtRow("Week in review","Fridays at 17:00 · ≈ 0.2 % a run",false,"is-off")}</ul>`;
+
+/* Compact context meter */
+$("#ctxRow").innerHTML=`<div class="stack" style="gap:6px;width:320px">${wsCtx(34).replace('class="ws-ctx"','class="ws-ctx" style="margin:0"')}<span class="meta">In the panel · always</span></div>
+  <div class="stack" style="gap:6px"><span class="ctx">Context <span class="bar" role="img" aria-label="Context 64 percent used; checkpoint at 70 percent"><i style="width:64%"></i><span class="mark" style="left:70%"></span><span class="ceiling" style="width:10%"></span></span><b class="num">64 %</b></span><span class="meta">In the chat’s top-right · from 60 %</span></div>`;
+
+/* App Settings footer button */
+const footBtn=cls=>`<button type="button" class="foot-btn ${cls}"><span class="me-av" aria-hidden="true">M</span><span>Settings</span></button>`;
+$("#footDemo").innerHTML=footBtn("")+footBtn("is-hover")+footBtn("is-selected")+footBtn("is-focus");
+
+/* ---------- theme: dark first, Light one click away (both switches stay in step) ---------- */
+let THEME_PREF=document.documentElement.getAttribute("data-theme");
+function syncThemeSegs(){const t=document.documentElement.getAttribute("data-theme");
+  document.querySelectorAll("#themeSeg [data-theme-set]").forEach(b=>b.setAttribute("aria-checked",b.dataset.themeSet===t));
+  document.querySelectorAll("#themeSeg2 [data-theme-set]").forEach(b=>b.setAttribute("aria-checked",b.dataset.themeSet===THEME_PREF));}
+function setTheme(p){THEME_PREF=p;const t=p==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p;
+  document.documentElement.setAttribute("data-theme",t);try{sessionStorage.setItem("bench-gallery-theme",t)}catch(e){/* storage blocked */}
+  syncThemeSegs();paintColour();}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-theme-set]");if(b)setTheme(b.dataset.themeSet)});
+document.addEventListener("keydown",e=>{const b=e.target.closest&&e.target.closest("[role=radiogroup] [role=radio]");if(!b||(e.key!=="ArrowRight"&&e.key!=="ArrowLeft"))return;
+  const all=[...b.parentElement.querySelectorAll("[role=radio]")],n=all[(all.indexOf(b)+(e.key==="ArrowRight"?1:all.length-1))%all.length];e.preventDefault();n.focus();n.click()});
+syncThemeSegs();
 
 /* ---------- live behaviour ---------- */
 document.querySelectorAll('[data-live]').forEach(s=>s.addEventListener("click",()=>s.setAttribute("aria-checked",s.getAttribute("aria-checked")!=="true")));

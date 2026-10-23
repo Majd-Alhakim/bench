@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>bench · UI direction v0.6 · dark first</title>
+<title>bench · UI direction v0.6.1 · dark first</title>
 <script>
 /* Dark first (client, 23 Oct). The theme is set before the first paint so nothing flashes.
    Pref: "dark" (default) · "light" · "system". Kept for this browser tab only, so a fresh load is always dark;
@@ -845,7 +845,7 @@ textarea.inp{height:auto;padding:10px 12px;line-height:22px;resize:vertical}
 /* The hero is sticky. Its own box is solid wash, so nothing that scrolls under it can show through the
    status line (the v0.3-partial bug); the fade lives below the box, over the messages, not under the text. */
 .hero-wrap{position:sticky;top:0;z-index:3;padding:14px 0 12px;text-align:center;background:var(--agent-wash)}
-.hero-wrap::after{content:"";position:absolute;left:0;right:0;top:100%;height:16px;background:linear-gradient(var(--agent-wash),transparent);pointer-events:none}
+/* v0.6.1: the strip under the hero is the blurred scroll edge (see "blurred scroll edge" below), not a hard cut */
 .nametag{display:inline-block;max-width:calc(100% - 48px);height:26px;line-height:26px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:top;margin-top:4px;padding:0 12px;border-radius:999px;background:var(--bg-surface);box-shadow:var(--elev-1);color:var(--agent-ink);font-size:15px;font-weight:600}
 .statusline{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;font-size:13px;line-height:18px;color:var(--text-2);transition:opacity var(--dur-short) ease}
 .statusline.swap{opacity:0}
@@ -1344,6 +1344,49 @@ table.spec td{padding:10px 12px 10px 0;box-shadow:inset 0 -1px 0 var(--line-subt
 /* Theme preview in Settings › Appearance */
 .theme-note{margin-top:2px;font-size:12px;line-height:16px;color:var(--text-3)}
 
+/* ---------- v0.6.1 · @-mention picker and the blurred scroll edge (client, 23 Oct) ---------- */
+:root{--edge-h:40px;--edge-blur:6px}
+.composer{position:relative}
+/* The draft field. A mirror behind the textarea paints each resolved @mention as a tinted pill under its letters,
+   so the token reads as a chip while you type and stays plain, editable text (undo, paste, IME all still work). */
+.mn-field{position:relative;flex:1;min-width:0;display:flex}
+.mn-field>textarea{position:relative;z-index:1;scrollbar-gutter:stable}
+.mn-mirror{position:absolute;inset:0;z-index:0;overflow:hidden;scrollbar-gutter:stable;padding:7px 4px;font-size:15px;line-height:22px;white-space:pre-wrap;overflow-wrap:break-word;color:transparent;pointer-events:none}
+.mn-hl{border-radius:6px;background:var(--agent-tint);box-shadow:0 0 0 2px var(--agent-tint);color:transparent}
+/* The picker rises out of the composer, aligned with the text. Only who's reachable from this chat is listed. */
+.mn-pop{position:absolute;z-index:40;left:40px;bottom:calc(100% + 8px);width:min(320px,calc(100% - 48px));padding:6px;background:var(--bg-raised);border-radius:var(--r-md);corner-shape:var(--corner);box-shadow:var(--elev-3);transform-origin:24px 100%}
+.mn-pop.anim{animation:mnIn var(--dur-short) var(--ease-out)}
+.mn-cap{padding:4px 8px 6px;font-size:12px;line-height:16px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mn-list{position:relative;display:grid;gap:2px;max-height:calc(6 * 42px);overflow-y:auto;overscroll-behavior:contain}
+.mn-grp{padding:8px 8px 2px;font-size:12px;line-height:16px;font-weight:600;color:var(--text-3)}
+.mn-grp:first-child{padding-top:0}
+.mn-opt{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:40px;padding:6px 10px 6px 8px;border-radius:var(--r-in);corner-shape:var(--corner);cursor:pointer;transition:background-color var(--dur-micro) ease}
+.mn-opt:hover{background:var(--state-hover)}
+.mn-opt[aria-selected="true"]{background:var(--state-selected)}
+.mn-opt .ag-nm{font-size:13px;line-height:18px;font-weight:600}
+.mn-st{font-size:12px;line-height:16px;color:var(--text-3);white-space:nowrap}
+.mn-none{padding:8px 8px 10px;font-size:13px;line-height:18px;color:var(--text-2)}
+.mn-keys{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px;padding:8px 8px 2px;box-shadow:inset 0 1px 0 var(--line-subtle);font-size:12px;line-height:16px;color:var(--text-3)}
+.mn-keys .kbd{height:18px;padding:0 5px;margin-right:2px}
+@keyframes mnIn{from{opacity:0;transform:translateY(6px) scale(.98)}}
+/* Blurred scroll edge. Older messages don't stop at a hard line under a header or the sticky hero: they soften into a
+   short progressive blur and fade into the canvas. One 40 px strip per scroller (never a full-area blur), shown only
+   while something is actually under the edge. The mask makes the blur strongest at the edge and zero at its foot. */
+.chatroom{--edge-bg:var(--agent-wash)}
+.tc-conv{--edge-bg:var(--bg-ground)}
+.chat-scroll::before,.hero-wrap::after{content:"";pointer-events:none;height:var(--edge-h);opacity:0;transition:opacity var(--dur-short) ease;
+  background:linear-gradient(var(--edge-bg),color-mix(in srgb,var(--edge-bg) 45%,transparent) 40%,transparent 80%);
+  -webkit-backdrop-filter:blur(var(--edge-blur));backdrop-filter:blur(var(--edge-blur));
+  -webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent)}
+.chat-scroll::before{position:sticky;top:0;z-index:4;display:block;flex:none;margin-bottom:calc(var(--edge-h) * -1)}
+.hero-wrap::after{position:absolute;left:0;right:0;top:100%}
+.chat-scroll:has(>.hero-wrap)::before{display:none}
+.chat-scroll.is-scrolled::before,.chat-scroll.is-scrolled>.hero-wrap::after{opacity:1}
+/* Reduced transparency: the same edge as a plain fade, no blur */
+@media (prefers-reduced-transparency:reduce){
+  .chat-scroll::before,.hero-wrap::after{-webkit-backdrop-filter:none;backdrop-filter:none;-webkit-mask-image:none;mask-image:none;background:linear-gradient(var(--edge-bg) 20%,transparent)}
+}
+
 /* ---------- keyframes ---------- */
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes dotp{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
@@ -1396,7 +1439,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.6 · dark first</b></div>
+  <div class="demo-id"><b>Direction v0.6.1 · dark first</b></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -1453,7 +1496,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
           </div>
           <form class="composer" id="nForm" aria-label="Message Noor">
             <button type="button" class="btn icon" aria-label="Attach a file" data-act="stub" id="nAttach"></button>
-            <textarea id="nIn" rows="1" placeholder="Message Noor · after this step" aria-label="Message Noor"></textarea>
+            <span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="nIn" rows="1" placeholder="Message Noor · after this step" aria-label="Message Noor"></textarea></span>
             <button type="button" class="btn secondary" id="nStop"></button>
             <button type="submit" class="btn icon inkbtn" id="nSend" aria-label="Send to Noor" disabled></button>
           </form>
@@ -1954,7 +1997,7 @@ const LOOK = {
   merge41:{t:"PR #41 merged by itself",tot:"0.4k tokens · 0.01 % of your week",steps:[["check","CI passed on Windows and Ubuntu · secret scan clean","0k"],["shield","The reviewer check passed (an agent that didn't write it)","0.3k"],["branch","Merged to main at 08:41 · revert any time","0.1k"]]},
   err:{t:"Noor · the run that stopped",tot:"5.2k tokens · 0.17 % of your week",steps:[["terminal","Ran pnpm test · 214 tests in one process","2.2k"],["x","Killed at 09:18: out of memory (exit 137)","0k"],["memory","Saved checkpoint 09:18 · 3 files kept","0.4k"],["refresh","Planned a retry: the suite in two halves","0.6k"]]},
   ckpt:{t:"Noor · checkpoint at the 90 % ceiling",tot:"2.0k tokens · 0.07 % of your week",steps:[["memory","Wrote the checkpoint · 8 of 8 sections","1.2k"],["sessions","Archived the old session in the trace","0k"],["chat","Started fresh and restated the next step","0.8k"]]},
-  team1:{t:"Bench picked Karim",tot:"0.3k tokens · 0.01 % of your week",steps:[["user","You mentioned @Karim, so Bench skipped the router","0k"],["doc","Karim got your message and the thread digest","0.3k"],["chat","Karim replied","2.0k"]]},
+  team1:{t:"Why Karim replied: you mentioned him",tot:"0.3k tokens · 0.01 % of your week",steps:[["user","You mentioned @Karim, so Bench skipped the router","0k"],["doc","Karim got your message and the thread digest","0.3k"],["chat","Karim replied","2.0k"]]},
   ho:{t:"Maya handed S1-6 to Karim",tot:"0.2k tokens · 0.01 % of your week",steps:[["doc","Brief: S1-6 SQLite persistence · acceptance criteria · 2 artifact refs","0.2k"],["shield","Karim got the brief, not Maya's transcript","0k"]]},
   memo:{t:"The debate on Stop",tot:"6.1k tokens · 0.20 % of your week",steps:[["chat","Sam, Noor and Maya · 7 messages · 4 min 12 s","5.2k"],["memory","Memo saved to Bench memory","0.4k"],["sessions","The debate chat is archived here","0k"]]},
   atlas:{t:"Atlas · morning status",tot:"1.1k tokens · 0.04 % of your week",steps:[["memory","Read 7 team summaries (no tokens: local)","0k"],["chat","Wrote this status","1.1k"]]},
@@ -2367,14 +2410,15 @@ function addH(html){
   const s = $("#hScroll"); if (s) s.scrollTop = s.scrollHeight;
 }
 function homeSend(v){
-  const i = HOME_CHAT.push(meM(esc(v), `<span class="receipt">${ic("check", 13)}Sent</span>`)) - 1;
+  const body = mnBody(v, "askIn"), ids = mnInfo(v, "askIn").ids;
+  const i = HOME_CHAT.push(meM(body, `<span class="receipt">${ic("check", 13)}Sent</span>`)) - 1;
   addH(HOME_CHAT[i]);
   addH(`<div class="thinking" id="hThink"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Atlas · Thinking</span></div>`);
   after(1300, () => {
     const th = $("#hThink"); if (th) th.remove();
-    HOME_CHAT[i] = meM(esc(v), seen("Atlas", "now"));
+    HOME_CHAT[i] = meM(body, seen("Atlas", "now"));
     const metas = $$("#hMsgs .mine .msg-meta"), last = metas[metas.length - 1]; if (last) last.innerHTML = seen("Atlas", "now");
-    const r = agM("on it. i'll hand it to the right person and bring you only what needs you.", rcpt(["now","0.6k tokens","0.02 % of your week"], "atlas"), "", {who:"atlas"});
+    const r = agM(ids.length ? `on it. i'll bring ${ids.map(mention).join(" and ")} in and come back with only what needs you.` : "on it. i'll hand it to the right person and bring you only what needs you.", rcpt(["now","0.6k tokens","0.02 % of your week"], "atlas"), "", {who:"atlas"});
     HOME_CHAT.push(r); addH(r);
   });
 }
@@ -2398,7 +2442,7 @@ function renderHome(){
         <div class="home-hero">${idHero("atlas", A, st, {id:"atlasHero", expr})}<p class="id-sub">Your main agent</p></div>
         <div class="msgs" id="hMsgs">${msgs}${HOME_CHAT.join("")}</div>
       </div></div>
-      <form class="composer" id="askForm" aria-label="Message ${esc(name)}"><button type="button" class="btn icon" aria-label="Attach a file" data-act="stub">${ic("plus")}</button><textarea id="askIn" rows="1" placeholder="${first ? "Tell " + esc(name) + " what you're working on" : "Message " + esc(name)}" aria-label="Message ${esc(name)}, your main agent"></textarea><button type="submit" class="btn icon inkbtn" id="askSend" aria-label="Send to ${esc(name)}" disabled>${ic("up")}</button></form>
+      <form class="composer" id="askForm" aria-label="Message ${esc(name)}"><button type="button" class="btn icon" aria-label="Attach a file" data-act="stub">${ic("plus")}</button><span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="askIn" rows="1" placeholder="${first ? "Tell " + esc(name) + " what you're working on" : "Message " + esc(name) + " · @ to bring someone in"}" aria-label="Message ${esc(name)}, your main agent"></textarea></span><button type="submit" class="btn icon inkbtn" id="askSend" aria-label="Send to ${esc(name)}" disabled>${ic("up")}</button></form>
       <p class="comp-hint" id="askHint"></p></div>
     <aside class="ws" id="hPane" aria-label="${esc(name)}'s panel: screen, routines and settings" inert>${apHTML("atlas")}</aside></div>`;
 }
@@ -3134,11 +3178,12 @@ function updateComposer(){
   stop.innerHTML = N.stopping ? `<span>Stopping</span><span class="busy-dots" aria-hidden="true"><i></i><i></i><i></i></span>` : `${ic("stop")}<span>Stop</span>`;
   stop.disabled = N.stopping;
   stop.setAttribute("aria-label", N.stopping ? "Stopping Noor after this step" : "Stop Noor after the current step");
-  const v = $("#nIn").value.trim();
-  $("#nSend").disabled = !v;
+  const v = $("#nIn").value.trim(), mn = mnInfo(v, "nIn");
+  $("#nSend").disabled = !v || mn.only;
   const hint = $("#nHint");
   if (S.scen === "offline") hint.innerHTML = `${ic("clock", 14)}<span>You're offline: messages queue and send when you're back.</span>`;
-  else if (v) hint.innerHTML = `<span>≈ ${(0.3 + v.length / 400).toFixed(1)}k tokens · ${(0.01 + v.length / 12000).toFixed(2)} % of your week</span>`;
+  else if (mn.only) hint.innerHTML = `<span>Add what you want ${esc(mn.names)} to do</span>`;
+  else if (v) hint.innerHTML = `<span>${mn.ids.length ? `Noor loops in ${esc(mn.names)} · ` : ""}≈ ${(0.3 + v.length / 400).toFixed(1)}k tokens · ${(0.01 + v.length / 12000).toFixed(2)} % of your week</span>`;
   else hint.innerHTML = "";
 }
 /* Ready to test (D-C): Start testing → the test build opens → you tell Noor what you found → all green (M-A2) with the
@@ -3161,7 +3206,7 @@ function reportTest(text){
   N.appr = "tested"; N.userAppr = "tested";
   if (nTick) { clearInterval(nTick); nTick = null; const ll = $("#liveLine"); if (ll) ll.remove(); }
   $("#nIn").placeholder = "Message Noor · after this step";
-  addN(meM(esc(text), `<span class="receipt">${ic("check", 13)}Sent</span>`));
+  addN(meM(mnBody(text, "nIn"), `<span class="receipt">${ic("check", 13)}Sent</span>`));
   setNoor("thinking", "reading your test notes");
   nAfter(1200, () => {
     const metas = $$("#nMsgs .mine .msg-meta"), last = metas[metas.length - 1]; if (last) last.innerHTML = seen("Noor", "now");
@@ -3524,7 +3569,7 @@ function applyIdentity(){
   const scr = SA === "atlas" ? $("#p-home") : SA === "noor" ? $("#p-agent") : here ? $("#p-room") : null;
   if (scr) scr.dataset.hue = SET.hue;
   if (here) $("#main").dataset.hue = SET.hue;
-  if (SA === "atlas" && $("#askIn")) { $("#askIn").placeholder = "Message " + nm; }
+  if (SA === "atlas" && $("#askIn")) { $("#askIn").placeholder = "Message " + nm + " · @ to bring someone in"; }
   buildSidebar();
 }
 function paintCk(){
@@ -3666,11 +3711,12 @@ $("#nIn").addEventListener("input", updateComposer);
 $("#nIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#nForm").requestSubmit(); } });
 $("#nForm").addEventListener("submit", e => {
   e.preventDefault();
-  const v = $("#nIn").value.trim(); if (!v) return;
-  $("#nIn").value = ""; updateComposer();
-  if (S.scen === "offline") { addN(meM(esc(v), `<span class="receipt">${ic("clock", 13)}Queued · sends when you're back online</span>`, {queued:true})); return; }
+  const v = $("#nIn").value.trim(), mn = mnInfo(v, "nIn"); if (!v || mn.only) return;
+  const body = mnBody(v, "nIn");
+  $("#nIn").value = ""; mnMirror($("#nIn")); updateComposer();
+  if (S.scen === "offline") { addN(meM(body, `<span class="receipt">${ic("clock", 13)}Queued · sends when you're back online</span>`, {queued:true})); return; }
   if (N.appr === "testing" && !N.stopped) { reportTest(v); return; }
-  addN(meM(esc(v), `<span class="receipt">${ic("check", 13)}Sent · Noor reads it after this step</span>`));
+  addN(meM(body, `<span class="receipt">${ic("check", 13)}Sent · Noor reads it after this step</span>`));
   const prev = [N.status, N.text], wasStopped = N.stopped;
   setNoor("thinking", "reading your message");
   addN(`<div class="thinking" id="nThink"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>Noor · Thinking</span></div>`);
@@ -3678,7 +3724,7 @@ $("#nForm").addEventListener("submit", e => {
     const th = $("#nThink"); if (th) th.remove();
     const metas = $$("#nMsgs .mine .msg-meta"), last = metas[metas.length - 1]; if (last) last.innerHTML = seen("Noor", "now");
     if (wasStopped) { N.stopped = false; addN(agM("understood. starting again with that.", rcpt(["now","0.6k tokens","0.02 % of your week"], "n0912"))); setNoor("working", "applying your change"); $("#nIn").placeholder = "Message Noor · after this step"; }
-    else { addN(agM("noted. i'll fold that in after this step.", rcpt(["now","0.5k tokens","0.02 % of your week"], "n0912"))); setNoor(prev[0], prev[1]); }
+    else { addN(agM(mn.ids.length ? `noted. i'll ask ${mn.ids.map(mention).join(" and ")} and fold the answer in after this step.` : "noted. i'll fold that in after this step.", rcpt(["now","0.5k tokens","0.02 % of your week"], "n0912"))); setNoor(prev[0], prev[1]); }
   });
 });
 $("#nAttach").innerHTML = ic("plus");
@@ -3731,11 +3777,16 @@ function renderRoom(id){
   const a = AG[id] || LUMEN, st = effStatus(id), sec = $("#p-room");
   ROOM.id = id;
   if (!ROOM.built) {
-    sec.innerHTML = `<div class="split pane-off" id="rSplit"><div class="chatroom"><div class="ahead" id="rHead"></div><div class="chat-scroll" id="rScroll"><div class="hero-wrap" id="rHero"></div><div class="msgs" id="rMsgs"></div></div><form class="composer" id="rForm" aria-label="Message"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><textarea id="rIn" rows="1" aria-label="Message"></textarea><button type="submit" class="btn icon inkbtn" id="rSend" aria-label="Send" disabled>${ic("up")}</button></form><p class="comp-hint" id="rHint"></p></div><aside class="ws" id="rPane" inert></aside></div>`;
+    sec.innerHTML = `<div class="split pane-off" id="rSplit"><div class="chatroom"><div class="ahead" id="rHead"></div><div class="chat-scroll" id="rScroll"><div class="hero-wrap" id="rHero"></div><div class="msgs" id="rMsgs"></div></div><form class="composer" id="rForm" aria-label="Message"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="rIn" rows="1" aria-label="Message"></textarea></span><button type="submit" class="btn icon inkbtn" id="rSend" aria-label="Send" disabled>${ic("up")}</button></form><p class="comp-hint" id="rHint"></p></div><aside class="ws" id="rPane" inert></aside></div>`;
     ROOM.built = true;
-    $("#rIn").addEventListener("input", () => { $("#rSend").disabled = !$("#rIn").value.trim(); });
+    /* The same composer contract as Noor's and Atlas's: the cost while you type, and who an @mention brings in */
+    $("#rIn").addEventListener("input", () => {
+      const v = $("#rIn").value.trim(), mn = mnInfo(v, "rIn"), nm = esc((AG[ROOM.id] || LUMEN).name);
+      $("#rSend").disabled = !v || mn.only;
+      $("#rHint").innerHTML = mn.only ? `<span>Add what you want ${esc(mn.names)} to do</span>` : v ? `<span>${mn.ids.length ? `${nm} loops in ${esc(mn.names)} · ` : ""}≈ ${(0.3 + v.length / 400).toFixed(1)}k tokens · ${(0.01 + v.length / 12000).toFixed(2)} % of your week</span>` : "";
+    });
     $("#rIn").addEventListener("keydown", ev => { if (ev.key === "Enter" && !ev.shiftKey) { ev.preventDefault(); $("#rForm").requestSubmit(); } });
-    $("#rForm").addEventListener("submit", ev => { ev.preventDefault(); const v = $("#rIn").value.trim(); if (!v) return; $("#rIn").value = ""; $("#rSend").disabled = true; $("#rMsgs").insertAdjacentHTML("beforeend", meM(esc(v), `<span class="receipt">${ic("check", 13)}Sent</span>`)); const s = $("#rScroll"); s.scrollTop = s.scrollHeight; });
+    $("#rForm").addEventListener("submit", ev => { ev.preventDefault(); const v = $("#rIn").value.trim(); if (!v || mnInfo(v, "rIn").only) return; const body = mnBody(v, "rIn"); $("#rIn").value = ""; mnMirror($("#rIn")); $("#rSend").disabled = true; $("#rHint").innerHTML = ""; $("#rMsgs").insertAdjacentHTML("beforeend", meM(body, `<span class="receipt">${ic("check", 13)}Sent</span>`)); const s = $("#rScroll"); s.scrollTop = s.scrollHeight; });
     /* The same panel as Noor's, closed by default; quiet one-line states instead of empty boxes */
     sec.addEventListener("click", ev => { if (ev.target.closest("#rPaneToggle")) apAct("toggle"); });
   }
@@ -3748,6 +3799,7 @@ function renderRoom(id){
   $("#rHero").innerHTML = `${idHero(id, a, st, {id:"rHeroAv"})}<div class="statusline">${badge(st)}<span>${ST[st].l} · ${esc(live)}</span></div>`;
   $("#rMsgs").innerHTML = roomMsgs(id);
   $("#rIn").placeholder = `Message ${a.name}`; $("#rIn").setAttribute("aria-label", `Message ${a.name}`);
+  $("#rIn").value = ""; $("#rSend").disabled = true; mnClose(); mnMirror($("#rIn"));
   $("#rHint").innerHTML = "";
   $("#rPane").setAttribute("aria-label", `${a.name}'s panel: screen, routines and settings`);
   $("#rPane").innerHTML = apHTML(id);
@@ -3843,7 +3895,6 @@ function teamMsgs(){
     ${gm("maya", "09:02", ["morning. Sprint 2, day 1.", `S1-4 chat UI is close, S1-3 is in review. ${mention("omar")} where's the interview prep?`], ["09:02","1.4k tokens","0.05 % of your week"], "atlas")}
     ${gm("omar", "09:03", ["prep's done. 8 questions; you answered 2 already. i'll pick up at 15:00 today."], ["09:03","0.9k tokens","0.03 % of your week"], "atlas")}
     ${meM(`${mention("karim")} is the Windows CI blocker something I need to decide?`, seen("Karim", "09:05"), {cls:"neutral"})}
-    <div class="sys">${avatar("karim", 16, {nobadge:true, hidden:true})}<span>Bench picked Karim</span>${lookBtn("team1")}</div>
     ${gm("karim", "09:06", ["yes. QA-3 failed twice on the Windows runners. two ways out: a paid runner, or nightly E2E on my machine. it's at the top of What needs you."], ["09:06","2.0k tokens","0.07 % of your week"], "team1")}
     ${handoffHTML()}
     ${gm("maya", "09:09", ["follow-ups:", `${mention("karim")} take S1-6, and the CI call with you`, `${mention("omar")} interview at 11:00, notes to memory after`, "opening a 5-minute debate on where Stop lives. Sam, Noor and me. i decide."], ["09:09","1.1k tokens","0.04 % of your week"], "atlas")}
@@ -3856,22 +3907,44 @@ function renderTeam(){
   sec.innerHTML = `<div class="tc-head">${cluster(28, PROJ.bench.cluster, "Bench team chat")}<h1>Team chat</h1><button type="button" class="tc-members" id="rosterBtn" aria-expanded="${!!T.roster}" aria-controls="roster" title="Members">${stackHTML(["maya","omar","karim","noor"], 24, "Here now: Maya, Omar, Karim, Noor")}<span>7</span></button></div>
     <div id="debateSlot">${T.memo ? memoHTML(false) : debateHTML()}</div>
     <div class="tc-split${T.roster ? " roster-on" : ""}" id="tcSplit"><div class="tc-conv"><div class="chat-scroll" id="tScroll"><div class="msgs" id="tMsgs">${teamMsgs()}</div></div>
-      <form class="composer" id="tForm" aria-label="Message the Bench team"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><textarea id="tIn" rows="1" aria-label="Message the team" placeholder="Message the team · @name picks who replies"></textarea><button type="submit" class="btn icon inkbtn" id="tSend" aria-label="Send to the team" disabled>${ic("up")}</button></form>
+      <form class="composer" id="tForm" aria-label="Message the Bench team"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="tIn" rows="1" aria-label="Message the team" placeholder="Message the team · @ picks who replies"></textarea></span><button type="submit" class="btn icon inkbtn" id="tSend" aria-label="Send to the team" disabled>${ic("up")}</button></form>
       <p class="comp-hint" id="tHint"></p></div>
     <aside class="roster" id="roster" aria-label="Members"${T.roster ? "" : " hidden"}><h2>In this chat · 7</h2><ul>${PROJ.bench.team.map(id => { const st = effStatus(id); return `<li class="rrow" title="${esc(AG[id].role)}">${avatar(id, 28, {status:st, hidden:true})}<span style="min-width:0"><b class="ellip" style="display:block">${AG[id].name}</b><span class="t-meta ink3">${ST[st].l}</span></span></li>`; }).join("")}</ul></aside></div>`;
   const s = $("#tScroll"); s.scrollTop = s.scrollHeight;
   $("#rosterBtn").addEventListener("click", () => { T.roster = !T.roster; $("#tcSplit").classList.toggle("roster-on", T.roster); $("#roster").hidden = !T.roster; $("#rosterBtn").setAttribute("aria-expanded", T.roster); });
   /* The routing cost shows while you type, before you send (who replies and ≈ tokens to route) */
-  $("#tIn").addEventListener("input", () => { const v = $("#tIn").value.trim(), m = v.match(/@(\w+)/), who = m && AG[m[1].toLowerCase()] ? AG[m[1].toLowerCase()].name : "Maya"; $("#tSend").disabled = !v; $("#tHint").innerHTML = v ? `<span>${esc(who)} replies · ≈ 0.3k tokens to route</span>` : ""; });
+  $("#tIn").addEventListener("input", teamHint);
   $("#tIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("#tForm").requestSubmit(); } });
-  $("#tForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const v = $("#tIn").value.trim(); if (!v) return;
-    $("#tIn").value = ""; $("#tSend").disabled = true; $("#tHint").innerHTML = "";
-    const m = v.match(/@(\w+)/), who = m && AG[m[1].toLowerCase()] ? m[1].toLowerCase() : "maya", why = m && AG[m[1].toLowerCase()] ? "(@mention)" : "(Maya leads Bench)";
-    const body = esc(v).replace(/@(\w+)/g, (x, nm) => AG[nm.toLowerCase()] ? mention(nm.toLowerCase()) : x);
-    $("#tMsgs").insertAdjacentHTML("beforeend", meM(body, `<span class="receipt">${ic("check", 13)}Sent</span>`, {cls:"neutral" + (animate() ? " arrive" : "")}) + `<div class="sys${animate() ? " arrive" : ""}">${avatar(who, 16, {nobadge:true, hidden:true})}<span title="${why}">Bench picked ${AG[who].name}</span>${lookBtn("team1")}</div>`);
-    const sc = $("#tScroll"); sc.scrollTop = sc.scrollHeight;
+  $("#tForm").addEventListener("submit", e => { e.preventDefault(); teamSend($("#tIn").value.trim(), false); });
+}
+/* Who replies, before you send: the @mentioned agents, or Maya (the lead) when the router decides */
+function teamHint(){
+  const ta = $("#tIn"), v = ta.value.trim(), mn = mnInfo(v, "tIn");
+  $("#tSend").disabled = !v || mn.only;
+  $("#tHint").innerHTML = !v ? "" : mn.only ? `<span>Add what you want ${esc(mn.names)} to do</span>`
+    : mnTrigger(ta) ? "<span>Pick who replies</span>"
+    : `<span>${esc(mn.ids.length ? mn.names : "Maya")} ${mn.ids.length > 1 ? "reply" : "replies"} · ≈ 0.3k tokens to route</span>`;
+}
+/* v0.6.1 (client screenshot): a message with a mention is a normal message with the chip inline, never a lone chip.
+   A mention skips the router, so there's no "Bench picked" line; the mentioned agent thinks and replies. Without a
+   mention the router picks, and says so. A mention on its own can't be sent: the hint asks what you want. */
+function teamSend(v, instant){
+  const mn = mnInfo(v, "tIn"); if (!v || mn.only) return;
+  const ta = $("#tIn"); ta.value = ""; mnMirror(ta); mnClose(); $("#tSend").disabled = true; $("#tHint").innerHTML = "";
+  const who = mn.ids[0] || "maya", a = AG[who], anim = !instant && animate() ? " arrive" : "";
+  const routed = mn.ids.length ? "" : `<div class="sys${anim}">${avatar("maya", 16, {nobadge:true, hidden:true})}<span>Bench picked Maya · she leads Bench</span>${lookBtn("teamRoute")}</div>`;
+  const box = $("#tMsgs"), sc = $("#tScroll");
+  const reply = () => gm(who, "now", [mn.ids.length ? "on it. i'll check and come back to you here before 11:00." : "got it. i'll take it, or hand it to the right person and tell you who."], ["now","0.9k tokens","0.03 % of your week"], mn.ids.length ? "team1" : "teamRoute");
+  const mine = meM(mnBody(v, "tIn"), instant ? seen(a.name, "now") : `<span class="receipt">${ic("check", 13)}Sent</span>`, {cls:"neutral" + anim});
+  if (instant) { box.insertAdjacentHTML("beforeend", mine + routed + reply()); sc.scrollTop = sc.scrollHeight; return; }
+  box.insertAdjacentHTML("beforeend", mine + routed + `<div class="thinking${anim}" id="tThink" data-hue="${a.hue}"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span><b style="color:var(--agent-ink);font-weight:600">${esc(a.name)}</b> · Thinking</span></div>`);
+  sc.scrollTop = sc.scrollHeight;
+  after(1400, () => {
+    const th = $("#tThink"); if (th) th.remove();
+    const metas = $$("#tMsgs .mine .msg-meta"), last = metas[metas.length - 1]; if (last) last.innerHTML = seen(a.name, "now");
+    const t = document.createElement("template"); t.innerHTML = reply().trim();
+    if (animate()) t.content.firstElementChild.classList.add("arrive");
+    box.appendChild(t.content); sc.scrollTop = sc.scrollHeight;
   });
 }
 function startTeamTimer(){
@@ -4400,7 +4473,7 @@ const MOMENTS = {
 
 /* ---------- demo chrome ---------- */
 const JUMP = [
-  ["Screens", [["home","Home · Atlas asks one thing"],["atlas-profile","Atlas › Profile (click its name)"],["needs","What needs you · the overlay"],["ready-to-test","What needs you · Ready to test"],["agent","Noor · ready for you to test"],["agent-panel","Noor · panel: screen + routines"],["agent-screen","Noor · panel: the full screen"],["agent-settings","Noor › Settings (her name or the gear)"],["settings","Settings · the app, Appearance (bottom left)"],["agent-settings-autonomy","Noor › Settings › Autonomy"],["agent-settings-memory","Noor › Settings › Memory"],["agent-takeover","Noor · take over"],["team","Bench team chat"],["split","Split view"],["project-bench","Bench dashboard"],["project-ik","InterviewKit dashboard"],["room-maya","Maya's room · changing rooms"],["memory","Memory · the Ledger"],["usage","Usage"],["trace","Look inside · the trace"],["tokens","System sheet"]]],
+  ["Screens", [["home","Home · Atlas asks one thing"],["atlas-profile","Atlas › Profile (click its name)"],["needs","What needs you · the overlay"],["ready-to-test","What needs you · Ready to test"],["agent","Noor · ready for you to test"],["agent-panel","Noor · panel: screen + routines"],["agent-screen","Noor · panel: the full screen"],["agent-settings","Noor › Settings (her name or the gear)"],["settings","Settings · the app, Appearance (bottom left)"],["agent-settings-autonomy","Noor › Settings › Autonomy"],["agent-settings-memory","Noor › Settings › Memory"],["agent-takeover","Noor · take over"],["team","Bench team chat"],["team-mention","Team chat · @ lists who can reply"],["team-mention-sent","Team chat · a message with a mention"],["agent-mention","Noor · @ lists her teammates"],["home-mention","Home · @ lists everyone Atlas can bring in"],["agent-scrolled","Noor · scrolled: the blurred edge"],["split","Split view"],["project-bench","Bench dashboard"],["project-ik","InterviewKit dashboard"],["room-maya","Maya's room · changing rooms"],["memory","Memory · the Ledger"],["usage","Usage"],["trace","Look inside · the trace"],["tokens","System sheet"]]],
   ["Flows and moments", [["first-run","First run · four steps"],["first-run-name","First run · your main agent (name and look)"],["home-first","Home · first use"],["new-agent","New agent · birth"],["agent-first","Lumen's first room"],["new-project","New project"],["project-new","Field Notes is set up"],["agent-green","All green · after your test"],["team-memo","The debate becomes a memo"],["project-sprint-done","Sprint done · the team gathers"],["home-empty","All caught up"]]],
   ["Worst moments", [["offline","Offline mid-run"],["offline-back","Back online · the digest"],["usage-limit","Weekly limit reached"],["limit-forecast","Limit forecast · Saturday"],["limit-reset","Monday reset · a new sprint end date"],["login-expired","Claude login expired"],["login-back","Signed in again"],["run-failed","A run failed"],["agent-error-retried","Retried, and learned"],["approval-denied","Approval denied · Jade keeps her files"],["agent-checkpoint","Checkpoint at the 90 % ceiling"],["agent-checkpoint-incomplete","Checkpoint incomplete"],["connector-revoked","Connector revoked"],["connector-back","Connector back"],["needs-conflict","Merge conflict · Karim fixes it"],["needs-conflict-resolved","Conflict fixed · merged by itself"],["guard","Guard defers a routine"],["guard-exempt","Guard · let one routine run"],["slow","Slow response · 14 s"],["long-message","A 500-line log"],["long-names","Very long names"],["agent-routines-empty","No routines yet"]]]
 ];
@@ -4547,6 +4620,16 @@ const ROUTES = {
   "agent-first":() => { if (!AG.lumen) { AG.lumen = LUMEN; if (EXTRA.indexOf("lumen") < 0) EXTRA.push("lumen"); } roomScreen("lumen", "agent-first"); },
   "team":() => teamScreen("team"),
   "team-memo":() => { T.memo = true; teamScreen("team-memo"); },
+  /* v0.6.1: the @-mention picker in each kind of chat, a sent mention, and the blurred scroll edge */
+  "team-mention":() => { teamScreen("team-mention"); mnDemo("tIn", "@"); },
+  "team-mention-sent":() => { teamScreen("team-mention-sent"); teamSend("@Maya can you check the onboarding copy before I test it?", true); },
+  "agent-mention":() => { noorScreen(null, null, "agent-mention"); mnDemo("nIn", "check with @ma"); },
+  "home-mention":() => { homeScreen("home-mention"); mnDemo("askIn", "@"); },
+  "agent-scrolled":() => {
+    noorScreen(null, null, "agent-scrolled");
+    const s = $("#convScroll"), hero = $("#nHero"), t = $$("#nMsgs > .msg")[1];
+    if (s && hero && t) s.scrollTop += t.getBoundingClientRect().top - hero.getBoundingClientRect().bottom + 6;
+  },
   "split":() => splitScreen(),
   "project-sprint-done":() => { PV.sprintDone = true; projectScreen("ik", "project-sprint-done"); },
   "project-new":() => { if (PROJ_ORDER.indexOf("fn") < 0) PROJ_ORDER.push("fn"); projectScreen("fn", "project-new"); },
@@ -4574,6 +4657,7 @@ function route(){
   else if (h.indexOf("room-") === 0 && AG[h.slice(5)]) roomScreen(h.slice(5));
   else if (h.indexOf("project-") === 0 && PROJ[h.slice(8)]) projectScreen(h.slice(8));
   else homeScreen();
+  edgeAll();
 }
 window.addEventListener("hashchange", route);
 
@@ -4667,17 +4751,17 @@ document.addEventListener("click", e => {
 document.addEventListener("submit", e => {
   if (e.target.id !== "askForm") return;
   e.preventDefault();
-  const v = $("#askIn").value.trim(); if (!v) return;
-  $("#askIn").value = ""; $("#askSend").disabled = true; $("#askHint").innerHTML = "";
+  const v = $("#askIn").value.trim(); if (!v || mnInfo(v, "askIn").only) return;
+  $("#askIn").value = ""; mnMirror($("#askIn")); $("#askSend").disabled = true; $("#askHint").innerHTML = "";
   if (S.scen === "first") { firstAsk(v); return; }
   homeSend(v);
 });
 /* The cost of a message shows while you type it, before you send (one estimate, like Noor's composer) */
 document.addEventListener("input", e => {
   if (e.target.id !== "askIn") return;
-  const v = e.target.value.trim();
-  $("#askSend").disabled = !v;
-  $("#askHint").innerHTML = v ? `<span>≈ ${(0.4 + v.length / 400).toFixed(1)}k tokens · ${(0.01 + v.length / 12000).toFixed(2)} % of your week</span>` : "";
+  const v = e.target.value.trim(), mn = mnInfo(v, "askIn"), nm = esc(atlasNow().name);
+  $("#askSend").disabled = !v || mn.only;
+  $("#askHint").innerHTML = mn.only ? `<span>Add what you want ${esc(mn.names)} to do</span>` : v ? `<span>${mn.ids.length ? `${nm} brings in ${esc(mn.names)} · ` : ""}≈ ${(0.4 + v.length / 400).toFixed(1)}k tokens · ${(0.01 + v.length / 12000).toFixed(2)} % of your week</span>` : "";
 });
 document.addEventListener("keydown", e => {
   if (e.target.id === "askIn" && e.key === "Enter" && !e.shiftKey) { e.preventDefault(); const f = $("#askForm"); if (f) f.requestSubmit(); return; }
@@ -4706,6 +4790,134 @@ $$(".dz").forEach(z => {
   z.addEventListener("drop", e => { e.preventDefault(); const pid = DRAG; DRAG = null; $("#dropzones").hidden = true; z.classList.remove("over"); if (pid) projAction(pid, z.dataset.dz); });
 });
 $("#sideSearch").addEventListener("input", filterSide);
+
+/* ---------- @-mention picker (v0.6.1, client 23 Oct) ----------
+   Every composer. Typing @ opens a small list above the composer of who's reachable from this chat: the team in a
+   team chat, an agent's teammates in its chat, anyone Atlas can bring in on Home. It filters as you type (names that
+   start with it first, then names and titles that contain it). ↑ ↓ move, Enter or Tab picks, Esc closes, a click picks.
+   The pick is written as plain text (@Maya) and painted as a chip by the field's mirror. Screen readers: a textarea
+   keeps its textbox role (HTML doesn't allow role="combobox" on it), so it carries the combobox's own attributes:
+   aria-autocomplete="list", aria-haspopup="listbox", aria-controls and aria-activedescendant on the listbox's options. */
+const MN = {pop:null, ta:null, list:[], idx:0, start:-1, esc:null};
+const MN_FIELDS = {askIn:true, nIn:true, rIn:true, tIn:true};
+LOOK.teamRoute = {t:"Bench picked Maya",tot:"0.3k tokens · 0.01 % of your week",steps:[["sessions","No @mention, so the router read the agent cards and the thread digest","0.3k"],["user","Picked Maya: she leads Bench and owns the sprint","0k"],["chat","Maya replied","0.9k"]]};
+function mnSelf(taId){ return taId === "askIn" ? "atlas" : taId === "nIn" ? "noor" : taId === "rIn" ? ROOM.id : null; }
+function mnScope(taId){
+  const plus = (p, ids) => p === "bench" && AG.lumen && ids.indexOf("lumen") < 0 ? ids.concat(["lumen"]) : ids;
+  if (taId === "tIn") return {groups:[["", plus("bench", PROJ.bench.team)]], cap:`Who can reply in this chat · ${plus("bench", PROJ.bench.team).length}`};
+  const self = mnSelf(taId);
+  if (self === "atlas") return {groups:[["Company", ["iris"].concat(S.scen === "long" ? ["relbot"] : [])]].concat(PROJ_ORDER.map(p => [PROJ[p].name, plus(p, PROJ[p].team)])), cap:`${atlasNow().name} can bring in anyone`};
+  const p = teamProj(self), nm = (AG[self] || LUMEN).name;
+  return {groups:[["", (p ? plus(p, PROJ[p].team) : ["atlas","iris"]).filter(x => x !== self)]], cap:p ? `${nm}'s teammates on ${PROJ[p].name}` : `${nm}'s teammates`};
+}
+function mnMatch(scope, q){
+  const seen = new Set(), all = [];
+  scope.groups.forEach(g => g[1].forEach(id => { if (AG[id] && !seen.has(id)) { seen.add(id); all.push({id, g:g[0]}); } }));
+  const ql = (q || "").toLowerCase(); if (!ql) return all;
+  const pre = [], mid = [];
+  all.forEach(o => { const a = AG[o.id], n = a.name.toLowerCase(); if (n.indexOf(ql) === 0) pre.push(o); else if (n.indexOf(ql) > 0 || (a.title || a.role || "").toLowerCase().indexOf(ql) >= 0) mid.push(o); });
+  return pre.concat(mid);
+}
+function mnFind(scope, word){ const w = word.toLowerCase(), o = mnMatch(scope, "").find(x => AG[x.id].name.toLowerCase() === w); return o ? o.id : null; }
+/* What a draft says: who it mentions (resolved in this chat only) and whether it's only mentions (then Send waits) */
+function mnInfo(text, taId){
+  const scope = mnScope(taId), ids = [];
+  const rest = (text || "").replace(/@[\w-]+/g, t => { const id = mnFind(scope, t.slice(1)); if (!id) return t; if (ids.indexOf(id) < 0) ids.push(id); return ""; }).trim();
+  const names = ids.map(id => AG[id].name), list = names.length > 1 ? names.slice(0, -1).join(", ") + " and " + names[names.length - 1] : names[0] || "";
+  return {ids, names:list, only:ids.length > 0 && !rest};
+}
+/* A sent message: your words with each resolved mention as an inline chip */
+function mnBody(text, taId){ const scope = mnScope(taId); return esc(text).replace(/@([\w-]+)/g, (x, w) => { const id = mnFind(scope, w); return id ? mention(id) : x; }); }
+function mnMirror(ta){
+  const mir = ta && ta.previousElementSibling; if (!mir || !mir.classList.contains("mn-mirror")) return;
+  const scope = mnScope(ta.id);
+  mir.innerHTML = esc(ta.value).replace(/@([\w-]+)/g, (x, w) => { const id = mnFind(scope, w); return id ? `<mark class="mn-hl" data-hue="${AG[id].hue}">${x}</mark>` : x; }) + String.fromCharCode(8203);   /* a zero-width space keeps a trailing newline's line box */
+  mir.scrollTop = ta.scrollTop;
+}
+function mnTrigger(ta){
+  if (ta.selectionStart !== ta.selectionEnd) return null;
+  const m = /(^|\s)@([\w-]{0,30})$/.exec(ta.value.slice(0, ta.selectionStart));
+  return m ? {start:ta.selectionStart - m[2].length - 1, q:m[2]} : null;
+}
+function mnEl(){
+  if (MN.pop) return MN.pop;
+  const p = MN.pop = document.createElement("div");
+  p.className = "mn-pop"; p.hidden = true;
+  p.addEventListener("mousedown", e => e.preventDefault());   /* the textarea keeps focus and its caret */
+  p.addEventListener("click", e => { const o = e.target.closest("[data-mn]"); if (o) mnPick(o.dataset.mn); });
+  p.addEventListener("mousemove", e => { const o = e.target.closest("[data-mn]"); if (!o) return; const i = MN.list.findIndex(x => x.id === o.dataset.mn); if (i >= 0 && i !== MN.idx) { MN.idx = i; mnPaint(false); } });
+  return p;
+}
+function mnOpen(ta, trig){
+  const scope = mnScope(ta.id), list = mnMatch(scope, trig.q), pop = mnEl();
+  const was = MN.ta === ta && !pop.hidden && pop.isConnected, keep = was && MN.list[MN.idx] ? MN.list[MN.idx].id : null;
+  MN.ta = ta; MN.start = trig.start; MN.list = list; MN.idx = Math.max(0, keep ? list.findIndex(o => o.id === keep) : 0);
+  const form = ta.closest("form"); if (pop.parentNode !== form) form.appendChild(pop);
+  let g = null;
+  const rows = list.map(o => {
+    const a = AG[o.id], head = o.g && o.g !== g && !trig.q ? `<div class="mn-grp" aria-hidden="true">${esc(o.g)}</div>` : "";
+    g = o.g;
+    return head + `<div class="mn-opt" role="option" id="mn-${o.id}" data-mn="${o.id}" aria-selected="false">${avatar(o.id, 24, {nobadge:true, hidden:true})}<span class="nmt"><b class="ag-nm">${esc(a.name)}</b>${a.title ? `<span class="ag-ttl">${esc(a.title)}</span>` : ""}</span><span class="mn-st">${ST[effStatus(o.id)].l}</span></div>`;
+  }).join("");
+  pop.innerHTML = `<div class="mn-cap" aria-hidden="true">${esc(scope.cap)}</div><div class="mn-list" role="listbox" id="mnList" aria-label="Mention someone"${list.length ? "" : " hidden"}>${rows}</div>`
+    + (list.length ? "" : `<p class="mn-none">No one called “${esc(trig.q)}” ${ta.id === "askIn" ? "on your team" : "in this chat"}.</p>`)
+    + `<div class="mn-keys" aria-hidden="true"><span><span class="kbd">↑</span><span class="kbd">↓</span> move</span><span><span class="kbd">Enter</span> pick</span><span><span class="kbd">Esc</span> close</span></div>`;
+  pop.hidden = false;
+  if (!was && animate()) { pop.classList.remove("anim"); void pop.offsetWidth; pop.classList.add("anim"); }
+  ta.setAttribute("aria-autocomplete", "list"); ta.setAttribute("aria-haspopup", "listbox"); ta.setAttribute("aria-controls", "mnList");
+  mnPaint(true);
+  if (!was) announce(list.length ? `${list.length} to mention. Arrow keys to move, Enter to pick.` : "No one by that name in this chat.");
+}
+function mnPaint(scroll){
+  const cur = MN.list[MN.idx];
+  $$(".mn-opt", MN.pop).forEach(o => o.setAttribute("aria-selected", !!cur && o.dataset.mn === cur.id));
+  if (MN.ta) { if (cur) MN.ta.setAttribute("aria-activedescendant", "mn-" + cur.id); else MN.ta.removeAttribute("aria-activedescendant"); }
+  if (scroll && cur) { const el = MN.pop.querySelector("#mn-" + cur.id), box = MN.pop.querySelector(".mn-list"); if (el && box) { if (el.offsetTop < box.scrollTop) box.scrollTop = el.offsetTop - 4; else if (el.offsetTop + el.offsetHeight > box.scrollTop + box.clientHeight) box.scrollTop = el.offsetTop + el.offsetHeight - box.clientHeight + 4; } }
+}
+function mnOpenNow(){ return !!(MN.pop && !MN.pop.hidden && MN.pop.isConnected && MN.ta && document.contains(MN.ta)); }
+function mnClose(){
+  if (MN.pop) MN.pop.hidden = true;
+  if (MN.ta) { MN.ta.removeAttribute("aria-activedescendant"); MN.ta.removeAttribute("aria-controls"); }
+  MN.list = []; MN.start = -1;
+}
+function mnPick(id){
+  const ta = MN.ta, a = AG[id]; if (!ta || !a || MN.start < 0) return;
+  const pos = ta.selectionStart, ins = "@" + a.name + " ";
+  const tail = ta.value.slice(pos).replace(/^[\w-]*/, "").replace(/^ /, "");   /* drop the rest of a half-typed name */
+  ta.value = ta.value.slice(0, MN.start) + ins + tail;
+  const c = MN.start + ins.length; ta.setSelectionRange(c, c);
+  mnClose(); ta.focus();
+  ta.dispatchEvent(new Event("input", {bubbles:true}));   /* the composer's own handler updates Send and the hint */
+  announce(`${a.name} mentioned`);
+}
+/* After Esc the list stays closed for that @ until you start a new one */
+function mnSync(ta){
+  const tr = mnTrigger(ta);
+  if (tr && MN.esc && MN.esc.ta === ta && MN.esc.start === tr.start) return;
+  if (!tr) MN.esc = null;
+  if (tr) mnOpen(ta, tr); else if (MN.ta === ta) mnClose();
+}
+document.addEventListener("input", e => { const ta = e.target; if (!ta || !MN_FIELDS[ta.id]) return; mnMirror(ta); mnSync(ta); });
+document.addEventListener("scroll", e => { const ta = e.target; if (ta && MN_FIELDS[ta.id]) mnMirror(ta); }, true);
+document.addEventListener("keyup", e => { if (MN_FIELDS[e.target.id] && ["ArrowLeft","ArrowRight","Home","End"].indexOf(e.key) >= 0) mnSync(e.target); });
+document.addEventListener("mouseup", e => { if (MN_FIELDS[e.target.id]) setTimeout(() => mnSync(e.target), 0); });
+document.addEventListener("focusout", e => { if (e.target === MN.ta) setTimeout(() => { if (document.activeElement !== MN.ta) mnClose(); }, 0); });
+document.addEventListener("submit", () => mnClose(), true);
+/* Capture phase: the picker's keys win over the composer's Enter-to-send while the list is open */
+document.addEventListener("keydown", e => {
+  if (!mnOpenNow() || e.target !== MN.ta) return;
+  const n = MN.list.length, stop = () => { e.preventDefault(); e.stopPropagation(); };
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { if (!n) return; stop(); MN.idx = (MN.idx + (e.key === "ArrowDown" ? 1 : n - 1)) % n; mnPaint(true); }
+  else if ((e.key === "Enter" && !e.shiftKey) || e.key === "Tab") { if (!n) { if (e.key === "Tab") mnClose(); return; } stop(); mnPick(MN.list[MN.idx].id); }
+  else if (e.key === "Escape") { stop(); MN.esc = {ta:MN.ta, start:MN.start}; mnClose(); }
+}, true);
+/* Demo routes: a composer with @ typed and the list open (static, so a screenshot shows the resting state) */
+function mnDemo(id, text){ const ta = $("#" + id); if (!ta) return; ta.focus(); ta.value = text; ta.setSelectionRange(text.length, text.length); ta.dispatchEvent(new Event("input", {bubbles:true})); }
+
+/* ---------- blurred scroll edge: on while something is under the top edge of a chat ---------- */
+function edgeSync(s){ if (s && s.classList) s.classList.toggle("is-scrolled", s.scrollTop > 2); }
+document.addEventListener("scroll", e => { const s = e.target; if (s && s.classList && s.classList.contains("chat-scroll")) edgeSync(s); }, {capture:true, passive:true});
+function edgeAll(){ $$(".chat-scroll").forEach(edgeSync); }
 
 /* ---------- init ---------- */
 $("#brandLink").innerHTML = lockupHTML(24);

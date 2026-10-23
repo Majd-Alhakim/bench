@@ -4,6 +4,14 @@
 
 ## 0000. Direction v0.6: dark first, and the Laws of UX applied (current)
 
+### v0.6.1 (2026-10-23, client requests)
+
+- **@-mention picker in every composer** (Home, Noor, any agent's room, team chat). `@` opens a small list above the composer of who's reachable from that chat (team chat: its 7 members; an agent's chat: its teammates; Home: anyone Atlas can bring in, grouped by team) with face, name, title and status word. It filters as you type; ↑ ↓, Enter/Tab, click, Esc. The pick is a tinted pill in the draft and an inline chip in the sent message; the hint under the composer names who replies. Spec: [DESIGN-SYSTEM.md](system/DESIGN-SYSTEM.md), v0.6.1 addendum.
+- **Client's screenshot bug fixed:** `@maya` + Send in team chat gave a bubble holding only the chip and a "Bench picked Maya" line. Now a mention-only draft can't be sent (the hint asks "Add what you want Maya to do"); a message with a mention renders as your words with the chip inline; the mentioned agent thinks and replies; "Bench picked" appears only when the router chose (the seeded @Karim exchange lost its wrong line too).
+- **Blurred scroll edge:** on agent pages older messages soften into a 40 px progressive blur and fade under the sticky hero instead of a hard cut; Home and team chat get the same edge at the top of their scroller. Only while scrolled; reduced transparency keeps the fade without blur.
+- **Gallery:** [`system/components.html`](system/components.html) is dark first with a Dark/Light switch and has every v0.6 component plus the two above.
+- **New routes:** `#team-mention`, `#team-mention-sent`, `#agent-mention`, `#home-mention`, `#agent-scrolled` (all in the Jump menu).
+
 **Artifact:** [`prototype/direction.html`](prototype/direction.html), the same file evolved; every v0.5 route still works. **Inputs:** the [Laws of UX audit](../ux/laws-of-ux-audit.md) (fixes 1–18), the client's four calls on it and the dark-first decision ([ui-feedback-4](../../requirements/interviews/2026-10-23-ui-feedback-4.md)), and two client-reported bugs. **Rules that changed:** [DESIGN-SYSTEM.md](system/DESIGN-SYSTEM.md) §10 (dark, now the default) and the v2.0 addendum; [tokens.css](system/tokens.css) v2.0 (dark at `:root`, light at `[data-theme="light"]`). The calm direction, the brand and every decided item stay: Quartet, Instrument Sans + JetBrains Mono, Cobalt = your call, shape agents with eyes, the three sounds.
 
 ### 0000.1 Dark first
@@ -53,7 +61,7 @@ All v0.5 routes still work. **Changed:** `#agent` is Noor's Ready to test (Play:
 
 ### 0000.5 Premium-craft output
 
-**Rubric:** Color moves to **Staff** for both themes (one Cobalt per view at rest, one amber per view, depth by tone on dark); Structure to **Staff** (FYI out of the overlay, the hero down to three things). Others unchanged from v0.5. **Blockers:** none. **Not done here:** no shell or browser in this session, so nothing was rendered: render every route at 1440×900 and 1280×800 in both themes (watch: Home at 1280 with Atlas's panel open, the New project dialog at 800 with the team preview, the demo bar at 1280 with Noor's state picker, the dark agent washes on a calibrated screen); regenerate `screens/*.png`; `system/components.html` is pinned to light and still needs the v0.6 components and a dark pass.
+**Rubric:** Color moves to **Staff** for both themes (one Cobalt per view at rest, one amber per view, depth by tone on dark); Structure to **Staff** (FYI out of the overlay, the hero down to three things). Others unchanged from v0.5. **Blockers:** none. **Not done here:** no shell or browser in this session, so nothing was rendered: render every route at 1440×900 and 1280×800 in both themes (watch: Home at 1280 with Atlas's panel open, the New project dialog at 800 with the team preview, the demo bar at 1280 with Noor's state picker, the dark agent washes on a calibrated screen); regenerate `screens/*.png`. (`system/components.html` got its dark pass and the v0.6 components in v0.6.1.)
 
 ---
 
