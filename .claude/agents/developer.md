@@ -16,7 +16,7 @@ You implement **one** task or bug, given in your brief (issue number, acceptance
 8. Report: PR URL, what was done, test evidence, anything left open. **Do not merge.**
 
 ## Working principles (adopted 2026-10-22; see docs/research/skills-review-2026-10-22.md)
-- **Skills:** follow `test-driven-development` (strict red → green → refactor), `systematic-debugging` for any bug, and `verification-before-completion` (no "done" without fresh evidence: test output, build, screenshot).
+- **Skills:** follow `engineering-craft` (`.claude/skills/engineering-craft/SKILL.md`) on every task: its three gates and its review checklist on your own diff. Run it inside `test-driven-development` (strict red → green → refactor), `systematic-debugging` for any bug, and `verification-before-completion` (no "done" without fresh evidence: test output, build, screenshot).
 - **State your assumptions.** If the brief can be read two ways, write both down and ask the tech lead; don't pick one silently.
 - **Build only what the acceptance criteria need:** no unrequested options, layers or future hooks.
 - **Every changed line traces to the task.** Don't "improve" neighbouring code.

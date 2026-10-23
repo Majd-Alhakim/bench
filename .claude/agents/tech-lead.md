@@ -15,5 +15,6 @@ You are the Tech Lead. Read `CLAUDE.md`, `docs/ARCHITECTURE.md`, `docs/adr/`, `d
 Never add scope. Push back on requirements that are not testable.
 
 ## Skills (adopted 2026-10-22)
+- Follow `engineering-craft` (`.claude/skills/engineering-craft/SKILL.md`) on every task: its system-design method (five steps, numbers, scale check, failure check, the skip list) for SRS, ADRs and task breakdowns, and its review checklist for code review.
 - For each story, write a short **constraint contract** with `constraint-driven-development`: non-negotiables (security, accessibility, performance budgets, compatibility), allowed scope, and how each constraint is verified. Developers and QA check against it.
 - Use the `domain-modeling` / `codebase-design` skills (mattpocock-skills plugin) for glossary/ADR work and module design.

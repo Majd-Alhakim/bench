@@ -59,6 +59,7 @@ Read first: [PRODUCT-MODEL](docs/PRODUCT-MODEL.md) · [ARCHITECTURE](docs/ARCHIT
 - Module boundaries are enforced by ESLint `no-restricted-imports` (core ↛ electron, renderer ↛ core).
 - Comments: one line inline, JSDoc on public API only. Formatting is Prettier's job.
 - Every feature emits a trace event so it's visible in the UI.
+- Engineering rulebook: the `engineering-craft` skill (gates, system-design method, review checklist) applies to all code and design work.
 
 ## Testing
 
