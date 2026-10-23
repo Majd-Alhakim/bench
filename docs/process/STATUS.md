@@ -2,30 +2,29 @@
 
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
-**Current phase:** 2 (PRD) + 4 (early UX prototype, lean mode). G1 approved 2026-10-22
-**Next step:** client clicks through the UX prototype (tasks T1–T5) and reviews the PRD draft → feedback corrects both → `/gate G2` (PRD), then G4 (UX)
+**Current phase:** 2 (PRD) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22.
+**Next step:** client reviews BRD v1.1 + PRD v0.2 and answers the "Open questions for G2" → `/gate G2`; then G4/G5 on prototype v0.7; then the SRS (`/specs`). Spikes S0-1 (subscription login via Agent SDK), browser agent and shell containment may run early on `spike/` branches (proposed, needs the client's OK).
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
-| 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [competitive brief](../research/competitive-brief.md), [research](../research/) | G0 ⏳ |
-| 1 | Requirements / BRD | ✅ Done ([interviews](../requirements/interviews/)) | [BRD v1.0](../requirements/BRD.md) **Baselined** | G1 ✅ 2026-10-22 |
-| 2 | PRD | 🟡 Draft v0.1 | [PRD](../requirements/PRD.md) | G2 ⏳ |
+| 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ⏳ |
+| 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.1** applies CR-001…007 + decisions, pending client confirmation | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
+| 2 | PRD | 🟡 **v0.2** for review (5 × 3-day sprints, 51 UCs) | [PRD](../requirements/PRD.md) | G2 ⏳ |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
-| 4 | UX design | 🟡 Low-fi prototype v0.4 (status badges, shape avatars with eyes) | [UX package](../design/ux/README.md), [prototype](../design/ux/prototype/index.html) | G4 ⏳ |
-| 5 | UI design & brand (incl. **final name**) | ⚪ Not started | `docs/design/ui/` | G5 ⏳ |
-| 6 | Backlog & Sprint 1 | ⚪ Not started ([BACKLOG](../BACKLOG.md) / [ROADMAP](../ROADMAP.md) are provisional) | GitHub Issues / board | G6 ⏳ |
+| 4 | UX design | 🟡 Premium spec, Laws of UX audit, low-fi v0.4 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ⏳ |
+| 5 | UI design & brand | 🟡 Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.7**; name still open | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ⏳ |
+| 6 | Backlog & Sprint 1 | ⚪ Not started (stories drafted in PRD v0.2 Appendix A) | GitHub Issues / board | G6 ⏳ |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
 
-## Already decided (input to the phases above, not a substitute for them)
-Product model (main agent + user-created agents, private and global memory, connectors per agent) · auth approach (ADR-0002) · cross-platform Electron stack (ADR-0001, *to confirm*) · repo conventions (ADR-0003) · engineering workflow (CLAUDE.md).
-**Client decisions (2026-10-21):**
-- Personal project: the client is the only user for now, so there is no outside validation.
-- **Lean mode**: MVP-only documents, and the UX prototype comes early.
-- **3-day sprints**, re-measured after Sprint 2.
+## Already decided (input to the phases above)
+Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo conventions (ADR-0003) · engineering workflow and skills (premium-craft, engineering-craft, ui-ux-guide).
+- Personal project, shared openly and customisable · lean mode · 3-day sprints · **full scope, open-source ready 14 days after G6** · licence MIT.
+- Positioning: Bench complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
+- Design: calm, chat-first Home with Atlas; dark first (charcoal) + light; copy removal test; second-person voice.
 
-**Not decided:** product name ("Bench" is only a codename), look and feel, avatars and animation, MVP scope.
+**Not decided:** product name ("Bench" is a codename).
 
 ## Gate log
 
@@ -35,6 +34,12 @@ Product model (main agent + user-created agents, private and global memory, conn
 
 ## Change requests
 
-| ID | Date | Summary | Impact | Status |
-|---|---|---|---|---|
-| — | — | — | — | — |
+| ID | Date | Summary | Status |
+|---|---|---|---|
+| [CR-001](../requirements/change-requests/CR-001.md) | 2026-10-22 | Manual projects, team per project, animated avatars | Approved |
+| [CR-002](../requirements/change-requests/CR-002.md) | 2026-10-22 | Built-in Reverse Engineer + teardown before BRD approval | Approved |
+| [CR-003](../requirements/change-requests/CR-003.md) | 2026-10-22 | Strategy moves M1–M11 (M4 replaced by CR-006) | Approved |
+| [CR-004](../requirements/change-requests/CR-004.md) | 2026-10-22 | Local deliverables + opt-in browser agent | Approved |
+| [CR-005](../requirements/change-requests/CR-005.md) | 2026-10-22 | Built-in skill library per role (+ engineering-craft, 2026-10-23) | Approved |
+| [CR-006](../requirements/change-requests/CR-006.md) | 2026-10-22 | Routines can do anything the agent can | Approved |
+| [CR-007](../requirements/change-requests/CR-007.md) | 2026-10-23 | Only what matters needs you; merge, commit and send are automatic | Approved |
