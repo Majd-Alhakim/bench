@@ -9,7 +9,7 @@ Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priorit
 - ✅ **S0-4** ADR-0002 accepted for personal use (research: [anthropic-repos-and-auth](research/anthropic-repos-and-auth.md)). ADR-0001 awaiting founder confirmation.
 - ✅ **S0-5** Competitor teardown: [competitive-brief](research/competitive-brief.md)
 - ✅ **S0-6** Multi-agent efficiency research: [multi-agent-efficiency](research/multi-agent-efficiency.md)
-- ✅ Private GitHub repo: github.com/Majd-Alhakim/bench
+- ✅ GitHub repo: github.com/eucas-app/eucas (was Majd-Alhakim/bench; public since 2026-10-24)
 - ✅ **S0-1 · Spike: SDK on subscription, per-agent isolation** (M): GO, [report](spikes/S0-1.md). Also done: ✅ **SP-B1** browser agent ([report](spikes/SP-B1.md)) and ✅ **M8** shell containment ([report](spikes/M8.md))
   - AC: a script runs `query()` with no API key, inheriting `claude login`, once with Haiku and once with Opus.
   - AC: with `strictMcpConfig` + `settingSources: []`, the agent sees ONLY the MCP servers and skills we pass (shown via its init message).

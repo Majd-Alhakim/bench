@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 3 (SRS), lean mode. G0, G1, G2, **G4 and G5** approved (G4/G5 on prototype v0.8.2, 2026-10-24).
-**Next step:** the SRS (`/specs`): BA functional requirements + tech-lead NFRs (M8 hook-based jail, M9 version pin, M10 worktrees, browser agent, runaway guard, safety net, the `claude auth status` onboarding check), then G3 → backlog and Sprint 1 → G6. Product name: **Eucas** (domain **eucas.app** ours); follow-ups: GitHub org and npm names.
+**Next step:** the logo design (next session, client's choice), then the SRS (`/specs`): BA functional requirements + tech-lead NFRs (M8 hook-based jail, M9 version pin, M10 worktrees, browser agent, runaway guard, safety net, the `claude auth status` onboarding check), then G3 → backlog and Sprint 1 → G6. Product name: **Eucas** (domain **eucas.app** ours); follow-ups: GitHub org and npm names.
 
 ## Phase tracker
 
