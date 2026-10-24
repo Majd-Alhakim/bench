@@ -1,14 +1,14 @@
-# Euca
+# Eucas
 
 **Every idea deserves a happy ending.**
 
-Euca ("you-ka") is a desktop app, Windows first, that turns your half-built ideas into finished work with a team of Claude agents, the **Eucas**. You talk to one main agent and create your own, each with its own role, model, private memory and connectors, plus a memory they all share. They plan, build, test and hand work to each other while you watch every step, prompt and token. You stay the boss: you answer the questions, review, test and decide.
+Eucas ("you-kuz") is a desktop app, Windows first, that turns your half-built ideas into finished work with a team of Claude agents: the Eucas. Each one is **a Euca**. You talk to one main agent and create your own, each with its own role, model, private memory and connectors, plus a memory they all share. They plan, build, test and hand work to each other while you watch every step, prompt and token. You stay the boss: you answer the questions, review, test and decide.
 
 The name comes from Tolkien's *eucatastrophe*: the sudden turn in a story from doom to a happy ending.
 
 > **Status: planning, docs only.** Requirements (BRD v1.2, PRD v0.3), the UX/UI prototype and the brand are done; feasibility spikes come next, then a 14-day build to v0.1. There's no app to install yet. "Bench" is the codename you'll still see in the repo. [Live status](docs/process/STATUS.md).
 
-Euca runs on your own Claude subscription through the official Claude Code. It never asks for or stores your Claude credentials. It is not made by or affiliated with Anthropic.
+Eucas runs on your own Claude subscription through the official Claude Code. It never asks for or stores your Claude credentials. It is not made by or affiliated with Anthropic.
 
 ## Read more
 - **Process (start here):** [docs/process/](docs/process/): lifecycle, team, status

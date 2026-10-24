@@ -1,6 +1,6 @@
 # Code of conduct
 
-Euca is a personal project shared openly. Everyone who joins in, in issues, pull requests or discussions, agrees to this:
+Eucas is a personal project shared openly. Everyone who joins in, in issues, pull requests or discussions, agrees to this:
 
 - **Be kind and specific.** Critique the work, not the person. Say what's wrong and what would fix it.
 - **Assume good intent,** and ask before assuming the worst.
