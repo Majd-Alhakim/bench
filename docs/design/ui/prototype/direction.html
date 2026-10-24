@@ -3473,7 +3473,7 @@ const SECS = SECIDS.reduce((a, g) => a.concat(g[1]), []);
 const LEADS = {"Bench › Dev team":"Karim","Bench › Product team":"Maya","InterviewKit":"Rana","Field Notes":"Lea","Company":"Atlas"};
 const SETS = {};
 SETS.noor = {sec:"profile", name:"Noor", title:"Developer", shape:"pill", hue:"coral", desc:"Writes code and tests in the repos you point her to, and opens pull requests.",
-  tier:"balanced", preset:"trusted", ckpt:70, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:"Karim",
+  tier:"balanced", preset:"trusted", ckpt:80, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:"Karim",
   overrides:[["Read files in granted folders","allow"],["Edit files in granted folders","allow"],["Run commands in granted folders","allow"],["Delete files in the scratch area","allow"]],
   grants:[{cmd:"pnpm add",where:"in bench (new dependencies)",by:"you",when:"21 Oct 16:02"}],
   conns:[{id:"github",name:"GitHub",on:true,d:"Repo bench: issues, pull requests, checks",k:1.1},{id:"gmail",name:"Gmail",on:false,d:"Read, label, draft and send as you",k:0.9},{id:"gdrive",name:"Google Drive",on:false,d:"Docs you share with Bench",k:0.6},{id:"ctx7",name:"Context7",on:true,d:"Library documentation lookup",k:0.4},{id:"figma",name:"Figma",na:true,d:"Not in your Claude Code inventory. Add it there first"}],
@@ -3486,7 +3486,7 @@ function defaultSet(id){
   const a = AG[id] || LUMEN, main = id === "atlas", n = SETS.noor, copy = o => JSON.parse(JSON.stringify(o));
   return {sec:"profile", name:a.name, title:a.title || "", shape:a.shape, hue:a.hue,
     desc:main ? "Your main agent. Talks with you, routes work to the team and keeps the company memory." : `${a.role} on ${a.team}.`,
-    tier:"balanced", preset:"trusted", ckpt:70, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:leadOf(id),
+    tier:"balanced", preset:"trusted", ckpt:80, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:leadOf(id),
     overrides:copy(n.overrides), grants:[], conns:copy(n.conns).map(c => (main && c.id === "gmail" ? Object.assign(c, {on:true}) : c)),
     skills:main ? [{n:"Route work",d:"Picks who replies and writes the brief.",on:true,b:true},{n:"Hire agents",d:"Drafts new agents for you to create.",on:true,b:true},{n:"Company memory",d:"Approves what the team learns about you.",on:true,b:true}].concat(copy(n.skills.filter(s => !s.b))) : copy(n.skills),
     folders:main ? [] : copy(n.folders), notif:copy(n.notif)};
@@ -3564,7 +3564,7 @@ const SECTION = {
     <div class="setrow"><div class="setrow-m"><div class="setrow-t">Private notes</div><div class="setrow-d">Last written today 08:58 · only ${nm} writes here</div></div><button type="button" class="btn secondary sm" data-go="memory">Open notes</button></div>
     <div class="setrow"><div class="setrow-m"><div class="setrow-t">Export ${nm}'s memory</div><div class="setrow-d">Plain Markdown, the same files as on disk.</div></div><button type="button" class="btn secondary sm" data-act="export">${ic("download", 14)}Export</button></div>
     <div class="set-group ck"><h3>Context checkpoint</h3>
-      <div class="ck-row"><label for="sCk" class="setrow-t">Checkpoint at</label><output id="ckVal" for="sCk">${SET.ckpt} %</output><span class="t-meta ink3">default 70 %</span></div>
+      <div class="ck-row"><label for="sCk" class="setrow-t">Checkpoint at</label><output id="ckVal" for="sCk">${SET.ckpt} %</output><span class="t-meta ink3">default 80 %</span></div>
       <input type="range" id="sCk" min="50" max="85" step="5" value="${SET.ckpt}" aria-describedby="ckHelp" aria-valuetext="${SET.ckpt} percent">
       <div class="ck-ends" aria-hidden="true"><span>50 %</span><span>85 %</span></div>
       <span class="bar" aria-hidden="true"><i id="ckFill" style="width:${SET.ckpt}%"></i><span class="ceiling" style="width:10%"></span><span class="mark" id="ckTick" style="left:${SET.ckpt}%"></span></span>
