@@ -89,7 +89,7 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 
 ## Project Status & Open Decisions
 
-- **G1 and G2 approved; Phase 3 (SRS) next**, spikes first (see STATUS.md). Repo: github.com/Majd-Alhakim/bench (private).
+- **G1 and G2 approved; Phase 3 (SRS) next**, spikes first (see STATUS.md). Repo: github.com/Majd-Alhakim/bench.
 - Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
 - **Product name: Euca** ("you-ka"); the agents are **Eucas**. "Bench" stays the codename in code and docs until the rename task after G5 ([decision](docs/requirements/interviews/2026-10-24-product-name.md)). Never name it "Claude Code".
 - Agents save drafts and never send or post; they never delete on the computer (CR-008).
