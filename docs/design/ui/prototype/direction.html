@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>eucas · UI direction v0.7.1 · dark first</title>
+<title>eucas · UI direction v0.8 · dark first</title>
+<script>window.H0 = location.hash; /* v0.8: the hash the page opened with, before the router rewrites it */</script>
 <script>
 /* Dark first (client, 23 Oct). The theme is set before the first paint so nothing flashes.
    Pref: "dark" (default) · "light" · "system". Kept for this browser tab only, so a fresh load is always dark;
@@ -1485,13 +1486,103 @@ table.spec td{padding:10px 12px 10px 0;box-shadow:inset 0 -1px 0 var(--line-subt
 html.rm *,html.rm *::before,html.rm *::after{animation-duration:1ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:1ms!important;transition-delay:0ms!important}
 html.rm .hero-av .body,html.rm .hero-av .blink,html.rm .hero-av .look,html.rm .g-spin,html.rm .g-think circle,html.rm .tdots i,html.rm .think-dots i,html.rm .busy-dots i{animation:none!important}
 html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--agent-base),0 0 0 3px var(--agent-tint)}
+/* ===== v0.8 (UF5, 2026-10-24) ===== */
+/* UF5-5: one minimal scrollbar, app-wide. A thin rounded thumb, no arrows, no track; faint at rest, brighter on hover. */
+::-webkit-scrollbar{width:10px;height:10px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text-3) 22%,transparent);border-radius:999px;border:3px solid transparent;background-clip:padding-box;min-height:40px}
+:hover::-webkit-scrollbar-thumb{background-color:color-mix(in srgb,var(--text-3) 40%,transparent)}
+::-webkit-scrollbar-thumb:hover{background-color:color-mix(in srgb,var(--text-3) 62%,transparent)}
+::-webkit-scrollbar-thumb:active{background-color:color-mix(in srgb,var(--text-2) 70%,transparent)}
+
+/* UF5-2: composers grow with the text (to ~8 lines), then scroll quietly; Expand opens a large editor in place */
+.composer textarea{max-height:190px;overflow-y:auto;scrollbar-gutter:auto;transition:height var(--dur-micro) ease}
+.mn-field>textarea{scrollbar-gutter:auto}
+.cmp-x{position:absolute;top:6px;right:6px;z-index:2;--h:28px;opacity:0;pointer-events:none;transition:opacity var(--dur-micro) ease}
+.composer.cmp-tall .cmp-x,.composer.cmp-big .cmp-x{opacity:1;pointer-events:auto}
+.composer.cmp-tall textarea,.composer.cmp-big textarea{padding-right:34px}
+.composer.cmp-big{align-items:flex-end}
+.composer.cmp-big textarea{height:min(52vh,440px)!important;max-height:none}
+.composer.cmp-big .mn-mirror{padding-right:34px}
+
+/* UF5-1: member rows show the title, and open a small agent card */
+.roster .rrow{cursor:pointer;border-radius:var(--r-sm);corner-shape:var(--corner)}
+.roster .rrow:hover{background:var(--bg-raised)}
+.roster .rrow:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.roster .rr-n{display:flex;align-items:baseline;gap:6px;min-width:0}
+.roster .rr-n .ag-ttl{font-size:12px}
+.agcard{position:fixed;z-index:60;width:300px;padding:16px;background:var(--bg-raised);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px var(--line-control),var(--elev-3,var(--elev-2))}
+.agcard .agc-h{display:flex;gap:12px;align-items:center}
+.agcard .agc-h b{display:block;font-size:16px;line-height:22px}
+.agcard .agc-h .t-meta{display:block}
+.agcard p{margin:12px 0 0;font-size:14px;line-height:20px;color:var(--text-2)}
+.agcard .agc-now{margin-top:8px;font-size:13px;line-height:18px;color:var(--text-3)}
+.agcard .agc-a{display:flex;gap:8px;margin-top:16px}
+
+/* UF5-3: drag anything from the sidebar into the middle to split (up to 4 panes) */
+.side [data-row][draggable="true"]{cursor:grab}
+.sp-drop{position:absolute;inset:0;z-index:40;pointer-events:none;display:none}
+.main.sp-dragging .sp-drop{display:block;pointer-events:auto}
+.sp-drop .z{position:absolute;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-2);border-radius:var(--r-lg);corner-shape:var(--corner);transition:background var(--dur-micro) ease,box-shadow var(--dur-micro) ease}
+.sp-drop .z span{padding:6px 10px;border-radius:999px;background:var(--bg-raised);box-shadow:var(--elev-2);opacity:0;transition:opacity var(--dur-micro) ease}
+.sp-drop .z.on{background:color-mix(in srgb,var(--action) 14%,transparent);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--action) 60%,transparent)}
+.sp-drop .z.on span{opacity:1}
+.sp-drop .z.l{left:12px;top:60px;bottom:12px;width:calc(50% - 18px)}
+.sp-drop .z.r{right:12px;top:60px;bottom:12px;width:calc(50% - 18px)}
+.sp-drop .z.t{left:12px;right:12px;top:60px;height:calc(50% - 42px)}
+.sp-drop .z.b{left:12px;right:12px;bottom:12px;height:calc(50% - 42px)}
+.sp-full{display:none;position:absolute;inset:60px 12px 12px;z-index:41;align-items:center;justify-content:center;font-size:14px;color:var(--text-2)}
+.main.sp-dragging.sp-max .sp-drop .z{display:none}
+.main.sp-dragging.sp-max .sp-full{display:flex}
+.msplit{position:absolute;inset:0;z-index:30;display:grid;gap:8px;padding:8px;background:var(--bg-ground)}
+.msplit[hidden]{display:none}
+.msplit .pn{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg-surface);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px var(--line-soft,var(--line-control));overflow:hidden}
+.msplit .pn-h{flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 14px;font-size:14px;line-height:20px}
+.msplit .pn-h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.msplit .pn-h .btn{--h:28px}
+.msplit iframe{flex:1;width:100%;border:0;background:var(--bg-ground)}
+.msplit .pn.enter{animation:pnIn var(--dur-small,240ms) var(--spring-smooth,ease) both}
+@keyframes pnIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+html.embed .demo,html.embed .side{display:none!important}
+html.embed .app{grid-template-columns:1fr!important;height:100vh}
+html.embed .topbar{display:none}
+
+/* UF5-4: Memory · List or Graph */
+.mem-view{display:inline-flex;padding:3px;gap:2px;border-radius:999px;background:var(--bg-sunken)}
+.mem-view button{height:30px;padding:0 14px;border-radius:999px;font-size:14px;color:var(--text-2)}
+.mem-view button[aria-pressed="true"]{background:var(--bg-raised);color:var(--text-1);box-shadow:var(--elev-1,0 1px 2px rgba(0,0,0,.3))}
+.mgraph{position:relative;flex:1;min-height:0;margin:0 16px 16px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-surface);overflow:hidden}
+.mgraph svg{display:block;width:100%;height:100%}
+.mgraph .edge{stroke:color-mix(in srgb,var(--text-3) 30%,transparent);stroke-width:1}
+.mgraph .edge.hot{stroke:color-mix(in srgb,var(--text-1) 70%,transparent);stroke-width:1.5}
+.mgraph .dust{fill:color-mix(in srgb,var(--text-3) 35%,transparent)}
+.mgraph .nd{cursor:pointer}
+.mgraph .nd text{font:500 12px/16px var(--font-text,inherit);fill:var(--text-2);pointer-events:none}
+.mgraph .nd.hub text{font-weight:600;fill:var(--text-1)}
+.mgraph .nd:focus-visible circle{outline:none;stroke:var(--focus);stroke-width:3}
+.mgraph .key{position:absolute;left:16px;bottom:12px;display:flex;gap:14px;font-size:12px;color:var(--text-3)}
+.mgraph .key i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.mgraph .tip{position:absolute;pointer-events:none;max-width:260px;padding:8px 10px;border-radius:var(--r-sm);background:var(--bg-raised);box-shadow:var(--elev-2);font-size:13px;line-height:18px;color:var(--text-1)}
+.mgraph .tip span{display:block;color:var(--text-3);font-size:12px}
+
+/* UF5-6: a fresh install starts with a welcome, then a live Claude Code check */
+.fr-welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:24px}
+.fr-welcome h1{font-size:44px;line-height:52px;letter-spacing:-.02em;margin:8px 0 0}
+.fr-welcome p{margin:0;max-width:520px;color:var(--text-2);font-size:16px;line-height:24px}
+.fr-welcome .acts{margin-top:12px}
+.fr-check{display:flex;align-items:center;gap:10px;color:var(--text-2)}
+.demo-fresh{height:30px;padding:0 12px;border-radius:999px;font-size:13px;color:var(--text-inverse);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .28)}
+.demo-fresh:hover{background:rgb(255 255 255 / .08)}
+.demo-fresh{flex:none}
+.demo-id b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.7 · dark first</b></div>
+  <div class="demo-id"><b>Direction v0.8 · dark first</b></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -1514,7 +1605,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 <div class="app" id="app">
   <aside class="side" id="side" aria-label="Your team and navigation">
     <div class="side-top">
-      <a class="brand" href="#home" aria-label="bench, Home" id="brandLink"></a>
+      <a class="brand" href="#home" aria-label="eucas, Home" id="brandLink"></a>
       <button type="button" class="btn icon" id="sideToggle" aria-expanded="true" aria-label="Collapse the sidebar" title="Collapse the sidebar"></button>
       <button type="button" class="btn icon" data-menu="new" aria-haspopup="menu" aria-expanded="false" aria-label="New agent or project" title="New agent or project" id="newBtn"></button>
     </div>
@@ -3970,7 +4061,7 @@ function renderTeam(){
     <div class="tc-split${T.roster ? " roster-on" : ""}" id="tcSplit"><div class="tc-conv"><div class="chat-scroll" id="tScroll"><div class="msgs" id="tMsgs">${teamMsgs()}</div></div>
       <form class="composer" id="tForm" aria-label="Message the Eucas app team"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="tIn" rows="1" aria-label="Message the team" placeholder="Message the team · @ picks who replies"></textarea></span><button type="submit" class="btn icon inkbtn" id="tSend" aria-label="Send to the team" disabled>${ic("up")}</button></form>
       <p class="comp-hint" id="tHint"></p></div>
-    <aside class="roster" id="roster" aria-label="Members"${T.roster ? "" : " hidden"}><h2>In this chat · 7</h2><ul>${PROJ.bench.team.map(id => { const st = effStatus(id); return `<li class="rrow" title="${esc(AG[id].role)}">${avatar(id, 28, {status:st, hidden:true})}<span style="min-width:0"><b class="ellip" style="display:block">${AG[id].name}</b><span class="t-meta ink3">${ST[st].l}</span></span></li>`; }).join("")}</ul></aside></div>`;
+    <aside class="roster" id="roster" aria-label="Members"${T.roster ? "" : " hidden"}><h2>In this chat · 7</h2><ul>${PROJ.bench.team.map(id => { const st = effStatus(id); return `<li class="rrow" role="button" tabindex="0" data-card="${id}" aria-haspopup="dialog" aria-label="${esc(AG[id].name)}, ${esc(AG[id].title || AG[id].role)}, ${ST[st].l}">${avatar(id, 28, {status:st, hidden:true})}<span style="min-width:0"><span class="rr-n"><b class="ellip">${AG[id].name}</b>${AG[id].title ? `<span class="ag-ttl">${esc(AG[id].title)}</span>` : ""}</span><span class="t-meta ink3">${ST[st].l}</span></span></li>`; }).join("")}</ul></aside></div>`;
   const s = $("#tScroll"); s.scrollTop = s.scrollHeight;
   $("#rosterBtn").addEventListener("click", () => { T.roster = !T.roster; $("#tcSplit").classList.toggle("roster-on", T.roster); $("#roster").hidden = !T.roster; $("#rosterBtn").setAttribute("aria-expanded", T.roster); });
   /* The routing cost shows while you type, before you send (who replies and ≈ tokens to route) */
@@ -4321,7 +4412,7 @@ function renderFrSteps(){
        <div class="acts"><button type="button" class="btn primary lg" data-fr="form">Continue</button></div>`,
     4:`<div class="rcs" role="radiogroup" aria-label="How to start the team">
          <label class="rc"><input type="radio" name="frTeam" value="ceo"${FR.team === "ceo" ? " checked" : ""}><span class="rc-b"><b>Just ${esc(FR.name)} for now</b><span>Add agents and projects when you need them.</span></span></label>
-         <label class="rc"><input type="radio" name="frTeam" value="team"${FR.team === "team" ? " checked" : ""}><span class="rc-b"><b>${esc(FR.name)} and a Product + Dev team</b><span>Creates a first project, Eucas, with 7 agents. ≈ 0.4 % of your week to set up.</span></span></label></div>
+         <label class="rc"><input type="radio" name="frTeam" value="team"${FR.team === "team" ? " checked" : ""}><span class="rc-b"><b>${esc(FR.name)} and a Product + Dev team</b><span>Creates a first project with 7 agents. ≈ 0.4 % of your week to set up.</span></span></label></div>
        <p class="fr-note" style="margin-top:14px">${ic("shield", 16)}<span>Your team commits, tests and merges on its own, and leaves emails and posts as drafts for you. It comes to you to delete, pay, answer, decide or test.</span></p>
        <p class="fr-note" style="margin-top:8px">${ic("info", 16)}<span>GitHub is on. Gmail stays off until you turn it on.</span></p>
        <div class="acts"><button type="button" class="btn primary lg" data-fr="finish">${FR.team === "team" ? `Finish<span class="cons"> · creates ${esc(FR.name)} and 7 agents</span>` : `Finish<span class="cons"> · creates ${esc(FR.name)}</span>`}</button></div>
@@ -5268,6 +5359,261 @@ applyTheme();
 buildJump();
 route();
 FIRST = false;
+</script>
+<script>
+/* ===== v0.8 (UF5, 2026-10-24): composer growth, agent card, drag-to-split, memory graph, fresh install ===== */
+IC.expand = '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>';
+IC.collapse = '<path d="M20 10h-6V4M4 14h6v6M14 10l7-7M10 14l-7 7"/>';
+
+/* Embedded panes (split view) show one screen with no demo bar, sidebar or top bar */
+const EMBED = new URLSearchParams(location.search).has("embed");
+if (EMBED) { document.documentElement.classList.add("embed"); try { SND.on = false; } catch (e) {} }
+
+/* ---------- UF5-2: composers grow with the text, then Expand opens a large editor ---------- */
+const CMP_LINE = 22, CMP_PAD = 14;
+function cmpSize(ta){
+  const c = ta.closest(".composer"); if (!c) return;
+  if (!c.querySelector(".cmp-x")) {
+    c.insertAdjacentHTML("afterbegin", `<button type="button" class="btn icon cmp-x" data-cmp="x" aria-label="Expand the message box" title="Expand">${ic("expand", 16)}</button>`);
+  }
+  if (c.classList.contains("cmp-big")) return;
+  ta.style.height = "auto";
+  ta.style.height = Math.min(ta.scrollHeight, 8 * CMP_LINE + CMP_PAD) + "px";
+  c.classList.toggle("cmp-tall", ta.scrollHeight > 3 * CMP_LINE + CMP_PAD);
+}
+function cmpBig(c, on){
+  const ta = c.querySelector("textarea"), x = c.querySelector(".cmp-x"); if (!ta || !x) return;
+  c.classList.toggle("cmp-big", on);
+  x.innerHTML = ic(on ? "collapse" : "expand", 16);
+  x.setAttribute("aria-label", on ? "Collapse the message box" : "Expand the message box");
+  x.title = on ? "Collapse" : "Expand";
+  if (!on) cmpSize(ta);
+  ta.focus();
+}
+document.addEventListener("input", e => { if (e.target.matches(".composer textarea")) cmpSize(e.target); }, true);
+document.addEventListener("click", e => {
+  const x = e.target.closest('[data-cmp="x"]'); if (!x) return;
+  const c = x.closest(".composer"); cmpBig(c, !c.classList.contains("cmp-big"));
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && e.target.matches(".composer.cmp-big textarea")) { e.stopPropagation(); cmpBig(e.target.closest(".composer"), false); }
+}, true);
+/* after a send the screen clears the field; shrink it back */
+document.addEventListener("submit", e => {
+  const c = e.target.closest(".composer"); if (!c) return;
+  setTimeout(() => { c.classList.remove("cmp-big"); const ta = c.querySelector("textarea"); if (ta) cmpSize(ta); }, 0);
+}, true);
+
+/* ---------- UF5-1: member rows open a small agent card ---------- */
+let CARD = null;
+function closeCard(focusBack){
+  if (!CARD) return;
+  const back = CARD.back; CARD.el.remove(); CARD = null;
+  if (focusBack && back && back.isConnected) back.focus();
+}
+function agentBrief(id){
+  const s = typeof SETS !== "undefined" && SETS[id];
+  return (s && s.desc) || `${AG[id].role} on ${AG[id].team}.`;
+}
+function openCard(id, row){
+  closeCard(false);
+  const a = AG[id]; if (!a) return;
+  const st = effStatus(id);
+  const el = document.createElement("div");
+  el.className = "agcard"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", `${a.name}, ${a.title || a.role}`);
+  el.innerHTML = `<div class="agc-h">${avatar(id, 40, {status:st, hidden:true})}<div style="min-width:0"><b>${esc(a.name)}</b><span class="t-meta ink3">${esc(a.title || a.role)} · ${esc(ST[st].l)}</span></div></div>
+    <p>${esc(agentBrief(id))}</p>${a.live || a.snip ? `<div class="agc-now">${esc(a.live ? "Now: " + a.live : a.snip)}</div>` : ""}
+    <div class="agc-a"><button type="button" class="btn primary" data-card-act="chat">${ic("chat", 16)}Chat</button><button type="button" class="btn secondary" data-card-act="profile">${ic("pencil", 16)}Edit profile</button></div>`;
+  document.body.appendChild(el);
+  const r = row.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
+  if (!r.width) { el.style.left = (innerWidth - w) / 2 + "px"; el.style.top = (innerHeight - h) / 2 + "px"; CARD = {el, id, back:row}; el.querySelector("button").focus(); return; }
+  const left = r.left - w - 8 > 8 ? r.left - w - 8 : Math.min(r.right + 8, innerWidth - w - 8);
+  el.style.left = left + "px"; el.style.top = Math.max(8, Math.min(r.top - 8, innerHeight - h - 8)) + "px";
+  if (animate()) el.animate([{opacity:0, transform:"translateX(6px)"}, {opacity:1, transform:"none"}], {duration:180, easing:"ease-out"});
+  CARD = {el, id, back:row};
+  el.querySelector("button").focus();
+}
+document.addEventListener("click", e => {
+  const act = e.target.closest("[data-card-act]");
+  if (act && CARD) {
+    const id = CARD.id; closeCard(false);
+    if (act.dataset.cardAct === "chat") nav(id === "noor" ? "agent" : id === "atlas" ? "home" : "room-" + id);
+    else openProfile(id);
+    return;
+  }
+  const row = e.target.closest("[data-card]");
+  if (row) { e.stopPropagation(); if (CARD && CARD.id === row.dataset.card) closeCard(true); else openCard(row.dataset.card, row); return; }
+  if (CARD && !e.target.closest(".agcard")) closeCard(false);
+}, true);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && CARD) { e.stopPropagation(); closeCard(true); return; }
+  const row = e.target.closest && e.target.closest("[data-card]");
+  if (row && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openCard(row.dataset.card, row); }
+}, true);
+addEventListener("hashchange", () => closeCard(false));
+
+/* ---------- UF5-3: drag anything from the sidebar into the middle to split, up to 4 panes ---------- */
+const SP = {panes:[], dir:"col", MAX:4};
+const PAGE = {home:"Home", needs:"What needs you", memory:"Memory", usage:"Usage", trace:"Look inside"};
+function rowTarget(k){
+  if (PAGE[k]) return {hash:k, label:k === "home" ? (AG.atlas ? AG.atlas.name : "Home") : PAGE[k]};
+  if (k === "noor") return {hash:"agent", label:"Noor"};
+  if (k === "tc-bench") return {hash:"team", label:`${PROJ.bench.name} team chat`};
+  if (k.indexOf("dash-") === 0 && PROJ[k.slice(5)]) return {hash:"project-" + k.slice(5), label:`${PROJ[k.slice(5)].name} dashboard`};
+  if (k === "lumen") return {hash:"agent-first", label:"Lumen"};
+  if (AG[k]) return {hash:"room-" + k, label:AG[k].name};
+  return null;
+}
+const V08_BASE = {"split-drag":"agent","composer-grow":"agent","composer-big":"agent","team-card":"team","memory-graph":"memory","fresh":"home","fresh-check":"home"};
+function curTarget(){
+  let h = (location.hash || "#home").slice(1) || "home"; h = V08_BASE[h] || h;
+  const crumbs = $("#crumbs"), last = crumbs && crumbs.innerText.trim().split(/\n|›/).pop().trim();
+  return {hash:h, label:last || "This screen"};
+}
+const mainEl = $("#main");
+mainEl.insertAdjacentHTML("beforeend", `<div class="sp-drop" aria-hidden="true"><div class="z l" data-z="l"><span>Open on the left</span></div><div class="z r" data-z="r"><span>Open on the right</span></div><div class="z t" data-z="t"><span>Open on top</span></div><div class="z b" data-z="b"><span>Open below</span></div><div class="sp-full">4 panes is the most. Close one first.</div></div><div class="msplit" id="mSplit" hidden aria-label="Split view"></div>`);
+const dropEl = mainEl.querySelector(".sp-drop");
+function markDraggable(){ $$("#sideList [data-row]").forEach(r => { if (rowTarget(r.dataset.row)) { r.draggable = true; if (!/Shift\+Enter/.test(r.title)) r.title = (r.title ? r.title + "\n" : "") + "Drag into the middle, or Shift+Enter, to open in a split"; } }); }
+new MutationObserver(markDraggable).observe($("#sideList"), {childList:true, subtree:true});
+markDraggable();
+let SPDRAG = null;
+$("#sideList").addEventListener("dragstart", e => {
+  const r = e.target.closest("[data-row]"); if (!r || !rowTarget(r.dataset.row)) return;
+  SPDRAG = r.dataset.row; e.dataTransfer.setData("text/plain", SPDRAG); e.dataTransfer.effectAllowed = "copy";
+  mainEl.classList.add("sp-dragging"); mainEl.classList.toggle("sp-max", SP.panes.length >= SP.MAX);
+});
+addEventListener("dragend", () => { SPDRAG = null; mainEl.classList.remove("sp-dragging", "sp-max"); $$(".sp-drop .z.on").forEach(z => z.classList.remove("on")); });
+dropEl.addEventListener("dragover", e => {
+  if (!SPDRAG) return; e.preventDefault();
+  const z = e.target.closest(".z"); $$(".sp-drop .z").forEach(x => x.classList.toggle("on", x === z));
+});
+dropEl.addEventListener("drop", e => {
+  e.preventDefault(); const z = e.target.closest(".z"), k = SPDRAG;
+  mainEl.classList.remove("sp-dragging", "sp-max"); SPDRAG = null;
+  if (z && k) addPane(k, z.dataset.z);
+});
+function addPane(k, zone){
+  const t = rowTarget(k); if (!t || EMBED) return;
+  if (SP.panes.length >= SP.MAX) return toast("<b>4 panes is the most.</b> Close one first.");
+  if (!SP.panes.length) { SP.panes.push(curTarget()); SP.dir = zone === "t" || zone === "b" ? "row" : "col"; }
+  if (SP.panes.some(p => p.hash === t.hash)) return toast(`<b>${esc(t.label)} is already open.</b>`);
+  if (zone === "l" || zone === "t") SP.panes.unshift(t); else SP.panes.push(t);
+  renderSplitPanes(t.hash);
+  announce(`${t.label} opened in a split. ${SP.panes.length} panes.`);
+}
+function paneSrc(h){ const th = document.documentElement.dataset.theme || "dark"; return location.pathname + "?embed=1&theme=" + encodeURIComponent(th) + "#" + h; }
+function renderSplitPanes(fresh){
+  const box = $("#mSplit"), n = SP.panes.length;
+  if (n < 2) { const last = SP.panes[0]; SP.panes = []; box.hidden = true; box.innerHTML = ""; if (last) go(last.hash); return; }
+  const cols = n === 2 ? (SP.dir === "row" ? "1fr" : "1fr 1fr") : "1fr 1fr";
+  const rows = n === 2 ? (SP.dir === "row" ? "1fr 1fr" : "1fr") : "1fr 1fr";
+  box.style.gridTemplateColumns = cols; box.style.gridTemplateRows = rows;
+  /* keep live panes (their iframes) and only add the new one */
+  const keep = new Map($$("#mSplit .pn").map(p => [p.dataset.h, p]));
+  box.innerHTML = "";
+  SP.panes.forEach((p, i) => {
+    let el = keep.get(p.hash);
+    if (!el) {
+      el = document.createElement("section"); el.className = "pn" + (p.hash === fresh && animate() ? " enter" : ""); el.dataset.h = p.hash;
+      el.innerHTML = `<div class="pn-h"><b>${esc(p.label)}</b><button type="button" class="btn icon" data-pane-close="${esc(p.hash)}" aria-label="Close ${esc(p.label)}" title="Close">${ic("x", 16)}</button></div><iframe title="${esc(p.label)}" src="${paneSrc(p.hash)}"></iframe>`;
+    }
+    el.style.gridRow = n === 3 && i === 0 && SP.dir === "col" ? "span 2" : "";
+    el.style.gridColumn = n === 3 && i === 0 && SP.dir === "row" ? "span 2" : "";
+    box.appendChild(el);
+  });
+  box.hidden = false;
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-pane-close]"); if (!c) return;
+  SP.panes = SP.panes.filter(p => p.hash !== c.dataset.paneClose); renderSplitPanes();
+});
+$("#sideList").addEventListener("keydown", e => {
+  if (e.key !== "Enter" || !e.shiftKey) return;
+  const r = e.target.closest("[data-row]"); if (!r || !rowTarget(r.dataset.row)) return;
+  e.preventDefault(); e.stopPropagation(); addPane(r.dataset.row, "r");
+}, true);
+/* a normal navigation leaves the split */
+addEventListener("hashchange", () => { if (SP.panes.length && !$("#mSplit").hidden) { SP.panes = []; $("#mSplit").hidden = true; $("#mSplit").innerHTML = ""; } });
+
+/* ---------- UF5-4: Memory · List or Graph ---------- */
+MEM.view = MEM.view || "list";
+const GRAPH = {
+  hubs:[["you","You",500,280,"var(--action)"],["atlas","Atlas",290,150,null],["noor","Noor",760,170,null],["karim","Karim",810,430,null],["dev","Dev team",690,495,"var(--text-3)"],["product","Product team",290,440,"var(--text-3)"],["company","Company",150,290,"var(--text-3)"]],
+  notes:{prstyle:[470,150,["you","noor","karim"]],datelib:[640,300,["noor","dev"]],signoff:[360,235,["you","atlas"]],routing:[400,515,["karim","product"]],windows:[420,345,["you"]],components:[530,420,["dev","noor","karim"]]}
+};
+function hubColor(h){ return h[4] || `var(--hue-${AG[h[0]] ? AG[h[0]].hue : "lavender"}-base)`; }
+function memGraphHTML(){
+  const hub = Object.fromEntries(GRAPH.hubs.map(h => [h[0], h]));
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const dust = GRAPH.hubs.flatMap(h => Array.from({length:h[0] === "you" ? 26 : 16}, () => { const a = rnd() * 6.283, d = 34 + rnd() * 70; return `<circle class="dust" cx="${(h[2] + Math.cos(a) * d).toFixed(1)}" cy="${(h[3] + Math.sin(a) * d * .8).toFixed(1)}" r="${(1.6 + rnd() * 1.6).toFixed(1)}"/>`; })).join("");
+  const edges = Object.entries(GRAPH.notes).flatMap(([id, n]) => n[2].map(t => `<line class="edge" data-e="${id} ${t}" x1="${n[0]}" y1="${n[1]}" x2="${hub[t][2]}" y2="${hub[t][3]}"/>`)).join("");
+  const notes = MEMNOTES.filter(n => GRAPH.notes[n.id]).map(n => { const g = GRAPH.notes[n.id]; return `<g class="nd" tabindex="0" role="button" data-gnote="${n.id}" aria-label="${esc(n.t)}, ${esc(n.type)}"><circle cx="${g[0]}" cy="${g[1]}" r="8" fill="var(--bg-raised)" stroke="var(--text-2)" stroke-width="1.5"/><text x="${g[0] + 12}" y="${g[1] + 4}">${esc(n.t.length > 34 ? n.t.slice(0, 33) + "…" : n.t)}</text></g>`; }).join("");
+  const hubs = GRAPH.hubs.map(h => `<g class="nd hub" data-ghub="${h[0]}"><circle cx="${h[2]}" cy="${h[3]}" r="${h[0] === "you" ? 16 : 12}" fill="${hubColor(h)}"/><text x="${h[2]}" y="${h[3] + (h[0] === "you" ? 32 : 28)}" text-anchor="middle">${esc(h[1])}</text></g>`).join("");
+  return `<div class="mgraph" id="mGraph"><svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Memory graph: 214 things your team knows, linked to who learned them">${dust}${edges}${hubs}${notes}</svg>
+    <div class="key"><span><i style="background:var(--action)"></i>You</span><span><i style="background:var(--hue-coral-base)"></i>Agents</span><span><i style="background:var(--text-3)"></i>Teams and company</span><span>Labelled: the 6 notes used most · dots: the other 208</span></div><div class="tip" id="gTip" hidden></div></div>`;
+}
+const renderMemoryList = renderMemory;
+renderMemory = function(){
+  renderMemoryList();
+  const top = $("#p-memory .mem-top .acts");
+  if (top && !top.querySelector(".mem-view")) top.insertAdjacentHTML("afterbegin", `<div class="mem-view" role="group" aria-label="View"><button type="button" data-mview="list" aria-pressed="${MEM.view === "list"}">List</button><button type="button" data-mview="graph" aria-pressed="${MEM.view === "graph"}">Graph</button></div>`);
+  if (MEM.view === "graph") { const m = $("#p-memory .mem"); if (m) { m.outerHTML = memGraphHTML(); $("#mGraph").style.height = "calc(100vh - 200px)"; } }
+};
+document.addEventListener("click", e => {
+  const v = e.target.closest("[data-mview]"); if (v) { MEM.view = v.dataset.mview; renderMemory(); return; }
+  const g = e.target.closest("[data-gnote]"); if (g) { MEM.note = g.dataset.gnote; MEM.view = "list"; renderMemory(); const b = $(`[data-mnote="${MEM.note}"]`); if (b) b.focus(); }
+});
+document.addEventListener("keydown", e => { const g = e.target.closest && e.target.closest("[data-gnote]"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); g.dispatchEvent(new MouseEvent("click", {bubbles:true})); } });
+function gHot(id, on, x, y){
+  $$("#mGraph .edge").forEach(l => l.classList.toggle("hot", on && l.dataset.e.split(" ").includes(id)));
+  const tip = $("#gTip"); if (!tip) return;
+  const n = MEMNOTES.find(m => m.id === id);
+  if (!on || !n) { tip.hidden = true; return; }
+  tip.innerHTML = `${esc(n.t)}<span>${esc(n.type)} · ${esc(n.used)}</span>`; tip.hidden = false;
+  const box = $("#mGraph").getBoundingClientRect(); tip.style.left = Math.min(x - box.left + 14, box.width - 270) + "px"; tip.style.top = (y - box.top + 14) + "px";
+}
+document.addEventListener("mouseover", e => { const g = e.target.closest && e.target.closest("#mGraph [data-gnote], #mGraph [data-ghub]"); if (g) gHot(g.dataset.gnote || g.dataset.ghub, true, e.clientX, e.clientY); });
+document.addEventListener("mouseout", e => { const g = e.target.closest && e.target.closest("#mGraph [data-gnote], #mGraph [data-ghub]"); if (g) gHot(g.dataset.gnote || g.dataset.ghub, false); });
+document.addEventListener("focusin", e => { const g = e.target.closest && e.target.closest("#mGraph [data-gnote]"); if (g) { const r = g.getBoundingClientRect(); gHot(g.dataset.gnote, true, r.right, r.top); } });
+
+/* ---------- UF5-6: start as a new user: welcome, a live Claude Code check, then the four steps ---------- */
+const renderFirstSteps = renderFirst, renderFrStepsBase = renderFrSteps;
+renderFirst = function(asleep){
+  if (FR.step !== 0) return renderFirstSteps(asleep);
+  $("#p-first").innerHTML = `<div class="fr-welcome"><div class="brandrow">${lockupHTML(40)}</div><h1>Every idea deserves a happy ending.</h1>
+    <p>Eucas gives you a team of Claude agents that builds your ideas with you. You stay the boss: you decide, test and accept. Setup takes about a minute.</p>
+    <div class="acts"><button type="button" class="btn primary lg" data-fr="start">Get started</button></div></div>`;
+  $('[data-fr="start"]').focus();
+};
+renderFrSteps = function(){
+  renderFrStepsBase();
+  if (FR.checking && FR.step === 1) { const b = $("#frSteps .sfr.cur .sfr-b"); if (b) b.innerHTML = `<div class="fr-check" role="status"><span class="busy-dots" aria-hidden="true"><i></i><i></i><i></i></span>Looking for Claude Code on this PC…</div>`; }
+};
+$("#p-first").addEventListener("click", e => {
+  if (!e.target.closest('[data-fr="start"]')) return;
+  FR.step = 1; FR.checking = true; renderFirst(); setHash("fresh-check");
+  setTimeout(() => { FR.checking = false; renderFrSteps(); announce("Found Claude Code, signed in."); const c = $('#frSteps [data-fr="next"]'); if (c) c.focus(); }, reduced() ? 200 : 1400);
+});
+ROUTES.fresh = () => {
+  Object.assign(FR, {step:0, team:"ceo", formed:false, name:"Atlas", shape:"sphere", hue:"lavender", checking:false});
+  S.firstTeam = false; show("first", "fresh"); renderFirst(); syncDemo("fresh");
+};
+ROUTES["fresh-check"] = ROUTES.fresh;
+$(".demo-tabs").insertAdjacentHTML("afterend", `<button type="button" class="demo-fresh" id="freshBtn" title="Reset the demo to a fresh install and run setup from the start">New user</button>`);
+$("#freshBtn").addEventListener("click", () => go("fresh"));
+const H0 = (window.H0 || "").slice(1);
+if (H0 === "fresh" || H0 === "fresh-check") ROUTES.fresh();
+/* v0.8 demo routes: each new state can be opened from the Jump menu */
+const V08_LONG = "Here's the plan for the onboarding copy:\n1. Step 1 says what Eucas found\n2. Step 2 shows the folder\n3. Step 3 wakes your main agent\n4. Step 4 picks how the team starts\nKeep each line under 60 characters.";
+function v08Fill(big){ const ta = $("#nIn"); if (!ta) return; ta.value = V08_LONG; ta.dispatchEvent(new Event("input", {bubbles:true})); if (big) cmpBig(ta.closest(".composer"), true); }
+ROUTES["team-card"] = () => { T.roster = true; ROUTES.team(); setHash("team-card"); setTimeout(() => { const r = $("#roster"); if (r && r.hidden) { const b = $('[aria-label="Members"]'); if (b) b.click(); } requestAnimationFrame(() => requestAnimationFrame(() => { const row = $('#roster [data-card="karim"]'); if (row) openCard("karim", row); })); }, 60); };
+ROUTES["composer-grow"] = () => { noorScreen(null, null, "agent"); setHash("composer-grow"); setTimeout(() => v08Fill(false), 60); };
+ROUTES["composer-big"] = () => { noorScreen(null, null, "agent"); setHash("composer-big"); setTimeout(() => v08Fill(true), 60); };
+ROUTES["split-drag"] = () => { noorScreen(null, null, "agent"); setHash("split-drag"); setTimeout(() => { addPane("karim", "r"); addPane("tc-bench", "r"); }, 60); };
+ROUTES["memory-graph"] = () => { MEM.view = "graph"; insightScreen("memory"); setHash("memory-graph"); };
+JUMP.push(["Your review, round 5 (v0.8)", [["fresh","Start as a new user · welcome, then setup"],["team-card","Team chat · titles and the agent card"],["composer-grow","Composer · grows as you write"],["composer-big","Composer · expanded"],["split-drag","Split view · dragged from the sidebar (3 panes)"],["memory-graph","Memory · the graph"]]]);
+buildJump();
+if (["team-card","composer-grow","composer-big","split-drag","memory-graph"].includes(H0)) ROUTES[H0]();
 </script>
 </body>
 </html>
