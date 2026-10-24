@@ -1,14 +1,26 @@
-# Bench (codename)
+# Euca
 
-A native cross-platform desktop app (Windows first, then macOS and Linux) for running a **glass-box team of Claude agents**. You talk to one main agent and create your own agents, each with its own role, model, private memory and connectors, plus a global memory they all share. Agents hand work to each other while you watch every message, tool call and token.
+**Every idea deserves a happy ending.**
 
-> Status: **Sprint 0, Inception.** No app code yet. See [docs/ROADMAP.md](docs/ROADMAP.md).
+Euca ("you-ka") is a desktop app, Windows first, that turns your half-built ideas into finished work with a team of Claude agents, the **Eucas**. You talk to one main agent and create your own, each with its own role, model, private memory and connectors, plus a memory they all share. They plan, build, test and hand work to each other while you watch every step, prompt and token. You stay the boss: you answer the questions, review, test and decide.
 
-- Vision: [docs/VISION.md](docs/VISION.md)
-- Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Backlog: [docs/BACKLOG.md](docs/BACKLOG.md)
-- Setup & connectors: [docs/SETUP.md](docs/SETUP.md)
-- **Process (start here): [docs/process/](docs/process/): lifecycle, team, status**
-- Product model: [docs/PRODUCT-MODEL.md](docs/PRODUCT-MODEL.md)
-- Research: [docs/research/](docs/research/)
+The name comes from Tolkien's *eucatastrophe*: the sudden turn in a story from doom to a happy ending.
+
+> **Status: planning, docs only.** Requirements (BRD v1.2, PRD v0.3), the UX/UI prototype and the brand are done; feasibility spikes come next, then a 14-day build to v0.1. There's no app to install yet. "Bench" is the codename you'll still see in the repo. [Live status](docs/process/STATUS.md).
+
+Euca runs on your own Claude subscription through the official Claude Code. It never asks for or stores your Claude credentials. It is not made by or affiliated with Anthropic.
+
+## Read more
+- **Process (start here):** [docs/process/](docs/process/): lifecycle, team, status
+- Vision: [docs/VISION.md](docs/VISION.md) · Product model: [docs/PRODUCT-MODEL.md](docs/PRODUCT-MODEL.md)
+- Requirements: [BRD](docs/requirements/BRD.md) · [PRD](docs/requirements/PRD.md)
+- Design: [UI direction and prototype](docs/design/ui/DIRECTION.md) · [Brand](docs/design/ui/brand/BRAND.md)
+- Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md) · Backlog: [docs/BACKLOG.md](docs/BACKLOG.md)
+- Setup and connectors: [docs/SETUP.md](docs/SETUP.md) · Research: [docs/research/](docs/research/)
 - Templates (main agent + blank agent): [templates/](templates/)
+
+## Contributing
+Read [CONTRIBUTING.md](CONTRIBUTING.md) (work branches merge into `dev` by PR, never push to `main`) and [REVIEW.md](REVIEW.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
+
+## License
+[MIT](LICENSE)
