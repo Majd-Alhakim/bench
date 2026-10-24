@@ -2473,7 +2473,7 @@ The v1.1 "ask me before sending" override is withdrawn: no agent sends, so there
 **Alternative flows**
 - **A1:** meeting requests from the BA are relayed by the CEO ("The BA wants to meet you") *(B4-Q3)*.
 - **A2:** the client snoozes a notification `[ASSUMPTION – confirm]`.
-- **A3, urgent:** the CEO judges an item urgent → besides the in-app notification, it emails the client (no approval needed, BR-15) *(B5-#3)*. Urgent = a blocked deliverable, a time-critical email, or a payment due `[default (B6-#3)]`. **v1.2:** kept as the one email an agent sends, because it goes only to the client's own address `[ASSUMPTION – confirm, §10 #41; CR-008 says agents never send]`.
+- **A3, urgent:** the CEO judges an item urgent → besides the in-app notification, it emails the client (no approval needed, BR-15) *(B5-#3)*. Urgent = a blocked deliverable, a time-critical email, or a payment due `[default (B6-#3)]`. **v1.2:** kept as the one email an agent sends, because it goes only to the client's own address *(§10 #41: answered (a), 2026-10-24; the one exception to CR-008's "never send")*.
 - **A4, muted (New v1.1):** the client muted sounds in Settings → toasts and badges still show, silently (BR-89) *(BRAND2)*. The optional first-open-of-the-day chime is off by default *(BRAND2)*.
 - **A5, for your info (New v1.1):** an event that needs nothing from the client (e.g. a debate under way, a merge done) → a quiet line in the main agent's chat, no toast and no count *(UF4-LoUX D-B, R5)*.
 
