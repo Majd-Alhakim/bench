@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>eucas · UI direction v0.8.1 · dark first</title>
+<title>eucas · UI direction v0.8.2 · dark first</title>
 <script>window.H0 = location.hash; /* v0.8: the hash the page opened with, before the router rewrites it */</script>
 <script>
 /* Dark first (client, 23 Oct). The theme is set before the first paint so nothing flashes.
@@ -1541,6 +1541,23 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 html.embed .demo,html.embed .side{display:none!important}
 html.embed .app{grid-template-columns:1fr!important;height:100vh}
 html.embed .topbar{display:none}
+html.embed .hero-wrap{display:none}
+html.embed .ahead{display:none}
+html.embed .chat-scroll::before,html.embed .hero-wrap::after{display:none}
+html.embed .chat-scroll{padding-top:8px}
+html.embed .tc-head{min-height:40px;padding:4px 12px}
+html.embed .tc-head h1,html.embed .tc-head>.cluster{display:none}
+html.embed .tc-head .tc-members{margin-left:auto}
+html.embed .composer{width:calc(100% - 24px);padding:4px;margin-bottom:10px;border-radius:var(--r-md)}
+html.embed .composer textarea{min-height:30px;padding:5px 4px;font-size:14px;line-height:20px}
+html.embed .composer .mn-mirror{padding:5px 4px;font-size:14px;line-height:20px}
+html.embed .composer .btn.icon{--h:30px}
+html.embed .composer .btn.icon.inkbtn{--h:32px}
+html.embed .comp-hint{display:none}
+.msplit .pn-h .av-wrap,.msplit .pn-h svg.av{flex:none}
+.msplit .pn-h .pn-t{display:flex;align-items:baseline;gap:8px;flex:1;min-width:0}
+.msplit .pn-h .pn-t b{flex:0 1 auto}
+.msplit .pn-h .pn-s{flex:0 100 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--text-3)}
 
 /* UF5-4: Memory · List or Graph */
 .mem-view{display:inline-flex;padding:3px;gap:2px;border-radius:999px;background:var(--bg-sunken)}
@@ -1576,7 +1593,7 @@ html.embed .topbar{display:none}
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.8.1 · dark first</b></div>
+  <div class="demo-id"><b>Direction v0.8.2 · dark first</b></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -5453,19 +5470,20 @@ const spCount = () => SP.cols[0].length + SP.cols[1].length;
 const spAll = () => SP.cols.flat();
 const PAGE = {home:"Home", needs:"What needs you", memory:"Memory", usage:"Usage", trace:"Look inside"};
 function rowTarget(k){
-  if (PAGE[k]) return {hash:k, label:k === "home" ? (AG.atlas ? AG.atlas.name : "Home") : PAGE[k]};
-  if (k === "noor") return {hash:"agent", label:"Noor"};
+  if (PAGE[k]) return {hash:k, label:k === "home" ? (AG.atlas ? AG.atlas.name : "Home") : PAGE[k], ag:k === "home" ? "atlas" : null};
+  if (k === "noor") return {hash:"agent", label:"Noor", ag:"noor"};
   if (k === "tc-bench") return {hash:"team", label:`${PROJ.bench.name} team chat`};
   if (k.indexOf("dash-") === 0 && PROJ[k.slice(5)]) return {hash:"project-" + k.slice(5), label:`${PROJ[k.slice(5)].name} dashboard`};
   if (k === "lumen") return {hash:"agent-first", label:"Lumen"};
-  if (AG[k]) return {hash:"room-" + k, label:AG[k].name};
+  if (AG[k]) return {hash:"room-" + k, label:AG[k].name, ag:k};
   return null;
 }
 const V08_BASE = {"split-drag":"agent","composer-grow":"agent","composer-big":"agent","team-card":"team","memory-graph":"memory","fresh":"home","fresh-check":"home"};
 function curTarget(){
   let h = (location.hash || "#home").slice(1) || "home"; h = V08_BASE[h] || h;
   const crumbs = $("#crumbs"), parts = crumbs ? crumbs.innerText.trim().split(/\n|›/).map(x => x.trim()).filter(Boolean) : [];
-  return {hash:h, label:parts[parts.length - 1] || "This screen"};
+  const ag = h === "agent" ? "noor" : h === "home" ? "atlas" : h.indexOf("room-") === 0 && AG[h.slice(5)] ? h.slice(5) : null;
+  return {hash:h, label:parts[parts.length - 1] || "This screen", ag};
 }
 const mainEl = $("#main");
 mainEl.insertAdjacentHTML("beforeend", `<div class="sp-drop" aria-hidden="true"></div><div class="msplit" id="mSplit" hidden aria-label="Split view"></div>`);
@@ -5530,7 +5548,9 @@ function renderSplitPanes(fresh){
     let el = $(`#mSplit .pn[data-h="${CSS.escape(p.hash)}"]`);
     if (!el) {
       el = document.createElement("section"); el.className = "pn" + (p.hash === fresh && animate() ? " enter" : ""); el.dataset.h = p.hash;
-      el.innerHTML = `<div class="pn-h"><b>${esc(p.label)}</b><button type="button" class="btn icon" data-pane-close="${esc(p.hash)}" aria-label="Close ${esc(p.label)}" title="Close">${ic("x", 16)}</button></div><iframe title="${esc(p.label)}" src="${paneSrc(p.hash)}"></iframe>`;
+      const st = p.ag && AG[p.ag] ? effStatus(p.ag) : null;
+      const who = st ? `${avatar(p.ag, 24, {status:st, hidden:true})}<span class="pn-t"><b>${esc(p.label)}</b><span class="pn-s">${esc(ST[st].l)}${AG[p.ag].title ? " · " + esc(AG[p.ag].title) : ""}</span></span>` : `<span class="pn-t"><b>${esc(p.label)}</b></span>`;
+      el.innerHTML = `<div class="pn-h">${who}<button type="button" class="btn icon" data-pane-close="${esc(p.hash)}" aria-label="Close ${esc(p.label)}" title="Close">${ic("x", 16)}</button></div><iframe title="${esc(p.label)}" src="${paneSrc(p.hash)}"></iframe>`;
       box.appendChild(el);
     }
     el.style.gridColumn = String(ci + 1);
