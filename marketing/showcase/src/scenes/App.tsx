@@ -5,13 +5,14 @@ import { BOXES } from "../boxes";
 import { AvatarShape, C, fontFamily } from "../brand";
 import { Avatar } from "../components/Avatar";
 import { F } from "../timeline";
+import { CAUGHT_AT } from "./Story";
 
 type Shot = keyof typeof BOXES;
 type Box = { x: number; y: number; w: number; h: number };
 const box = (shot: Shot, cap: string): Box => (BOXES[shot] as Record<string, Box>)[cap];
 const centre = (b: Box) => [b.x + b.w / 2, b.y + b.h / 2] as const;
 
-// Which real screen is on at each moment (start frame, shot). Same-layout shots cut like the live app updating.
+// Which real screen is on at each moment (start frame, shot).
 const SHOTS: [number, Shot][] = [
   [F.toApp, "talk-0"],
   [F.sent, "ask-1"],
@@ -25,14 +26,24 @@ const SHOTS: [number, Shot][] = [
   [F.board, "board-1"],
   [F.boardDone, "board-2"],
   [F.test, "test-1"],
-  [F.startTest + 8, "test-2"],
   [F.green, "green"],
   [F.deploy, "deploy-1"],
   [F.goLive + 6, "deploy-2"],
   [F.live, "live"],
 ];
-// A soft dissolve only where the layout changes (a new chapter or screen).
-const DISSOLVE = new Set<number>([F.team, F.board, F.test, F.green, F.deploy, F.live]);
+// A new screen is a clean cut on the beat; the camera jumps with it and settles.
+const CUTS = [F.toApp, F.team, F.board, F.test, F.green, F.deploy, F.live];
+// Within one screen the app updates like the real thing: the chat scrolls by the anchor's move and the new
+// message eases in. Shots without an anchor change in place.
+const ANCHOR: Partial<Record<Shot, string>> = {
+  "ask-2": "u1",
+  "ask-3": "u1",
+  "ask-4": "u1",
+  "ask-5": "u1",
+  "ask-6": "u1",
+  "team-2": "maya",
+};
+const UPDATE = 8; // frames
 
 // Camera: the point of the screen in the middle of the frame, and the zoom.
 type Cam = [frame: number, x: number, y: number, zoom: number];
@@ -57,7 +68,6 @@ const CAMERA: Cam[] = [
   [F.test, 960, 540, 1],
   [F.test + 22, 1608, 340, 1.7],
   [F.startTest + 8, 1608, 340, 1.7],
-  [F.startTest + 26, 1640, 990, 2.1],
   [F.green, 960, 540, 1],
   [F.green + 18, 1100, 430, 1.6],
   [F.deploy, 960, 540, 1],
@@ -66,13 +76,22 @@ const CAMERA: Cam[] = [
   [F.goLive + 26, 1640, 990, 2.1],
   [F.live, 960, 540, 1],
   [F.live + 20, 1100, 620, 1.7],
-  [F.lockup, 1100, 625, 1.8],
+  [F.lockup - 1, 1100, 625, 1.8],
 ];
 
 function camera(f: number) {
-  const at = CAMERA.map((c) => c[0]);
-  const pick = (i: number) => interpolate(f, at, CAMERA.map((c) => c[i]), { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: inOut });
-  const z = pick(3);
+  // Interpolate only within the current screen, so a cut never drags the camera across it.
+  const cut = CUTS.reduce((last, c) => (f >= c ? c : last), CUTS[0]);
+  const next = CUTS.find((c) => c > cut) ?? F.lockup;
+  const keys = CAMERA.filter((c) => c[0] >= cut && c[0] < next);
+  const pick = (i: number) =>
+    keys.length === 1
+      ? keys[0][i]
+      : interpolate(f, keys.map((c) => c[0]), keys.map((c) => c[i]), { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: inOut });
+  // A small settle after each cut, and a slow push the whole time so no hold is ever dead still.
+  const settle = 1 + 0.035 * (1 - ease(f, [cut, cut + 16], [0, 1]));
+  const push = 1 + 0.025 * ((f - cut) / (next - cut));
+  const z = pick(3) * settle * push;
   // Keep the frame inside the screen at every zoom.
   const x = Math.min(Math.max(pick(1), 960 / z), 1920 - 960 / z);
   const y = Math.min(Math.max(pick(2), 540 / z), 1080 - 540 / z);
@@ -177,21 +196,17 @@ const CalloutPill: React.FC<{ c: Callout; f: number; cam: ReturnType<typeof came
 
 const Chapter: React.FC<{ f: number }> = ({ f }) => {
   const { fps } = useVideoConfig();
-  const ch = [...CHAPTERS].reverse().find((c) => f >= c.at);
-  if (!ch) return null;
-  const next = CHAPTERS.find((c) => c.at > ch.at)?.at ?? F.lockup;
-  const show = arrive(f, ch.at, fps) * (1 - ease(f, [next - 8, next], [0, 1]));
-  const line = arrive(f, ch.at + 8, fps);
+  if (f < CHAPTERS[0].at) return null;
+  const show = arrive(f, CHAPTERS[0].at, fps) * (1 - ease(f, [F.lockup - 10, F.lockup - 2], [0, 1]));
+  // One steady label; only its text changes from chapter to chapter.
   return (
     <div
       style={{
         position: "absolute",
         left: 48,
         top: 44,
-        display: "flex",
-        alignItems: "center",
-        gap: 18,
-        padding: "16px 30px 16px 16px",
+        width: 880,
+        height: 90,
         borderRadius: 26,
         background: "rgba(21,23,29,.9)",
         border: "1.5px solid rgba(255,255,255,.14)",
@@ -199,13 +214,36 @@ const Chapter: React.FC<{ f: number }> = ({ f }) => {
         fontFamily,
         opacity: show,
         transform: `translateY(${(1 - show) * -12}px)`,
+        overflow: "hidden",
       }}
     >
-      <span style={{ width: 52, height: 52, flex: "none", borderRadius: 26, background: C.cobalt, color: C.white, display: "grid", placeItems: "center", fontSize: 28, fontWeight: 600 }}>{ch.n}</span>
-      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <span style={{ fontSize: 34, fontWeight: 600, color: C.porcelain, letterSpacing: -0.5 }}>{ch.title}</span>
-        <span style={{ fontSize: 24, color: "#aeb2bd", opacity: line }}>{ch.line}</span>
-      </div>
+      {CHAPTERS.map((ch, i) => {
+        const next = CHAPTERS[i + 1]?.at ?? Infinity;
+        const enter = i === 0 ? 1 : ease(f, [ch.at, ch.at + 10], [0, 1]);
+        const leave = Number.isFinite(next) ? ease(f, [next, next + 8], [0, 1]) : 0;
+        if (f < ch.at || leave >= 1) return null;
+        return (
+          <div
+            key={ch.n}
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 18,
+              padding: "0 30px 0 18px",
+              opacity: enter * (1 - leave),
+              transform: `translateY(${(1 - enter) * 22 - leave * 22}px)`,
+            }}
+          >
+            <span style={{ width: 52, height: 52, flex: "none", borderRadius: 26, background: C.cobalt, color: C.white, display: "grid", placeItems: "center", fontSize: 28, fontWeight: 600 }}>{ch.n}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <span style={{ fontSize: 34, fontWeight: 600, color: C.porcelain, letterSpacing: -0.5 }}>{ch.title}</span>
+              <span style={{ fontSize: 24, color: "#aeb2bd", whiteSpace: "nowrap" }}>{ch.line}</span>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -217,25 +255,37 @@ export const App: React.FC = () => {
   const f = useCurrentFrame() + F.toApp;
   const cam = camera(f);
   const idx = SHOTS.reduce((last, [start], i) => (f >= start ? i : last), 0);
-  const [at, shot] = SHOTS[Math.max(0, idx)];
-  const prev = idx > 0 && DISSOLVE.has(at) ? SHOTS[idx - 1][1] : null;
-  const mix = prev ? ease(f, [at, at + 9], [0, 1]) : 1;
-  const enter = ease(f, [F.toApp, F.toApp + 12], [0, 1]);
+  const [at, shot] = SHOTS[idx];
+  // In-place update: the previous state scrolls by the anchor's move while the new one settles in.
+  const updating = idx > 0 && !CUTS.includes(at) && f < at + UPDATE ? SHOTS[idx - 1][1] : null;
+  const t = updating ? ease(f, [at, at + UPDATE], [0, 1]) : 1;
+  const anchor = ANCHOR[shot];
+  const dy = updating && anchor ? box(updating, anchor).y - box(shot, anchor).y : 0;
+  // In: the caught idea opens like an iris onto the app. Out: the app falls back into the dark ending.
+  const iris = ease(f, [F.toApp, F.toApp + 18], [0, 1], inOut);
+  const out = ease(f, [F.lockup - 12, F.lockup], [0, 1], inOut);
 
   // Typing: the typed composer is revealed letter by letter over the empty one.
   const comp1 = box("talk-1", "composer");
   const typed = ease(f, [F.typeStart, F.typeEnd], [0, PROMPT_CHARS], (t) => t);
   const reveal = f >= F.typeEnd ? 2000 : 14 + Math.floor(typed) * 7.6;
 
-  const layer = (s: Shot, opacity: number) => (
-    <Img src={staticFile(`screens/${s}.png`)} style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, opacity }} />
+  const layer = (s: Shot, opacity: number, y = 0) => (
+    <Img src={staticFile(`screens/${s}.png`)} style={{ position: "absolute", left: 0, top: y, width: 1920, height: 1080, opacity }} />
   );
 
   return (
-    <AbsoluteFill style={{ background: "#0e0f12", opacity: enter }}>
+    <AbsoluteFill
+      style={{
+        background: "#0e0f12",
+        clipPath: iris < 1 ? `circle(${iris * 2300}px at ${CAUGHT_AT[0]}px ${CAUGHT_AT[1]}px)` : undefined,
+        opacity: 1 - out,
+        transform: `scale(${(1 + 0.12 * (1 - iris)) * (1 - 0.04 * out)})`,
+      }}
+    >
       <div style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, transformOrigin: "0 0", transform: `translate(${960 - cam.x * cam.z}px, ${540 - cam.y * cam.z}px) scale(${cam.z})` }}>
-        {prev && layer(prev, 1)}
-        {layer(shot, mix)}
+        {updating && layer(updating, 1, -dy * t)}
+        {layer(shot, updating ? t : 1, updating ? dy * (1 - t) : 0)}
         {shot === "talk-0" && f >= F.typeStart && (
           <div style={{ position: "absolute", left: comp1.x - 20, top: comp1.y - 14, width: Math.min(comp1.w + 80, reveal), height: comp1.h + 28, overflow: "hidden" }}>
             <Img src={staticFile("screens/talk-1.png")} style={{ position: "absolute", left: -(comp1.x - 20), top: -(comp1.y - 14), width: 1920, height: 1080 }} />

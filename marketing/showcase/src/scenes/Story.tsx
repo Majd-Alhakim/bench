@@ -169,7 +169,7 @@ export const Story: React.FC = () => {
             left: topX,
             top: topYNow,
             transform: `rotate(${topRot}deg)`,
-            opacity: ease(f, [F.toApp, F.toApp + 2], [1, 0]),
+            opacity: ease(f, [F.toApp + 8, F.toApp + 12], [1, 0]), // held until the iris has opened past it
           }}
         />
       )}

@@ -35,8 +35,8 @@ const BEATS_S = {
   boardDone: 28.6,
   // 4 · You review and test (the quiet passage).
   test: 31.8,
-  startTest: 34.0,
-  green: 35.2,
+  startTest: 33.6,
+  green: 34.2,
   // 5 · You say when it goes live (on the big swell).
   deploy: 38.0,
   goLive: 38.9,

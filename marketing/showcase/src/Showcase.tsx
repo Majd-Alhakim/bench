@@ -9,7 +9,7 @@ import { F } from "./timeline";
 /** Hook and problem (Story), the five steps in the real app (App), then the brand cards (End). */
 export const Showcase: React.FC = () => (
   <AbsoluteFill>
-    <Sequence durationInFrames={F.toApp + 12}>
+    <Sequence durationInFrames={F.toApp + 20}>
       <Story />
     </Sequence>
     <Sequence from={F.toApp} durationInFrames={F.lockup - F.toApp}>

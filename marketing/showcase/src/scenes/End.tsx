@@ -10,10 +10,10 @@ const Lockup: React.FC = () => {
   const { fps } = useVideoConfig();
   const a = arrive(f, 0, fps, { damping: 200, stiffness: 140 });
   return (
-    <AbsoluteFill style={{ background: C.porcelain, alignItems: "center", justifyContent: "center" }}>
+    <AbsoluteFill style={{ background: C.ink, alignItems: "center", justifyContent: "center" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 58, opacity: a, transform: `scale(${0.94 + 0.06 * a})` }}>
-        <Quartet size={160} />
-        <span style={{ fontFamily, fontWeight: 600, fontSize: 168, letterSpacing: -6, color: C.ink, lineHeight: 1 }}>eucas</span>
+        <Quartet size={160} colour />
+        <span style={{ fontFamily, fontWeight: 600, fontSize: 168, letterSpacing: -6, color: C.porcelain, lineHeight: 1 }}>eucas</span>
       </div>
     </AbsoluteFill>
   );
@@ -25,8 +25,8 @@ const Tagline: React.FC = () => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   return (
-    <AbsoluteFill style={{ background: C.porcelain, alignItems: "center", justifyContent: "center" }}>
-      <div style={{ fontFamily, fontWeight: 600, fontSize: 92, letterSpacing: -2.5, color: C.ink, display: "flex", gap: 24 }}>
+    <AbsoluteFill style={{ background: C.ink, alignItems: "center", justifyContent: "center" }}>
+      <div style={{ fontFamily, fontWeight: 600, fontSize: 92, letterSpacing: -2.5, color: C.porcelain, display: "flex", gap: 24 }}>
         {TAGLINE.map((w, i) => {
           const a = arrive(f, i * 3, fps, { damping: 200, stiffness: 120 });
           return (
