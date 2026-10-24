@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
-**Next step:** G0 approved 2026-10-24 (spikes GO, [reports](../spikes/)). Next: your G4/G5 review of prototype **v0.8.1** (rounds 5–6 applied, [UF5](../requirements/interviews/2026-10-24-ui-feedback-5.md), [UF6](../requirements/interviews/2026-10-24-ui-feedback-6.md)); then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
+**Next step:** G0 approved 2026-10-24 (spikes GO, [reports](../spikes/)). Next: your G4/G5 review of prototype **v0.8.2** (rounds 5–7 applied: [UF5](../requirements/interviews/2026-10-24-ui-feedback-5.md), [UF6](../requirements/interviews/2026-10-24-ui-feedback-6.md), [UF7](../requirements/interviews/2026-10-24-ui-feedback-7.md)); then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
 
 ## Phase tracker
 
