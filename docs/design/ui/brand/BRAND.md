@@ -124,14 +124,14 @@ It's the one element that's ours already (it came from the client's avatar refer
 
 **The story.** Four seats, four different characters. The team is the logo: a sphere, a triangle, a rounded square and a droplet, cut from the same bodies your agents wear, sitting together in a 2 × 2. Every agent you create is one of these shapes, so the mark means "your team" before anyone reads a word, and it survives any name. The client chose it on 2026-10-23: *"I liked the logo of the quadrat the most."*
 
-Files: [logo/](logo/). Source of truth for the geometry: the Quartet entry on the explorations page ([explorations.html](explorations/explorations.html)), copied exactly.
+Files: [logo/](logo/). Source of truth for the geometry: [`logo/quartet.py`](logo/quartet.py), which writes every master; edit its `spec()`, not the SVGs. **Refined 2026-10-24** after the client's logo videos ([lessons](logo-lessons.md)): the triangle and droplet were about a third lighter than the sphere and square, so the mark leaned left; the gaps ran 8 to 13.5; the triangle was a stroke. Now the weights are close, the gaps are even, the triangle is a drawn equilateral, and the reversed mark is shaved 0.6 so it doesn't look heavier on dark.
 
 ### The mark
 | Rule | Value |
 |---|---|
 | Grid | A 100-unit square split into four 50-unit seats; one character per seat |
-| Shapes | Sphere `r 20` at (26, 26) · triangle (74,10)(91,43)(57,43) with 6-unit round joins · square 38 at `r 12` from (7, 55) · the avatar droplet at 0.46 from (51.1, 50.3) |
-| Gaps | 8 units or more between shapes, so the four still separate at 16 px |
+| Shapes | Sphere `r 20.2` at (25, 25) · equilateral triangle, apex (75, 2), base at y 44.5, corners `r 4.5` · square 37 at `r 11` from (7, 57) · the avatar droplet at 0.485, centred on x 74.5, base at y 95 |
+| Gaps | 11.8 to 14 between neighbours (8.3 at the droplet's tip, which reads wider), so the four still separate at 16 px |
 | One colour (the default) | Ink `#15171d` on light grounds (`mark.svg`); Porcelain white `#eceef3` on Ink and dark grounds (`mark-on-dark.svg`). The mark is the team as a whole, so in the interface it never wears an agent's hue |
 | Colour | Coral, Honey, Mint, Orchid (`#ff5f73`, `#f2ab1d`, `#3cc47c`, `#e05cb4`), fixed. Only on the app icon and brand moments (first open, the brand board). They never follow your agents' hues |
 | Minimum size | 16 px. Below 24 px the mark stands alone, without the name |
