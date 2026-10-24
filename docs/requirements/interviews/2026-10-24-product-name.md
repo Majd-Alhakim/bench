@@ -29,6 +29,6 @@ Closes D-UI5 (the name). This came out of a brainstorm on 2026-10-23 and 2026-10
 
 ## Follow-ups
 1. **Trademark search** (client, with PM help): USPTO classes 9 and 42 and WIPO Global Brand Database, for "EUCA" and "EUCAS", and for similar-sounding marks (Euka).
-2. **Domain: done.** The client bought **`eucas.app`** at Cloudflare on 2026-10-24. Keep auto-renew and WHOIS privacy on (not yet confirmed). No site yet; a landing page can be GitHub Pages pointed at it. Still free to claim: the GitHub org `euca-app` and the npm names `euca` and `eucas` (`github.com/euca` and `/eucas` are taken by old personal accounts).
+2. **Domain: done.** The client bought **`eucas.app`** at Cloudflare on 2026-10-24. Confirmed through the Cloudflare API on 2026-10-24: auto-renew on, WHOIS privacy on, transfer lock on; expires 2027-10-24. No site yet; a landing page can be GitHub Pages pointed at it. Still free to claim: the GitHub org `euca-app` and the npm names `euca` and `eucas` (`github.com/euca` and `/eucas` are taken by old personal accounts).
 3. **Rename task** (after G5): product copy, the prototype, the README and the app name move from "Bench" to "Euca". Package and repo names follow at S1-1. The codename stays in code until then.
 4. Convert the lockup's live text to outlines before shipping `logo/lockup.svg`.
