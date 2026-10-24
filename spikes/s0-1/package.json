@@ -1,0 +1,9 @@
+{
+  "name": "spike-s0-1",
+  "private": true,
+  "type": "module",
+  "description": "Throwaway spike: Agent SDK on the user's claude login, per-agent isolation (S0-1).",
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.290"
+  }
+}

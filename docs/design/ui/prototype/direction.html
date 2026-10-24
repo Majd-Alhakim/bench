@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>bench · UI direction v0.7 · dark first</title>
+<title>eucas · UI direction v0.8.2 · dark first</title>
+<script>window.H0 = location.hash; /* v0.8: the hash the page opened with, before the router rewrites it */</script>
 <script>
 /* Dark first (client, 23 Oct). The theme is set before the first paint so nothing flashes.
    Pref: "dark" (default) · "light" · "system". Kept for this browser tab only, so a fresh load is always dark;
@@ -32,7 +33,7 @@ window.addEventListener("error", function (e) {
 </script>
 <style>
 /* ==========================================================================
-   bench direction v0.6 · dark first, plus the Laws of UX fixes (1–17) and the
+   eucas direction v0.6 · dark first, plus the Laws of UX fixes (1–17) and the
    round-4 bugs (Atlas's empty name pill, misaligned two-column fields).
    Dark is the default; Light and Match system are in Settings › Appearance and
    in the demo bar. Every colour below is a role token; [data-theme="dark"]
@@ -1485,13 +1486,114 @@ table.spec td{padding:10px 12px 10px 0;box-shadow:inset 0 -1px 0 var(--line-subt
 html.rm *,html.rm *::before,html.rm *::after{animation-duration:1ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:1ms!important;transition-delay:0ms!important}
 html.rm .hero-av .body,html.rm .hero-av .blink,html.rm .hero-av .look,html.rm .g-spin,html.rm .g-think circle,html.rm .tdots i,html.rm .think-dots i,html.rm .busy-dots i{animation:none!important}
 html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--agent-base),0 0 0 3px var(--agent-tint)}
+/* ===== v0.8 (UF5, 2026-10-24) ===== */
+/* UF5-5: one minimal scrollbar, app-wide. A thin rounded thumb, no arrows, no track; faint at rest, brighter on hover. */
+::-webkit-scrollbar{width:10px;height:10px;background:transparent}
+::-webkit-scrollbar-track,::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text-3) 22%,transparent);border-radius:999px;border:3px solid transparent;background-clip:padding-box;min-height:40px}
+:hover::-webkit-scrollbar-thumb{background-color:color-mix(in srgb,var(--text-3) 40%,transparent)}
+::-webkit-scrollbar-thumb:hover{background-color:color-mix(in srgb,var(--text-3) 62%,transparent)}
+::-webkit-scrollbar-thumb:active{background-color:color-mix(in srgb,var(--text-2) 70%,transparent)}
+
+/* UF5-2: composers grow with the text (to ~8 lines), then scroll quietly; Expand opens a large editor in place */
+.composer textarea{max-height:190px;overflow-y:auto;scrollbar-gutter:auto;transition:height var(--dur-micro) ease}
+.mn-field>textarea{scrollbar-gutter:auto}
+.cmp-x{position:absolute;top:6px;right:6px;z-index:2;--h:28px;opacity:0;pointer-events:none;transition:opacity var(--dur-micro) ease}
+.composer.cmp-tall .cmp-x,.composer.cmp-big .cmp-x{opacity:1;pointer-events:auto}
+.composer.cmp-tall textarea,.composer.cmp-big textarea{padding-right:34px}
+.composer.cmp-big{align-items:flex-end}
+.composer.cmp-big textarea{height:min(52vh,440px)!important;max-height:none}
+.composer.cmp-big .mn-mirror{padding-right:34px}
+
+/* UF5-1: member rows show the title, and open a small agent card */
+.roster .rrow{cursor:pointer;border-radius:var(--r-sm);corner-shape:var(--corner)}
+.roster .rrow:hover{background:var(--bg-raised)}
+.roster .rrow:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+.roster .rr-n{display:flex;align-items:baseline;gap:6px;min-width:0}
+.roster .rr-n .ag-ttl{font-size:12px}
+.agcard{position:fixed;z-index:60;width:300px;padding:16px;background:var(--bg-raised);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px var(--line-control),var(--elev-3,var(--elev-2))}
+.agcard .agc-h{display:flex;gap:12px;align-items:center}
+.agcard .agc-h b{display:block;font-size:16px;line-height:22px}
+.agcard .agc-h .t-meta{display:block}
+.agcard p{margin:12px 0 0;font-size:14px;line-height:20px;color:var(--text-2)}
+.agcard .agc-now{margin-top:8px;font-size:13px;line-height:18px;color:var(--text-3)}
+.agcard .agc-a{display:flex;gap:8px;margin-top:16px}
+
+/* UF5-3: drag anything from the sidebar into the middle to split (up to 4 panes) */
+.side [data-row][draggable="true"]{cursor:grab}
+.sp-drop{position:absolute;inset:0;z-index:40;pointer-events:none;display:none}
+.main.sp-dragging .sp-drop{display:block;pointer-events:auto}
+.sp-drop .z{position:absolute;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-2);border-radius:var(--r-lg);corner-shape:var(--corner);transition:background var(--dur-micro) ease,box-shadow var(--dur-micro) ease}
+.sp-drop .z span{padding:6px 10px;border-radius:999px;background:var(--bg-raised);box-shadow:var(--elev-2);opacity:0;transition:opacity var(--dur-micro) ease}
+.sp-drop .z.on{background:color-mix(in srgb,var(--action) 14%,transparent);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--action) 60%,transparent)}
+.sp-drop .z.on span{opacity:1}
+.sp-full{display:flex;position:absolute;inset:60px 12px 12px;align-items:center;justify-content:center;font-size:14px;color:var(--text-2);background:color-mix(in srgb,var(--bg-ground) 70%,transparent);border-radius:var(--r-lg)}
+.msplit{position:absolute;inset:0;z-index:30;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;background:var(--bg-ground)}
+.msplit[hidden]{display:none}
+.msplit .pn{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg-ground);border:1px solid color-mix(in srgb,var(--text-3) 30%,transparent);border-radius:var(--r-lg);corner-shape:var(--corner);overflow:hidden;box-shadow:var(--elev-2)}
+.msplit .pn-h{flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 14px;font-size:14px;line-height:20px;background:var(--bg-surface);border-bottom:1px solid color-mix(in srgb,var(--text-3) 18%,transparent)}
+.msplit .pn-h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.msplit .pn-h .btn{--h:28px}
+.msplit iframe{flex:1;width:100%;border:0;background:var(--bg-ground)}
+.msplit .pn.enter{animation:pnIn var(--dur-small,240ms) var(--spring-smooth,ease) both}
+@keyframes pnIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+html.embed .demo,html.embed .side{display:none!important}
+html.embed .app{grid-template-columns:1fr!important;height:100vh}
+html.embed .topbar{display:none}
+html.embed .hero-wrap{display:none}
+html.embed .ahead{display:none}
+html.embed .chat-scroll::before,html.embed .hero-wrap::after{display:none}
+html.embed .chat-scroll{padding-top:8px}
+html.embed .tc-head{min-height:40px;padding:4px 12px}
+html.embed .tc-head h1,html.embed .tc-head>.cluster{display:none}
+html.embed .tc-head .tc-members{margin-left:auto}
+html.embed .composer{width:calc(100% - 24px);padding:4px;margin-bottom:10px;border-radius:var(--r-md)}
+html.embed .composer textarea{min-height:30px;padding:5px 4px;font-size:14px;line-height:20px}
+html.embed .composer .mn-mirror{padding:5px 4px;font-size:14px;line-height:20px}
+html.embed .composer .btn.icon{--h:30px}
+html.embed .composer .btn.icon.inkbtn{--h:32px}
+html.embed .comp-hint{display:none}
+.msplit .pn-h .av-wrap,.msplit .pn-h svg.av{flex:none}
+.msplit .pn-h .pn-t{display:flex;align-items:baseline;gap:8px;flex:1;min-width:0}
+.msplit .pn-h .pn-t b{flex:0 1 auto}
+.msplit .pn-h .pn-s{flex:0 100 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--text-3)}
+
+/* UF5-4: Memory · List or Graph */
+.mem-view{display:inline-flex;padding:3px;gap:2px;border-radius:999px;background:var(--bg-sunken)}
+.mem-view button{height:30px;padding:0 14px;border-radius:999px;font-size:14px;color:var(--text-2)}
+.mem-view button[aria-pressed="true"]{background:var(--bg-raised);color:var(--text-1);box-shadow:var(--elev-1,0 1px 2px rgba(0,0,0,.3))}
+.mgraph{position:relative;flex:1;min-height:0;margin:0 16px 16px;border-radius:var(--r-lg);corner-shape:var(--corner);background:var(--bg-surface);overflow:hidden}
+.mgraph svg{display:block;width:100%;height:100%}
+.mgraph .edge{stroke:color-mix(in srgb,var(--text-3) 30%,transparent);stroke-width:1}
+.mgraph .edge.hot{stroke:color-mix(in srgb,var(--text-1) 70%,transparent);stroke-width:1.5}
+.mgraph .dust{fill:color-mix(in srgb,var(--text-3) 35%,transparent)}
+.mgraph .nd{cursor:pointer}
+.mgraph .nd text{font:500 12px/16px var(--font-text,inherit);fill:var(--text-2);pointer-events:none}
+.mgraph .nd.hub text{font-weight:600;fill:var(--text-1)}
+.mgraph .nd:focus-visible circle{outline:none;stroke:var(--focus);stroke-width:3}
+.mgraph .key{position:absolute;left:16px;bottom:12px;display:flex;gap:14px;font-size:12px;color:var(--text-3)}
+.mgraph .key i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.mgraph .tip{position:absolute;pointer-events:none;max-width:260px;padding:8px 10px;border-radius:var(--r-sm);background:var(--bg-raised);box-shadow:var(--elev-2);font-size:13px;line-height:18px;color:var(--text-1)}
+.mgraph .tip span{display:block;color:var(--text-3);font-size:12px}
+
+/* UF5-6: a fresh install starts with a welcome, then a live Claude Code check */
+.fr-welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:24px}
+.fr-welcome h1{font-size:44px;line-height:52px;letter-spacing:-.02em;margin:8px 0 0}
+.fr-welcome p{margin:0;max-width:700px;text-wrap:balance;color:var(--text-2);font-size:16px;line-height:24px}
+.fr-welcome .acts{margin-top:12px}
+.fr-check{display:flex;align-items:center;gap:10px;color:var(--text-2)}
+.demo-fresh{height:30px;padding:0 12px;border-radius:999px;font-size:13px;color:var(--text-inverse);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .28)}
+.demo-fresh:hover{background:rgb(255 255 255 / .08)}
+.demo-fresh{flex:none}
+.demo-id b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.7 · dark first</b></div>
+  <div class="demo-id"><b>Direction v0.8.2 · dark first</b></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -1514,7 +1616,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 <div class="app" id="app">
   <aside class="side" id="side" aria-label="Your team and navigation">
     <div class="side-top">
-      <a class="brand" href="#home" aria-label="bench, Home" id="brandLink"></a>
+      <a class="brand" href="#home" aria-label="eucas, Home" id="brandLink"></a>
       <button type="button" class="btn icon" id="sideToggle" aria-expanded="true" aria-label="Collapse the sidebar" title="Collapse the sidebar"></button>
       <button type="button" class="btn icon" data-menu="new" aria-haspopup="menu" aria-expanded="false" aria-label="New agent or project" title="New agent or project" id="newBtn"></button>
     </div>
@@ -1587,7 +1689,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
                 <button role="tab" aria-selected="false" tabindex="-1" data-file="term">Terminal</button>
               </div>
               <div class="ws-body" id="wsBody"></div>
-              <div class="ws-foot"><span class="grow">S1-4 Chat UI · bench</span><button type="button" class="btn secondary sm" id="wTake">Take over</button></div>
+              <div class="ws-foot"><span class="grow">S1-4 Chat UI · eucas-app</span><button type="button" class="btn secondary sm" id="wTake">Take over</button></div>
             </div>
             <div class="ws-panel" data-wpanel="settings" hidden>
               <div class="set" id="setBox">
@@ -1604,7 +1706,7 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
     <section class="screen" id="p-room" aria-label="Agent" hidden></section>
 
     <!-- TEAM CHAT -->
-    <section class="screen" id="p-team" aria-label="Bench team chat" hidden></section>
+    <section class="screen" id="p-team" aria-label="Eucas app team chat" hidden></section>
 
     <!-- SPLIT VIEW and ONE PROJECT -->
     <section class="screen" id="p-split" aria-label="Split view" hidden>
@@ -1736,13 +1838,13 @@ const ST = {
 const AG = {
   atlas:{name:"Atlas",role:"Main agent · CEO",team:"Company",shape:"sphere",hue:"lavender",status:"idle",snip:"replied to Dana for you at 08:02",time:"08:02",since:"12 Oct",runs:540,notes:88,lessons:21},
   iris:{name:"Iris",role:"Personal assistant",team:"Company",shape:"droplet",hue:"aqua",status:"idle",snip:"Monday's plan is ready when you are",time:"Wed",since:"12 Oct",runs:120,notes:31,lessons:4},
-  maya:{name:"Maya",role:"PM · lead",team:"Bench › Product team",shape:"cloud",hue:"mint",status:"working",snip:"review's ready: S1-2 and S1-3",live:"planning Sprint 2 follow-ups",time:"09:12",since:"14 Oct",runs:286,notes:52,lessons:9},
-  omar:{name:"Omar",role:"BA lead",team:"Bench › Product team",shape:"hexagon",hue:"teal",status:"thinking",snip:"8 questions on memory filters, ready",time:"09:10",since:"14 Oct",runs:144,notes:40,lessons:6},
-  lina:{name:"Lina",role:"BA",team:"Bench › Product team",shape:"egg",hue:"cocoa",status:"idle",snip:"yesterday's notes are in memory",time:"08:30",since:"14 Oct",runs:98,notes:27,lessons:3},
-  sam:{name:"Sam",role:"UX/UI",team:"Bench › Product team",shape:"blob",hue:"tangerine",status:"working",snip:"3 of 4 first-run screens done",live:"first-run screens, 3 of 4",time:"09:08",since:"14 Oct",runs:173,notes:35,lessons:7},
-  karim:{name:"Karim",role:"Tech lead",team:"Bench › Dev team",shape:"square",hue:"pear",status:"working",snip:"PR #41 merged to main by itself",live:"starting S1-6 SQLite persistence",time:"08:41",since:"14 Oct",runs:351,notes:61,lessons:15},
-  noor:{name:"Noor",role:"Developer",team:"Bench › Dev team",shape:"pill",hue:"coral",status:"working",snip:"PR #44 open, waiting for Karim",live:"running pnpm test chat",time:"09:14",since:"14 Oct",runs:312,notes:46,lessons:12},
-  jade:{name:"Jade",role:"QA",team:"Bench › Dev team",shape:"triangle",hue:"orchid",status:"blocked",snip:"E2E failed twice on Windows CI",time:"07:39",since:"14 Oct",runs:204,notes:33,lessons:8},
+  maya:{name:"Maya",role:"PM · lead",team:"Eucas app › Product team",shape:"cloud",hue:"mint",status:"working",snip:"review's ready: S1-2 and S1-3",live:"planning Sprint 2 follow-ups",time:"09:12",since:"14 Oct",runs:286,notes:52,lessons:9},
+  omar:{name:"Omar",role:"BA lead",team:"Eucas app › Product team",shape:"hexagon",hue:"teal",status:"thinking",snip:"8 questions on memory filters, ready",time:"09:10",since:"14 Oct",runs:144,notes:40,lessons:6},
+  lina:{name:"Lina",role:"BA",team:"Eucas app › Product team",shape:"egg",hue:"cocoa",status:"idle",snip:"yesterday's notes are in memory",time:"08:30",since:"14 Oct",runs:98,notes:27,lessons:3},
+  sam:{name:"Sam",role:"UX/UI",team:"Eucas app › Product team",shape:"blob",hue:"tangerine",status:"working",snip:"3 of 4 first-run screens done",live:"first-run screens, 3 of 4",time:"09:08",since:"14 Oct",runs:173,notes:35,lessons:7},
+  karim:{name:"Karim",role:"Tech lead",team:"Eucas app › Dev team",shape:"square",hue:"pear",status:"working",snip:"PR #41 merged to main by itself",live:"starting S1-6 SQLite persistence",time:"08:41",since:"14 Oct",runs:351,notes:61,lessons:15},
+  noor:{name:"Noor",role:"Developer",team:"Eucas app › Dev team",shape:"pill",hue:"coral",status:"working",snip:"PR #44 open, waiting for Karim",live:"running pnpm test chat",time:"09:14",since:"14 Oct",runs:312,notes:46,lessons:12},
+  jade:{name:"Jade",role:"QA",team:"Eucas app › Dev team",shape:"triangle",hue:"orchid",status:"blocked",snip:"E2E failed twice on Windows CI",time:"07:39",since:"14 Oct",runs:204,notes:33,lessons:8},
   rana:{name:"Rana",role:"PM · lead",team:"InterviewKit",shape:"egg",hue:"honey",status:"working",snip:"sprint 1 wraps today: 5 of 8 done",live:"closing Sprint 1",time:"09:05",since:"19 Oct",runs:88,notes:19,lessons:3},
   yusuf:{name:"Yusuf",role:"BA",team:"InterviewKit",shape:"blob",hue:"aqua",status:"waiting",snip:"6 questions on the interview flow",time:"08:49",since:"19 Oct",runs:41,notes:12,lessons:1},
   tala:{name:"Tala",role:"Developer",team:"InterviewKit",shape:"pill",hue:"mint",status:"working",snip:"booking page: calendar picker done",live:"building the booking page",time:"09:13",since:"19 Oct",runs:77,notes:15,lessons:2},
@@ -1760,7 +1862,7 @@ const AG = {
 const TITLES = {atlas:"Main agent",maya:"PM",omar:"BA lead",lina:"BA",sam:"UX/UI",karim:"Tech lead",noor:"Developer",jade:"QA",rana:"PM",yusuf:"BA",tala:"Developer",lea:"PM",ben:"BA lead",ivo:"BA",mia:"UX/UI",raf:"Tech lead",zoe:"Developer",kai:"QA",relbot:"Release notes"};
 Object.keys(TITLES).forEach(k => { AG[k].title = TITLES[k]; });
 const IK_NAME = "InterviewKit", IK_LONG = "InterviewKit for the Spring Hiring Round 2027";
-const LUMEN = {name:"Lumen",title:"",role:"Release notes",team:"Bench › Dev team",shape:"droplet",hue:"honey",status:"idle",snip:"first draft due Friday",time:"Now",since:"22 Oct",runs:0,notes:18,lessons:0};
+const LUMEN = {name:"Lumen",title:"",role:"Release notes",team:"Eucas app › Dev team",shape:"droplet",hue:"honey",status:"idle",snip:"first draft due Friday",time:"Now",since:"22 Oct",runs:0,notes:18,lessons:0};
 const GHOST = {name:"New agent",shape:"droplet",hue:"none",status:"idle"};
 
 /* ---------- icons: one outline set, 1.5 stroke, sized to the line ---------- */
@@ -1840,11 +1942,11 @@ function markSVG(size, fg = "currentColor", color = false){
   return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false"><circle cx="26" cy="26" r="20" fill="${c("coral")}"/><path d="M74 10 L91 43 L57 43 Z" fill="${c("honey")}" stroke="${c("honey")}" stroke-width="6" stroke-linejoin="round"/><rect x="7" y="55" width="38" height="38" rx="12" fill="${c("mint")}"/><path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z" fill="${c("orchid")}"/></svg>`;
 }
 /* Lockup: mark, gap 0.36 × its height, the name (a codename) in Instrument Sans 600 at 0.84 × height. */
-function lockupHTML(h){ return `<span class="lockup" style="--h:${h}px">${markSVG(h)}<span class="wm">bench</span></span>`; }
+function lockupHTML(h){ return `<span class="lockup" style="--h:${h}px">${markSVG(h)}<span class="wm">eucas</span></span>`; }
 
 /* ---------- sound (P-7, decided 23 Oct): the explorations' three sounds, synthesised live, no files ----------
    On by default (the Sound switch in the demo bar). Nothing plays before your first click or key press, and the
-   AudioContext is only created then (browser autoplay rules). In the app, needs you and done play only when Bench
+   AudioContext is only created then (browser autoplay rules). In the app, needs you and done play only when Eucas
    isn't the window you're in; here they play in view so you can hear them. Sound is separate from reduced motion. */
 const SND = {on:true, armed:false, ac:null, master:null, nb:null, last:{}};
 try { SND.on = localStorage.getItem("bench-proto-sound") !== "off"; } catch (e) { SND.on = true; }
@@ -2047,15 +2149,15 @@ const LOOK = {
   n0919:{t:"Noor · 09:19 run summary",tot:"3.4k tokens · 0.11 % of your week",steps:[["terminal","Ran pnpm test · 214 of 214 passed","1.1k"],["memory","Used 1 note: \"PR style\" (preference, 20 Oct)","0.2k"],["branch","Opened PR #44 · 3 files","1.4k"],["chat","Wrote this summary","0.7k"]]},
   qa3:{t:"How QA-3 got here",tot:"8.6k tokens · 0.29 % of your week",steps:[["terminal","Jade · E2E attempt 1 · runner timeout · 07:12","2.9k"],["terminal","Jade · E2E attempt 2 · Electron didn't start · 07:39","3.1k"],["user","Karim · tried another runner image · 07:44","2.1k"],["shield","Karim escalated it to you · 07:45","0.5k"]]},
   email:{t:"Atlas replied to Dana for you",tot:"1.6k tokens · 0.05 % of your week",steps:[["chat","Read Dana's email (your Gmail)","0.6k"],["memory","Used 1 note: \"your email sign-off\" (preference, 16 Oct)","0.2k"],["pencil","Wrote the reply: Tuesday 15:00 suits you","0.6k"],["external","Sent it from your Gmail at 08:02","0.2k"]]},
-  e2e:{t:"Why Jade is asking",tot:"0.3k tokens · 0.01 % of your week",steps:[["folder","e2e/legacy/ is outside Jade's scratch area","0k"],["doc","Nothing imports or runs these 14 files since S1-1","0.2k"],["shield","Atlas passed it to you: deleting files always needs you","0.1k"]]},
+  e2e:{t:"Why Jade is asking",tot:"0.3k tokens · 0.01 % of your week",steps:[["folder","Agents never delete files themselves","0k"],["doc","Nothing imports or runs these 14 files since S1-1","0.2k"],["shield","Atlas passed it to you: deleting files always needs you","0.1k"]]},
   merge41:{t:"PR #41 merged by itself",tot:"0.4k tokens · 0.01 % of your week",steps:[["check","CI passed on Windows and Ubuntu · secret scan clean","0k"],["shield","The reviewer check passed (an agent that didn't write it)","0.3k"],["branch","Merged to main at 08:41 · revert any time","0.1k"]]},
   err:{t:"Noor · the run that stopped",tot:"5.2k tokens · 0.17 % of your week",steps:[["terminal","Ran pnpm test · 214 tests in one process","2.2k"],["x","Killed at 09:18: out of memory (exit 137)","0k"],["memory","Saved checkpoint 09:18 · 3 files kept","0.4k"],["refresh","Planned a retry: the suite in two halves","0.6k"]]},
   ckpt:{t:"Noor · checkpoint at the 90 % ceiling",tot:"2.0k tokens · 0.07 % of your week",steps:[["memory","Wrote the checkpoint · 8 of 8 sections","1.2k"],["sessions","Archived the old session in the trace","0k"],["chat","Started fresh and restated the next step","0.8k"]]},
-  team1:{t:"Why Karim replied: you mentioned him",tot:"0.3k tokens · 0.01 % of your week",steps:[["user","You mentioned @Karim, so Bench skipped the router","0k"],["doc","Karim got your message and the thread digest","0.3k"],["chat","Karim replied","2.0k"]]},
+  team1:{t:"Why Karim replied: you mentioned him",tot:"0.3k tokens · 0.01 % of your week",steps:[["user","You mentioned @Karim, so Eucas skipped the router","0k"],["doc","Karim got your message and the thread digest","0.3k"],["chat","Karim replied","2.0k"]]},
   ho:{t:"Maya handed S1-6 to Karim",tot:"0.2k tokens · 0.01 % of your week",steps:[["doc","Brief: S1-6 SQLite persistence · acceptance criteria · 2 artifact refs","0.2k"],["shield","Karim got the brief, not Maya's transcript","0k"]]},
-  memo:{t:"The debate on Stop",tot:"6.1k tokens · 0.20 % of your week",steps:[["chat","Sam, Noor and Maya · 7 messages · 4 min 12 s","5.2k"],["memory","Memo saved to Bench memory","0.4k"],["sessions","The debate chat is archived here","0k"]]},
+  memo:{t:"The debate on Stop",tot:"6.1k tokens · 0.20 % of your week",steps:[["chat","Sam, Noor and Maya · 7 messages · 4 min 12 s","5.2k"],["memory","Memo saved to Eucas memory","0.4k"],["sessions","The debate chat is archived here","0k"]]},
   atlas:{t:"Atlas · morning status",tot:"1.1k tokens · 0.04 % of your week",steps:[["memory","Read 7 team summaries (no tokens: local)","0k"],["chat","Wrote this status","1.1k"]]},
-  first:{t:"Atlas · your first answer",tot:"1.2k tokens · 0.04 % of your week",steps:[["external","Read 7 open issues in bench (GitHub, read-only)","0.7k"],["chat","Sorted them and wrote this checklist","0.5k"]]}
+  first:{t:"Atlas · your first answer",tot:"1.2k tokens · 0.04 % of your week",steps:[["external","Read 7 open issues in eucas-app (GitHub, read-only)","0.7k"],["chat","Sorted them and wrote this checklist","0.5k"]]}
 };
 function openLook(ref, anchor){
   const L = LOOK[ref] || LOOK.n0912;
@@ -2145,7 +2247,7 @@ let current = "home", curHash = "home";
 
 /* ---------- projects ---------- */
 const PROJ = {
-  bench:{id:"bench",name:"Bench",sprint:2,day:1,days:3,ends:"Sat 24 Oct",team:["maya","omar","lina","sam","karim","noor","jade"],side:["karim","jade","noor","maya"],more:["omar","sam","lina"],cluster:["maya","karim","noor"],tcTime:"09:11",tcSnip:"Maya: follow-ups for Karim and Omar",activity:"Noor is running tests · a debate is live",
+  bench:{id:"bench",name:"Eucas app",sprint:2,day:1,days:3,ends:"Sat 24 Oct",team:["maya","omar","lina","sam","karim","noor","jade"],side:["karim","jade","noor","maya"],more:["omar","sam","lina"],cluster:["maya","karim","noor"],tcTime:"09:11",tcSnip:"Maya: follow-ups for Karim and Omar",activity:"Noor is running tests · a debate is live",
     board:{todo:[["S1-6","SQLite persistence","karim"],["S2-5","Routine scheduler","noor"],["S2-6","Memory browser","lina"]],
       doing:[["S1-4","Chat UI: streaming, markdown, stop","noor","working"],["QA-3","E2E on Windows CI","jade","blocked"],["S2-1","First-run screens","sam","working"],["S1-2","Onboarding","maya","test"],["S1-3","Agent runner","karim","review"]],
       done:[["S2-0","Sprint 2 plan","maya"],["S1-1","Repo and CI","karim"]]}},
@@ -2169,33 +2271,33 @@ function busyCount(){ return PROJ_ORDER.reduce((s, p) => s + PROJ[p].board.doing
 
 /* ---------- What needs you: tickets (D2 ranking: blocked > outward/reserved > requests > meetings > FYI) ---------- */
 const NEEDS0 = [
-  {k:"qa3",grp:"decide",av:"jade",proj:"bench",tag:{state:"Blocked",cls:"ink",glyph:"blocked"},title:"QA-3 is blocked: E2E failed twice",who:"Jade · QA-3 · Bench",age:"since 07:45",start:"QA-3: Jade is blocked",
+  {k:"qa3",grp:"decide",av:"jade",proj:"bench",tag:{state:"Blocked",cls:"ink",glyph:"blocked"},title:"QA-3 is blocked: E2E failed twice",who:"Jade · QA-3 · Eucas app",age:"since 07:45",start:"QA-3: Jade is blocked",
     d:"Jade's end-to-end tests failed twice on the Windows CI runners, at 07:12 and 07:39. Karim suggests two ways out.",
     opts:[{v:"nightly",t:"Nightly E2E on Karim's machine",s:"Free · results each morning instead of on every pull request",rec:true,label:"Use nightly E2E",cons:"free",done:"<b>Nightly E2E chosen.</b> Karim sets it up tonight; first results tomorrow at 07:00."},
           {v:"paid",t:"A paid Windows runner",s:"About 2 h to set up · needs a payment from you",label:"Use a paid runner",cons:"needs a payment",done:"<b>Paid runner chosen.</b> Karim sends you the payment details; nothing is bought until you pay."}],
     recBy:"Karim recommends",sec:[["secondary","Ask Karim","askkarim"],["tertiary","Later","later"]],look:"qa3"},
-  /* CR-007: deleting files outside an agent's own scratch area is one of the few things that still needs you (D-C: Jade's, not Noor's) */
-  {k:"e2e",grp:"decide",av:"jade",proj:"bench",tag:{gate:"Deletes"},title:"Jade asks to delete <code>e2e/legacy/</code>",who:"Jade · QA-3 · Bench",age:"6 min",start:"Jade's request to delete e2e/legacy/",
-    prov:"Deleting files always comes to you.",cmd:"git rm -r e2e/legacy",where:"in repo bench",
+  /* CR-008: agents never delete files themselves; every delete needs you (D-C: Jade's, not Noor's) */
+  {k:"e2e",grp:"decide",av:"jade",proj:"bench",tag:{gate:"Deletes"},title:"Jade asks to delete <code>e2e/legacy/</code>",who:"Jade · QA-3 · Eucas app",age:"6 min",start:"Jade's request to delete e2e/legacy/",
+    prov:"Deleting files always comes to you.",cmd:"git rm -r e2e/legacy",where:"in repo eucas-app",
     d:"The old Spectron tests. Playwright replaced them in S1-1, and nothing runs them anymore.",
-    cons:["14 files","outside Jade's scratch area","git keeps a copy"],
+    cons:["14 files","agents never delete files","git keeps a copy"],
     primary:{label:"Delete 14 files",act:"allow"},sec:[["secondary","Keep them","deny"]],
-    why:"Deleting can't be undone from Bench.",look:"e2e"},
-  {k:"pay",grp:"decide",av:"sam",proj:"bench",tag:{gate:"Payment"},title:"A Figma seat for Sam",who:"Sam · S2-1 · Bench",age:"since 06:10",start:"Sam's Figma seat",
-    d:"You pay outside Bench; agents never pay.",
+    why:"Deleting can't be undone from Eucas.",look:"e2e"},
+  {k:"pay",grp:"decide",av:"sam",proj:"bench",tag:{gate:"Payment"},title:"A Figma seat for Sam",who:"Sam · S2-1 · Eucas app",age:"since 06:10",start:"Sam's Figma seat",
+    d:"You pay outside Eucas; agents never pay.",
     facts:[["What","Figma Professional, 1 seat"],["For","Hand-off files for S2-1"]],
-    primary:{label:"Mark as paid",cons:"you paid outside Bench",done:"<b>Marked as paid.</b> Sam is told the seat is ready."},sec:[["secondary","Not now","later"]]},
+    primary:{label:"Mark as paid",cons:"you paid outside Eucas",done:"<b>Marked as paid.</b> Sam is told the seat is ready."},sec:[["secondary","Not now","later"]]},
   /* CR-007, new: Ready to test. What to try, how, and one way in. The merge before it happened by itself.
      D-C: this is Noor's demo moment too; her ticket shows in her chat and here (one fact, resolved anywhere). */
-  {k:"stoptest",grp:"test",av:"noor",proj:"bench",tag:{},title:"The Stop button is ready for you to try",who:"Noor · S1-4 · Bench",age:"2 min",start:"Noor's Stop button, ready for you to try",
+  {k:"stoptest",grp:"test",av:"noor",proj:"bench",tag:{},title:"The Stop button is ready for you to try",who:"Noor · S1-4 · Eucas app",age:"2 min",start:"Noor's Stop button, ready for you to try",
     d:"Stop now sits in the composer and takes Send's place while an agent runs. About 3 minutes; your own team isn't touched.",
     test:["Start the test build. It opens with a sample team.","Ask Noor something long, then press Stop while she answers.","Check she stops within 2 s and says what she kept."],
     primary:{label:"Start testing",cons:"about 3 min",act:"startTest"},
     sec:[["tertiary","Later today","later"]],
     why:"The full suite passed on its own at 09:12: 214 of 214.",look:"n0912"},
-  {k:"test",grp:"test",av:"maya",proj:"bench",tag:{},title:"Onboarding and the agent runner are ready to try",who:"Maya · S1-2, S1-3 · Bench",age:"since 08:44",start:"onboarding and the agent runner, ready for you to try",
+  {k:"test",grp:"test",av:"maya",proj:"bench",tag:{},title:"Onboarding and the agent runner are ready to try",who:"Maya · S1-2, S1-3 · Eucas app",age:"since 08:44",start:"onboarding and the agent runner, ready for you to try",
     d:"The four first-run steps from a fresh start, then a first run with a real agent. Your own team isn't touched.",
-    test:["Start the test build. It opens on an empty Bench folder.","Go through the four steps; give your main agent a name and a look.","Ask it something. The first answer should land in under 3 minutes."],
+    test:["Start the test build. It opens on an empty Eucas folder.","Go through the four steps; give your main agent a name and a look.","Ask it something. The first answer should land in under 3 minutes."],
     primary:{label:"Start testing",cons:"about 10 min",done:"<b>The test build is open.</b> Tell Maya what works and what doesn't; she files what you find."},
     sec:[["tertiary","Later today","later"]],
     why:"Merged to main by itself at 08:36, after CI and the reviewer check passed."},
@@ -2208,17 +2310,17 @@ function fyiHTML(){
   if (H.variant !== "default" || T.memo || ["normal","forecast","guard","guard-exempt"].indexOf(S.scen) < 0) return "";
   return sysL(`Maya, Sam and Noor are debating where Stop lives · Maya decides by 09:15 · <button type="button" class="linkbtn" data-go="team">Watch</button>`, "chat");
 }
-const NEED_LOGIN = {k:"login",grp:"decide",av:"bench",proj:null,tag:{state:"Blocked",cls:"ink",glyph:"blocked"},title:"Sign in to Claude again",who:"Bench · 3 agents and 1 routine are waiting",age:"since 08:10",start:"signing in to Claude again",
+const NEED_LOGIN = {k:"login",grp:"decide",av:"bench",proj:null,tag:{state:"Blocked",cls:"ink",glyph:"blocked"},title:"Sign in to Claude again",who:"Eucas · 3 agents and 1 routine are waiting",age:"since 08:10",start:"signing in to Claude again",
   d:"Your Claude login has expired, so your agents paused at a safe point. Nothing is lost.",cmd:"claude login",where:"in any terminal",
   primary:{label:"Copy command",act:"copy"},sec:[["secondary","Check again","checklogin"]],
-  why:"Bench never sees or stores your Claude credentials. It checks every 30 s and resumes by itself."};
+  why:"Eucas never sees or stores your Claude credentials. It checks every 30 s and resumes by itself."};
 const NEED_FIRST = {k:"issue12",grp:"decide",av:"atlas",proj:null,tag:{kind:"Proposal"},title:"Issue #12 needs a decision from you",who:"Atlas · from your GitHub issues",age:"1 min",start:"issue #12",
   d:"\"Sign the Windows installer?\" Signing removes the SmartScreen warning but needs a certificate (about €70 a year). Atlas suggests waiting until v0.1 ships.",
   opts:[{v:"wait",t:"Wait until v0.1 ships",s:"Free · the SmartScreen warning stays for now",rec:true,label:"Wait until v0.1",cons:"free",done:"<b>Noted on issue #12:</b> wait until v0.1. Atlas comments on GitHub as you."},
         {v:"sign",t:"Sign it now",s:"About €70 a year · needs a payment from you",label:"Sign it now",cons:"needs a payment",done:"<b>Noted:</b> sign it now. A payment ticket follows; nothing is bought until you pay."}],
   sec:[["tertiary","Later","later"]]};
 /* R11: a pause never moves a sprint's end by itself. Monday after the reset, the lead proposes; you decide. */
-const NEED_SPRINT = {k:"sprint",grp:"decide",av:"maya",proj:"bench",tag:{kind:"Proposal"},title:"Sprint 2 ran out of time while paused. New end date?",who:"Maya · Sprint 2 · Bench",age:"since 09:04",start:"Maya's new end date for Sprint 2",
+const NEED_SPRINT = {k:"sprint",grp:"decide",av:"maya",proj:"bench",tag:{kind:"Proposal"},title:"Sprint 2 ran out of time while paused. New end date?",who:"Maya · Sprint 2 · Eucas app",age:"since 09:04",start:"Maya's new end date for Sprint 2",
   d:"Your week ran out on Sat 24 Oct at 14:05, the day Sprint 2 was due, and the team was paused for 43 hours. The end date didn't move by itself.",
   opts:[{v:"tue",t:"End it on Tue 27 Oct",s:"Keeps all 7 stories · the 3 sprint days, shifted past the pause",rec:true,label:"End Sprint 2 on Tue 27 Oct",cons:"7 stories kept",done:"<b>Sprint 2 now ends Tue 27 Oct.</b> Maya tells the team; nothing else changes."},
         {v:"close",t:"Close it now, as planned",s:"S1-4 and S1-6 go back to the backlog for Sprint 3",label:"Close Sprint 2 now",cons:"2 stories to the backlog",done:"<b>Sprint 2 is closed.</b> S1-4 and S1-6 go back to the backlog for Sprint 3."}],
@@ -2342,16 +2444,16 @@ function crumbsHTML(){
   /* Jakob (fix 2): the agent's own crumb opens its profile and settings */
   const who = (id, name) => `<button type="button" class="crumb-cur" data-profile="${id}" aria-current="page" title="${esc(name)}'s profile and settings">${esc(name)}</button>`;
   switch (current){
-    case "agent": return cb("Bench", "project-bench") + sep + who("noor", AG.noor.name);
+    case "agent": return cb("Eucas app", "project-bench") + sep + who("noor", AG.noor.name);
     case "room": { const a = AG[ROOM.id] || LUMEN, p = teamProj(ROOM.id); return (p ? cb(PROJ[p].name, "project-" + p) : cb("Company", "home")) + sep + who(ROOM.id, a.name); }
-    case "team": return cb("Bench", "project-bench") + sep + "<b>Team chat</b>";
+    case "team": return cb("Eucas app", "project-bench") + sep + "<b>Team chat</b>";
     case "project": return `<b>${esc(PROJ[PV.solo].name)}</b>${sep}<span>Dashboard</span>`;
     case "split": return "<b>Split view</b>";
     case "needs": return "<b>What needs you</b>";
     case "memory": return "<b>Memory</b>";
     case "usage": return "<b>Usage</b>";
     case "settings": return "<b>Settings</b>";
-    case "trace": return cb("Bench", "project-bench") + sep + cb("Noor", "agent") + sep + "<b>Look inside</b>";
+    case "trace": return cb("Eucas app", "project-bench") + sep + cb("Noor", "agent") + sep + "<b>Look inside</b>";
     default: return "";
   }
 }
@@ -2386,7 +2488,7 @@ function renderBanner(){
   let h = "";
   /* Peak-End + say it once (fix 4): on Home, Atlas says the limit or the login in its own message; the top-bar ring only echoes it */
   if (current === "home" && (sc === "limit" || sc === "login")) { host.innerHTML = ""; return; }
-  if (sc === "offline") h = `<div class="banner${drop}" role="status">${ic("cloudOff", 18)}<span class="bt"><b>You're offline.</b> Agents finish their step, then wait. Nothing is lost.</span><span class="acts"><button type="button" class="btn secondary sm" data-act="tryOnline" title="Bench also checks every 15 s">Try now</button></span></div>`;
+  if (sc === "offline") h = `<div class="banner${drop}" role="status">${ic("cloudOff", 18)}<span class="bt"><b>You're offline.</b> Agents finish their step, then wait. Nothing is lost.</span><span class="acts"><button type="button" class="btn secondary sm" data-act="tryOnline" title="Eucas also checks every 15 s">Try now</button></span></div>`;
   else if (sc === "limit") h = `<div class="banner ink${drop}" role="status">${ic("pause", 18)}<span class="bt"><b>Your week is used up.</b> 3 runs paused safely and resume <b>Mon 26 Oct at 09:00</b>.</span><span class="acts"><button type="button" class="btn on-ink solid sm" data-go="usage">See paused work</button></span></div>`;
   else if (sc === "login") h = `<div class="banner ink${drop}" role="status">${ic("key", 18)}<span class="bt"><b>Your Claude login has expired.</b> Your agents paused safely. Run <code>claude login</code> in a terminal.</span><span class="acts"><button type="button" class="btn on-ink solid sm" data-act="copyLogin">${ic("copy", 14)}Copy command</button><button type="button" class="btn on-ink sm" data-act="checkLogin">Check again</button></span></div>`;
   else if (sc === "forecast") h = `<div class="banner thin${drop}" role="status">${ic("gauge", 18)}<span class="bt"><b>At this pace your week runs out around Sat 14:00.</b> Routines wait; your requests still run.</span><span class="acts"><button type="button" class="btn tertiary sm" data-go="usage">See what's waiting</button></span></div>`;
@@ -2487,7 +2589,7 @@ function renderHome(){
   const A = atlasNow(), name = A.name;
   const expr = first ? "calm" : !n && st === "idle" ? "pleased" : ST[st].e;
   const msgs = first
-    ? agM(`<p>hi. i'm ${esc(name)}. tell me what you're working on, or start with one of these.</p>`, "", `<div class="sugg" id="firstChips" role="group" aria-label="Suggestions built from your Claude Code inventory">${["Look at the open GitHub issues in bench","Plan a small project together","What can this team do?"].map(t => `<button type="button" data-first="${esc(t)}">${esc(t)}</button>`).join("")}</div>`, {who:A})
+    ? agM(`<p>hi. i'm ${esc(name)}. tell me what you're working on, or start with one of these.</p>`, "", `<div class="sugg" id="firstChips" role="group" aria-label="Suggestions built from your Claude Code inventory">${["Look at the open GitHub issues in eucas-app","Plan a small project together","What can this team do?"].map(t => `<button type="button" data-first="${esc(t)}">${esc(t)}</button>`).join("")}</div>`, {who:A})
     : newsHTML() + askMsgHTML();
   $("#p-home").dataset.hue = A.hue;
   /* Home is Atlas's chat with the same panel every agent has: closed by default, opened from its name (Settings) */
@@ -2642,7 +2744,7 @@ function undoTicket(k){
 }
 function ticketAct(box, k, act, btn){
   const n = needByKey(k); if (!n) return;
-  if (act === "allow") { resolveTicket(box, k, "allow", "<b>Deleted.</b> Jade removed <code>e2e/legacy/</code> (14 files). git keeps a copy; Bench can't undo it.", null); return; }
+  if (act === "allow") { resolveTicket(box, k, "allow", "<b>Deleted.</b> Jade removed <code>e2e/legacy/</code> (14 files). git keeps a copy; Eucas can't undo it.", null); return; }
   if (act === "deny") { openDenyBox(box, k); return; }
   if (act === "denyGo") { const inp = box.querySelector(".deny-box input"); keepFiles(box, k, inp ? inp.value.trim() : ""); return; }
   if (act === "startTest") { startTest(box); return; }
@@ -2651,7 +2753,7 @@ function ticketAct(box, k, act, btn){
   if (act === "discard") { resolveTicket(box, k, "later", "<b>Draft discarded.</b> Nothing was sent.", () => undoTicket(k)); return; }
   if (act === "team") { closeNeeds(true); nav("team"); return; }
   if (act === "usage") { closeNeeds(true); nav("usage"); return; }
-  if (act === "askkarim") { stub("Karim gets your question in the Bench team chat. This sample doesn't open it."); return; }
+  if (act === "askkarim") { stub("Karim gets your question in the Eucas app team chat. This sample doesn't open it."); return; }
   if (act === "copy") { btn.innerHTML = ic("check") + "<span>Copied</span>"; toast("<b>Copied:</b> claude login", {icon:"copy"}); return; }
   if (act === "checklogin") { go("login-back"); return; }
   if (act === "stub") { stub(); return; }
@@ -2794,7 +2896,7 @@ function pvHTML(pid, side){
   /* Calm: the project's tickets aren't repeated here; one line opens them in the overlay, filtered to this project. Nothing when none. */
   const needs = live.length ? `<button type="button" class="pv-needs" data-nd-proj="${pid}"><span class="count soft" data-cnt="${pid}">${live.length}</span><span>${live.length === 1 ? "thing here needs" : "things here need"} you</span>${ic("arrowR", 14)}</button>` : "";
   let banner = "";
-  if (P.setup) banner = `<div class="setup${animate() ? " gather" : ""}" id="setupCard">${stackHTML(P.team, 32)}<div class="grow"><b>${esc(P.name)} is set up.</b><p>Lea is planning sprint 1 from your goal, with 12 lessons from Bench.</p></div><button type="button" class="btn tertiary" data-act="orgtree">Open its Team</button></div>`;
+  if (P.setup) banner = `<div class="setup${animate() ? " gather" : ""}" id="setupCard">${stackHTML(P.team, 32)}<div class="grow"><b>${esc(P.name)} is set up.</b><p>Lea is planning sprint 1 from your goal, with 12 lessons from Eucas app.</p></div><button type="button" class="btn tertiary" data-act="orgtree">Open its Team</button></div>`;
   if (sdone) banner = `<div class="setup" id="sprintDone">${stackHTML(P.team, 32)}<div class="grow"><b>Sprint 1 is done.</b><p>6 of 8 accepted first time · 3 lessons learned · 7.1 % of your week</p></div><button type="button" class="btn tertiary" data-go="memory">Read the lessons</button><button type="button" class="btn primary lg" data-act="stub">Plan sprint 2</button></div>`;
   return `<div class="pv-head" data-pv="${pid}">
       <div class="pv-id"><h2>${esc(P.name)}</h2><span class="t-meta">${esc(sprintLine(P, true))}</span></div>
@@ -2822,7 +2924,7 @@ function openSplit(pid, asLeft){ if (asLeft) { SPLIT.l = pid; SPLIT.r = otherPro
 function projAction(pid, act, side){
   if (act === "here") { PV.solo = pid; nav("project-" + pid); }
   else if (act === "split") openSplit(pid, false);
-  else if (act === "tab") toast(`<b>${esc(PROJ[pid].name)} opens in a new tab</b> inside Bench, next to this one. This sample doesn't draw tabs.`, {icon:"tab"});
+  else if (act === "tab") toast(`<b>${esc(PROJ[pid].name)} opens in a new tab</b> inside Eucas, next to this one. This sample doesn't draw tabs.`, {icon:"tab"});
   else if (act === "toggle") setGroupOpen(pid, !SIDE.open[pid]);
   else if (act === "swap") { const l = SPLIT.l; SPLIT.l = SPLIT.r; SPLIT.r = l; renderSplit(); }
   else if (act === "close") { const keep = side === "L" ? SPLIT.r : SPLIT.l; PV.solo = keep; nav("project-" + keep); }
@@ -2858,24 +2960,24 @@ const MEMNOTES = [
   {id:"prstyle",t:"Short PR titles, \"Fixes #n\" last",type:"Preference",scope:"Global · about you",src:"Learned from your edits to PR #38 and #41 · Atlas approved on 20 Oct",used:"Applied 3 times · last by Noor at 09:19 today",
     md:["Keep pull request titles under 60 characters, in sentence case.","Put \"Fixes #n\" as the last line of the description, never in the title.","No emoji in titles or descriptions."],
     fm:"type: preference\nscope: global\nabout: you\napproved_by: atlas\nlearned_from: [[pr-38-edit]], [[pr-41-edit]]\nupdated: 2026-10-20",links:[["noor","Noor's lesson: use the PR template in .github"],["karim","Karim's review checklist"]]},
-  {id:"datelib",t:"Prefer the date library already in the repo",type:"Lesson",scope:"Noor, and Bench › Dev team",src:"From your redirect at 08:52 today",used:"Applied once · Noor, 08:58",
-    md:["Before adding a dependency, check package.json for a library that already does the job.","date-fns is the date library in bench."],fm:"type: lesson\nscope: team\nteam: bench/dev\nsource: noor\nlearned_from: [[noor-2026-10-22-0852]]\nupdated: 2026-10-22",links:[["noor","Noor's work log, 22 Oct"]]},
+  {id:"datelib",t:"Prefer the date library already in the repo",type:"Lesson",scope:"Noor, and Eucas app › Dev team",src:"From your redirect at 08:52 today",used:"Applied once · Noor, 08:58",
+    md:["Before adding a dependency, check package.json for a library that already does the job.","date-fns is the date library in eucas-app."],fm:"type: lesson\nscope: team\nteam: eucas-app/dev\nsource: noor\nlearned_from: [[noor-2026-10-22-0852]]\nupdated: 2026-10-22",links:[["noor","Noor's work log, 22 Oct"]]},
   {id:"signoff",t:"Sign emails \"Best, Majd\"",type:"Preference",scope:"Global · about you",src:"From your edits to 3 drafts · Atlas approved on 16 Oct",used:"Applied 6 times · last in the reply to Dana",
     md:["Close emails with \"Best, Majd\" on its own line.","No \"Kind regards\"."],fm:"type: preference\nscope: global\nabout: you\napproved_by: atlas\nupdated: 2026-10-16",links:[["atlas","Atlas's reply to Dana, 08:02"]]},
-  {id:"routing",t:"Storage questions go to Karim",type:"Routing",scope:"Bench team chat",src:"From 2 times you re-routed to Karim · 20 Oct",used:"Used 4 times by Bench's router",
-    md:["When a question is about SQLite, files on disk or the ledger, Karim replies first."],fm:"type: routing\nscope: team\nteam: bench\nupdated: 2026-10-20",links:[["karim","Karim's agent card"]]},
+  {id:"routing",t:"Storage questions go to Karim",type:"Routing",scope:"Eucas app team chat",src:"From 2 times you re-routed to Karim · 20 Oct",used:"Used 4 times by Eucas's router",
+    md:["When a question is about SQLite, files on disk or the ledger, Karim replies first."],fm:"type: routing\nscope: team\nteam: eucas-app\nupdated: 2026-10-20",links:[["karim","Karim's agent card"]]},
   {id:"windows",t:"You're on Windows 11; show PowerShell",type:"Preference",scope:"Global · about you",src:"From your corrections on 15 Oct · Atlas approved",used:"Applied 11 times",
     md:["Give shell examples in PowerShell first.","Paths use the path API, never a hard-coded backslash."],fm:"type: preference\nscope: global\nabout: you\nupdated: 2026-10-15",links:[]},
-  {id:"components",t:"Keep components under 200 lines",type:"Lesson",scope:"Bench › Dev team",src:"From Karim's review on 19 Oct",used:"Applied 2 times · last by Noor at 09:04",
-    md:["Split a React component when it passes 200 lines.","Keep the stop/send logic in its own hook."],fm:"type: lesson\nscope: team\nteam: bench/dev\nsource: karim\nupdated: 2026-10-19",links:[["noor","Noor's 09:04 change to Composer.tsx"]]}
+  {id:"components",t:"Keep components under 200 lines",type:"Lesson",scope:"Eucas app › Dev team",src:"From Karim's review on 19 Oct",used:"Applied 2 times · last by Noor at 09:04",
+    md:["Split a React component when it passes 200 lines.","Keep the stop/send logic in its own hook."],fm:"type: lesson\nscope: team\nteam: eucas-app/dev\nsource: karim\nupdated: 2026-10-19",links:[["noor","Noor's 09:04 change to Composer.tsx"]]}
 ];
 const MEM = {scope:"about", note:"prstyle"};
 function renderMemory(){
   const nt = MEMNOTES.find(n => n.id === MEM.note) || MEMNOTES[0];
   const scopes = [["About you",[["about","user","Preferences about you",23]]],["Global",[["company","building","Company notes",41],["memos","doc","Decisions and memos",18]]],
-    ["Teams",[["dev","grid","Bench › Dev team",64],["product","grid","Bench › Product team",37],["ik","grid","InterviewKit",22]]],["Private",[["noor","noor","Noor",46],["karim","karim","Karim",61],["atlas","atlas","Atlas",88]]]];
+    ["Teams",[["dev","grid","Eucas app › Dev team",64],["product","grid","Eucas app › Product team",37],["ik","grid","InterviewKit",22]]],["Private",[["noor","noor","Noor",46],["karim","karim","Karim",61],["atlas","atlas","Atlas",88]]]];
   $("#p-memory").innerHTML = `<div class="mem-top"><div><h1 class="t-title" style="font-size:20px">Memory</h1><p class="ink2">Your team knows <b class="num">214</b> things about how you work.</p></div>
-      <div class="acts"><button type="button" class="btn icon" data-act="openFolder" aria-label="Open the memory folder" title="Open the folder: plain Markdown in Bench\\memory">${ic("folder")}</button><button type="button" class="btn secondary" data-act="export">${ic("download")}Export as Markdown</button></div></div>
+      <div class="acts"><button type="button" class="btn icon" data-act="openFolder" aria-label="Open the memory folder" title="Open the folder: plain Markdown in Eucas\\memory">${ic("folder")}</button><button type="button" class="btn secondary" data-act="export">${ic("download")}Export as Markdown</button></div></div>
     <div class="mem">
       <nav class="mem-scopes" aria-label="Memory scopes">${scopes.map(g => `<h3>${g[0]}</h3>${g[1].map(s => `<button type="button" data-mscope="${s[0]}"${MEM.scope === s[0] ? ' aria-current="true"' : ""}>${AG[s[1]] ? avatar(s[1], 16, {nobadge:true, hidden:true}) : ic(s[1])}<span class="ellip">${esc(s[2])}</span><span class="n">${s[3]}</span></button>`).join("")}`).join("")}</nav>
       <div class="mem-list"><div class="srch"><input class="inp sm" style="width:100%" type="search" placeholder="Search memory" aria-label="Search memory"></div>
@@ -2944,7 +3046,7 @@ MQ_DARK.addEventListener("change", () => { if (THEME.pref === "system") applyThe
 function renderAppSettings(){
   $("#p-settings").innerHTML = `<div class="page narrow">
     <div class="page-h"><div><h1 class="t-title" style="font-size:20px">Settings</h1><p>For the whole app. An agent's own settings open from its name.</p></div></div>
-    <div class="card"><h2>What needs you</h2><p class="ink2" style="max-width:56ch">Your team commits, tests, merges to main after CI and the reviewer check, and sends email as you. It comes to you only for:</p>
+    <div class="card"><h2>What needs you</h2><p class="ink2" style="max-width:56ch">Your team commits, tests, merges to main after CI and the reviewer check, and leaves emails and posts in your drafts. It comes to you only for:</p>
       <ul class="ma-list" style="margin-top:12px">${NEEDS_KINDS.map(k => `<li>${ic(k[0])}<span>${esc(k[1])}</span></li>`).join("")}</ul></div>
     <div class="card" id="appearance"><h2>Appearance</h2>
       <div class="setrow"><div class="setrow-m"><div class="setrow-t">Theme</div><div class="setrow-d" id="themeNote">${themeNote()}</div></div>${themeSegHTML()}</div>
@@ -2952,8 +3054,8 @@ function renderAppSettings(){
     <div class="card"><h2>Sound</h2>
       <div class="setrow"><div class="setrow-m"><div class="setrow-t">Sound</div><div class="setrow-d">Needs you, done and handoff</div></div>${switchH('data-act="appSound" id="appSound"', SND.on, "Sound")}</div></div>
     <div class="card"><h2>Account</h2>
-      <div class="setrow"><div class="setrow-m"><div class="setrow-t">Claude Code 2.x</div><div class="setrow-d">Bench uses this login and never stores your credentials.</div></div><span class="tag ok">${glyph("done")}Signed in</span></div>
-      <div class="setrow"><div class="setrow-m"><div class="setrow-t">Bench folder</div><div class="setrow-d"><code>C:\\Users\\majd\\Bench</code> · your agents, memory and projects as plain files</div></div><button type="button" class="btn icon" data-act="openFolder" aria-label="Open the Bench folder" title="Open the folder">${ic("folder")}</button></div>
+      <div class="setrow"><div class="setrow-m"><div class="setrow-t">Claude Code 2.x</div><div class="setrow-d">Eucas uses this login and never stores your credentials.</div></div><span class="tag ok">${glyph("done")}Signed in</span></div>
+      <div class="setrow"><div class="setrow-m"><div class="setrow-t">Eucas folder</div><div class="setrow-d"><code>C:\\Users\\majd\\Eucas</code> · your agents, memory and projects as plain files</div></div><button type="button" class="btn icon" data-act="openFolder" aria-label="Open the Eucas folder" title="Open the folder">${ic("folder")}</button></div>
       <div class="setrow"><div class="setrow-m"><div class="setrow-t">API key</div><div class="setrow-d">Ignored: agents use your Claude subscription, not paid API credits.</div></div></div></div>
   </div>`;
 }
@@ -3065,14 +3167,14 @@ function greenMsg(anim){
 function errorCard(done){
   const body = done ? "" : `<p class="t-sub ink2">${ic("check", 14).replace("<svg", '<svg style="vertical-align:-2px;margin-right:4px;color:var(--ok-ink)"')}Kept: the 3 changed files, the 09:18 checkpoint and the test log.</p>
     <div class="acts"><button type="button" class="btn primary lg" data-n="retry">Retry now<span class="cons"> · in two halves</span></button><button type="button" class="btn secondary lg" data-n="askkarim">Ask Karim</button>${lookBtn("err")}</div>
-    <p class="t-meta ink3 num">Bench retries by itself in 1:48. If that fails too, Karim takes it.</p>
+    <p class="t-meta ink3 num">Eucas retries by itself in 1:48. If that fails too, Karim takes it.</p>
     <details><summary>Details</summary><pre>exit code 137 · killed: out of memory
 pnpm test · 214 tests in one worker
  PASS  composer › renders Stop while running
  PASS  stream › renders markdown
  FATAL ERROR: Reached heap limit. JavaScript heap out of memory</pre></details>`;
   return `<div class="msg">${avatar("noor", 32, {nobadge:true, hidden:true, expr:done ? "calm" : "concerned"})}<div class="stackb"><div class="recovery${done ? " resolved-card" : ""}" id="runCard">
-    <div class="why">${ic(done ? "refresh" : "info", 18)}<div><b>${done ? "Retried at 09:20 with the suite in two halves." : "Noor's run stopped: the test runner ran out of memory."}</b><p>${done ? "The first half passed at 09:21, the second at 09:23. Nothing was lost." : "Bench retries once at 09:20 with the suite split in two, not the same way again."}</p></div></div>
+    <div class="why">${ic(done ? "refresh" : "info", 18)}<div><b>${done ? "Retried at 09:20 with the suite in two halves." : "Noor's run stopped: the test runner ran out of memory."}</b><p>${done ? "The first half passed at 09:21, the second at 09:23. Nothing was lost." : "Eucas retries once at 09:20 with the suite split in two, not the same way again."}</p></div></div>
     ${body}</div><div class="msg-meta">${rcpt(["09:18","5.2k tokens","0.17 % of your week"], "err")}</div></div></div>`;
 }
 function checkpointCard(bad){
@@ -3309,13 +3411,13 @@ function stopNoor(){
 function renderTerm(){
   if ($("#wsBody").dataset.view !== "term") return;
   const names = ["renders Send when idle","renders Stop while running","Stop calls run.stop","Enter sends","Shift+Enter adds a line","streams markdown","formats times with date-fns","relative times in the past","empty input keeps Send disabled","aria-busy while running","focus returns to the input","stops within 2 s"];
-  const lines = ['<span class="mut">~/bench $</span> pnpm test chat', ""];
+  const lines = ['<span class="mut">~/eucas-app $</span> pnpm test chat', ""];
   const done = N.variant === "default" ? N.passed : 12;
   names.forEach((n, i) => { if (i < done) lines.push(`<span class="pass">PASS</span> composer › ${n}`); else if (i === done) lines.push(`<span class="run">RUNS</span> composer › ${n}`); });
   lines.push("", `Tests: ${done} passed, 12 total`);
-  if (N.variant === "error") lines.push("", '<span class="mut">~/bench $</span> pnpm test', '<span class="fail">FATAL</span> JavaScript heap out of memory · exit 137');
-  else if (N.phase === "full") lines.push("", '<span class="mut">~/bench $</span> pnpm test', '<span class="run">RUNS</span> full suite…');
-  else if (N.phase === "fulldone" || N.variant === "green") lines.push("", '<span class="mut">~/bench $</span> pnpm test', '<span class="pass">PASS</span> 214 of 214 · 2 min 41 s');
+  if (N.variant === "error") lines.push("", '<span class="mut">~/eucas-app $</span> pnpm test', '<span class="fail">FATAL</span> JavaScript heap out of memory · exit 137');
+  else if (N.phase === "full") lines.push("", '<span class="mut">~/eucas-app $</span> pnpm test', '<span class="run">RUNS</span> full suite…');
+  else if (N.phase === "fulldone" || N.variant === "green") lines.push("", '<span class="mut">~/eucas-app $</span> pnpm test', '<span class="pass">PASS</span> 214 of 214 · 2 min 41 s');
   $("#wsBody").innerHTML = `<div class="term" aria-live="off">${lines.join("\n")}</div>`;
 }
 function wsView(v){
@@ -3380,7 +3482,7 @@ const RT = {empty:false, suggest:true, list:[
 let RT_DRAFT = null;
 const pctW = k => k / 30;
 const fmtPct = p => (p >= 1 ? p.toFixed(1) : p.toFixed(2)) + " %";
-function permTag(p){ return p === "edit" ? `<span class="tag" title="Runs with Noor's own permissions: she can edit files in bench/. Deleting and paying still wait for you.">${ic("pencil", 12)}Can edit files</span>` : `<span class="tag" title="Only reads: GitHub and memory">${ic("book", 12)}Read-only</span>`; }
+function permTag(p){ return p === "edit" ? `<span class="tag" title="Runs with Noor's own permissions: she can edit files in eucas-app/. Deleting and paying still wait for you.">${ic("pencil", 12)}Can edit files</span>` : `<span class="tag" title="Only reads: GitHub and memory">${ic("book", 12)}Read-only</span>`; }
 function routineCap(){ const l = RT.empty ? [] : RT.list; return l.length ? `${l.filter(r => r.on).length} of ${l.length} on` : "No routines yet"; }
 /* Compact routine rows (C5): name, when and the cost of one run; click a row for its figures, permissions and actions. */
 function rtRow(r){
@@ -3413,7 +3515,7 @@ function renderRoutines(){
   const deps = RT.list.find(r => r.id === "deps");
   let slot = "";
   /* The guard banner above the screen already says it; the waiting routine's card shows which one. */
-  /* R7, decided: Bench suggests an exception after 3 identical choices. A suggestion, never automatic; you can undo it. */
+  /* R7, decided: Eucas suggests an exception after 3 identical choices. A suggestion, never automatic; you can undo it. */
   if (S.scen === "guard-exempt" && RT.suggest && !deps.exempt) slot = `<div class="suggest${animate() ? " arrive" : ""}" role="status"><span class="l-ic">${ic("sparkLine", 18)}</span><div><b>You've run Dependency check yourself the last 3 times it waited.</b><p>Let it run even when the guard is on? Other routines still wait.</p><div class="acts"><button type="button" class="btn primary" data-act="exemptYes">Let it run<span class="cons"> · ≈ 0.30 % a week</span></button><button type="button" class="btn tertiary" data-act="exemptNo">Keep waiting</button></div></div></div>`;
   $("#guardSlot").innerHTML = slot;
 }
@@ -3467,16 +3569,16 @@ $("#rtList").addEventListener("click", e => {
 const TIERS = [["fast","Fast","Haiku","Routing, quick answers, small edits.",0.5],["balanced","Balanced","Sonnet","Most coding work. The Developer default.",1.2],["deep","Deep","Opus","Hard design and debugging. Uses your week fastest.",6]];
 /* CR-007: commits, pushes, pull requests, merges after CI + the reviewer check, and runs in granted folders need no one */
 /* Mental model (fix 9): Trusted is the default; the copy says CR-007 in one line each */
-const PRESETS = [["careful","Ask every time","Asks before commands, edits and deletes."],["trusted","Trusted","Runs tests, commits, pushes and merges once checks pass. Asks before deleting outside its scratch area or paying."],["auto","Autonomous",'Everything except <button type="button" class="linkbtn" data-kinds>the five things that always need you</button>.']];
+const PRESETS = [["careful","Ask every time","Asks before commands, edits and deletes."],["trusted","Trusted","Runs tests, commits, pushes and merges once checks pass. Asks before deleting anything or paying."],["auto","Autonomous",'Everything except <button type="button" class="linkbtn" data-kinds>the five things that always need you</button>.']];
 const SECIDS = [["Who",[["profile","Profile"],["model","Model"]]],["What {n} may do",[["autonomy","Autonomy"],["connectors","Connectors"],["skills","Skills"],["workspace","Workspace"]]],["How {n} works with you",[["memory","Memory"],["notifications","Notifications"],["lifecycle","Lifecycle"]]]];
 const SECS = SECIDS.reduce((a, g) => a.concat(g[1]), []);
-const LEADS = {"Bench › Dev team":"Karim","Bench › Product team":"Maya","InterviewKit":"Rana","Field Notes":"Lea","Company":"Atlas"};
+const LEADS = {"Eucas app › Dev team":"Karim","Eucas app › Product team":"Maya","InterviewKit":"Rana","Field Notes":"Lea","Company":"Atlas"};
 const SETS = {};
 SETS.noor = {sec:"profile", name:"Noor", title:"Developer", shape:"pill", hue:"coral", desc:"Writes code and tests in the repos you point her to, and opens pull requests.",
-  tier:"balanced", preset:"trusted", ckpt:70, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:"Karim",
-  overrides:[["Read files in granted folders","allow"],["Edit files in granted folders","allow"],["Run commands in granted folders","allow"],["Delete files in the scratch area","allow"]],
-  grants:[{cmd:"pnpm add",where:"in bench (new dependencies)",by:"you",when:"21 Oct 16:02"}],
-  conns:[{id:"github",name:"GitHub",on:true,d:"Repo bench: issues, pull requests, checks",k:1.1},{id:"gmail",name:"Gmail",on:false,d:"Read, label, draft and send as you",k:0.9},{id:"gdrive",name:"Google Drive",on:false,d:"Docs you share with Bench",k:0.6},{id:"ctx7",name:"Context7",on:true,d:"Library documentation lookup",k:0.4},{id:"figma",name:"Figma",na:true,d:"Not in your Claude Code inventory. Add it there first"}],
+  tier:"balanced", preset:"trusted", ckpt:80, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:"Karim",
+  overrides:[["Read files in granted folders","allow"],["Edit files in granted folders","allow"],["Run commands in granted folders","allow"],["Delete files","ask"]],
+  grants:[{cmd:"pnpm add",where:"in eucas-app (new dependencies)",by:"you",when:"21 Oct 16:02"}],
+  conns:[{id:"github",name:"GitHub",on:true,d:"Repo eucas-app: issues, pull requests, checks",k:1.1},{id:"gmail",name:"Gmail",on:false,d:"Read, label and draft; you send",k:0.9},{id:"gdrive",name:"Google Drive",on:false,d:"Docs you share with Eucas",k:0.6},{id:"ctx7",name:"Context7",on:true,d:"Library documentation lookup",k:0.4},{id:"figma",name:"Figma",na:true,d:"Not in your Claude Code inventory. Add it there first"}],
   skills:[{n:"Test-driven development",d:"Writes the failing test first.",on:true,b:true},{n:"Systematic debugging",d:"Finds the cause before changing code.",on:true,b:true},{n:"Verify before done",d:"Runs the checks before calling it finished.",on:true,b:true},{n:"Receiving code review",d:"Checks review comments before acting on them.",on:true,b:true},{n:"Pull requests",d:"Clear descriptions and a tight scope.",on:true,b:true},{n:"Frontend design",d:"UI taste rules. Usually for designers.",on:false},{n:"Security review",d:"Checks changes for common risks.",on:false}],
   folders:[{p:"bench/",d:"Repo · read and write",by:"you",when:"20 Oct"},{p:"docs-site/",d:"Read only",by:"Atlas, on your behalf",when:"21 Oct"}],
   notif:[{t:"needs you",d:"Always on: nothing waits on you silently.",on:true,lock:true},{t:"has something ready for you to test",on:true},{t:"is blocked or can't decide",on:true},{t:"finishes a task",on:false},{t:"has a routine fail or get skipped",on:true}]
@@ -3486,7 +3588,7 @@ function defaultSet(id){
   const a = AG[id] || LUMEN, main = id === "atlas", n = SETS.noor, copy = o => JSON.parse(JSON.stringify(o));
   return {sec:"profile", name:a.name, title:a.title || "", shape:a.shape, hue:a.hue,
     desc:main ? "Your main agent. Talks with you, routes work to the team and keeps the company memory." : `${a.role} on ${a.team}.`,
-    tier:"balanced", preset:"trusted", ckpt:70, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:leadOf(id),
+    tier:"balanced", preset:"trusted", ckpt:80, browser:false, browserRoutines:false, learn:true, askSend:false, saved:false, pick:false, lead:leadOf(id),
     overrides:copy(n.overrides), grants:[], conns:copy(n.conns).map(c => (main && c.id === "gmail" ? Object.assign(c, {on:true}) : c)),
     skills:main ? [{n:"Route work",d:"Picks who replies and writes the brief.",on:true,b:true},{n:"Hire agents",d:"Drafts new agents for you to create.",on:true,b:true},{n:"Company memory",d:"Approves what the team learns about you.",on:true,b:true}].concat(copy(n.skills.filter(s => !s.b))) : copy(n.skills),
     folders:main ? [] : copy(n.folders), notif:copy(n.notif)};
@@ -3531,7 +3633,7 @@ function pfPickHTML(){
   return `<div class="pf-pick"><div class="chips" role="radiogroup" aria-label="Shape">${SHAPE_ORDER.map(s => `<button type="button" class="chip-shape" role="radio" aria-checked="${s === SET.shape}" data-pf-shape="${s}" title="${SHAPES[s].n}" aria-label="${SHAPES[s].n}"><span>${avatarSVG({shape:s, hue:SET.hue}, {expr:"calm"})}</span></button>`).join("")}</div>
     <div class="chips" role="radiogroup" aria-label="Colour">${HUE_ORDER.map(h => { const t = taken.indexOf(h) >= 0; return `<button type="button" class="chip-hue${t ? " used" : ""}" role="radio" aria-checked="${h === SET.hue}" data-pf-hue="${h}" style="background:${HUE[h].base}" title="${HUE[h].n}${t ? " · another agent has this colour and shape" : ""}" aria-label="${HUE[h].n}${t ? ", taken with this shape" : ""}"></button>`; }).join("")}</div></div>`;
 }
-const TEAMS = ["Bench › Dev team","Bench › Product team","InterviewKit","Field Notes","Company"];
+const TEAMS = ["Eucas app › Dev team","Eucas app › Product team","InterviewKit","Field Notes","Company"];
 const SECTION = {
   profile: () => { const main = SA === "atlas", a = AG[SA] || LUMEN, nm = esc(SET.name);
     return `<h2 id="secH" tabindex="-1">Profile</h2>
@@ -3539,19 +3641,19 @@ const SECTION = {
     ${SET.pick ? pfPickHTML() : ""}${main ? maWellHTML() : ""}
     <div class="field"><label for="sName">Name</label><input class="inp" id="sName" value="${nm}" maxlength="40" autocomplete="off"></div>
     <div class="field"><label for="sTitle">Title <span class="optl">(Optional)</span></label><div class="clr-wrap"><input class="inp" id="sTitle" value="${esc(SET.title)}" maxlength="24" autocomplete="off" placeholder="Developer, PM…" aria-describedby="sTitleHelp"><button type="button" class="btn icon clr-btn" id="sTitleClr" aria-label="Remove the title" title="Remove the title"${SET.title ? "" : " hidden"}>${ic("x")}</button></div><span class="help" id="sTitleHelp">Shown next to the name in the sidebar.</span></div>
-    <div class="field"><label for="sDesc">Description</label><textarea class="inp" id="sDesc" rows="3">${esc(SET.desc)}</textarea>${main ? "" : '<span class="help">Bench reads this to decide who replies.</span>'}</div>
+    <div class="field"><label for="sDesc">Description</label><textarea class="inp" id="sDesc" rows="3">${esc(SET.desc)}</textarea>${main ? "" : '<span class="help">Eucas reads this to decide who replies.</span>'}</div>
     ${main ? "" : `<div class="f2"><div class="field"><label for="sTeam">Home team</label><select class="inp" id="sTeam">${[a.team].concat(TEAMS.filter(t => t !== a.team)).map(t => `<option>${esc(t)}</option>`).join("")}</select></div>
       <div class="field"><label for="sLead">Lead</label><select class="inp" id="sLead" aria-describedby="sLeadHelp">${[SET.lead].concat(SET.lead === "Atlas" ? [] : ["Atlas"]).map(l => `<option>${esc(l)}</option>`).join("")}</select><span class="help" id="sLeadHelp">Can read ${nm}'s private notes, never edit them.</span></div></div>`}`; },
-  model: () => `<h2 id="secH" tabindex="-1">Model</h2><p class="set-lede">Bench maps each tier to the current Claude model.</p>
+  model: () => `<h2 id="secH" tabindex="-1">Model</h2><p class="set-lede">Eucas maps each tier to the current Claude model.</p>
     <div class="rcs" role="radiogroup" aria-labelledby="secH">${TIERS.map(t => `<label class="rc"><input type="radio" name="tier" value="${t[0]}"${SET.tier === t[0] ? " checked" : ""}><span class="rc-b"><b>${t[1]} (${t[2]})</b><span>${t[3]}</span></span><span class="rc-e">≈ ${fmtPct(pctW(t[4]))}<small>of your week per turn</small></span></label>`).join("")}</div>
     ${S.scen === "limit" ? '<p class="t-meta ink3" style="margin-top:12px">Deep (Opus) is used up until Mon 26 Oct at 09:00. Balanced still works.</p>' : ""}`,
   autonomy: () => `<h2 id="secH" tabindex="-1">Autonomy</h2><p class="set-lede">What ${esc(SET.name)} does without asking you.</p>
     <div class="rcs" role="radiogroup" aria-labelledby="secH">${PRESETS.map(p => `<label class="rc"><input type="radio" name="preset" value="${p[0]}"${SET.preset === p[0] ? " checked" : ""}><span class="rc-b"><b>${p[1]}</b><span>${p[2]}</span></span>${p[0] === "trusted" ? '<span class="tag">Default</span>' : ""}</label>`).join("")}</div>
-    <div class="set-group"><h3>Sending as you</h3><div class="setrow"><div class="setrow-m"><div class="setrow-t">Ask me before sending emails or posts</div><div class="setrow-d">Off: ${esc(SET.name)} sends as you and logs each one in the trace.</div></div>${switchH('id="sAskSend"', SET.askSend, "Ask me before sending emails or posts")}</div></div>
+    <div class="set-group"><h3>Emails and posts</h3><div class="setrow"><div class="setrow-m"><div class="setrow-t">Always drafts</div><div class="setrow-d">${esc(SET.name)} saves them in Gmail's drafts or the app it would post to. You send them.</div></div></div></div>
     <div class="set-group"><h3>Extra grants · ${SET.grants.length}</h3>${SET.grants.length ? SET.grants.map((g, i) => `<div class="setrow"><div class="setrow-m"><div class="setrow-t"><code>${esc(g.cmd)}</code> ${esc(g.where)}</div><div class="setrow-d">Always · granted by ${esc(g.by)} · ${esc(g.when)}</div></div><button type="button" class="btn quiet-danger sm" data-revoke="${i}" aria-label="Revoke ${esc(g.cmd)} ${esc(g.where)}">Revoke</button></div>`).join("") : '<p class="t-meta ink3">None beyond the preset.</p>'}</div>
     <details class="disc"><summary>${ic("chevD")}Per-tool overrides <span class="n">${SET.overrides.length + 1}</span></summary>${SET.overrides.map((o, i) => `<div class="setrow"><div class="setrow-m"><div class="setrow-t">${esc(o[0])}</div></div><select class="inp sm" data-ov="${i}" aria-label="${esc(o[0])}">${[["ask","Ask"],["allow","Allow"],["block","Block"]].map(x => `<option value="${x[0]}"${x[0] === o[1] ? " selected" : ""}>${x[1]}</option>`).join("")}</select></div>`).join("")}
       <div class="setrow"><div class="setrow-m"><div class="setrow-t">Write global memory</div><div class="setrow-d">Always a proposal that you or Atlas approve</div></div>${lockedH("Proposal")}</div></details>
-    <details class="disc"><summary>${ic("chevD")}Always asks you <span class="n">3, locked</span></summary>${[["Delete a repo, a folder or files outside its scratch area","Deletes"],["Delete agents or projects","Deletes"],["Pay for anything","Never: agents don't pay; you do"]].map(r => `<div class="setrow"><div class="setrow-m"><div class="setrow-t">${r[0]}</div><div class="setrow-d">${r[1]}</div></div>${lockedH("Locked")}</div>`).join("")}</details>`,
+    <details class="disc"><summary>${ic("chevD")}Always asks you <span class="n">3, locked</span></summary>${[["Delete a repo, a folder or any file","Deletes"],["Delete agents or projects","Deletes"],["Pay for anything","Never: agents don't pay; you do"]].map(r => `<div class="setrow"><div class="setrow-m"><div class="setrow-t">${r[0]}</div><div class="setrow-d">${r[1]}</div></div>${lockedH("Locked")}</div>`).join("")}</details>`,
   connectors: () => `<h2 id="secH" tabindex="-1">Connectors</h2><p class="set-lede">From your Claude Code inventory. Only the ones on load for ${esc(SET.name)}, and each adds to every turn's tokens.</p>
     ${SET.conns.map(c => `<div class="setrow"><div class="setrow-m"><div class="setrow-t">${esc(c.name)}${c.out ? ' <span class="tag risk">' + ic("lock", 12) + "Outward-capable</span>" : ""}</div><div class="setrow-d">${esc(c.d)}${c.k && !c.na ? ` · ≈ ${c.k}k tokens per turn` : ""}</div></div>${c.na ? '<span class="t-meta ink3">Not available</span>' : switchH(`data-conn="${c.id}"`, c.on, c.name)}</div>`).join("")}`,
   skills: () => { const row = (s, i) => `<div class="setrow"><div class="setrow-m"><div class="setrow-t">${esc(s.n)}</div><div class="setrow-d">${esc(s.d)}</div></div>${switchH(`data-skill="${i}"`, s.on, s.n)}</div>`;
@@ -3564,7 +3666,7 @@ const SECTION = {
     <div class="setrow"><div class="setrow-m"><div class="setrow-t">Private notes</div><div class="setrow-d">Last written today 08:58 · only ${nm} writes here</div></div><button type="button" class="btn secondary sm" data-go="memory">Open notes</button></div>
     <div class="setrow"><div class="setrow-m"><div class="setrow-t">Export ${nm}'s memory</div><div class="setrow-d">Plain Markdown, the same files as on disk.</div></div><button type="button" class="btn secondary sm" data-act="export">${ic("download", 14)}Export</button></div>
     <div class="set-group ck"><h3>Context checkpoint</h3>
-      <div class="ck-row"><label for="sCk" class="setrow-t">Checkpoint at</label><output id="ckVal" for="sCk">${SET.ckpt} %</output><span class="t-meta ink3">default 70 %</span></div>
+      <div class="ck-row"><label for="sCk" class="setrow-t">Checkpoint at</label><output id="ckVal" for="sCk">${SET.ckpt} %</output><span class="t-meta ink3">default 80 %</span></div>
       <input type="range" id="sCk" min="50" max="85" step="5" value="${SET.ckpt}" aria-describedby="ckHelp" aria-valuetext="${SET.ckpt} percent">
       <div class="ck-ends" aria-hidden="true"><span>50 %</span><span>85 %</span></div>
       <span class="bar" aria-hidden="true"><i id="ckFill" style="width:${SET.ckpt}%"></i><span class="ceiling" style="width:10%"></span><span class="mark" id="ckTick" style="left:${SET.ckpt}%"></span></span>
@@ -3573,7 +3675,7 @@ const SECTION = {
   workspace: () => `<h2 id="secH" tabindex="-1">Workspace</h2>
     <div class="set-group"><h3>Folder grants</h3>${SET.folders.length ? SET.folders.map((f, i) => `<div class="setrow">${ic("folder", 16).replace("<svg", '<svg class="ic"')}<div class="setrow-m"><div class="setrow-t"><code>${esc(f.p)}</code></div><div class="setrow-d">${esc(f.d)} · granted by ${esc(f.by)} · ${esc(f.when)}</div></div><button type="button" class="btn quiet-danger sm" data-revoke-folder="${i}" aria-label="Revoke ${esc(f.p)}">Revoke</button></div>`).join("") : `<p class="t-meta ink3">No folders. ${esc(SET.name)} can only chat.</p>`}
       <button type="button" class="btn secondary sm" data-act="stub" style="margin-top:10px">${ic("plus", 14)}Grant a folder</button><p class="t-meta ink3" style="margin-top:10px">${esc(SET.name)} can't see anything outside these.</p></div>
-    <div class="set-group"><h3>Browser</h3><div class="setrow"><div class="setrow-m"><div class="setrow-t">Give ${esc(SET.name)} a browser</div><div class="setrow-d">An isolated browser profile. ${esc(SET.name)} asks before clicks, typing and new sites. Screenshots stay on this PC for 30 days.</div></div>${switchH('id="sBrowser"', SET.browser, "Give " + SET.name + " a browser")}</div>
+    <div class="set-group"><h3>Browser</h3><div class="setrow"><div class="setrow-m"><div class="setrow-t">Give ${esc(SET.name)} a browser</div><div class="setrow-d">An isolated browser profile. ${esc(SET.name)} asks only before signing in to a site for the first time. Screenshots stay on this PC for 30 days.</div></div>${switchH('id="sBrowser"', SET.browser, "Give " + SET.name + " a browser")}</div>
       ${SET.browser ? `<div class="setrow"><div class="setrow-m"><div class="setrow-t">Use the browser in routines</div></div>${switchH('id="sBrowserRt"', SET.browserRoutines, "Use the browser in routines")}</div>` : ""}</div>`,
   notifications: () => `<h2 id="secH" tabindex="-1">Notifications</h2><p class="set-lede">In the app on this PC, silent by default.</p>
     ${SET.notif.map((n, i) => `<div class="setrow"><div class="setrow-m"><div class="setrow-t">Tell you when ${esc(SET.name)} ${esc(n.t)}</div>${n.d ? `<div class="setrow-d">${esc(n.d)}</div>` : ""}</div>${n.lock ? lockedH("Always on") : switchH(`data-notif="${i}"`, n.on, "Tell you when " + SET.name + " " + n.t)}</div>`).join("")}
@@ -3751,7 +3853,7 @@ $("#p-agent").addEventListener("click", e => {
   if (a === "retry") playRetry();
   else if (a === "askkarim") stub("Karim gets the run, the log and the checkpoint as a brief. This sample doesn't open his chat.");
   else if (a === "readckpt") stub("The checkpoint opens in Memory as plain Markdown: 8 sections, 1.2k tokens.");
-  else if (a === "reconnect") toast("<b>In Claude Code:</b> run <code>claude mcp</code>, pick GitHub, sign in again. Bench notices by itself and never copies the credentials.", {icon:"key", ms:9000});
+  else if (a === "reconnect") toast("<b>In Claude Code:</b> run <code>claude mcp</code>, pick GitHub, sign in again. Eucas notices by itself and never copies the credentials.", {icon:"key", ms:9000});
   else if (a === "checkgh") go("connector-back");
   else if (a === "showlog") { const box = $("#logBox"), acts = box && box.nextElementSibling; if (!box) return; if (acts) acts.remove(); box.outerHTML = logHTML(true); const nb = $("#logBox"); nb.scrollTop = 398 * 20; nb.focus(); }
   else if (a === "logpane") {
@@ -3820,7 +3922,7 @@ const ROOMMSG = {
   maya:() => agM("onboarding (S1-2) is on main and ready for you to try. about 5 minutes; the steps are in the ticket.", rcpt(["08:44","0.9k tokens","0.03 % of your week"], "atlas"), `<button type="button" class="pointer" style="margin:6px 0 0" data-open-ticket="test">${avatar("maya", 24, {status:"waiting", hidden:true})}<span>Ready to test · Onboarding</span>${ic("arrowR", 14)}</button>`, {who:"maya"}),
   jade:() => {
     const first = agM("E2E failed twice on the Windows runners, at 07:12 and 07:39. Karim has the details and two ways out; it's at the top of What needs you.", rcpt(["07:45","0.8k tokens","0.03 % of your week"], "qa3"), "", {who:"jade", expr:"concerned"});
-    const ask = agM("while i'm in there: <code>e2e/legacy/</code> is 14 old Spectron tests nothing runs anymore. it's outside my scratch area, so deleting it needs your ok.", rcpt(["09:08","0.6k tokens","0.02 % of your week"], "e2e"), "", {who:"jade"});
+    const ask = agM("while i'm in there: <code>e2e/legacy/</code> is 14 old Spectron tests nothing runs anymore. i never delete files myself, so this needs your ok.", rcpt(["09:08","0.6k tokens","0.02 % of your week"], "e2e"), "", {who:"jade"});
     /* Approval denied (worst moment): the files stay, she says so, and your reason becomes her lesson */
     if (ROOM.v === "denied") return first + ask + sysL("You kept <code>e2e/legacy/</code> · nothing was deleted · 09:14", "x")
       + agM("ok. e2e/legacy/ stays. i'll mark it in the QA-3 notes so it's easy to remove later.", rcpt(["09:14","0.5k tokens","0.02 % of your week"], "e2e"), "", {who:"jade"})
@@ -3959,18 +4061,18 @@ function teamMsgs(){
     ${gm("karim", "09:06", ["yes. QA-3 failed twice on the Windows runners. two ways out: a paid runner, or nightly E2E on my machine. it's at the top of What needs you."], ["09:06","2.0k tokens","0.07 % of your week"], "team1")}
     ${handoffHTML()}
     ${gm("maya", "09:09", ["follow-ups:", `${mention("karim")} take S1-6, and the CI call with you`, `${mention("omar")} interview at 11:00, notes to memory after`, "opening a 5-minute debate on where Stop lives. Sam, Noor and me. i decide."], ["09:09","1.1k tokens","0.04 % of your week"], "atlas")}
-    ${T.memo ? sysL("Debate closed at 09:16 · the memo is in Bench memory", "doc") : ""}
+    ${T.memo ? sysL("Debate closed at 09:16 · the memo is in Eucas memory", "doc") : ""}
     ${T.memo ? "" : `<div class="thinking" data-hue="teal"><span class="think-dots" aria-hidden="true"><i></i><i></i><i></i></span><span><b style="color:var(--agent-ink);font-weight:600">Omar</b> · Thinking</span></div>`}`;
 }
 function renderTeam(){
   const sec = $("#p-team");
   /* Calm: the member list (with status words) is behind the "here now" faces, closed by default */
-  sec.innerHTML = `<div class="tc-head">${cluster(28, PROJ.bench.cluster, "Bench team chat")}<h1>Team chat</h1><button type="button" class="tc-members" id="rosterBtn" aria-expanded="${!!T.roster}" aria-controls="roster" title="Members">${stackHTML(["maya","omar","karim","noor"], 24, "Here now: Maya, Omar, Karim, Noor")}<span>7</span></button></div>
+  sec.innerHTML = `<div class="tc-head">${cluster(28, PROJ.bench.cluster, "Eucas app team chat")}<h1>Team chat</h1><button type="button" class="tc-members" id="rosterBtn" aria-expanded="${!!T.roster}" aria-controls="roster" title="Members">${stackHTML(["maya","omar","karim","noor"], 24, "Here now: Maya, Omar, Karim, Noor")}<span>7</span></button></div>
     <div id="debateSlot">${T.memo ? memoHTML(false) : debateHTML()}</div>
     <div class="tc-split${T.roster ? " roster-on" : ""}" id="tcSplit"><div class="tc-conv"><div class="chat-scroll" id="tScroll"><div class="msgs" id="tMsgs">${teamMsgs()}</div></div>
-      <form class="composer" id="tForm" aria-label="Message the Bench team"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="tIn" rows="1" aria-label="Message the team" placeholder="Message the team · @ picks who replies"></textarea></span><button type="submit" class="btn icon inkbtn" id="tSend" aria-label="Send to the team" disabled>${ic("up")}</button></form>
+      <form class="composer" id="tForm" aria-label="Message the Eucas app team"><button type="button" class="btn icon" data-act="stub" aria-label="Attach a file">${ic("plus")}</button><span class="mn-field"><span class="mn-mirror" aria-hidden="true"></span><textarea id="tIn" rows="1" aria-label="Message the team" placeholder="Message the team · @ picks who replies"></textarea></span><button type="submit" class="btn icon inkbtn" id="tSend" aria-label="Send to the team" disabled>${ic("up")}</button></form>
       <p class="comp-hint" id="tHint"></p></div>
-    <aside class="roster" id="roster" aria-label="Members"${T.roster ? "" : " hidden"}><h2>In this chat · 7</h2><ul>${PROJ.bench.team.map(id => { const st = effStatus(id); return `<li class="rrow" title="${esc(AG[id].role)}">${avatar(id, 28, {status:st, hidden:true})}<span style="min-width:0"><b class="ellip" style="display:block">${AG[id].name}</b><span class="t-meta ink3">${ST[st].l}</span></span></li>`; }).join("")}</ul></aside></div>`;
+    <aside class="roster" id="roster" aria-label="Members"${T.roster ? "" : " hidden"}><h2>In this chat · 7</h2><ul>${PROJ.bench.team.map(id => { const st = effStatus(id); return `<li class="rrow" role="button" tabindex="0" data-card="${id}" aria-haspopup="dialog" aria-label="${esc(AG[id].name)}, ${esc(AG[id].title || AG[id].role)}, ${ST[st].l}">${avatar(id, 28, {status:st, hidden:true})}<span style="min-width:0"><span class="rr-n"><b class="ellip">${AG[id].name}</b>${AG[id].title ? `<span class="ag-ttl">${esc(AG[id].title)}</span>` : ""}</span><span class="t-meta ink3">${ST[st].l}</span></span></li>`; }).join("")}</ul></aside></div>`;
   const s = $("#tScroll"); s.scrollTop = s.scrollHeight;
   $("#rosterBtn").addEventListener("click", () => { T.roster = !T.roster; $("#tcSplit").classList.toggle("roster-on", T.roster); $("#roster").hidden = !T.roster; $("#rosterBtn").setAttribute("aria-expanded", T.roster); });
   /* The routing cost shows while you type, before you send (who replies and ≈ tokens to route) */
@@ -3989,7 +4091,7 @@ function teamHint(){
     : `<span>${esc(mn.ids.length ? mn.names : "Maya")} ${mn.ids.length > 1 ? "reply" : "replies"} · ≈ 0.3k tokens to route</span>`;
 }
 /* v0.6.1 (client screenshot): a message with a mention is a normal message with the chip inline, never a lone chip.
-   A mention skips the router, so there's no "Bench picked" line; the mentioned agent thinks and replies. Without a
+   A mention skips the router, so there's no "Eucas picked" line; the mentioned agent thinks and replies. Without a
    mention the router picks, and says so. A mention on its own can't be sent: the hint asks what you want. */
 function teamSend(v, instant){
   const mn = mnInfo(v, "tIn"); if (!v || mn.only) return;
@@ -3998,7 +4100,7 @@ function teamSend(v, instant){
   const rw = rpTeamTarget(), quote = rpTake("tIn"); $("#tHint").innerHTML = "";
   const direct = mn.ids.length > 0 || !!rw;
   const who = mn.ids[0] || rw || "maya", a = AG[who], anim = !instant && animate() ? " arrive" : "";
-  const routed = direct ? "" : `<div class="sys${anim}">${avatar("maya", 16, {nobadge:true, hidden:true})}<span>Bench picked Maya · she leads Bench</span>${lookBtn("teamRoute")}</div>`;
+  const routed = direct ? "" : `<div class="sys${anim}">${avatar("maya", 16, {nobadge:true, hidden:true})}<span>Eucas picked Maya · she leads Eucas app</span>${lookBtn("teamRoute")}</div>`;
   const box = $("#tMsgs"), sc = $("#tScroll");
   const reply = () => gm(who, "now", [direct ? "on it. i'll check and come back to you here before 11:00." : "got it. i'll take it, or hand it to the right person and tell you who."], ["now","0.9k tokens","0.03 % of your week"], direct ? "team1" : "teamRoute");
   const mine = meM(quote + mnBody(v, "tIn"),instant ? seen(a.name, "now") : `<span class="receipt">${ic("check", 13)}Sent</span>`, {cls:"neutral" + anim});
@@ -4038,7 +4140,7 @@ function playMemo(){
   T.memo = true;
   const slot = $("#debateSlot"), d = $("#debate");
   if (!slot || current !== "team") return;
-  const swap = () => { slot.innerHTML = memoHTML(animate()); $("#tMsgs").innerHTML = teamMsgs(); const s = $("#tScroll"); s.scrollTop = s.scrollHeight; announce("Debate decided. The memo is saved to Bench memory."); };
+  const swap = () => { slot.innerHTML = memoHTML(animate()); $("#tMsgs").innerHTML = teamMsgs(); const s = $("#tScroll"); s.scrollTop = s.scrollHeight; announce("Debate decided. The memo is saved to Eucas memory."); };
   if (d && animate()) { d.classList.add("closing"); setTimeout(swap, 380); } else swap();
   if (current === "team") { curHash = "team-memo"; setHash(curHash); syncDemo(curHash); }
 }
@@ -4077,7 +4179,7 @@ function pickRowHTML(){
   if (!DLG.pick) return `${ttlFieldHTML()}<div class="picker"><button type="button" class="btn tertiary sm" id="pickOpen" aria-expanded="false">Change shape or colour</button></div>`;
   return `${ttlFieldHTML()}<div class="picker">
     <div class="chips" role="radiogroup" aria-label="Shape">${SHAPE_ORDER.map(s => `<button type="button" class="chip-shape" role="radio" aria-checked="${s === DLG.shape}" data-shape="${s}" title="${SHAPES[s].n}" aria-label="${SHAPES[s].n}"><span>${avatarSVG({shape:s, hue:"none"}, {expr:"calm"})}</span></button>`).join("")}</div>
-    <div class="chips" role="radiogroup" aria-label="Hue">${HUE_ORDER.map(h => `<button type="button" class="chip-hue${USED_HUES.indexOf(h) >= 0 ? " used" : ""}" role="radio" aria-checked="${h === DLG.hue}" data-hue-pick="${h}" style="background:${HUE[h].base}" title="${HUE[h].n}${USED_HUES.indexOf(h) >= 0 ? " · used in Bench" : ""}" aria-label="${HUE[h].n}${USED_HUES.indexOf(h) >= 0 ? ", used in Bench" : ""}"></button>`).join("")}</div></div>`;
+    <div class="chips" role="radiogroup" aria-label="Hue">${HUE_ORDER.map(h => `<button type="button" class="chip-hue${USED_HUES.indexOf(h) >= 0 ? " used" : ""}" role="radio" aria-checked="${h === DLG.hue}" data-hue-pick="${h}" style="background:${HUE[h].base}" title="${HUE[h].n}${USED_HUES.indexOf(h) >= 0 ? " · used in Eucas" : ""}" aria-label="${HUE[h].n}${USED_HUES.indexOf(h) >= 0 ? ", used in Eucas" : ""}"></button>`).join("")}</div></div>`;
 }
 function addD(html){ const box = $("#dMsgs"); if (!box) return; const t = document.createElement("template"); t.innerHTML = html.trim(); if (animate()) Array.from(t.content.children).forEach(el => el.classList.add("arrive")); box.appendChild(t.content); const b = $("#dlgBody"); b.scrollTop = b.scrollHeight; }
 function dlgSend(text){
@@ -4102,7 +4204,7 @@ function birth(){
     const nm = $("#dlgName");
     if (animate()) wa(nm, [{opacity:0, transform:"translateY(-6px)"}, {opacity:1, transform:"none"}], {duration:320, easing:SPRING_SMOOTH});
     addD(sysL("Atlas suggests the name Lumen · click it to change it", "pencil"));
-    addD(agM(`<p>got it. here's me:</p>${checklist([["Name",'<span class="dname">Lumen</span> · release notes'],["Team","Bench › Dev team"],["Can","read merged PRs · write drafts"],["Routine","Fridays at 16:00 · ≈ 0.12 % of your week each time"]])}<p>drafts are held for your ok. nothing posts until you've read them.</p>`, "", "", {who:{name:"Lumen", shape:DLG.shape, hue:DLG.hue}}));
+    addD(agM(`<p>got it. here's me:</p>${checklist([["Name",'<span class="dname">Lumen</span> · release notes'],["Team","Eucas app › Dev team"],["Can","read merged PRs · write drafts"],["Routine","Fridays at 16:00 · ≈ 0.12 % of your week each time"]])}<p>drafts are held for your ok. nothing posts until you've read them.</p>`, "", "", {who:{name:"Lumen", shape:DLG.shape, hue:DLG.hue}}));
     addD(`<p class="knows">${ic("memory", 14)}<span><span class="dname">Lumen</span> starts knowing <b class="num" id="knowN">${animate() ? 0 : 18}</b> things about how you work, from your team's memory.</span></p>`);
     countUp($("#knowN"), 18, 400);
     const pr = $("#pickRow"); pr.innerHTML = pickRowHTML(); pr.hidden = false;
@@ -4152,7 +4254,7 @@ function createLumen(){
   buildSidebar(); buildProjects();
   const row = $('#sideList [data-row="lumen"]');
   const nm = esc(LUMEN.name);
-  toast(`<b>${nm} joined Bench › Dev team.</b>`, {actions:[{label:"Open " + LUMEN.name, fn:() => nav("agent-first")}], undo:() => { EXTRA.splice(EXTRA.indexOf("lumen"), 1); delete AG.lumen; buildSidebar(); buildProjects(); toast(`Undone. ${nm} is removed; nothing had run.`, {icon:"undo"}); }});
+  toast(`<b>${nm} joined Eucas app › Dev team.</b>`, {actions:[{label:"Open " + LUMEN.name, fn:() => nav("agent-first")}], undo:() => { EXTRA.splice(EXTRA.indexOf("lumen"), 1); delete AG.lumen; buildSidebar(); buildProjects(); toast(`Undone. ${nm} is removed; nothing had run.`, {icon:"undo"}); }});
   if (!row) return;
   row.scrollIntoView({block:"nearest"});
   if (!from || !animate()) { row.classList.add("flash"); return; }
@@ -4180,7 +4282,7 @@ function dlgProjectHTML(){
     <div class="field"><label for="npDesc">Describe it <span class="optl">(Optional)</span></label><div class="rt-new-row"><input class="inp" id="npDesc" autocomplete="off" placeholder="A field-notes app for interview research"><button type="button" class="btn secondary" id="npFill">Fill the fields</button></div></div>
     <div class="f2"><div class="field"><label for="npName">Name</label><input class="inp" id="npName" autocomplete="off" placeholder="Name your project"></div><div class="field"><label for="npGoal">Goal <span class="optl">(Optional)</span></label><input class="inp" id="npGoal" autocomplete="off" placeholder="What done looks like"></div></div>
     <div class="field"><span class="lab" id="npStartL">Start from</span><div class="rcs" role="radiogroup" aria-labelledby="npStartL">
-      <label class="rc"><input type="radio" name="npStart" value="team" checked><span class="rc-b"><b>Product + Dev team <span class="tag" style="margin-left:4px;vertical-align:1px">Atlas recommends</span></b><span>PM, analysts, UX/UI, tech lead, developer, QA · 12 lessons from Bench</span></span><span class="rc-e">7<small>agents</small></span></label>
+      <label class="rc"><input type="radio" name="npStart" value="team" checked><span class="rc-b"><b>Product + Dev team <span class="tag" style="margin-left:4px;vertical-align:1px">Atlas recommends</span></b><span>PM, analysts, UX/UI, tech lead, developer, QA · 12 lessons from Eucas app</span></span><span class="rc-e">7<small>agents</small></span></label>
       <label class="rc"><input type="radio" name="npStart" value="blank"><span class="rc-b"><b>Blank</b><span>Just a lead. Add agents when you need them.</span></span><span class="rc-e">1<small>agent</small></span></label></div></div>
     <div class="field" id="npTeamF"><span class="lab">Team</span><div class="np-team" id="npTeam">${npTeamHTML(0)}</div></div>
   </div></div>
@@ -4311,23 +4413,23 @@ function renderFirst(asleep){
 function renderFrSteps(){
   const body = {
     /* Occam (fix 14): the API-key note shows only when the variable is set; this machine has none */
-    1:`<div class="found">${ic("check", 18)}<div><b>Found Claude Code 2.x, signed in.</b><span>Bench uses this login and never stores your credentials.</span></div></div>
+    1:`<div class="found">${ic("check", 18)}<div><b>Found Claude Code 2.x, signed in.</b><span>Eucas uses this login and never stores your credentials.</span></div></div>
        <div class="acts"><button type="button" class="btn primary lg" data-fr="next">Continue</button></div>`,
-    2:`<div class="field" style="margin:0"><label for="frFolder">Where Bench keeps your team</label><div class="rt-new-row"><input class="inp" id="frFolder" value="C:\\Users\\majd\\Bench"><button type="button" class="btn secondary" data-act="stub">Choose</button></div><span class="help">Your agents, memory and projects are plain files here.</span></div>
+    2:`<div class="field" style="margin:0"><label for="frFolder">Where Eucas keeps your team</label><div class="rt-new-row"><input class="inp" id="frFolder" value="C:\\Users\\majd\\Eucas"><button type="button" class="btn secondary" data-act="stub">Choose</button></div><span class="help">Your agents, memory and projects are plain files here.</span></div>
        <div class="acts"><button type="button" class="btn primary lg" data-fr="next">Continue</button></div>`,
-    /* Tesler (fix 14): no model choice before you've used Bench. Balanced by default; change it later in its profile. */
+    /* Tesler (fix 14): no model choice before you've used Eucas. Balanced by default; change it later in its profile. */
     3:`<div class="field"><label for="frName">Name</label><input class="inp" id="frName" value="${esc(FR.name)}" maxlength="24" autocomplete="off" style="max-width:280px"></div>
        <div class="field fr-look" style="margin:0"><span class="lab">Look</span><div id="frChips">${frChips()}</div></div>
        <div class="acts"><button type="button" class="btn primary lg" data-fr="form">Continue</button></div>`,
     4:`<div class="rcs" role="radiogroup" aria-label="How to start the team">
          <label class="rc"><input type="radio" name="frTeam" value="ceo"${FR.team === "ceo" ? " checked" : ""}><span class="rc-b"><b>Just ${esc(FR.name)} for now</b><span>Add agents and projects when you need them.</span></span></label>
-         <label class="rc"><input type="radio" name="frTeam" value="team"${FR.team === "team" ? " checked" : ""}><span class="rc-b"><b>${esc(FR.name)} and a Product + Dev team</b><span>Creates a first project, Bench, with 7 agents. ≈ 0.4 % of your week to set up.</span></span></label></div>
-       <p class="fr-note" style="margin-top:14px">${ic("shield", 16)}<span>Your team commits, tests, merges and sends on its own. It comes to you to delete, pay, answer, decide or test.</span></p>
+         <label class="rc"><input type="radio" name="frTeam" value="team"${FR.team === "team" ? " checked" : ""}><span class="rc-b"><b>${esc(FR.name)} and a Product + Dev team</b><span>Creates a first project with 7 agents. ≈ 0.4 % of your week to set up.</span></span></label></div>
+       <p class="fr-note" style="margin-top:14px">${ic("shield", 16)}<span>Your team commits, tests and merges on its own, and leaves emails and posts as drafts for you. It comes to you to delete, pay, answer, decide or test.</span></p>
        <p class="fr-note" style="margin-top:8px">${ic("info", 16)}<span>GitHub is on. Gmail stays off until you turn it on.</span></p>
        <div class="acts"><button type="button" class="btn primary lg" data-fr="finish">${FR.team === "team" ? `Finish<span class="cons"> · creates ${esc(FR.name)} and 7 agents</span>` : `Finish<span class="cons"> · creates ${esc(FR.name)}</span>`}</button></div>
        <div id="frCreating"></div>`
   };
-  const steps = [[1,"Claude Code","Found Claude Code 2.x, signed in"],[2,"Your Bench folder","C:\\Users\\majd\\Bench"],[3,"Your main agent",`${FR.name} · ${HUE[FR.hue].n} ${SHAPES[FR.shape].n.toLowerCase()}`],[4,"How to start the team",""]];
+  const steps = [[1,"Claude Code","Found Claude Code 2.x, signed in"],[2,"Your Eucas folder","C:\\Users\\majd\\Eucas"],[3,"Your main agent",`${FR.name} · ${HUE[FR.hue].n} ${SHAPES[FR.shape].n.toLowerCase()}`],[4,"How to start the team",""]];
   $("#frSteps").innerHTML = steps.map(s => { const cls = s[0] < FR.step ? "done" : s[0] === FR.step ? "cur" : "todo"; return `<li class="sfr ${cls}"><div class="sfr-h"><span class="sfr-n">${s[0] < FR.step ? ic("check", 14) : s[0]}</span><b>${s[1]}</b>${s[0] < FR.step ? `<span class="res">${esc(s[2])}</span>` : ""}</div>${s[0] === FR.step ? `<div class="sfr-b">${body[s[0]]}</div>` : ""}</li>`; }).join("");
 }
 /* M-F1: the grey sleeper forms into your main agent as step 3 opens; then every edit repaints it live */
@@ -4369,7 +4471,7 @@ function finishFirst(){
     clearInterval(tick);
     S.firstTeam = team;
     go("home-first");
-    toast(team ? `<b>${esc(FR.name)} and 7 agents are ready in Bench.</b>` : `<b>${esc(FR.name)} is ready.</b>`, {icon:"check"});
+    toast(team ? `<b>${esc(FR.name)} and 7 agents are ready in Eucas.</b>` : `<b>${esc(FR.name)} is ready.</b>`, {icon:"check"});
   }, reduced() ? 300 : 1300);
 }
 $("#p-first").addEventListener("change", e => {
@@ -4402,7 +4504,7 @@ function firstAsk(text){
     const th = $("#fThink"); if (th) th.remove();
     if (!$("#hMsgs")) return;
     const metas = $$("#hMsgs .mine .msg-meta"), last = metas[metas.length - 1]; if (last) last.innerHTML = seen("Atlas", "now");
-    addH(agM(`<p>here's what's open in bench:</p>${checklist([["7 open issues","2 look like bugs, 1 needs a decision from you"],["#12","sign the Windows installer?"],["#9 and #14","bugs: developer work, once you have one"]])}`, rcpt(["now","1.2k tokens","0.04 % of your week"], "first"), `<div class="hintbubble" role="note">${eyes(16)}<span>Point at any message to see what it cost. Look inside shows each step.</span><button type="button" class="btn sm on-ink" data-act="gotIt">Got it</button></div>`, {who:atlasNow()}));
+    addH(agM(`<p>here's what's open in eucas-app:</p>${checklist([["7 open issues","2 look like bugs, 1 needs a decision from you"],["#12","sign the Windows installer?"],["#9 and #14","bugs: developer work, once you have one"]])}`, rcpt(["now","1.2k tokens","0.04 % of your week"], "first"), `<div class="hintbubble" role="note">${eyes(16)}<span>Point at any message to see what it cost. Look inside shows each step.</span><button type="button" class="btn sm on-ink" data-act="gotIt">Got it</button></div>`, {who:atlasNow()}));
     S.ringPct = 0.04; renderTop();
     H.firstTicket = true; paintCounts(); buildSidebar();
     addH(askMsgHTML()); sfx("needs");
@@ -4425,7 +4527,7 @@ function renderSheet(){
   const dark = themeNow() === "dark";
   const coreLight = [["Ink","#15171d","Text, the mark, toasts",["#ffffff","#f3f4f7"]],["Porcelain","#f3f4f7","The ground",["#15171d","#646976"]],["White","#ffffff","Sheets, cards, bubbles",["#15171d","#474b57"]],["Cobalt","#2e5bff","The one action, links, focus",["#ffffff"]],["Text 2","#474b57","Secondary text",["#ffffff"]],["Text 3","#646976","Meta, placeholders",["#ffffff","#f3f4f7"]],["Control edge","#868b97","Inputs, switches (3:1)",["#ffffff"]],["Needs you","#8a5300","Amber ink · tint #fff1d9",["#ffffff","#fff1d9"]],["Done","#1b7a45","Green ink · tint #e3f5ea",["#ffffff","#e3f5ea"]],["Error","#c0262d","Red ink · tint #fdeaea",["#ffffff","#fdeaea"]]];
   const core = dark ? CORE_DARK : coreLight;
-  const steps = [["Display","44 / 48 · 600","First run and brand only","Set up your team.","600 44px/48px var(--font-display)","-.032em"],["Headline","28 / 34 · 600","One per screen; the open ticket on Home","QA-3 is blocked","600 28px/34px var(--font-display)","-.022em"],["Title","20 / 26 · 600","Panes, dialogs, names","Noor's screen","600 20px/26px var(--font-display)","-.014em"],["Body","15 / 22 · 400, 600","Chat, lists, inputs","Noor wants to run the full suite before the PR.","400 15px/22px var(--font-text)","-.006em"],["Sub","13 / 18 · 400, 600","Snippets, system lines, small buttons","Runs 214 tests · stays inside bench/","400 13px/18px var(--font-text)","0"],["Meta","12 / 16 · 400, 600","Receipts, tags, counts","09:04 · 1.8k tokens · 0.06 % of your week","400 12px/16px var(--font-text)",".005em"]];
+  const steps = [["Display","44 / 48 · 600","First run and brand only","Set up your team.","600 44px/48px var(--font-display)","-.032em"],["Headline","28 / 34 · 600","One per screen; the open ticket on Home","QA-3 is blocked","600 28px/34px var(--font-display)","-.022em"],["Title","20 / 26 · 600","Panes, dialogs, names","Noor's screen","600 20px/26px var(--font-display)","-.014em"],["Body","15 / 22 · 400, 600","Chat, lists, inputs","Noor wants to run the full suite before the PR.","400 15px/22px var(--font-text)","-.006em"],["Sub","13 / 18 · 400, 600","Snippets, system lines, small buttons","Runs 214 tests · stays inside eucas-app/","400 13px/18px var(--font-text)","0"],["Meta","12 / 16 · 400, 600","Receipts, tags, counts","09:04 · 1.8k tokens · 0.06 % of your week","400 12px/16px var(--font-text)",".005em"]];
   const states = ["idle","thinking","working","waiting","blocked","paused","error","done"];
   $("#sheet").innerHTML = `<div class="row" style="gap:12px">${lockupHTML(40)}</div>
     <h1 class="t-head" style="font-size:44px;line-height:48px;letter-spacing:-.032em;margin-top:28px">The system under direction v0.6.</h1>
@@ -4518,7 +4620,7 @@ const MOMENTS = {
   "first-run-name":["your main agent wakes", () => { FR.step = 3; FR.formed = false; renderFirst(true); setTimeout(wakeAtlas, 300); }],
   "ready-to-test":["start testing", () => { const b = $('#needsList .tk[data-k="test"] [data-tka="primary"]'); if (b) b.click(); }],
   "atlas-profile":["a new look", () => { if (SA !== "atlas" || !$("#setBox").closest("#hPane")) return; snapshot(); SET.shape = SET.shape === "sphere" ? "cloud" : "sphere"; applyIdentity(); setSec("profile", true); saved(); }],
-  "home-first":["the first answer", () => firstAsk("Look at the open GitHub issues in bench")],
+  "home-first":["the first answer", () => firstAsk("Look at the open GitHub issues in eucas-app")],
   offline:["back online", tryOnline],
   "login-expired":["signed in again", () => { go("login-back"); setTimeout(playWake, 200); }],
   "login-back":["waking up", playWake],
@@ -4542,7 +4644,7 @@ const MOMENTS = {
 
 /* ---------- demo chrome ---------- */
 const JUMP = [
-  ["Screens", [["home","Home · Atlas asks one thing"],["atlas-profile","Atlas › Profile (click its name)"],["needs","What needs you · the overlay"],["ready-to-test","What needs you · Ready to test"],["agent","Noor · ready for you to test"],["agent-panel","Noor · panel: screen + routines"],["agent-screen","Noor · panel: the full screen"],["agent-settings","Noor › Settings (her name or the gear)"],["settings","Settings · the app, Appearance (bottom left)"],["agent-settings-autonomy","Noor › Settings › Autonomy"],["agent-settings-memory","Noor › Settings › Memory"],["agent-takeover","Noor · take over"],["team","Bench team chat"],["team-mention","Team chat · @ lists who can reply"],["team-mention-sent","Team chat · a message with a mention"],["agent-mention","Noor · @ lists her teammates"],["home-mention","Home · @ lists everyone Atlas can bring in"],["agent-scrolled","Noor · scrolled: the blurred edge"],["split","Split view"],["project-bench","Bench dashboard"],["project-ik","InterviewKit dashboard"],["room-maya","Maya's room · changing rooms"],["memory","Memory · the Ledger"],["usage","Usage"],["trace","Look inside · the trace"],["tokens","System sheet"]]],
+  ["Screens", [["home","Home · Atlas asks one thing"],["atlas-profile","Atlas › Profile (click its name)"],["needs","What needs you · the overlay"],["ready-to-test","What needs you · Ready to test"],["agent","Noor · ready for you to test"],["agent-panel","Noor · panel: screen + routines"],["agent-screen","Noor · panel: the full screen"],["agent-settings","Noor › Settings (her name or the gear)"],["settings","Settings · the app, Appearance (bottom left)"],["agent-settings-autonomy","Noor › Settings › Autonomy"],["agent-settings-memory","Noor › Settings › Memory"],["agent-takeover","Noor · take over"],["team","Eucas app team chat"],["team-mention","Team chat · @ lists who can reply"],["team-mention-sent","Team chat · a message with a mention"],["agent-mention","Noor · @ lists her teammates"],["home-mention","Home · @ lists everyone Atlas can bring in"],["agent-scrolled","Noor · scrolled: the blurred edge"],["split","Split view"],["project-bench","Eucas app dashboard"],["project-ik","InterviewKit dashboard"],["room-maya","Maya's room · changing rooms"],["memory","Memory · the Ledger"],["usage","Usage"],["trace","Look inside · the trace"],["tokens","System sheet"]]],
   ["Reply (v0.7)", [["reply","Reply · to a whole message (goes to Karim)"],["reply-selection","Reply · to the part you select"],["reply-sent","Reply · sent, leads back to the words"]]],
   ["Flows and moments", [["first-run","First run · four steps"],["first-run-name","First run · your main agent (name and look)"],["home-first","Home · first use"],["new-agent","New agent · birth"],["agent-first","Lumen's first room"],["new-project","New project"],["project-new","Field Notes is set up"],["agent-green","All green · after your test"],["team-memo","The debate becomes a memo"],["project-sprint-done","Sprint done · the team gathers"],["home-empty","All caught up"]]],
   ["Worst moments", [["offline","Offline mid-run"],["offline-back","Back online · the digest"],["usage-limit","Weekly limit reached"],["limit-forecast","Limit forecast · Saturday"],["limit-reset","Monday reset · a new sprint end date"],["login-expired","Claude login expired"],["login-back","Signed in again"],["run-failed","A run failed"],["agent-error-retried","Retried, and learned"],["approval-denied","Approval denied · Jade keeps her files"],["agent-checkpoint","Checkpoint at the 90 % ceiling"],["agent-checkpoint-incomplete","Checkpoint incomplete"],["connector-revoked","Connector revoked"],["connector-back","Connector back"],["needs-conflict","Merge conflict · Karim fixes it"],["needs-conflict-resolved","Conflict fixed · merged by itself"],["guard","Guard defers a routine"],["guard-exempt","Guard · let one routine run"],["slow","Slow response · 14 s"],["long-message","A 500-line log"],["long-names","Very long names"],["agent-routines-empty","No routines yet"]]]
@@ -4740,7 +4842,7 @@ function sideNav(r){
   if (r === "home" || r === "needs" || r === "memory" || r === "usage" || r === "trace") return nav(r);
   if (r === "noor") return nav("agent");
   if (r === "tc-bench") return nav("team");
-  if (r.indexOf("tc-") === 0) return stub("This sample draws the Bench team chat only.");
+  if (r.indexOf("tc-") === 0) return stub("This sample draws the Eucas app team chat only.");
   if (r.indexOf("dash-") === 0) return projAction(r.slice(5), "here");
   if (r === "lumen") return nav("agent-first");
   if (AG[r]) return nav("room-" + r);
@@ -4762,8 +4864,8 @@ function doAct(a, el){
     case "orgtree": return stub("The org tree (Team) isn't part of this direction sample.");
     case "sessions": return stub("Sessions (live and archived) aren't part of this direction sample.");
     case "company": return stub("The Company page isn't part of this direction sample.");
-    case "export": return toast("<b>Exported 1,204 notes as plain Markdown</b> (2.1 MB) to Downloads\\bench-memory-2026-10-22.zip. Your Claude login and connector credentials aren't included.", {icon:"download", actions:[{label:"Show in folder", fn:() => stub()}]});
-    case "openFolder": return stub("Opens Bench\\memory in File Explorer.");
+    case "export": return toast("<b>Exported 1,204 notes as plain Markdown</b> (2.1 MB) to Downloads\\eucas-memory-2026-10-22.zip. Your Claude login and connector credentials aren't included.", {icon:"download", actions:[{label:"Show in folder", fn:() => stub()}]});
+    case "openFolder": return stub("Opens Eucas\\memory in File Explorer.");
     case "forgetNote": return toast("<b>Forgotten.</b>", {undo:() => toast("Undone. The note is back.", {icon:"undo"})});
     case "runNow": return toast("<b>Running now</b> · ≈ 0.30 % of your week", {icon:"refresh"});
     case "undoSetting": if (SET_PREV && SET_PREV_FOR === SA) { Object.assign(SET, JSON.parse(SET_PREV)); SET.saved = false; SET_PREV = null; applyIdentity(); setSec(SET.sec, true); setCapNow(); toast("Undone. The setting is back to what it was.", {icon:"undo"}); } return;
@@ -4782,7 +4884,7 @@ function doAct(a, el){
       return toast("<b>Dependency check now runs even when the guard is on.</b> Next run Mon 26 Oct at 09:00.", {undo:() => { d.exempt = false; renderRoutines(); toast("Undone. Dependency check waits for room again.", {icon:"undo"}); }});
     }
     case "exemptUndo": { const d = RT.list.find(r => r.id === "deps"); d.exempt = false; renderRoutines(); return toast("Undone. Dependency check waits for room in your week again.", {icon:"undo"}); }
-    case "exemptNo": RT.suggest = false; renderRoutines(); return toast("Kept waiting. Bench won't suggest this for Dependency check again this month.", {icon:"info"});
+    case "exemptNo": RT.suggest = false; renderRoutines(); return toast("Kept waiting. Eucas won't suggest this for Dependency check again this month.", {icon:"info"});
     case "pitch": return stub("Pitching to Atlas opens a conversation that ends in a one-page proposal. Not part of this sample.");
   }
 }
@@ -4874,7 +4976,7 @@ $("#sideSearch").addEventListener("input", filterSide);
    aria-autocomplete="list", aria-haspopup="listbox", aria-controls and aria-activedescendant on the listbox's options. */
 const MN = {pop:null, ta:null, list:[], idx:0, start:-1, esc:null};
 const MN_FIELDS = {askIn:true, nIn:true, rIn:true, tIn:true};
-LOOK.teamRoute = {t:"Bench picked Maya",tot:"0.3k tokens · 0.01 % of your week",steps:[["sessions","No @mention, so the router read the agent cards and the thread digest","0.3k"],["user","Picked Maya: she leads Bench and owns the sprint","0k"],["chat","Maya replied","0.9k"]]};
+LOOK.teamRoute = {t:"Eucas picked Maya",tot:"0.3k tokens · 0.01 % of your week",steps:[["sessions","No @mention, so the router read the agent cards and the thread digest","0.3k"],["user","Picked Maya: she leads Eucas app and owns the sprint","0k"],["chat","Maya replied","0.9k"]]};
 function mnSelf(taId){ return taId === "askIn" ? "atlas" : taId === "nIn" ? "noor" : taId === "rIn" ? ROOM.id : null; }
 function mnScope(taId){
   const plus = (p, ids) => p === "bench" && AG.lumen && ids.indexOf("lumen") < 0 ? ids.concat(["lumen"]) : ids;
@@ -5268,6 +5370,289 @@ applyTheme();
 buildJump();
 route();
 FIRST = false;
+</script>
+<script>
+/* ===== v0.8 (UF5, 2026-10-24): composer growth, agent card, drag-to-split, memory graph, fresh install ===== */
+IC.expand = '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>';
+IC.collapse = '<path d="M20 10h-6V4M4 14h6v6M14 10l7-7M10 14l-7 7"/>';
+
+/* Embedded panes (split view) show one screen with no demo bar, sidebar or top bar */
+const EMBED = new URLSearchParams(location.search).has("embed");
+if (EMBED) { document.documentElement.classList.add("embed"); try { SND.on = false; } catch (e) {} }
+
+/* ---------- UF5-2: composers grow with the text, then Expand opens a large editor ---------- */
+const CMP_LINE = 22, CMP_PAD = 14;
+function cmpSize(ta){
+  const c = ta.closest(".composer"); if (!c) return;
+  if (!c.querySelector(".cmp-x")) {
+    c.insertAdjacentHTML("afterbegin", `<button type="button" class="btn icon cmp-x" data-cmp="x" aria-label="Expand the message box" title="Expand">${ic("expand", 16)}</button>`);
+  }
+  if (c.classList.contains("cmp-big")) return;
+  ta.style.height = "auto";
+  ta.style.height = Math.min(ta.scrollHeight, 8 * CMP_LINE + CMP_PAD) + "px";
+  c.classList.toggle("cmp-tall", ta.scrollHeight > 3 * CMP_LINE + CMP_PAD);
+}
+function cmpBig(c, on){
+  const ta = c.querySelector("textarea"), x = c.querySelector(".cmp-x"); if (!ta || !x) return;
+  c.classList.toggle("cmp-big", on);
+  x.innerHTML = ic(on ? "collapse" : "expand", 16);
+  x.setAttribute("aria-label", on ? "Collapse the message box" : "Expand the message box");
+  x.title = on ? "Collapse" : "Expand";
+  if (!on) cmpSize(ta);
+  ta.focus();
+}
+document.addEventListener("input", e => { if (e.target.matches(".composer textarea")) cmpSize(e.target); }, true);
+document.addEventListener("click", e => {
+  const x = e.target.closest('[data-cmp="x"]'); if (!x) return;
+  const c = x.closest(".composer"); cmpBig(c, !c.classList.contains("cmp-big"));
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && e.target.matches(".composer.cmp-big textarea")) { e.stopPropagation(); cmpBig(e.target.closest(".composer"), false); }
+}, true);
+/* after a send the screen clears the field; shrink it back */
+document.addEventListener("submit", e => {
+  const c = e.target.closest(".composer"); if (!c) return;
+  setTimeout(() => { c.classList.remove("cmp-big"); const ta = c.querySelector("textarea"); if (ta) cmpSize(ta); }, 0);
+}, true);
+
+/* ---------- UF5-1: member rows open a small agent card ---------- */
+let CARD = null;
+function closeCard(focusBack){
+  if (!CARD) return;
+  const back = CARD.back; CARD.el.remove(); CARD = null;
+  if (focusBack && back && back.isConnected) back.focus();
+}
+function agentBrief(id){
+  const s = typeof SETS !== "undefined" && SETS[id];
+  return (s && s.desc) || `${AG[id].role} on ${AG[id].team}.`;
+}
+function openCard(id, row){
+  closeCard(false);
+  const a = AG[id]; if (!a) return;
+  const st = effStatus(id);
+  const el = document.createElement("div");
+  el.className = "agcard"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", `${a.name}, ${a.title || a.role}`);
+  el.innerHTML = `<div class="agc-h">${avatar(id, 40, {status:st, hidden:true})}<div style="min-width:0"><b>${esc(a.name)}</b><span class="t-meta ink3">${esc(a.title || a.role)} · ${esc(ST[st].l)}</span></div></div>
+    <p>${esc(agentBrief(id))}</p>${a.live || a.snip ? `<div class="agc-now">${esc(a.live ? "Now: " + a.live : a.snip)}</div>` : ""}
+    <div class="agc-a"><button type="button" class="btn primary" data-card-act="chat">${ic("chat", 16)}Chat</button><button type="button" class="btn secondary" data-card-act="profile">${ic("pencil", 16)}Edit profile</button></div>`;
+  document.body.appendChild(el);
+  const r = row.getBoundingClientRect(), w = el.offsetWidth, h = el.offsetHeight;
+  if (!r.width) { el.style.left = (innerWidth - w) / 2 + "px"; el.style.top = (innerHeight - h) / 2 + "px"; CARD = {el, id, back:row}; el.querySelector("button").focus(); return; }
+  const left = r.left - w - 8 > 8 ? r.left - w - 8 : Math.min(r.right + 8, innerWidth - w - 8);
+  el.style.left = left + "px"; el.style.top = Math.max(8, Math.min(r.top - 8, innerHeight - h - 8)) + "px";
+  if (animate()) el.animate([{opacity:0, transform:"translateX(6px)"}, {opacity:1, transform:"none"}], {duration:180, easing:"ease-out"});
+  CARD = {el, id, back:row};
+  el.querySelector("button").focus();
+}
+document.addEventListener("click", e => {
+  const act = e.target.closest("[data-card-act]");
+  if (act && CARD) {
+    const id = CARD.id; closeCard(false);
+    if (act.dataset.cardAct === "chat") nav(id === "noor" ? "agent" : id === "atlas" ? "home" : "room-" + id);
+    else openProfile(id);
+    return;
+  }
+  const row = e.target.closest("[data-card]");
+  if (row) { e.stopPropagation(); if (CARD && CARD.id === row.dataset.card) closeCard(true); else openCard(row.dataset.card, row); return; }
+  if (CARD && !e.target.closest(".agcard")) closeCard(false);
+}, true);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && CARD) { e.stopPropagation(); closeCard(true); return; }
+  const row = e.target.closest && e.target.closest("[data-card]");
+  if (row && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openCard(row.dataset.card, row); }
+}, true);
+addEventListener("hashchange", () => closeCard(false));
+
+/* ---------- UF5-3 + UF6-1: drag from the sidebar to split. The first split is left | right; a third and
+   fourth pane split one side into top and bottom (max 2 × 2). Panes never move in the DOM, so they don't reload. ---------- */
+const SP = {cols:[[], []], MAX:4};
+const spCount = () => SP.cols[0].length + SP.cols[1].length;
+const spAll = () => SP.cols.flat();
+const PAGE = {home:"Home", needs:"What needs you", memory:"Memory", usage:"Usage", trace:"Look inside"};
+function rowTarget(k){
+  if (PAGE[k]) return {hash:k, label:k === "home" ? (AG.atlas ? AG.atlas.name : "Home") : PAGE[k], ag:k === "home" ? "atlas" : null};
+  if (k === "noor") return {hash:"agent", label:"Noor", ag:"noor"};
+  if (k === "tc-bench") return {hash:"team", label:`${PROJ.bench.name} team chat`};
+  if (k.indexOf("dash-") === 0 && PROJ[k.slice(5)]) return {hash:"project-" + k.slice(5), label:`${PROJ[k.slice(5)].name} dashboard`};
+  if (k === "lumen") return {hash:"agent-first", label:"Lumen"};
+  if (AG[k]) return {hash:"room-" + k, label:AG[k].name, ag:k};
+  return null;
+}
+const V08_BASE = {"split-drag":"agent","composer-grow":"agent","composer-big":"agent","team-card":"team","memory-graph":"memory","fresh":"home","fresh-check":"home"};
+function curTarget(){
+  let h = (location.hash || "#home").slice(1) || "home"; h = V08_BASE[h] || h;
+  const crumbs = $("#crumbs"), parts = crumbs ? crumbs.innerText.trim().split(/\n|›/).map(x => x.trim()).filter(Boolean) : [];
+  const ag = h === "agent" ? "noor" : h === "home" ? "atlas" : h.indexOf("room-") === 0 && AG[h.slice(5)] ? h.slice(5) : null;
+  return {hash:h, label:parts[parts.length - 1] || "This screen", ag};
+}
+const mainEl = $("#main");
+mainEl.insertAdjacentHTML("beforeend", `<div class="sp-drop" aria-hidden="true"></div><div class="msplit" id="mSplit" hidden aria-label="Split view"></div>`);
+const dropEl = mainEl.querySelector(".sp-drop");
+function markDraggable(){ $$("#sideList [data-row]").forEach(r => { if (rowTarget(r.dataset.row)) { r.draggable = true; if (!/Shift\+Enter/.test(r.title)) r.title = (r.title ? r.title + "\n" : "") + "Drag into the middle, or Shift+Enter, to open in a split"; } }); }
+new MutationObserver(markDraggable).observe($("#sideList"), {childList:true, subtree:true});
+markDraggable();
+/* drop zones: left | right before the first split; afterwards, above or below a pane that is still alone in its column */
+function spZones(){
+  const m = mainEl.getBoundingClientRect();
+  if (!spCount()) return [{z:"0", ins:"col", side:1, label:"Open on the right", x:m.width / 2 + 6, y:60, w:m.width / 2 - 18, h:m.height - 72},
+                           {z:"1", ins:"col", side:0, label:"Open on the left", x:12, y:60, w:m.width / 2 - 18, h:m.height - 72}];
+  const out = [];
+  SP.cols.forEach((col, ci) => {
+    if (col.length !== 1) return;
+    const el = $(`#mSplit .pn[data-h="${CSS.escape(col[0].hash)}"]`); if (!el) return;
+    const r = el.getBoundingClientRect(), x = r.left - m.left, y = r.top - m.top;
+    out.push({z:`${ci}t`, ins:"row", col:ci, at:0, label:`Open above ${col[0].label}`, x, y, w:r.width, h:r.height / 2 - 4});
+    out.push({z:`${ci}b`, ins:"row", col:ci, at:1, label:`Open below ${col[0].label}`, x, y:y + r.height / 2 + 4, w:r.width, h:r.height / 2 - 4});
+  });
+  return out;
+}
+let SPDRAG = null, SPZ = [];
+function showZones(){
+  SPZ = spZones();
+  dropEl.innerHTML = SPZ.length ? SPZ.map(z => `<div class="z" data-z="${z.z}" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px"><span>${esc(z.label)}</span></div>`).join("")
+    : `<div class="sp-full">4 panes is the most. Close one first.</div>`;
+}
+$("#sideList").addEventListener("dragstart", e => {
+  const r = e.target.closest("[data-row]"); if (!r || !rowTarget(r.dataset.row)) return;
+  SPDRAG = r.dataset.row; e.dataTransfer.setData("text/plain", SPDRAG); e.dataTransfer.effectAllowed = "copy";
+  showZones(); mainEl.classList.add("sp-dragging");
+});
+addEventListener("dragend", () => { SPDRAG = null; mainEl.classList.remove("sp-dragging"); });
+dropEl.addEventListener("dragover", e => {
+  if (!SPDRAG) return; e.preventDefault();
+  const z = e.target.closest(".z"); $$(".sp-drop .z").forEach(x => x.classList.toggle("on", x === z));
+});
+dropEl.addEventListener("drop", e => {
+  e.preventDefault(); const z = e.target.closest(".z"), k = SPDRAG;
+  mainEl.classList.remove("sp-dragging"); SPDRAG = null;
+  if (z && k) addPane(k, SPZ.find(x => x.z === z.dataset.z));
+});
+/* zone: {ins:"col", side} for the first split, {ins:"row", col, at} for a third or fourth pane; none = the next free spot */
+function addPane(k, zone){
+  const t = rowTarget(k); if (!t || EMBED) return;
+  if (spCount() >= SP.MAX) return toast("<b>4 panes is the most.</b> Close one first.");
+  if (spAll().some(p => p.hash === t.hash) || (!spCount() && curTarget().hash === t.hash)) return toast(`<b>${esc(t.label)} is already open.</b>`);
+  if (!zone) zone = !spCount() ? {ins:"col", side:1} : SP.cols[1].length < 2 ? {ins:"row", col:1, at:1} : {ins:"row", col:0, at:1};
+  if (!spCount()) { const cur = curTarget(); SP.cols = zone.side === 0 ? [[t], [cur]] : [[cur], [t]]; }
+  else SP.cols[zone.col].splice(zone.at, 0, t);
+  renderSplitPanes(t.hash);
+  announce(`${t.label} opened in a split. ${spCount()} panes.`);
+}
+function paneSrc(h){ const th = document.documentElement.dataset.theme || "dark"; return location.pathname + "?embed=1&theme=" + encodeURIComponent(th) + "#" + h; }
+function renderSplitPanes(fresh){
+  const box = $("#mSplit");
+  if (spCount() < 2) { const last = spAll()[0]; SP.cols = [[], []]; box.hidden = true; box.innerHTML = ""; if (last) go(last.hash); return; }
+  const live = new Set(spAll().map(p => p.hash));
+  $$("#mSplit .pn").forEach(el => { if (!live.has(el.dataset.h)) el.remove(); });
+  SP.cols.forEach((col, ci) => col.forEach((p, ri) => {
+    let el = $(`#mSplit .pn[data-h="${CSS.escape(p.hash)}"]`);
+    if (!el) {
+      el = document.createElement("section"); el.className = "pn" + (p.hash === fresh && animate() ? " enter" : ""); el.dataset.h = p.hash;
+      const st = p.ag && AG[p.ag] ? effStatus(p.ag) : null;
+      const who = st ? `${avatar(p.ag, 24, {status:st, hidden:true})}<span class="pn-t"><b>${esc(p.label)}</b><span class="pn-s">${esc(ST[st].l)}${AG[p.ag].title ? " · " + esc(AG[p.ag].title) : ""}</span></span>` : `<span class="pn-t"><b>${esc(p.label)}</b></span>`;
+      el.innerHTML = `<div class="pn-h">${who}<button type="button" class="btn icon" data-pane-close="${esc(p.hash)}" aria-label="Close ${esc(p.label)}" title="Close">${ic("x", 16)}</button></div><iframe title="${esc(p.label)}" src="${paneSrc(p.hash)}"></iframe>`;
+      box.appendChild(el);
+    }
+    el.style.gridColumn = String(ci + 1);
+    el.style.gridRow = col.length === 1 ? "1 / span 2" : String(ri + 1);
+  }));
+  box.hidden = false;
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-pane-close]"); if (!c) return;
+  SP.cols = SP.cols.map(col => col.filter(p => p.hash !== c.dataset.paneClose));
+  /* an empty side takes the bottom pane of the other side, so the split stays left | right */
+  const empty = SP.cols.findIndex(col => !col.length), other = 1 - empty;
+  if (empty >= 0 && SP.cols[other].length === 2) SP.cols[empty] = [SP.cols[other].pop()];
+  renderSplitPanes();
+});
+$("#sideList").addEventListener("keydown", e => {
+  if (e.key !== "Enter" || !e.shiftKey) return;
+  const r = e.target.closest("[data-row]"); if (!r || !rowTarget(r.dataset.row)) return;
+  e.preventDefault(); e.stopPropagation(); addPane(r.dataset.row);
+}, true);
+/* a normal navigation leaves the split */
+addEventListener("hashchange", () => { if (spCount() && !$("#mSplit").hidden) { SP.cols = [[], []]; $("#mSplit").hidden = true; $("#mSplit").innerHTML = ""; } });
+
+/* ---------- UF5-4: Memory · List or Graph ---------- */
+MEM.view = MEM.view || "list";
+const GRAPH = {
+  hubs:[["you","You",500,280,"var(--action)"],["atlas","Atlas",290,150,null],["noor","Noor",760,170,null],["karim","Karim",810,430,null],["dev","Dev team",690,495,"var(--text-3)"],["product","Product team",290,440,"var(--text-3)"],["company","Company",150,290,"var(--text-3)"]],
+  notes:{prstyle:[470,150,["you","noor","karim"]],datelib:[640,300,["noor","dev"]],signoff:[360,235,["you","atlas"]],routing:[400,515,["karim","product"]],windows:[420,345,["you"]],components:[530,420,["dev","noor","karim"]]}
+};
+function hubColor(h){ return h[4] || `var(--hue-${AG[h[0]] ? AG[h[0]].hue : "lavender"}-base)`; }
+function memGraphHTML(){
+  const hub = Object.fromEntries(GRAPH.hubs.map(h => [h[0], h]));
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const dust = GRAPH.hubs.flatMap(h => Array.from({length:h[0] === "you" ? 26 : 16}, () => { const a = rnd() * 6.283, d = 34 + rnd() * 70; return `<circle class="dust" cx="${(h[2] + Math.cos(a) * d).toFixed(1)}" cy="${(h[3] + Math.sin(a) * d * .8).toFixed(1)}" r="${(1.6 + rnd() * 1.6).toFixed(1)}"/>`; })).join("");
+  const edges = Object.entries(GRAPH.notes).flatMap(([id, n]) => n[2].map(t => `<line class="edge" data-e="${id} ${t}" x1="${n[0]}" y1="${n[1]}" x2="${hub[t][2]}" y2="${hub[t][3]}"/>`)).join("");
+  const notes = MEMNOTES.filter(n => GRAPH.notes[n.id]).map(n => { const g = GRAPH.notes[n.id]; return `<g class="nd" tabindex="0" role="button" data-gnote="${n.id}" aria-label="${esc(n.t)}, ${esc(n.type)}"><circle cx="${g[0]}" cy="${g[1]}" r="8" fill="var(--bg-raised)" stroke="var(--text-2)" stroke-width="1.5"/><text x="${g[0] + 12}" y="${g[1] + 4}">${esc(n.t.length > 34 ? n.t.slice(0, 33) + "…" : n.t)}</text></g>`; }).join("");
+  const hubs = GRAPH.hubs.map(h => `<g class="nd hub" data-ghub="${h[0]}"><circle cx="${h[2]}" cy="${h[3]}" r="${h[0] === "you" ? 16 : 12}" fill="${hubColor(h)}"/><text x="${h[2]}" y="${h[3] + (h[0] === "you" ? 32 : 28)}" text-anchor="middle">${esc(h[1])}</text></g>`).join("");
+  return `<div class="mgraph" id="mGraph"><svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Memory graph: 214 things your team knows, linked to who learned them">${dust}${edges}${hubs}${notes}</svg>
+    <div class="key"><span><i style="background:var(--action)"></i>You</span><span><i style="background:var(--hue-coral-base)"></i>Agents</span><span><i style="background:var(--text-3)"></i>Teams and company</span><span>Labelled: the 6 notes used most · dots: the other 208</span></div><div class="tip" id="gTip" hidden></div></div>`;
+}
+const renderMemoryList = renderMemory;
+renderMemory = function(){
+  renderMemoryList();
+  const top = $("#p-memory .mem-top .acts");
+  if (top && !top.querySelector(".mem-view")) top.insertAdjacentHTML("afterbegin", `<div class="mem-view" role="group" aria-label="View"><button type="button" data-mview="list" aria-pressed="${MEM.view === "list"}">List</button><button type="button" data-mview="graph" aria-pressed="${MEM.view === "graph"}">Graph</button></div>`);
+  if (MEM.view === "graph") { const m = $("#p-memory .mem"); if (m) { m.outerHTML = memGraphHTML(); $("#mGraph").style.height = "calc(100vh - 200px)"; } }
+};
+document.addEventListener("click", e => {
+  const v = e.target.closest("[data-mview]"); if (v) { MEM.view = v.dataset.mview; renderMemory(); return; }
+  const g = e.target.closest("[data-gnote]"); if (g) { MEM.note = g.dataset.gnote; MEM.view = "list"; renderMemory(); const b = $(`[data-mnote="${MEM.note}"]`); if (b) b.focus(); }
+});
+document.addEventListener("keydown", e => { const g = e.target.closest && e.target.closest("[data-gnote]"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); g.dispatchEvent(new MouseEvent("click", {bubbles:true})); } });
+function gHot(id, on, x, y){
+  $$("#mGraph .edge").forEach(l => l.classList.toggle("hot", on && l.dataset.e.split(" ").includes(id)));
+  const tip = $("#gTip"); if (!tip) return;
+  const n = MEMNOTES.find(m => m.id === id);
+  if (!on || !n) { tip.hidden = true; return; }
+  tip.innerHTML = `${esc(n.t)}<span>${esc(n.type)} · ${esc(n.used)}</span>`; tip.hidden = false;
+  const box = $("#mGraph").getBoundingClientRect(); tip.style.left = Math.min(x - box.left + 14, box.width - 270) + "px"; tip.style.top = (y - box.top + 14) + "px";
+}
+document.addEventListener("mouseover", e => { const g = e.target.closest && e.target.closest("#mGraph [data-gnote], #mGraph [data-ghub]"); if (g) gHot(g.dataset.gnote || g.dataset.ghub, true, e.clientX, e.clientY); });
+document.addEventListener("mouseout", e => { const g = e.target.closest && e.target.closest("#mGraph [data-gnote], #mGraph [data-ghub]"); if (g) gHot(g.dataset.gnote || g.dataset.ghub, false); });
+document.addEventListener("focusin", e => { const g = e.target.closest && e.target.closest("#mGraph [data-gnote]"); if (g) { const r = g.getBoundingClientRect(); gHot(g.dataset.gnote, true, r.right, r.top); } });
+
+/* ---------- UF5-6: start as a new user: welcome, a live Claude Code check, then the four steps ---------- */
+const renderFirstSteps = renderFirst, renderFrStepsBase = renderFrSteps;
+renderFirst = function(asleep){
+  if (FR.step !== 0) return renderFirstSteps(asleep);
+  $("#p-first").innerHTML = `<div class="fr-welcome"><div class="brandrow">${lockupHTML(40)}</div><h1>Every idea deserves a happy ending.</h1>
+    <p>Eucas gives you a team of Claude agents that builds your ideas with you.<br>You stay the boss: you decide, test and accept. Setup takes about a minute.</p>
+    <div class="acts"><button type="button" class="btn primary lg" data-fr="start">Get started</button></div></div>`;
+  $('[data-fr="start"]').focus();
+};
+renderFrSteps = function(){
+  renderFrStepsBase();
+  if (FR.checking && FR.step === 1) { const b = $("#frSteps .sfr.cur .sfr-b"); if (b) b.innerHTML = `<div class="fr-check" role="status"><span class="busy-dots" aria-hidden="true"><i></i><i></i><i></i></span>Looking for Claude Code on this PC…</div>`; }
+};
+$("#p-first").addEventListener("click", e => {
+  if (!e.target.closest('[data-fr="start"]')) return;
+  FR.step = 1; FR.checking = true; renderFirst(); setHash("fresh-check");
+  setTimeout(() => { FR.checking = false; renderFrSteps(); announce("Found Claude Code, signed in."); const c = $('#frSteps [data-fr="next"]'); if (c) c.focus(); }, reduced() ? 200 : 1400);
+});
+ROUTES.fresh = () => {
+  Object.assign(FR, {step:0, team:"ceo", formed:false, name:"Atlas", shape:"sphere", hue:"lavender", checking:false});
+  S.firstTeam = false; show("first", "fresh"); renderFirst(); syncDemo("fresh");
+};
+ROUTES["fresh-check"] = ROUTES.fresh;
+$(".demo-tabs").insertAdjacentHTML("afterend", `<button type="button" class="demo-fresh" id="freshBtn" title="Reset the demo to a fresh install and run setup from the start">New user</button>`);
+$("#freshBtn").addEventListener("click", () => go("fresh"));
+const H0 = (window.H0 || "").slice(1);
+if (H0 === "fresh" || H0 === "fresh-check") ROUTES.fresh();
+/* v0.8 demo routes: each new state can be opened from the Jump menu */
+const V08_LONG = "Here's the plan for the onboarding copy:\n1. Step 1 says what Eucas found\n2. Step 2 shows the folder\n3. Step 3 wakes your main agent\n4. Step 4 picks how the team starts\nKeep each line under 60 characters.";
+function v08Fill(big){ const ta = $("#nIn"); if (!ta) return; ta.value = V08_LONG; ta.dispatchEvent(new Event("input", {bubbles:true})); if (big) cmpBig(ta.closest(".composer"), true); }
+ROUTES["team-card"] = () => { T.roster = true; ROUTES.team(); setHash("team-card"); setTimeout(() => { const r = $("#roster"); if (r && r.hidden) { const b = $('[aria-label="Members"]'); if (b) b.click(); } requestAnimationFrame(() => requestAnimationFrame(() => { const row = $('#roster [data-card="karim"]'); if (row) openCard("karim", row); })); }, 60); };
+ROUTES["composer-grow"] = () => { noorScreen(null, null, "agent"); setHash("composer-grow"); setTimeout(() => v08Fill(false), 60); };
+ROUTES["composer-big"] = () => { noorScreen(null, null, "agent"); setHash("composer-big"); setTimeout(() => v08Fill(true), 60); };
+ROUTES["split-drag"] = () => { noorScreen(null, null, "agent"); setHash("split-drag"); setTimeout(() => { addPane("karim"); addPane("tc-bench", {ins:"row", col:1, at:1}); }, 60); };
+ROUTES["memory-graph"] = () => { MEM.view = "graph"; insightScreen("memory"); setHash("memory-graph"); };
+JUMP.push(["Your review, round 5 (v0.8)", [["fresh","Start as a new user · welcome, then setup"],["team-card","Team chat · titles and the agent card"],["composer-grow","Composer · grows as you write"],["composer-big","Composer · expanded"],["split-drag","Split view · dragged from the sidebar (3 panes)"],["memory-graph","Memory · the graph"]]]);
+buildJump();
+if (["team-card","composer-grow","composer-big","split-drag","memory-graph"].includes(H0)) ROUTES[H0]();
 </script>
 </body>
 </html>
