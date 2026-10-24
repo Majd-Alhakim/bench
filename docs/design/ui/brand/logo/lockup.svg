@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 322 100" width="322" height="100" role="img" aria-label="euca">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 362 100" width="362" height="100" role="img" aria-label="eucas">
   <!-- Lockup: mark, a gap of 0.36 × the mark's height, the name in Instrument Sans 600 at 0.84 × height, tracking −0.035em.
-       The name "euca" is still live text. Before shipping, set it in the bundled Instrument Sans
+       The name "eucas" is still live text. Before shipping, set it in the bundled Instrument Sans
        and convert it to outlines before shipping this file; until then textLength holds the width if the face is missing. -->
   <g fill="#15171d">
     <circle cx="26" cy="26" r="20"/>
     <path d="M74 10 L91 43 L57 43 Z" stroke="#15171d" stroke-width="6" stroke-linejoin="round"/>
     <rect x="7" y="55" width="38" height="38" rx="12"/>
     <path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/>
-    <text x="136" y="80" font-family="'Instrument Sans', 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif" font-weight="600" font-size="84" letter-spacing="-2.94" textLength="180" lengthAdjust="spacing">euca</text>
+    <text x="136" y="80" font-family="'Instrument Sans', 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif" font-weight="600" font-size="84" letter-spacing="-2.94" textLength="220" lengthAdjust="spacing">eucas</text>
   </g>
 </svg>
