@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
-**Next step:** G0 approved 2026-10-24 (spikes GO, [reports](../spikes/)). Next: G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
+**Next step:** G0 approved 2026-10-24 (spikes GO, [reports](../spikes/)). Next: your G4/G5 review of prototype **v0.8** (round 5 applied, [UF5](../requirements/interviews/2026-10-24-ui-feedback-5.md)); then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
 
 ## Phase tracker
 
@@ -14,7 +14,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 | 2 | PRD | ✅ **v0.3** (5 × 3-day sprints, 51 UCs), G2 questions answered | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
 | 4 | UX design | 🟡 Premium spec, Laws of UX audit, low-fi v0.4 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ⏳ |
-| 5 | UI design & brand | 🟡 Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.7**; **name: Eucas** (one agent is a Euca) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ⏳ |
+| 5 | UI design & brand | 🟡 Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.8** (your round-5 review applied); **name: Eucas** (one agent is a Euca) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ⏳ |
 | 6 | Backlog & Sprint 1 | ⚪ Not started (stories drafted in PRD v0.2 Appendix A) | GitHub Issues / board | G6 ⏳ |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
 
