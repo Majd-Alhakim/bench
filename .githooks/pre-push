@@ -1,0 +1,10 @@
+#!/bin/sh
+# Refuse direct pushes to the long-lived branches; changes reach them only through PRs.
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/staging|refs/heads/dev)
+      echo "pre-push: direct push to ${remote_ref#refs/heads/} is not allowed. Open a PR instead (CONTRIBUTING.md)." >&2
+      exit 1 ;;
+  esac
+done
+exit 0
