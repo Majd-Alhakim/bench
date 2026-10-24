@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>eucas · UI direction v0.8 · dark first</title>
+<title>eucas · UI direction v0.8.1 · dark first</title>
 <script>window.H0 = location.hash; /* v0.8: the hash the page opened with, before the router rewrites it */</script>
 <script>
 /* Dark first (client, 23 Oct). The theme is set before the first paint so nothing flashes.
@@ -1528,17 +1528,11 @@ html.rm .applied.glow{animation:none!important;box-shadow:inset 0 0 0 1px var(--
 .sp-drop .z span{padding:6px 10px;border-radius:999px;background:var(--bg-raised);box-shadow:var(--elev-2);opacity:0;transition:opacity var(--dur-micro) ease}
 .sp-drop .z.on{background:color-mix(in srgb,var(--action) 14%,transparent);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--action) 60%,transparent)}
 .sp-drop .z.on span{opacity:1}
-.sp-drop .z.l{left:12px;top:60px;bottom:12px;width:calc(50% - 18px)}
-.sp-drop .z.r{right:12px;top:60px;bottom:12px;width:calc(50% - 18px)}
-.sp-drop .z.t{left:12px;right:12px;top:60px;height:calc(50% - 42px)}
-.sp-drop .z.b{left:12px;right:12px;bottom:12px;height:calc(50% - 42px)}
-.sp-full{display:none;position:absolute;inset:60px 12px 12px;z-index:41;align-items:center;justify-content:center;font-size:14px;color:var(--text-2)}
-.main.sp-dragging.sp-max .sp-drop .z{display:none}
-.main.sp-dragging.sp-max .sp-full{display:flex}
-.msplit{position:absolute;inset:0;z-index:30;display:grid;gap:8px;padding:8px;background:var(--bg-ground)}
+.sp-full{display:flex;position:absolute;inset:60px 12px 12px;align-items:center;justify-content:center;font-size:14px;color:var(--text-2);background:color-mix(in srgb,var(--bg-ground) 70%,transparent);border-radius:var(--r-lg)}
+.msplit{position:absolute;inset:0;z-index:30;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;padding:10px;background:var(--bg-ground)}
 .msplit[hidden]{display:none}
-.msplit .pn{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg-surface);border-radius:var(--r-lg);corner-shape:var(--corner);box-shadow:inset 0 0 0 1px var(--line-soft,var(--line-control));overflow:hidden}
-.msplit .pn-h{flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 14px;font-size:14px;line-height:20px}
+.msplit .pn{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg-ground);border:1px solid color-mix(in srgb,var(--text-3) 30%,transparent);border-radius:var(--r-lg);corner-shape:var(--corner);overflow:hidden;box-shadow:var(--elev-2)}
+.msplit .pn-h{flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 14px;font-size:14px;line-height:20px;background:var(--bg-surface);border-bottom:1px solid color-mix(in srgb,var(--text-3) 18%,transparent)}
 .msplit .pn-h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
 .msplit .pn-h .btn{--h:28px}
 .msplit iframe{flex:1;width:100%;border:0;background:var(--bg-ground)}
@@ -1569,7 +1563,7 @@ html.embed .topbar{display:none}
 /* UF5-6: a fresh install starts with a welcome, then a live Claude Code check */
 .fr-welcome{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:24px}
 .fr-welcome h1{font-size:44px;line-height:52px;letter-spacing:-.02em;margin:8px 0 0}
-.fr-welcome p{margin:0;max-width:520px;color:var(--text-2);font-size:16px;line-height:24px}
+.fr-welcome p{margin:0;max-width:700px;text-wrap:balance;color:var(--text-2);font-size:16px;line-height:24px}
 .fr-welcome .acts{margin-top:12px}
 .fr-check{display:flex;align-items:center;gap:10px;color:var(--text-2)}
 .demo-fresh{height:30px;padding:0 12px;border-radius:999px;font-size:13px;color:var(--text-inverse);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .28)}
@@ -1582,7 +1576,7 @@ html.embed .topbar{display:none}
 
 <!-- ============ Prototype chrome (not part of the UI) ============ -->
 <header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <div class="demo-id"><b>Direction v0.8 · dark first</b></div>
+  <div class="demo-id"><b>Direction v0.8.1 · dark first</b></div>
   <div class="demo-tabs" role="tablist" aria-label="Sample screens">
     <button role="tab" id="t-home" data-scr="home" aria-selected="true">Home</button>
     <button role="tab" id="t-agent" data-scr="agent" aria-selected="false" tabindex="-1">Noor</button>
@@ -5452,8 +5446,11 @@ document.addEventListener("keydown", e => {
 }, true);
 addEventListener("hashchange", () => closeCard(false));
 
-/* ---------- UF5-3: drag anything from the sidebar into the middle to split, up to 4 panes ---------- */
-const SP = {panes:[], dir:"col", MAX:4};
+/* ---------- UF5-3 + UF6-1: drag from the sidebar to split. The first split is left | right; a third and
+   fourth pane split one side into top and bottom (max 2 × 2). Panes never move in the DOM, so they don't reload. ---------- */
+const SP = {cols:[[], []], MAX:4};
+const spCount = () => SP.cols[0].length + SP.cols[1].length;
+const spAll = () => SP.cols.flat();
 const PAGE = {home:"Home", needs:"What needs you", memory:"Memory", usage:"Usage", trace:"Look inside"};
 function rowTarget(k){
   if (PAGE[k]) return {hash:k, label:k === "home" ? (AG.atlas ? AG.atlas.name : "Home") : PAGE[k]};
@@ -5467,73 +5464,95 @@ function rowTarget(k){
 const V08_BASE = {"split-drag":"agent","composer-grow":"agent","composer-big":"agent","team-card":"team","memory-graph":"memory","fresh":"home","fresh-check":"home"};
 function curTarget(){
   let h = (location.hash || "#home").slice(1) || "home"; h = V08_BASE[h] || h;
-  const crumbs = $("#crumbs"), last = crumbs && crumbs.innerText.trim().split(/\n|›/).pop().trim();
-  return {hash:h, label:last || "This screen"};
+  const crumbs = $("#crumbs"), parts = crumbs ? crumbs.innerText.trim().split(/\n|›/).map(x => x.trim()).filter(Boolean) : [];
+  return {hash:h, label:parts[parts.length - 1] || "This screen"};
 }
 const mainEl = $("#main");
-mainEl.insertAdjacentHTML("beforeend", `<div class="sp-drop" aria-hidden="true"><div class="z l" data-z="l"><span>Open on the left</span></div><div class="z r" data-z="r"><span>Open on the right</span></div><div class="z t" data-z="t"><span>Open on top</span></div><div class="z b" data-z="b"><span>Open below</span></div><div class="sp-full">4 panes is the most. Close one first.</div></div><div class="msplit" id="mSplit" hidden aria-label="Split view"></div>`);
+mainEl.insertAdjacentHTML("beforeend", `<div class="sp-drop" aria-hidden="true"></div><div class="msplit" id="mSplit" hidden aria-label="Split view"></div>`);
 const dropEl = mainEl.querySelector(".sp-drop");
 function markDraggable(){ $$("#sideList [data-row]").forEach(r => { if (rowTarget(r.dataset.row)) { r.draggable = true; if (!/Shift\+Enter/.test(r.title)) r.title = (r.title ? r.title + "\n" : "") + "Drag into the middle, or Shift+Enter, to open in a split"; } }); }
 new MutationObserver(markDraggable).observe($("#sideList"), {childList:true, subtree:true});
 markDraggable();
-let SPDRAG = null;
+/* drop zones: left | right before the first split; afterwards, above or below a pane that is still alone in its column */
+function spZones(){
+  const m = mainEl.getBoundingClientRect();
+  if (!spCount()) return [{z:"0", ins:"col", side:1, label:"Open on the right", x:m.width / 2 + 6, y:60, w:m.width / 2 - 18, h:m.height - 72},
+                           {z:"1", ins:"col", side:0, label:"Open on the left", x:12, y:60, w:m.width / 2 - 18, h:m.height - 72}];
+  const out = [];
+  SP.cols.forEach((col, ci) => {
+    if (col.length !== 1) return;
+    const el = $(`#mSplit .pn[data-h="${CSS.escape(col[0].hash)}"]`); if (!el) return;
+    const r = el.getBoundingClientRect(), x = r.left - m.left, y = r.top - m.top;
+    out.push({z:`${ci}t`, ins:"row", col:ci, at:0, label:`Open above ${col[0].label}`, x, y, w:r.width, h:r.height / 2 - 4});
+    out.push({z:`${ci}b`, ins:"row", col:ci, at:1, label:`Open below ${col[0].label}`, x, y:y + r.height / 2 + 4, w:r.width, h:r.height / 2 - 4});
+  });
+  return out;
+}
+let SPDRAG = null, SPZ = [];
+function showZones(){
+  SPZ = spZones();
+  dropEl.innerHTML = SPZ.length ? SPZ.map(z => `<div class="z" data-z="${z.z}" style="left:${z.x}px;top:${z.y}px;width:${z.w}px;height:${z.h}px"><span>${esc(z.label)}</span></div>`).join("")
+    : `<div class="sp-full">4 panes is the most. Close one first.</div>`;
+}
 $("#sideList").addEventListener("dragstart", e => {
   const r = e.target.closest("[data-row]"); if (!r || !rowTarget(r.dataset.row)) return;
   SPDRAG = r.dataset.row; e.dataTransfer.setData("text/plain", SPDRAG); e.dataTransfer.effectAllowed = "copy";
-  mainEl.classList.add("sp-dragging"); mainEl.classList.toggle("sp-max", SP.panes.length >= SP.MAX);
+  showZones(); mainEl.classList.add("sp-dragging");
 });
-addEventListener("dragend", () => { SPDRAG = null; mainEl.classList.remove("sp-dragging", "sp-max"); $$(".sp-drop .z.on").forEach(z => z.classList.remove("on")); });
+addEventListener("dragend", () => { SPDRAG = null; mainEl.classList.remove("sp-dragging"); });
 dropEl.addEventListener("dragover", e => {
   if (!SPDRAG) return; e.preventDefault();
   const z = e.target.closest(".z"); $$(".sp-drop .z").forEach(x => x.classList.toggle("on", x === z));
 });
 dropEl.addEventListener("drop", e => {
   e.preventDefault(); const z = e.target.closest(".z"), k = SPDRAG;
-  mainEl.classList.remove("sp-dragging", "sp-max"); SPDRAG = null;
-  if (z && k) addPane(k, z.dataset.z);
+  mainEl.classList.remove("sp-dragging"); SPDRAG = null;
+  if (z && k) addPane(k, SPZ.find(x => x.z === z.dataset.z));
 });
+/* zone: {ins:"col", side} for the first split, {ins:"row", col, at} for a third or fourth pane; none = the next free spot */
 function addPane(k, zone){
   const t = rowTarget(k); if (!t || EMBED) return;
-  if (SP.panes.length >= SP.MAX) return toast("<b>4 panes is the most.</b> Close one first.");
-  if (!SP.panes.length) { SP.panes.push(curTarget()); SP.dir = zone === "t" || zone === "b" ? "row" : "col"; }
-  if (SP.panes.some(p => p.hash === t.hash)) return toast(`<b>${esc(t.label)} is already open.</b>`);
-  if (zone === "l" || zone === "t") SP.panes.unshift(t); else SP.panes.push(t);
+  if (spCount() >= SP.MAX) return toast("<b>4 panes is the most.</b> Close one first.");
+  if (spAll().some(p => p.hash === t.hash) || (!spCount() && curTarget().hash === t.hash)) return toast(`<b>${esc(t.label)} is already open.</b>`);
+  if (!zone) zone = !spCount() ? {ins:"col", side:1} : SP.cols[1].length < 2 ? {ins:"row", col:1, at:1} : {ins:"row", col:0, at:1};
+  if (!spCount()) { const cur = curTarget(); SP.cols = zone.side === 0 ? [[t], [cur]] : [[cur], [t]]; }
+  else SP.cols[zone.col].splice(zone.at, 0, t);
   renderSplitPanes(t.hash);
-  announce(`${t.label} opened in a split. ${SP.panes.length} panes.`);
+  announce(`${t.label} opened in a split. ${spCount()} panes.`);
 }
 function paneSrc(h){ const th = document.documentElement.dataset.theme || "dark"; return location.pathname + "?embed=1&theme=" + encodeURIComponent(th) + "#" + h; }
 function renderSplitPanes(fresh){
-  const box = $("#mSplit"), n = SP.panes.length;
-  if (n < 2) { const last = SP.panes[0]; SP.panes = []; box.hidden = true; box.innerHTML = ""; if (last) go(last.hash); return; }
-  const cols = n === 2 ? (SP.dir === "row" ? "1fr" : "1fr 1fr") : "1fr 1fr";
-  const rows = n === 2 ? (SP.dir === "row" ? "1fr 1fr" : "1fr") : "1fr 1fr";
-  box.style.gridTemplateColumns = cols; box.style.gridTemplateRows = rows;
-  /* keep live panes (their iframes) and only add the new one */
-  const keep = new Map($$("#mSplit .pn").map(p => [p.dataset.h, p]));
-  box.innerHTML = "";
-  SP.panes.forEach((p, i) => {
-    let el = keep.get(p.hash);
+  const box = $("#mSplit");
+  if (spCount() < 2) { const last = spAll()[0]; SP.cols = [[], []]; box.hidden = true; box.innerHTML = ""; if (last) go(last.hash); return; }
+  const live = new Set(spAll().map(p => p.hash));
+  $$("#mSplit .pn").forEach(el => { if (!live.has(el.dataset.h)) el.remove(); });
+  SP.cols.forEach((col, ci) => col.forEach((p, ri) => {
+    let el = $(`#mSplit .pn[data-h="${CSS.escape(p.hash)}"]`);
     if (!el) {
       el = document.createElement("section"); el.className = "pn" + (p.hash === fresh && animate() ? " enter" : ""); el.dataset.h = p.hash;
       el.innerHTML = `<div class="pn-h"><b>${esc(p.label)}</b><button type="button" class="btn icon" data-pane-close="${esc(p.hash)}" aria-label="Close ${esc(p.label)}" title="Close">${ic("x", 16)}</button></div><iframe title="${esc(p.label)}" src="${paneSrc(p.hash)}"></iframe>`;
+      box.appendChild(el);
     }
-    el.style.gridRow = n === 3 && i === 0 && SP.dir === "col" ? "span 2" : "";
-    el.style.gridColumn = n === 3 && i === 0 && SP.dir === "row" ? "span 2" : "";
-    box.appendChild(el);
-  });
+    el.style.gridColumn = String(ci + 1);
+    el.style.gridRow = col.length === 1 ? "1 / span 2" : String(ri + 1);
+  }));
   box.hidden = false;
 }
 document.addEventListener("click", e => {
   const c = e.target.closest("[data-pane-close]"); if (!c) return;
-  SP.panes = SP.panes.filter(p => p.hash !== c.dataset.paneClose); renderSplitPanes();
+  SP.cols = SP.cols.map(col => col.filter(p => p.hash !== c.dataset.paneClose));
+  /* an empty side takes the bottom pane of the other side, so the split stays left | right */
+  const empty = SP.cols.findIndex(col => !col.length), other = 1 - empty;
+  if (empty >= 0 && SP.cols[other].length === 2) SP.cols[empty] = [SP.cols[other].pop()];
+  renderSplitPanes();
 });
 $("#sideList").addEventListener("keydown", e => {
   if (e.key !== "Enter" || !e.shiftKey) return;
   const r = e.target.closest("[data-row]"); if (!r || !rowTarget(r.dataset.row)) return;
-  e.preventDefault(); e.stopPropagation(); addPane(r.dataset.row, "r");
+  e.preventDefault(); e.stopPropagation(); addPane(r.dataset.row);
 }, true);
 /* a normal navigation leaves the split */
-addEventListener("hashchange", () => { if (SP.panes.length && !$("#mSplit").hidden) { SP.panes = []; $("#mSplit").hidden = true; $("#mSplit").innerHTML = ""; } });
+addEventListener("hashchange", () => { if (spCount() && !$("#mSplit").hidden) { SP.cols = [[], []]; $("#mSplit").hidden = true; $("#mSplit").innerHTML = ""; } });
 
 /* ---------- UF5-4: Memory · List or Graph ---------- */
 MEM.view = MEM.view || "list";
@@ -5581,7 +5600,7 @@ const renderFirstSteps = renderFirst, renderFrStepsBase = renderFrSteps;
 renderFirst = function(asleep){
   if (FR.step !== 0) return renderFirstSteps(asleep);
   $("#p-first").innerHTML = `<div class="fr-welcome"><div class="brandrow">${lockupHTML(40)}</div><h1>Every idea deserves a happy ending.</h1>
-    <p>Eucas gives you a team of Claude agents that builds your ideas with you. You stay the boss: you decide, test and accept. Setup takes about a minute.</p>
+    <p>Eucas gives you a team of Claude agents that builds your ideas with you.<br>You stay the boss: you decide, test and accept. Setup takes about a minute.</p>
     <div class="acts"><button type="button" class="btn primary lg" data-fr="start">Get started</button></div></div>`;
   $('[data-fr="start"]').focus();
 };
@@ -5609,7 +5628,7 @@ function v08Fill(big){ const ta = $("#nIn"); if (!ta) return; ta.value = V08_LON
 ROUTES["team-card"] = () => { T.roster = true; ROUTES.team(); setHash("team-card"); setTimeout(() => { const r = $("#roster"); if (r && r.hidden) { const b = $('[aria-label="Members"]'); if (b) b.click(); } requestAnimationFrame(() => requestAnimationFrame(() => { const row = $('#roster [data-card="karim"]'); if (row) openCard("karim", row); })); }, 60); };
 ROUTES["composer-grow"] = () => { noorScreen(null, null, "agent"); setHash("composer-grow"); setTimeout(() => v08Fill(false), 60); };
 ROUTES["composer-big"] = () => { noorScreen(null, null, "agent"); setHash("composer-big"); setTimeout(() => v08Fill(true), 60); };
-ROUTES["split-drag"] = () => { noorScreen(null, null, "agent"); setHash("split-drag"); setTimeout(() => { addPane("karim", "r"); addPane("tc-bench", "r"); }, 60); };
+ROUTES["split-drag"] = () => { noorScreen(null, null, "agent"); setHash("split-drag"); setTimeout(() => { addPane("karim"); addPane("tc-bench", {ins:"row", col:1, at:1}); }, 60); };
 ROUTES["memory-graph"] = () => { MEM.view = "graph"; insightScreen("memory"); setHash("memory-graph"); };
 JUMP.push(["Your review, round 5 (v0.8)", [["fresh","Start as a new user · welcome, then setup"],["team-card","Team chat · titles and the agent card"],["composer-grow","Composer · grows as you write"],["composer-big","Composer · expanded"],["split-drag","Split view · dragged from the sidebar (3 panes)"],["memory-graph","Memory · the graph"]]]);
 buildJump();
