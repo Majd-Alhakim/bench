@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+.env
+
+# Ignore the output video from Git but not videos you import into src/.
+out
+
+# Licensed music: not redistributable (see README)
+public/music.mp3
+
+# Captured from the prototype by scripts/capture.mjs
+public/screens/
