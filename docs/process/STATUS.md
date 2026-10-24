@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
-**Next step:** spikes S0-1 (subscription login via Agent SDK), SP-B1 (browser agent) and M8 (shell containment) on `spike/` branches (approved, G2-Q12) → close G0; fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Euca** (decided 2026-10-24); follow-ups: trademark search, domains, rename task after G5.
+**Next step:** spikes S0-1 (subscription login via Agent SDK), SP-B1 (browser agent) and M8 (shell containment) on `spike/` branches (approved, G2-Q12) → close G0; fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Euca** (decided 2026-10-24); follow-ups: trademark search, rename task after G5; domain **eucas.app** bought.
 
 ## Phase tracker
 
