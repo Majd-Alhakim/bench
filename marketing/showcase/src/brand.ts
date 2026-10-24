@@ -69,10 +69,3 @@ export const AVATAR = {
 } as const;
 
 export type AvatarShape = keyof typeof AVATAR;
-
-export const TEAM = [
-  { name: "Atlas", role: "Main agent", shape: "sphere", hue: C.hue.lavender },
-  { name: "Maya", role: "PM", shape: "cloud", hue: C.hue.mint },
-  { name: "Noor", role: "Developer", shape: "pill", hue: C.hue.coral },
-  { name: "Karim", role: "Tech lead", shape: "square", hue: C.hue.pear },
-] as const;
