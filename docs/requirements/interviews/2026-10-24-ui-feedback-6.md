@@ -1,0 +1,10 @@
+# UI feedback 6: G4/G5 review of prototype v0.8 (2026-10-24)
+
+The client's second pass, with annotated screenshots of the split view and the new-user welcome. G4 and G5 stay open.
+
+| # | Client (verbatim or condensed) | Decision (PM) |
+|---|---|---|
+| UF6-1 | *"The first split should be left and right then I can place the third anywhere top or bottom left or right, with third and fourth screen the split is horizontal up or down"* | The **first split is always left \| right**: the drop zones are only *left* and *right*. A **third or fourth** pane splits one side into **top and bottom**: the zones are *above* and *below* each pane that is still alone on its side. Most is 2 × 2. Closing a pane keeps the split left \| right (an empty side takes the other side's bottom pane) |
+| UF6-2 | The split panes' headers look *"cut off like not rounded"* because the pane background matches the app background; *"adding a thin border around the screens when splitted would solve the issue"* | Each pane gets a **thin border** (text-3 at 30 %), a soft shadow, and a header strip on the surface colour with a hairline under it, so every pane reads as its own rounded card |
+| UF6-3 | *"Make the word minute in the same line as the sentence above it right now it kills the balance"* | The welcome copy is set as **two lines, one sentence each**, with balanced wrapping. No orphan word |
+| UF6-4 | *"How did it find a claude subscription directly?"* | In the prototype the result is **scripted**. In the app, step 1 runs the official `claude` on this PC. It checks that Claude Code is installed, then runs **`claude auth status`**, which returns `loggedIn`, `authMethod` (`claude.ai`) and `subscriptionType` (e.g. `max`). Eucas reads only those fields, never the credentials (ADR-0002). If Claude Code isn't installed, step 1 turns into a guided install. If it isn't signed in, step 1 offers **Sign in**, which runs `claude auth login` (Claude Code's own sign-in in the browser) and re-checks. *Verified on this PC 2026-10-24:* `claude auth status` reported `loggedIn: true`, `authMethod: claude.ai`, `subscriptionType: max` |
