@@ -1,9 +1,9 @@
 # Brand platform: "In plain sight"
 
-**Status:** v1.1, 2026-10-23. Every brand decision is closed except the name: brand round 2 ([client notes](../../../requirements/interviews/2026-10-23-brand-decisions.md)) kept the brand and Porcelain / Ink / Cobalt, chose the **Quartet** logo, **Instrument Sans + JetBrains Mono**, and the **three sounds on by default**. Explorations it chose from: [explorations/](explorations/) (read-only).
+**Status:** v1.2, 2026-10-24. **Every brand decision is closed.** The name is **Euca** ([decision](../../../requirements/interviews/2026-10-24-product-name.md)). Brand round 2 ([client notes](../../../requirements/interviews/2026-10-23-brand-decisions.md)) kept the brand and Porcelain / Ink / Cobalt, chose the **Quartet** logo, **Instrument Sans + JetBrains Mono**, and the **three sounds on by default**. Explorations it chose from: [explorations/](explorations/) (read-only).
 **Inputs:** [DIRECTION.md](../DIRECTION.md) (D-UI1 to D-UI11), client feedback [round 1](../../../requirements/interviews/2026-10-22-ui-feedback-1.md), [round 2](../../../requirements/interviews/2026-10-22-ui-feedback-2.md) and [brand round 2](../../../requirements/interviews/2026-10-23-brand-decisions.md), [VISION.md](../../../VISION.md), [PRODUCT-MODEL.md](../../../PRODUCT-MODEL.md), the [Grok Bot teardown](../../../research/teardowns/grok-bot-ui-video.md), [references/](../references/).
 **Visual:** [brand-board.html](brand-board.html) (one file; fonts from Google Fonts for review). **Logo files:** [logo/](logo/) (`mark.svg`, `mark-on-dark.svg`, `app-icon-macos.svg`, `app-icon-windows.svg`, `favicon.svg`, `lockup.svg`). **System:** [../system/DESIGN-SYSTEM.md](../system/DESIGN-SYSTEM.md), [tokens.css](../system/tokens.css), [components.html](../system/components.html).
-**Name:** deferred by the client. "bench" is the codename. Nothing here depends on it: the Quartet mark carries the identity, and the lockup takes any short name.
+**Name:** **Euca** ("you-ka"), set lowercase as `euca` in the lockup. The agents are **Eucas** ("you-kuz"), and Atlas is your first Euca. It comes from Tolkien's *eucatastrophe*, the sudden turn in a story from doom to a happy ending: your half-built idea, seen through. You stay the hero; Eucas are the crew. Risks (Euka AI sounds alike; eucalyptus) and follow-ups (trademark, domains, rename task) are in the [decision](../../../requirements/interviews/2026-10-24-product-name.md). "Bench" stays the codename in the repo until the rename task.
 
 The client's brief for this pass: *"it feels like normal and with no clear identity that makes it unique; it needs a brand and a design system that make it feel premium."*
 
@@ -139,7 +139,7 @@ Files: [logo/](logo/). Source of truth for the geometry: the Quartet entry on th
 | Never | Four squares (that's a tile logo, and the mixed shapes are what keep it ours), a fifth shape, a rearranged order, one shape recoloured in an agent's hue, an outline, a box around it, Cobalt |
 
 ### The lockup (renameable)
-`[mark] + gap of 0.36 × mark height + [name]`, the name in **Instrument Sans 600** at 0.84 × the mark's height, lowercase, tracking −0.035em, centred on the mark (`lockup.svg`). Any 3 to 8 lowercase letters take the same slot; the board shows the 3, 5 and 8 letter slots. `lockup.svg` keeps the codename as live text; convert it to outlines once the name is final.
+`[mark] + gap of 0.36 × mark height + [name]`, the name in **Instrument Sans 600** at 0.84 × the mark's height, lowercase, tracking −0.035em, centred on the mark (`lockup.svg`). Any 3 to 8 lowercase letters take the same slot; the board shows the 3, 5 and 8 letter slots. `lockup.svg` sets `euca` as live text; convert it to outlines before shipping.
 
 The drawn monoline wordmark of v1.0 (letters built from the eye stroke) is retired with the eyes mark: with Quartet, the identity is the shapes, and the name is simply set well.
 
@@ -269,4 +269,4 @@ The drawn monoline wordmark of v1.0 (letters built from the eye stroke) is retir
 | P-6 | "Look inside" replaces "Trace" | 22 Oct |
 | **P-7** | **Sound: needs you, done, handoff on by default, mute in Settings; first-open chime optional, off** | **23 Oct** |
 
-Boards B ("The Proof") and C ("Night Glasshouse") stay as explorations only. Still deferred, by your choice: the name (D-UI5). Dark mode is mapped but not built (Phase 5b).
+Boards B ("The Proof") and C ("Night Glasshouse") stay as explorations only. The name (D-UI5) is **Euca**, decided 24 Oct. Dark mode is mapped but not built (Phase 5b).

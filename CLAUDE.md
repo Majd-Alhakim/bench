@@ -89,7 +89,8 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 
 ## Project Status & Open Decisions
 
-- **Phase 0 → 1** (see STATUS.md). Repo: github.com/Majd-Alhakim/bench (private). Next: `/discovery` (requirements interview).
+- **G1 and G2 approved; Phase 3 (SRS) next**, spikes first (see STATUS.md). Repo: github.com/Majd-Alhakim/bench (private).
 - Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
-- Open: product name ("Bench" is a codename only; decided in Phase 5) · look and feel, avatars, animation · MVP scope · confirm Electron (ADR-0001).
+- **Product name: Euca** ("you-ka"); the agents are **Eucas**. "Bench" stays the codename in code and docs until the rename task after G5 ([decision](docs/requirements/interviews/2026-10-24-product-name.md)). Never name it "Claude Code".
+- Agents save drafts and never send or post; they never delete on the computer (CR-008).
 - Roles: the founder is product owner and human in the loop; Claude acts as PM + CTO and asks before irreversible or outward-facing actions.

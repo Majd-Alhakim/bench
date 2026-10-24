@@ -3,7 +3,7 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
-**Next step:** spikes S0-1 (subscription login via Agent SDK), SP-B1 (browser agent) and M8 (shell containment) on `spike/` branches (approved, G2-Q12) → close G0; fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: brainstorm in progress.
+**Next step:** spikes S0-1 (subscription login via Agent SDK), SP-B1 (browser agent) and M8 (shell containment) on `spike/` branches (approved, G2-Q12) → close G0; fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Euca** (decided 2026-10-24); follow-ups: trademark search, domains, rename task after G5.
 
 ## Phase tracker
 
@@ -14,7 +14,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 | 2 | PRD | ✅ **v0.3** (5 × 3-day sprints, 51 UCs), G2 questions answered | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
 | 4 | UX design | 🟡 Premium spec, Laws of UX audit, low-fi v0.4 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ⏳ |
-| 5 | UI design & brand | 🟡 Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.7**; name still open | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ⏳ |
+| 5 | UI design & brand | 🟡 Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.7**; **name: Euca** (agents are Eucas) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ⏳ |
 | 6 | Backlog & Sprint 1 | ⚪ Not started (stories drafted in PRD v0.2 Appendix A) | GitHub Issues / board | G6 ⏳ |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
 
@@ -24,7 +24,7 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 - Positioning: Bench complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
 - Design: calm, chat-first Home with Atlas; dark first (charcoal) + light; copy removal test; second-person voice.
 
-**Not decided:** product name ("Bench" is a codename).
+**Product name:** **Euca** (2026-10-24, [decision](../requirements/interviews/2026-10-24-product-name.md)); "Bench" stays the codename in the repo until the rename task.
 
 ## Gate log
 
