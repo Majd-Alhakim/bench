@@ -15,7 +15,8 @@ Never push to `main`, `staging` or `dev` directly. Every change goes branch → 
 - **Promotion PRs** (`dev` → `staging`, `staging` → `main`) use a merge commit, not squash, so the branches keep one shared history. Title: `chore(release): promote dev to staging` / `chore(release): vX.Y.Z`.
 - **Hotfix:** branch `fix/…` from `main`, PR into `main`, then merge `main` back into `staging` and `dev` with PRs.
 - **Rollback:** revert the merge commit on `main` with a PR (`git revert -m 1 <sha>`), one click in the GitHub UI.
-- The local guard `.githooks/pre-push` refuses pushes to the three long-lived branches. Turn it on once per clone with `git config core.hooksPath .githooks` (lefthook takes over at S1-1).
+- **GitHub enforces this** with the ruleset "Protect main, staging and dev": no direct pushes, no force-pushes, no deletion, a PR with green gitleaks + Windows + Ubuntu checks to merge. Required reviews are off, because the maintainer can't approve their own PRs.
+- The local guard `.githooks/pre-push` also refuses pushes to the three long-lived branches. Turn it on once per clone with `git config core.hooksPath .githooks` (lefthook takes over at S1-1).
 
 ## Workflow
 1. Pick a backlog item ([docs/BACKLOG.md](docs/BACKLOG.md)). Branch from up-to-date `dev`: `feat/<id>-<slug>`, `fix/…`, `chore/…`, `docs/…`, `spike/…`.
