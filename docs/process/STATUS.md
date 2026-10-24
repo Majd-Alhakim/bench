@@ -3,13 +3,13 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
-**Next step:** spikes S0-1 (subscription login via Agent SDK), SP-B1 (browser agent) and M8 (shell containment) on `spike/` branches (approved, G2-Q12) → close G0; fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
+**Next step:** spikes **S0-1, SP-B1 and M8 done, all GO** ([reports](../spikes/)); your go/no-go closes G0 (S0-2 and S0-3 can run in Sprint 1); fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
-| 0 | Problem & validation | 🟡 Mostly done (spikes S0-1..3 pending) | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ⏳ |
+| 0 | Problem & validation | 🟡 Spikes S0-1, SP-B1, M8 done (GO, 2026-10-24); S0-2, S0-3 pending | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ⏳ |
 | 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.2** applies CR-001…008 + G2 answers; open items §10 #41–#43 | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
 | 2 | PRD | ✅ **v0.3** (5 × 3-day sprints, 51 UCs), G2 questions answered | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
