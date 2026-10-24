@@ -89,7 +89,7 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 
 ## Project Status & Open Decisions
 
-- **G1 and G2 approved; Phase 3 (SRS) next**, spikes first (see STATUS.md). Repo: github.com/Majd-Alhakim/bench.
+- **G0, G1, G2, G4 and G5 approved; next: the logo, then Phase 3 (SRS)** (see STATUS.md). Repo: github.com/eucas-app/eucas (public; moved from Majd-Alhakim/bench on 2026-10-24, old links redirect).
 - Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
 - **Product name: Eucas** ("you-kuz"); one agent is **a Euca**. Not "Euca" alone (EUCA is a registered EU/UK software mark). "Bench" stays the codename in code and docs until the rename task ([decision](docs/requirements/interviews/2026-10-24-product-name.md)). Never name it "Claude Code".
 - Agents save drafts and never send or post; they never delete on the computer (CR-008).
