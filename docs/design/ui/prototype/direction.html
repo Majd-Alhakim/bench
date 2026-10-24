@@ -1939,7 +1939,7 @@ const Q_HUE = {coral:"#ff5f73", honey:"#f2ab1d", mint:"#3cc47c", orchid:"#e05cb4
 /* One colour in the interface: currentColor, so the mark is Ink on Porcelain and the soft light on the dark ground */
 function markSVG(size, fg = "currentColor", color = false){
   const c = k => color ? Q_HUE[k] : fg;
-  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false"><circle cx="26" cy="26" r="20" fill="${c("coral")}"/><path d="M74 10 L91 43 L57 43 Z" fill="${c("honey")}" stroke="${c("honey")}" stroke-width="6" stroke-linejoin="round"/><rect x="7" y="55" width="38" height="38" rx="12" fill="${c("mint")}"/><path transform="translate(51.1 50.3) scale(.46)" d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z" fill="${c("orchid")}"/></svg>`;
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false"><path d="M4.8 25A20.2 20.2 0 1 1 45.2 25A20.2 20.2 0 1 1 4.8 25Z" fill="${c("coral")}"/><path d="M78.9 8.75L95.64 37.75A4.5 4.5 0 0 1 91.74 44.5L58.26 44.5A4.5 4.5 0 0 1 54.36 37.75L71.1 8.75A4.5 4.5 0 0 1 78.9 8.75Z" fill="${c("honey")}"/><path d="M18 57L33 57A11 11 0 0 1 44 68L44 83A11 11 0 0 1 33 94L18 94A11 11 0 0 1 7 83L7 68A11 11 0 0 1 18 57Z" fill="${c("mint")}"/><path d="M74.5 52.81C79.35 60.57 90.99 70.27 90.99 79.97C90.99 89.18 83.72 95 74.5 95C65.28 95 58.01 89.18 58.01 79.97C58.01 70.27 69.65 60.57 74.5 52.81Z" fill="${c("orchid")}"/></svg>`;
 }
 /* Lockup: mark, gap 0.36 × its height, the name (a codename) in Instrument Sans 600 at 0.84 × height. */
 function lockupHTML(h){ return `<span class="lockup" style="--h:${h}px">${markSVG(h)}<span class="wm">eucas</span></span>`; }
