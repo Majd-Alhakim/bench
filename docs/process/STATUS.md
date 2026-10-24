@@ -3,13 +3,13 @@
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
 **Current phase:** 2 → 3 (SRS) with 4/5 (UX/UI) well advanced, lean mode. G1 approved 2026-10-22; **G2 approved with changes 2026-10-23** (CR-008).
-**Next step:** spikes **S0-1, SP-B1 and M8 done, all GO** ([reports](../spikes/)); your go/no-go closes G0 (S0-2 and S0-3 can run in Sprint 1); fix prototype copy "70 % checkpoint" → 80 %; G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
+**Next step:** G0 approved 2026-10-24 (spikes GO, [reports](../spikes/)). Next: G4/G5 review of prototype v0.7; then the SRS (`/specs`). Product name: **Eucas** (decided 2026-10-24; trademark first search done; domain **eucas.app** ours); follow-ups: GitHub org and npm names, rename task.
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
-| 0 | Problem & validation | 🟡 Spikes S0-1, SP-B1, M8 done (GO, 2026-10-24); S0-2, S0-3 pending | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ⏳ |
+| 0 | Problem & validation | ✅ Spikes S0-1, SP-B1, M8 GO (2026-10-24); S0-2, S0-3 in Sprint 1 | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ✅ 2026-10-24 |
 | 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.2** applies CR-001…008 + G2 answers; open items §10 #41–#43 | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
 | 2 | PRD | ✅ **v0.3** (5 × 3-day sprints, 51 UCs), G2 questions answered | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
 | 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
@@ -32,6 +32,7 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 |---|---|---|---|
 | 2026-10-22 | G1 (BRD) | **Approved**: BRD v0.5 baselined as v1.0 | "yes". Remaining detail assumptions are carried into the PRD/SRS as defaults |
 | 2026-10-23 | G2 (PRD) | **Approved with changes**: PRD v0.3, BRD v1.2 | Accepted 8 recommendations; changed Q3 (browser asks only at first sign-in), Q4 (model auto by complexity, changeable), Q5 (agents never delete on the computer), Q6 (drafts only, never send or post). Recorded as CR-008 |
+| 2026-10-24 | G0 (Problem & feasibility) | **Approved (go)** on spikes S0-1, SP-B1 and M8 ([reports](../spikes/)) | "Approve G0: go on S0-1, SP-B1 and M8. Record it and move on." S0-2 and S0-3 run in Sprint 1 |
 
 ## Change requests
 
