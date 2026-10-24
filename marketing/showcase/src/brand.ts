@@ -64,6 +64,8 @@ export const AVATAR = {
   },
   square: { d: "M34 13H66A22 22 0 0 1 88 35V67A22 22 0 0 1 66 89H34A22 22 0 0 1 12 67V35A22 22 0 0 1 34 13Z", eye: [50, 50, 13] },
   pill: { d: "M30 27H70A24 24 0 0 1 70 75H30A24 24 0 0 1 30 27Z", eye: [60, 51, 11] },
+  // Drawn with a 14-wide round stroke in the prototype; Avatar does the same.
+  triangle: { d: "M50 16L88 82L12 82Z", eye: [50, 64, 10] },
 } as const;
 
 export type AvatarShape = keyof typeof AVATAR;

@@ -117,7 +117,7 @@ export const Story: React.FC = () => {
 
   const poses = Object.fromEntries(SHAPE_NAMES.map((n) => [n, pose(n, f, fps)]));
   const camera = keys(f, [F.lookUp, F.problem, F.problem + 16], [1, 1.1, 1]);
-  const eucasOut = ease(f, [F.composer, F.composer + 10], [1, 0]);
+  const eucasOut = ease(f, [F.toApp, F.toApp + 10], [1, 0]);
   const textOut = ease(f, [F.turn, F.turn + 10], [0, 1]);
 
   // The pile sways more and more before the top idea tips over.
@@ -169,7 +169,7 @@ export const Story: React.FC = () => {
             left: topX,
             top: topYNow,
             transform: `rotate(${topRot}deg)`,
-            opacity: ease(f, [F.composer, F.composer + 2], [1, 0]),
+            opacity: ease(f, [F.toApp, F.toApp + 2], [1, 0]),
           }}
         />
       )}
