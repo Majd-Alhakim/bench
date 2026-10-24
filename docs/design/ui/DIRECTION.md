@@ -1,7 +1,7 @@
 # UI Direction: "Apple built a Grok Bot × Dots" (draft for client review)
 
 **Status:** **v0.7, reply to a message** (2026-10-23; **§00000**, on v0.6.2), on **v0.6, dark first + the Laws of UX fixes** (§0000), on top of **v0.5, round 4** (F1–F6 and CR-007, §000), on top of **v0.4, the calm pass**, 2026-10-23, from the client's round-3 feedback ([C1–C7](../../requirements/interviews/2026-10-23-ui-feedback-3.md)): v0.3 looked "wow" but was overwhelming to use. §00 is v0.4. The brand is unchanged (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, the three sounds, shape agents with eyes). §0 is v0.3, kept as history: it rebuilt the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec; every brand decision is closed except the name. §1–§5 are the v0.1/v0.2 history.
-**Name (2026-10-24):** the product is **Eucas**, and one agent is **a Euca** ([decision](../../requirements/interviews/2026-10-24-product-name.md)). Prototype copy still says "Bench" until the rename task.
+**Name (2026-10-24):** the product is **Eucas**, and one agent is **a Euca** ([decision](../../requirements/interviews/2026-10-24-product-name.md)). **v0.7.1** (2026-10-24): the prototype says Eucas; its sample project is "Eucas app" (repo `eucas-app`); its copy follows CR-008 (emails and posts are always drafts, agents never delete files themselves, the browser agent asks only before a first sign-in). Internal ids still say `bench`.
 
 ## 00000. Direction v0.7: reply to a message (current)
 
