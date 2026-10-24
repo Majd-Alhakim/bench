@@ -1,9 +1,45 @@
 # UI Direction: "Apple built a Grok Bot × Dots" (draft for client review)
 
-**Status:** **v0.7, reply to a message** (2026-10-23; **§00000**, on v0.6.2), on **v0.6, dark first + the Laws of UX fixes** (§0000), on top of **v0.5, round 4** (F1–F6 and CR-007, §000), on top of **v0.4, the calm pass**, 2026-10-23, from the client's round-3 feedback ([C1–C7](../../requirements/interviews/2026-10-23-ui-feedback-3.md)): v0.3 looked "wow" but was overwhelming to use. §00 is v0.4. The brand is unchanged (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, the three sounds, shape agents with eyes). §0 is v0.3, kept as history: it rebuilt the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec; every brand decision is closed except the name. §1–§5 are the v0.1/v0.2 history.
-**Name (2026-10-24):** the product is **Eucas**, and one agent is **a Euca** ([decision](../../requirements/interviews/2026-10-24-product-name.md)). Prototype copy still says "Bench" until the rename task.
+**Status:** **v0.8.2, approved at G4/G5 on 2026-10-24** (your review rounds 5–7) (2026-10-24; **§000000**), on **v0.7, reply to a message** (2026-10-23; **§00000**, on v0.6.2), on **v0.6, dark first + the Laws of UX fixes** (§0000), on top of **v0.5, round 4** (F1–F6 and CR-007, §000), on top of **v0.4, the calm pass**, 2026-10-23, from the client's round-3 feedback ([C1–C7](../../requirements/interviews/2026-10-23-ui-feedback-3.md)): v0.3 looked "wow" but was overwhelming to use. §00 is v0.4. The brand is unchanged (Porcelain/Ink/Cobalt, Quartet, Instrument Sans, the three sounds, shape agents with eyes). §0 is v0.3, kept as history: it rebuilt the prototype on the stage-1 brand ("In plain sight", the Look) and design system, and on the UX premium spec; every brand decision is closed except the name. §1–§5 are the v0.1/v0.2 history.
+**Name (2026-10-24):** the product is **Eucas**, and one agent is **a Euca** ([decision](../../requirements/interviews/2026-10-24-product-name.md)). **v0.7.1** (2026-10-24): the prototype says Eucas; its sample project is "Eucas app" (repo `eucas-app`); its copy follows CR-008 (emails and posts are always drafts, agents never delete files themselves, the browser agent asks only before a first sign-in). Internal ids still say `bench`.
 
-## 00000. Direction v0.7: reply to a message (current)
+## 000000. Direction v0.8: your review, round 5 (current)
+
+From your first G4/G5 pass on v0.7.1 ([UF5-1…6](../../requirements/interviews/2026-10-24-ui-feedback-5.md)). Every change has a route in the Jump menu under **"Your review, round 5 (v0.8)"**, and **New user** in the demo bar starts a fresh install.
+
+| # | What you asked | What v0.8 does |
+|---|---|---|
+| UF5-1 | Titles in the members list; click a member for a brief, chat, profile, edit | Each row shows **name + title**. Clicking or pressing Enter on a member opens a small **agent card**: face, name, title, status, the one-line description and what they're doing now, plus **Chat** and **Edit profile** (opens Settings › Profile, where name, title, look and description are edited). Esc or a click outside closes it, and focus returns to the row. *PM call:* the card itself is the profile glance, so it has two buttons, not three |
+| UF5-2 | A composer that grows like Claude's, with an expand option instead of a scrollbar | Every composer **grows with the text** up to 8 lines, with no arrows. From the 4th line an **Expand** button appears top-right and opens a large editor in place (about half the window). **Collapse** or Esc brings it back. Sending shrinks it. The draft is kept in both sizes |
+| UF5-3 | Drag anything from the side menu into the middle to split, up to 4 | Agents, team chats, dashboards and the Insight pages are **draggable**. While you drag, four drop zones appear (left, right, top, bottom). Dropping makes a split of **live panes**, each a full screen with its own close ×: 2 side by side or stacked, 3 as one big pane plus two, 4 as a 2 × 2 grid. A fifth drop says *"4 panes is the most. Close one first."* Without a mouse, **Shift+Enter** on a sidebar row opens it in a split. Any normal navigation leaves the split |
+| UF5-4 | The memory graph | **Not dropped.** Memory now has a **List / Graph** toggle. The graph links each note to you, the agents who learned it and their teams. The 6 most-used notes are labelled and the other 208 are dots. Hover a note to light up its links and see how often it's used, and click it to open it in the list. Nodes take Tab and Enter |
+| UF5-5 | A minimal, premium scrollbar | One scrollbar across the app: a thin rounded thumb with no arrows and no track. It's faint at rest, brighter on hover and while dragging, and the same in dark and light |
+| UF5-6 | Review onboarding as if you'd just downloaded it | **New user** resets the demo and opens a **welcome** ("Every idea deserves a happy ending.", *Get started*). Then a live **"Looking for Claude Code on this PC…"** check, the four steps, and a first Home with only your main agent |
+
+**v0.8.1** ([UF6](../../requirements/interviews/2026-10-24-ui-feedback-6.md)): the first split is always left | right, and a third or fourth pane goes above or below a pane (most is 2 × 2); split panes have a thin border, a soft shadow and a header strip; the welcome copy is two balanced lines. How step 1 finds Claude Code and your plan in the real app (`claude auth status`) is recorded in UF6-4.
+
+**v0.8.2** ([UF7](../../requirements/interviews/2026-10-24-ui-feedback-7.md)): split panes are compact. The agent's small face, name, status and title sit in the pane header; the big face, the blur and the floating icon are gone; the message bar is smaller.
+
+**Also fixed:** the logo's aria-label still said "bench"; step 4 no longer names the first project "Eucas"; the demo bar's title truncates instead of overlapping the tabs.
+
+**State matrix (new parts only):**
+- **Agent card:** default · long description (clamped by width) · no title (the row shows the name only) · blocked or paused status (the label comes from the shared status vocabulary).
+- **Composer:** empty · 1–3 lines · 4–8 lines (grows, Expand shows) · 9+ lines (scrolls quietly) · expanded · after send (shrinks).
+- **Split:** dragging (zones) · 2 / 3 / 4 panes · full (message) · already open (toast) · closing down to 1 (back to a normal screen).
+- **Graph:** default · hover · keyboard focus · a note with no links (the "You're on Windows" note links only to you).
+- **Fresh install:** welcome · checking · found. The "not found / not signed in" state is the existing *Sign in to Claude again* ticket, and a guided-install screen comes with UC-06 in the SRS.
+
+**Emotional moments:** the welcome line on the first launch; a pane springing into the split when you drop; the graph lighting up a note's links.
+
+**Worst moments:** a dropped item that can't open in a split (Usage-only pages work; anything else is not draggable); a fifth pane; a 500-line draft (the expanded editor scrolls inside, and the box never grows past half the window); reduced motion (no pane spring, no card slide, instant check).
+
+**Coherence:** the agent card reuses the avatar, status vocabulary, button styles and corner family. The split panes are the real screens, not new ones. The scrollbar is one rule for every scroll area.
+
+**Rubric (v0.8 changes):** Copy Senior · Visuals Senior · Color Senior (agent hues only on agents; Cobalt only on the primary action and You) · Type Senior · Structure Senior · States and recovery Senior · Motion and emotion Senior · Coherence Senior · Intelligence Senior (the graph makes learning visible). No blockers.
+
+**Checked:** headless renders at 1440 × 900 of every new route (dark, plus the graph in light), the split at 1280 × 800, and a live click-through. The click-through covered drag to the left zone, the 4-pane limit, closing a pane, and the whole new-user flow ending on the first Home. Not checked: real mouse dragging in Electron (the drag events were synthetic), and the light theme of the embedded panes.
+
+## 00000. Direction v0.7: reply to a message
 
 Client (2026-10-23): *"add the reply to message feature where I can reply to the full message or choose part of the text and reply to"*. Everything from v0.6.2 stays (charcoal, calm, dark first).
 

@@ -25,6 +25,12 @@ Closes D-UI5 (the name). This came out of a brainstorm on 2026-10-23 and 2026-10
 | WIPO, `EUCA` (exact, 117 results) | **EUCA, Holland Brands B.V., EU and UK registrations (2019), classes 9, 14, 16, 25, 35, 36, 38, 41, 42.** EUCA Match (Australia), classes 35 and 42, pending |
 | USPTO, `EUKA` (sound-alike) | Essential oils only (classes 3, 5). Euka AI has no registration |
 
+
+**Second search (2026-10-24, WIPO Global Brand Database, fuzzy and phonetic, live marks in classes 9 or 42):**
+- Spelled alike: LUCAS (ZF, Jolife: vehicle and medical equipment), EURAS (Germany), EuCAP (UK, an antennas conference). Nothing close to EUCAS for software.
+- Sound alike: **EUCOS** is the nearest. It's registered in class 9 by several Chinese electronics sellers (EU, UK, US, Canada, Australia, Japan, Mexico): devices, not software services. Then AUCAS (cables, class 9, EU and UK) and AICAS (a German real-time Java company, classes 9 and 42, pronounced "eye-kas"). EUKAS and EUCAZ exist, but not in 9 or 42.
+- **Reading (not legal advice):** no live mark found would clearly block EUCAS for a software app and its services. EUCOS is the one a trademark lawyer should look at before you file or sell anything.
+
 The Holland Brands registration is why the product isn't "Euca". A Euca as one character, inside the Eucas product, is a lower risk, but have it checked before using "Euca" alone as a brand in the EU or UK.
 
 ## Freedom check (2026-10-24, web search + DNS)
@@ -42,7 +48,7 @@ The Holland Brands registration is why the product isn't "Euca". A Euca as one c
 | Pronunciation on first read | Low | Onboarding and the site say "you-kuz" once |
 
 ## Follow-ups
-1. **Trademark: done** (first search above). A lawyer's clearance is advised before any commercial use.
+1. **Trademark: two searches done** (above): no blocking mark found for EUCAS in software. Have a lawyer clear it (EUCOS especially) before filing or any commercial use.
 2. **Domain: done.** The client bought **`eucas.app`** at Cloudflare on 2026-10-24. Confirmed through the Cloudflare API on 2026-10-24: auto-renew on, WHOIS privacy on, transfer lock on; expires 2027-10-24. No site yet; a landing page can be GitHub Pages pointed at it.
 3. **GitHub org and npm:** claim the org `euca-app` (or similar) and the npm names `eucas` and `euca` (client's accounts).
 4. **Rename task:** product copy, the prototype, the README and the app name move from "Bench" to "Eucas". Package and repo names follow at S1-1. The codename stays in code until then.
