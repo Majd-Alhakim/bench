@@ -50,6 +50,6 @@ The Holland Brands registration is why the product isn't "Euca". A Euca as one c
 ## Follow-ups
 1. **Trademark: two searches done** (above): no blocking mark found for EUCAS in software. Have a lawyer clear it (EUCOS especially) before filing or any commercial use.
 2. **Domain: done.** The client bought **`eucas.app`** at Cloudflare on 2026-10-24. Confirmed through the Cloudflare API on 2026-10-24: auto-renew on, WHOIS privacy on, transfer lock on; expires 2027-10-24. No site yet; a landing page can be GitHub Pages pointed at it.
-3. **GitHub org and npm:** claim the org `euca-app` (or similar) and the npm names `eucas` and `euca` (client's accounts).
+3. **GitHub org and npm: done (2026-10-24).** The client created the GitHub organization **`eucas-app`** (it matches eucas.app); moving the repo into it is optional and still open. The npm package **`eucas`** 0.0.1 is published under the client's account `majd-alhakim`: a placeholder with a README pointing to the repo. **`euca`** is deliberately not claimed, because of the EU/UK EUCA mark.
 4. **Rename task:** product copy, the prototype, the README and the app name move from "Bench" to "Eucas". Package and repo names follow at S1-1. The codename stays in code until then.
 5. Convert the lockup's live text to outlines before shipping `logo/lockup.svg`.
