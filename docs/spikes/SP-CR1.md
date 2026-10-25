@@ -4,7 +4,7 @@
 **Setup:** Claude Code **2.1.303** (unmodified), signed in with `claude login` (claude.ai, **Max**). Every probe runs headless from an empty temp folder with `--strict-mcp-config`, `--setting-sources ""`, `ANTHROPIC_API_KEY` stripped, and one tool: `RemoteTrigger`. Docs below were read on **2026-10-25**.
 **Origin:** the client's monetization grilling, 25 Oct: "laptop-closed" work matters; "yes do the spike it is important".
 
-**Recommendation: GO with limits.** Eucas can hand a brief to a **cloud scheduled task** (formerly "routine") on your own account and read the result back, all through the unmodified `claude` CLI, without ever seeing your token. It only fits **repo work on GitHub**, it loses most of the per-Euca isolation, and the routines API is a research preview. So: an opt-in "Keep working in the cloud" for code tasks, not a general cloud runner.
+**Recommendation: GO with limits.** Eucas can hand a brief to a **cloud scheduled task** (formerly "routine") on your own account and read the result back, all through the unmodified `claude` CLI, without ever seeing your token. It only fits **repo work on GitHub**, it loses most of the per-Euca isolation, and the routines API is a research preview. So: an opt-in "Keep working in the cloud" for code tasks, not a general cloud runner. The live run proved the loop end to end in 14 s. It also showed that two of our usual fences don't hold in the cloud: tool lists and connector lists (finding 4).
 
 ## Results
 | Question | Result |
@@ -13,7 +13,7 @@
 | 2. No token handling by Eucas | ✅ `claude -p --tools RemoteTrigger` listed the account's routines (0) in **6.5 s**, about **$0.0008** at API prices, Haiku. The CLI attaches the OAuth token in-process; Eucas only sees JSON. Never use the routine `/fire` token (finding 3) |
 | 3. Limits | Fresh **GitHub clone** only, no local files; 4 vCPU / 16 GB / 30 GB VM; min schedule interval **1 hour**; **100** scheduled runs/hour/account, **30** run-now/API fires per task/hour; counts against your plan's usage; isolation is per task, not per Euca (findings 4–6) |
 | 4. Terms | Allowed for personal use: it is you running your own Claude Code on your own login. Flags for before a public v0.1 (finding 7) |
-| Live loop (create → fire → status → result) | ⏳ *Pending the client's OK to create one throwaway routine on their account; see "Not covered here".* |
+| Live loop (create → fire → status → result) | ✅ Client-approved run, 25 Oct. Created a **disabled** routine over HTTP (`created_via: http_api`), ran it by hand once (a disabled routine still runs on `run`), then read it back. **14 s from fire to result:** sandbox 2 s, clone 3 s, Claude Code started at +6 s, answer `SPIKE-PROBE-OK 3 bash=yes` at +14 s. `get` → `last_run.status: SUCCEEDED`; `get_run_log` gave every tool call and result. Disabled again afterwards. The Haiku driver runs cost about **$0.006** in total at API prices; the cloud run itself counts against the plan (findings 2, 4) |
 
 Read-only probe output:
 ```
@@ -22,6 +22,19 @@ Read-only probe output:
 ## routines list                {"ok":true,"result":"Count: 0","costUsd":0.00079976,"ms":6513}
 ```
 (With a description, the CLI is explicit: *"--cloud cannot be combined with --print. Starting a new cloud session with --cloud is interactive only."*)
+
+Live run (`--live`, then `--log <id>`), condensed from `get_run_log` and `get`:
+```
+create  HTTP 200 CREATE_TRIGGER_OUTCOME_CREATED  trig_015C2Gkc4MBzmwWTLbQTY9tm  (enabled:false, run_once_at 2027-10-25)
+run     HTTP 200  session_id cse_01VfbcT2xhiD36nEwzJdSRHW
+18:05:46 fired · :46 Allocating sandbox · :49 Cloning repository eucas-app/eucas · :52 No setup script · :54 init model=claude-haiku-5-5 cwd=/home/user/eucas
+18:05:56 tool_use Bash: find docs/spikes -type f -name '*.md' | wc -l   -> 3
+18:05:57 tool_use Bash: git status                                     -> On branch main … working tree clean
+18:06:00 result: success turns=3 — SPIKE-PROBE-OK 3 bash=yes
+get     last_run.status ROUTINE_RUN_STATUS_SUCCEEDED · allowed_tools ["Read","Glob","Grep"] · mcp_connections: 8 (none were sent)
+update  enabled:false
+```
+Our first create attempt, with a body Claude guessed, was rejected four times (`One of job_config or session_request must be set`, then `Extra inputs are not permitted`); the working shape came from the `/schedule` skill (finding 2).
 
 ## 1. What exists today (docs read 2026-10-25)
 
@@ -38,10 +51,11 @@ Read-only probe output:
 
 ## Findings for the design
 1. **Routines are the only scriptable door.** Starting a cloud session needs a terminal (`--cloud` refuses `-p`). The desktop app and claude.ai can start them, but Eucas can't drive those. `RemoteTrigger` is a documented built-in tool ([tools reference](https://code.claude.com/docs/en/tools-reference), [SDK `RemoteTriggerInput`](https://code.claude.com/docs/en/agent-sdk/typescript#remotetrigger)), so Eucas can call it from `query()` with `tools: ['RemoteTrigger']`. **Shape:** one **routine per cloud-eligible Euca** ("Backend Euca, cloud"), with no schedule; each hand-off `update`s its saved prompt with the brief, then `run`s it. Each run is a new session.
-2. **The create/update body is not documented** (`body: {[k: string]: unknown}`). `/schedule` builds it with Claude's help. Eucas should let a small Haiku run compose it, validate the returned JSON with zod, and pin a tested Claude Code version (M9 already re-checks each upgrade). Treat a shape change as "cloud unavailable", not a crash.
+2. **The create/update body is not documented** (`body: {[k: string]: unknown}`). A guessed body failed four times; the working shape is in the `/schedule` skill: `name`, **one of `cron_expression` or `run_once_at`** (there's no "API only" form here, so use a far-off `run_once_at` with `enabled: false`), and `job_config.ccr` = `environment_id`, `session_context` (`model`, `sources[].git_repository.url`, `allowed_tools`) and `events[]` carrying the prompt as a user message. Eucas should build that body itself (not let a model guess it), validate the `get` response with zod, and pin a tested Claude Code version (M9 already re-checks each upgrade). Treat a shape change as "cloud unavailable", not a crash. Read status from `get` → `last_run.status`; `list_runs` still said `active` after the run had finished, because the session stays open.
 3. **No tokens, ever.** `RemoteTrigger` "adds the OAuth token in-process and never exposes" it. The `/fire` token (`sk-ant-oat01-…`) is a credential Eucas would have to store: that's forbidden by ADR-0002 and the [legal page](https://code.claude.com/docs/en/legal-and-compliance) ("may not collect, store, or intermediate Claude.ai credentials or session tokens"). Use `run`, not `/fire`. Don't automate `/web-setup` either (it sends your `gh` token to your Claude account; that's yours to choose).
 4. **Isolation moves from Eucas to the routine.** In the cloud none of Eucas's per-run options exist: no `strictMcpConfig`, `tools`/`disallowedTools`, `skills`, `plugins`, `settingSources: []`, and our PreToolUse jail (M8) doesn't run. What a run reaches is:
-   - **Connectors:** the claude.ai connectors on the task. **All of them are included by default**, so Eucas must send an explicit list on every create/update (the Euca's subset, often none) and re-check it with `get` before each `run`.
+   - **Connectors:** the claude.ai connectors on the task. **Proven live: we sent no `mcp_connections`, and all 8 of the account's connectors were attached**, Vercel and Cloudflare (write-capable) included. Eucas must send the Euca's explicit subset on every create/update (or `clear_mcp_connections: true` when it has none) and re-check with `get` before each `run`. Treat a mismatch as a hard stop.
+   - **Tools:** **proven live: `allowed_tools: ["Read","Glob","Grep"]` does not restrict.** The run used Bash twice. It's the same trap as locally (`allowedTools` only auto-approves). The stored config also has `disallowed_tools`, `builtin_tools`, `account_skills`, `account_plugins` and `subagents` fields, which look like the real per-run fences, but they're undocumented and untested here. Until one is proven, a cloud Euca must be treated as having **every built-in tool, including Bash**.
    - **Repo config:** the clone's `CLAUDE.md`, `.claude/settings.json` (hooks, permission rules), `.mcp.json`, `.claude/skills|agents|commands`. Your `~/.claude` is **not** read, and plugins never load ([what carries over](https://code.claude.com/docs/en/cloud-environments#what-carries-over-from-your-setup)).
    - **Permissions:** auto mode (a classifier), not Eucas's approval gate. A run stops for a prompt only on ask rules or repeated blocks.
    - **Network:** the environment's allowlist (Default = "Trusted" package registries etc.).
@@ -72,7 +86,11 @@ Read-only probe output:
 - **BR-93** (pre-run estimate) and the usage meter: include cloud runs.
 - **ADR-0002:** add the routine `/fire` token to the never-store list, and the SDK-overview note above as an open policy risk for public release.
 
+## Left on the client's account (delete when you like)
+At [claude.ai/code/routines](https://claude.ai/code/routines): the routine **"SP-CR1 probe (delete me)"** (`trig_015C2Gkc4MBzmwWTLbQTY9tm`), **disabled**. It has a placeholder run date of 2027-10-25, but it can't fire while disabled. Its one run session, `cse_01VfbcT2xhiD36nEwzJdSRHW`, is in the claude.ai/code sidebar. Neither the tool nor the CLI can delete routines; it's one click on that page.
+
 ## Not covered here
-- **The live loop on a real routine** (create → run → `list_runs` → `get_run_log` → disable). The probe has it behind `--live` / `--log <id>`, but it creates persistent configuration on the client's account, so it waits for the client's OK. Until then, the status/result path is from the docs, not a run.
+- Whether `disallowed_tools` / `builtin_tools` really fence a cloud run, and whether `clear_mcp_connections` sticks. These are the first things to test in the build, with a throwaway routine like this one.
+- Runs start on the repo's **default branch** (`main` here); starting from a Euca's branch has to be said in the prompt. Not tested.
 - How long one run can work unattended in practice (no maximum session length is documented), concurrency under the org's "cloud sessions running at once" limit, and the GitHub App vs bundle path for this repo.
 - Self-hosted environments (Team/Enterprise only) and Managed Agents (API key only).

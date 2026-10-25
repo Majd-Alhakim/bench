@@ -1,7 +1,8 @@
 // SP-CR1 throwaway probe: can a local app drive Claude's cloud work through the
 // unmodified `claude` CLI, without ever touching the user's OAuth token?
 // Run: node spikes/cloud-routines/probe.mjs            (read-only checks)
-//      node spikes/cloud-routines/probe.mjs --live     (creates, fires, reads and disables ONE routine)
+//      SP_CR1_ENV_ID=env_... node spikes/cloud-routines/probe.mjs --live   (creates ONE disabled routine and runs it once)
+//      node spikes/cloud-routines/probe.mjs --log <trigger_id>              (reads the run, then disables the routine)
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -54,15 +55,43 @@ step('claude -p --cloud <new task>', { exit: cloud.code, message: (cloud.err || 
 step('routines list', remote('Use RemoteTrigger action list. Reply with only the count and, per routine, its id, name and enabled flag.'));
 
 if (live) {
-  // 4. Create one routine with no schedule, then fire it once.
-  const created = remote(
-    `Use RemoteTrigger action create to make a routine named "SP-CR1 probe (delete me)" with NO schedule, ` +
-      `on repository ${REPO}, default cloud environment, no connectors (mcp_connections empty), model claude-haiku-5-5, ` +
-      `and this prompt: "Read-only spike probe. Do not edit, commit, push, or open PRs. Count the .md files in docs/spikes ` +
-      `and reply with exactly one line: SPIKE-PROBE-OK <count>." If the create body is rejected, read the error, fix the body and retry up to 3 times. ` +
-      `Then use action run on the new trigger. Reply with only JSON: {"trigger_id":..., "session_id":..., "session_url":...}.`,
-  );
-  step('create + run', created);
+  // 4. Create one disabled routine (schedule a year out, so it never fires by itself), then run it once by hand.
+  // Body shape from the /schedule skill; the public docs leave it untyped.
+  const envId = process.env.SP_CR1_ENV_ID; // an anthropic_cloud environment id from the account
+  const body = {
+    name: 'SP-CR1 probe (delete me)',
+    run_once_at: '2027-10-25T00:00:00Z',
+    enabled: false,
+    job_config: {
+      ccr: {
+        environment_id: envId,
+        session_context: {
+          model: 'claude-haiku-5-5',
+          sources: [{ git_repository: { url: REPO } }],
+          allowed_tools: ['Read', 'Glob', 'Grep'],
+        },
+        events: [{
+          data: {
+            uuid: crypto.randomUUID(),
+            session_id: '',
+            type: 'user',
+            parent_tool_use_id: null,
+            message: {
+              role: 'user',
+              content:
+                'Read-only spike probe. Do not edit, commit, push, or open PRs. ' +
+                '1) Count the .md files in docs/spikes. 2) Try to run the shell command `git status` and say whether you could. ' +
+                'Reply with exactly one line: SPIKE-PROBE-OK <count> bash=<yes|no>.',
+            },
+          },
+        }],
+      },
+    },
+  };
+  step('create + run', remote(
+    `Use RemoteTrigger action create with exactly this body, unchanged: ${JSON.stringify(body)} ` +
+      `Then use action run on the new trigger_id. Reply with only JSON: {"trigger_id":..., "create_status":..., "run_status":..., "run_response":...}.`,
+  ));
   console.log('\nNext: wait a few minutes, then run with --log <trigger_id> to read status and disable it.');
 }
 
