@@ -4,7 +4,7 @@
 **Setup:** Claude Code **2.1.303** (unmodified), signed in with `claude login` (claude.ai, **Max**). Every probe runs headless from an empty temp folder with `--strict-mcp-config`, `--setting-sources ""`, `ANTHROPIC_API_KEY` stripped, and one tool: `RemoteTrigger`. Docs below were read on **2026-10-25**.
 **Origin:** the client's monetization grilling, 25 Oct: "laptop-closed" work matters; "yes do the spike it is important".
 
-**Recommendation: GO with limits.** Eucas can hand a brief to a **cloud scheduled task** (formerly "routine") on your own account and read the result back, all through the unmodified `claude` CLI, without ever seeing your token. It only fits **repo work on GitHub**, it loses most of the per-Euca isolation, and the routines API is a research preview. So: an opt-in "Keep working in the cloud" for code tasks, not a general cloud runner. The live run proved the loop end to end in 14 s. It also showed that two of our usual fences don't hold in the cloud: tool lists and connector lists (finding 4).
+**Recommendation: GO with limits.** Eucas can hand a brief to a **cloud scheduled task** (formerly "routine") on your own account and read the result back, all through the unmodified `claude` CLI, without ever seeing your token. It only fits **repo work on GitHub**, it loses most of the per-Euca isolation, and the routines API is a research preview. So: an opt-in "Keep working in the cloud" for code tasks, not a general cloud runner. The live run proved the loop end to end in 14 s. The limits test then showed which fences hold. Tools can be fenced with `disallowed_tools` (not `allowed_tools`), and connectors only with `clear_mcp_connections` or an explicit list (not `[]`). Bash stays a hole to GitHub, because the VM holds a GitHub token (finding 4).
 
 ## Results
 | Question | Result |
@@ -36,6 +36,24 @@ update  enabled:false
 ```
 Our first create attempt, with a body Claude guessed, was rejected four times (`One of job_config or session_request must be set`, then `Extra inputs are not permitted`); the working shape came from the `/schedule` skill (finding 2).
 
+## Limits test (client-approved, 25 Oct, second routine)
+One new disabled routine (`trig_01TYvquqHawNobqMzvdSzAGc`), Haiku, read-only prompts, run 6 times by hand (the first duration design was invalid, so it was rerun).
+
+| Test | Setup | Result |
+|---|---|---|
+| Connector fence | create with `mcp_connections: []` | ❌ all 8 connectors attached anyway |
+| | `update` with `clear_mcp_connections: true` | ✅ `mcp_connections: []`; the run had no claude.ai connectors |
+| Tool fence (run A) | `disallowed_tools`: Bash, Write, Edit, WebFetch, WebSearch | ✅ none of them available (ToolSearch: "No matching deferred tools found"). Still present: GitHub MCP (~60 tools), Agent, Workflow, Artifact, PushNotification (it **sent a push** unasked), CronCreate, SendMessage, `add_repo` |
+| Tool fence (run B) | also block `mcp__github`, PushNotification, Agent, Workflow, `add_repo` | ✅ all gone except `add_repo`, which needs its full name `mcp__claude-code-remote__add_repo` |
+| Network (Default env, "Trusted") | `curl` from Bash | example.com → no response (blocked); registry.npmjs.org → 200; api.github.com → 200 |
+| Start branch | `git fetch origin spike/cloud-routines` | ✅ works; the clone starts detached on `main`, so the prompt picks the branch |
+| Secrets in the VM | env var **names** only | `GH_TOKEN`, `GITHUB_TOKEN`, `AWS_*`, `CLOUDSDK_AUTH_ACCESS_TOKEN`, `CLAUDE_CODE_MESSAGING_TOKEN` and more. Values not printed |
+| Machine | `nproc`, `free`, `df` | 4 CPUs, 15 GB RAM, 30 GB free disk (matches the docs) |
+| Concurrency | 3 × `run` back to back | ✅ all 3 accepted within 0.2 s, ran in parallel, each finished in ~26 s. No refusal at 3 |
+| Duration (run C) | 3 × foreground `sleep 500` | ❌ not a run-time limit: Claude Code itself refuses long foreground sleeps ("Blocked: sleep 500 … use run_in_background"), so the agent ended after 14 s |
+| Duration (run D) | one 25-min **background** job (heartbeat every 60 s), agent ends its turn and waits | ✅ **25/25 heartbeats, 19:35:50 → 19:59:50, no gaps.** The VM wasn't paused while the job ran with no turn active. The agent was woken at 20:00:50 to read the output and report. This is how a long build or test run behaves |
+| Status after finish | `list_runs` | every finished run still shows `status: active, worker_status: idle`; "done" = idle + a `result` event in the log |
+
 ## 1. What exists today (docs read 2026-10-25)
 
 | Mechanism | Laptop can close? | How a local app starts it | Brief + repo/files | Status and results back | Needs |
@@ -54,8 +72,8 @@ Our first create attempt, with a body Claude guessed, was rejected four times (`
 2. **The create/update body is not documented** (`body: {[k: string]: unknown}`). A guessed body failed four times; the working shape is in the `/schedule` skill: `name`, **one of `cron_expression` or `run_once_at`** (there's no "API only" form here, so use a far-off `run_once_at` with `enabled: false`), and `job_config.ccr` = `environment_id`, `session_context` (`model`, `sources[].git_repository.url`, `allowed_tools`) and `events[]` carrying the prompt as a user message. Eucas should build that body itself (not let a model guess it), validate the `get` response with zod, and pin a tested Claude Code version (M9 already re-checks each upgrade). Treat a shape change as "cloud unavailable", not a crash. Read status from `get` → `last_run.status`; `list_runs` still said `active` after the run had finished, because the session stays open.
 3. **No tokens, ever.** `RemoteTrigger` "adds the OAuth token in-process and never exposes" it. The `/fire` token (`sk-ant-oat01-…`) is a credential Eucas would have to store: that's forbidden by ADR-0002 and the [legal page](https://code.claude.com/docs/en/legal-and-compliance) ("may not collect, store, or intermediate Claude.ai credentials or session tokens"). Use `run`, not `/fire`. Don't automate `/web-setup` either (it sends your `gh` token to your Claude account; that's yours to choose).
 4. **Isolation moves from Eucas to the routine.** In the cloud none of Eucas's per-run options exist: no `strictMcpConfig`, `tools`/`disallowedTools`, `skills`, `plugins`, `settingSources: []`, and our PreToolUse jail (M8) doesn't run. What a run reaches is:
-   - **Connectors:** the claude.ai connectors on the task. **Proven live: we sent no `mcp_connections`, and all 8 of the account's connectors were attached**, Vercel and Cloudflare (write-capable) included. Eucas must send the Euca's explicit subset on every create/update (or `clear_mcp_connections: true` when it has none) and re-check with `get` before each `run`. Treat a mismatch as a hard stop.
-   - **Tools:** **proven live: `allowed_tools: ["Read","Glob","Grep"]` does not restrict.** The run used Bash twice. It's the same trap as locally (`allowedTools` only auto-approves). The stored config also has `disallowed_tools`, `builtin_tools`, `account_skills`, `account_plugins` and `subagents` fields, which look like the real per-run fences, but they're undocumented and untested here. Until one is proven, a cloud Euca must be treated as having **every built-in tool, including Bash**.
+   - **Connectors:** the claude.ai connectors on the task. **Proven live:** leaving out `mcp_connections` attached all 8 of the account's connectors (Vercel and Cloudflare, which can make changes, included). **Sending `mcp_connections: []` did the same.** Only an `update` with **`clear_mcp_connections: true`** removed them, and a run then had no claude.ai connectors. So Eucas must send the Euca's explicit subset, or clear them when it has none, and re-check with `get` before each `run`. Treat a mismatch as a hard stop.
+   - **Tools:** **proven live:** `allowed_tools` doesn't restrict (Bash ran with only Read/Glob/Grep allowed), but **`disallowed_tools` does**. With Bash, Write and Edit on it, the run had none of them. A server prefix works too (`mcp__github` removed all of GitHub's tools), but a short name doesn't: `add_repo` stayed until we used its full name `mcp__claude-code-remote__add_repo`. **The cloud adds tools of its own** that Eucas must block by name: about 60 `mcp__github__*` tools, Agent, Workflow, Artifact, SendMessage, SendUserFile, CronCreate, ScheduleWakeup, Monitor and **PushNotification**. In the first fence run, the agent sent a push to the founder's phone without being asked. **Bash is the gap:** the environment holds `GH_TOKEN` and `GITHUB_TOKEN` (names only; the docs say credentials are attached by a proxy), so any Euca allowed Bash can reach GitHub as you through `git`/`curl`, whatever the tool list says. The real write fence is GitHub's branch rules, plus keeping Bash off for Eucas that don't need it.
    - **Repo config:** the clone's `CLAUDE.md`, `.claude/settings.json` (hooks, permission rules), `.mcp.json`, `.claude/skills|agents|commands`. Your `~/.claude` is **not** read, and plugins never load ([what carries over](https://code.claude.com/docs/en/cloud-environments#what-carries-over-from-your-setup)).
    - **Permissions:** auto mode (a classifier), not Eucas's approval gate. A run stops for a prompt only on ask rules or repeated blocks.
    - **Network:** the environment's allowlist (Default = "Trusted" package registries etc.).
@@ -89,8 +107,10 @@ Our first create attempt, with a body Claude guessed, was rejected four times (`
 ## Left on the client's account (delete when you like)
 At [claude.ai/code/routines](https://claude.ai/code/routines): the routine **"SP-CR1 probe (delete me)"** (`trig_015C2Gkc4MBzmwWTLbQTY9tm`), **disabled**. It has a placeholder run date of 2027-10-25, but it can't fire while disabled. Its one run session, `cse_01VfbcT2xhiD36nEwzJdSRHW`, is in the claude.ai/code sidebar. Neither the tool nor the CLI can delete routines; it's one click on that page.
 
+Second routine, from the limits test: **"SP-CR1 limits probe (delete me)"** (`trig_01TYvquqHawNobqMzvdSzAGc`), disabled, with its 6 run sessions (`cse_01Mye24Tki5GEW2NiU6NjMaC`, `cse_014L3NxxAM9GnjeATWMrL1pm`, `cse_017GLQ9wZm3KMkPyjxnxUvf4`, `cse_013w8RPHD6URPiGES4b2DYWB`, `cse_01VvshXByMrGDBWsU29sxvdG`, `cse_01Ef7CDzGUFn7C1RThViNgm9`). Run A also sent one push notification to the founder's phone.
+
 ## Not covered here
-- Whether `disallowed_tools` / `builtin_tools` really fence a cloud run, and whether `clear_mcp_connections` sticks. These are the first things to test in the build, with a throwaway routine like this one.
-- Runs start on the repo's **default branch** (`main` here); starting from a Euca's branch has to be said in the prompt. Not tested.
-- How long one run can work unattended in practice (no maximum session length is documented), concurrency under the org's "cloud sessions running at once" limit, and the GitHub App vs bundle path for this repo.
+- Whether the `GH_TOKEN` in the VM can push past what the GitHub connection allows, and whether repo rulesets stop it. We didn't push (read-only by agreement).
+- A run over an hour, and the org's "cloud sessions running at once" limit above 3.
+- The GitHub App vs bundle path for this repo (routines cloned it fine either way).
 - Self-hosted environments (Team/Enterprise only) and Managed Agents (API key only).
