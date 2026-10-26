@@ -1,0 +1,11 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>panel</title>
+<style>html,body{margin:0;background:#16181d;color:#e6e6e6;font:14px system-ui}main{padding:16px}h1{font-size:15px;margin:0 0 12px}</style></head>
+<body><main><h1 id="h">2 sessions, all guarded</h1><p>api-server: running</p><p>web: needs you</p></main>
+<script>
+  const T = window.__TAURI__;
+  T.event.listen("shown", ({ payload: opened }) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => T.core.invoke("panel_first_frame", { tJs: Date.now(), opened }))),
+  );
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") T.core.invoke("close_panel", { by: "esc" }); });
+</script></body></html>
