@@ -55,7 +55,7 @@ for (const [name, route, what, themes = ["dark", "light"]] of SHOTS) {
       clip = { x: b.x, y: b.y, width: b.width, height: b.height };
     }
     const file = path.join(OUT, themes.length > 1 ? `${name}-${theme}.webp` : `${name}.webp`);
-    await page.screenshot({ path: file, type: "webp", quality: 84, clip, omitBackground: true });
+    await page.screenshot({ path: file, type: "webp", quality: 76, clip, omitBackground: true });
     console.log(path.relative(process.cwd(), file), `${Math.round(clip.width * 2)}x${Math.round(clip.height * 2)}`);
   }
 }

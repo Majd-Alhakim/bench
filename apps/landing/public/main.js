@@ -111,9 +111,10 @@
     label.textContent = label.textContent.replace(/(Show|Hide) the peek\./, `${on ? "Hide" : "Show"} the peek.`);
   }
   // The goo layer's notch shape follows the button's width (it grows for the marker).
-  const fitGoo = () => live.style.setProperty("--nw", `${notch.offsetWidth}px`);
-  fitGoo();
-  if ("ResizeObserver" in window) new ResizeObserver(fitGoo).observe(notch);
+  // ResizeObserver hands over the size after layout, so reading it never forces a reflow.
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(([e]) => live.style.setProperty("--nw", `${e.borderBoxSize?.[0]?.inlineSize ?? e.target.offsetWidth}px`)).observe(notch);
+  }
   live.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") { clearTimeout(closeT); openT = setTimeout(() => showPeek(true), 280); } });
   live.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { clearTimeout(openT); closeT = setTimeout(() => showPeek(false), 360); } });
   const isOpen = () => !peek.hidden && !peek.classList.contains("folding");
