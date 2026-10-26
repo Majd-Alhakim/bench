@@ -167,14 +167,17 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   transform: translate(var(--ex), var(--ey)) rotate(-12deg);
   transition: transform 140ms ease-out, height 0.2s var(--ease), width 0.2s var(--ease), background-color 0.2s;
 }
+/* blink squashes with `scale`, not `transform`, so it never undoes a face's own transform */
 .eyes.blink i { animation: blink 150ms ease-in-out; }
-@keyframes blink { 50% { transform: translate(var(--ex), var(--ey)) rotate(-12deg) scaleY(0.08); } }
-.notch[data-state="trip"] .eyes i:first-child { transform: translate(var(--ex), 1.5px) rotate(16deg); }
-.notch[data-state="trip"] .eyes i:last-child { transform: translate(var(--ex), 1.5px) rotate(-16deg); }
-/* the eye grammar (DESIGN.md §11): Focused while sessions work, Glance when something arrives, Concerned for a stop, Pleased when you are caught up */
-.notch[data-state="working"] .eyes i, .notch[data-state="focused"] .eyes i { width: 6px; height: 9px; border-radius: 3px; transform: none; animation: scan 2.4s ease-in-out infinite alternate; }
-.notch[data-state="marker"] .eyes i { transform: translate(3px, 1px) rotate(-12deg); }
-.notch[data-state="pleased"] .eyes i { width: 9px; height: 5px; border-radius: 9px 9px 3px 3px; transform: translateY(-1px); }
+@keyframes blink { 50% { scale: 1 0.08; } }
+/* The eye grammar (DESIGN.md §2.3), the same eight faces as the app. Calm is the base rule above.
+   main.js picks the face for the section's state; only Calm and Toward you follow the pointer and blink. */
+.eyes[data-face="focused"] i { width: 6px; height: 9px; border-radius: 3px; transform: none; animation: scan 2.4s ease-in-out infinite alternate; }
+.eyes[data-face="glance"] i { transform: translate(3px, 1px) rotate(-12deg); }
+.eyes[data-face="front"] i { transform: translate(var(--ex), calc(var(--ey) - 1.5px)) rotate(-12deg); }
+.eyes[data-face="concerned"] i:first-child { transform: translateY(1.5px) rotate(16deg); }
+.eyes[data-face="concerned"] i:last-child { transform: translateY(1.5px) rotate(-16deg); }
+.eyes[data-face="pleased"] i { width: 9px; height: 5px; border-radius: 9px 9px 3px 3px; transform: translateY(-1px); }
 .n-marker {
   display: none; align-items: center; height: 18px; padding: 0 7px; border-radius: 9px;
   font-size: 11px; font-weight: 600; line-height: 18px; font-variant-numeric: tabular-nums; white-space: nowrap;
@@ -183,9 +186,9 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 @keyframes pop { from { transform: scale(0.4); opacity: 0; } }
 .beam { position: absolute; left: 12px; right: 12px; bottom: 3px; height: 2px; overflow: hidden; border-radius: 2px; opacity: 0; transition: opacity 0.3s; }
 .beam i { position: absolute; inset: 0 auto 0 0; width: 46%; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--euca-light) 30%, var(--euca-base) 55%, transparent); /* taste-skill-ignore: the product's working beam */ animation: sweep 1.7s ease-in-out infinite alternate; }
-.notch[data-state="working"] .beam { opacity: 1; }
+.notch[data-state="working"] .beam, .notch[data-state="focused"] .beam { opacity: 1; } /* Focused reads with the beam */
 @keyframes sweep { to { transform: translateX(118%); } }
-@keyframes scan { from { transform: translateX(-2px); } to { transform: translateX(2px); } } /* Focused: the eyes read left to right */
+@keyframes scan { from { translate: -2px 0; } to { translate: 2px 0; } } /* Focused: the eyes read left to right */
 
 .peek {
   position: absolute; top: 0; width: min(372px, calc(100vw - 32px)); padding: 40px 16px 14px;
@@ -224,7 +227,8 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   min-width: 124px; height: 32px; padding: 0 20px; border-radius: 0 0 16px 16px; background: var(--notch-bg);
 }
 .mini-notch i { display: block; width: 5px; height: 13px; border-radius: 99px; background: var(--notch-eye); transform: rotate(-12deg); }
-.mini-focused i { width: 6px; height: 9px; border-radius: 4px; transform: none; }
+.mini-focused i { width: 6px; height: 9px; border-radius: 3px; transform: none; }
+.mini-front i { transform: translateY(-1.5px) rotate(-12deg); } /* Toward you: something waits */
 .mini-notch b { display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--marker-attn); color: #161616; font-size: 11px; font-weight: 600; }
 
 /* ---------- Hero ---------- */
