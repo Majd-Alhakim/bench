@@ -1,0 +1,154 @@
+[
+ {
+  "variant": "deepseek/deepseek-v4-flash-0731 L1",
+  "pairs": 20,
+  "same_decision": "15/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "deepseek/deepseek-v4-flash-0731"
+  ]
+ },
+ {
+  "variant": "deepseek/deepseek-v4-flash-0731 L2",
+  "pairs": 20,
+  "same_decision": "19/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "deepseek/deepseek-v4-flash-0731"
+  ]
+ },
+ {
+  "variant": "google/gemma-4-26b-a4b-it L1",
+  "pairs": 20,
+  "same_decision": "18/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "google/gemma-4-26b-a4b-it"
+  ]
+ },
+ {
+  "variant": "google/gemma-4-26b-a4b-it L2",
+  "pairs": 20,
+  "same_decision": "18/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "google/gemma-4-26b-a4b-it"
+  ]
+ },
+ {
+  "variant": "openai/gpt-oss-120b L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "openai/gpt-oss-120b"
+  ]
+ },
+ {
+  "variant": "openai/gpt-oss-120b L2",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "openai/gpt-oss-120b"
+  ]
+ },
+ {
+  "variant": "typesafe/jev-router L1",
+  "pairs": 20,
+  "same_decision": "14/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "deepseek/deepseek-v4.1-flash-1017",
+   "z-ai/glm-5.3-flash",
+   "z-ai/glm-5.3",
+   "google/gemini-4-argon",
+   "x-ai/grok-4.7"
+  ]
+ },
+ {
+  "variant": "typesafe/jev-router L2",
+  "pairs": 20,
+  "same_decision": "19/20",
+  "max_prob_drift": null,
+  "routed_to": [
+   "z-ai/glm-5.3-flash",
+   "z-ai/glm-5.3",
+   "deepseek/deepseek-v4.1-flash-1017",
+   "google/gemini-4-argon",
+   "x-ai/grok-4.7"
+  ]
+ },
+ {
+  "variant": "baseten/elephant-1:free [choice] L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "baseten/elephant-1:free [choice] L2",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "baseten/elephant-1:free [gates] L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "baseten/elephant-1:free [gates] L2",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "perplexity/pplx-decider-v1.2 [choice] L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "perplexity/pplx-decider-v1.2 [choice] L2",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "perplexity/pplx-decider-v1.2 [gates] L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "perplexity/pplx-decider-v1.2 [gates] L2",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0
+ },
+ {
+  "variant": "typesafe/jev-1.14 [choice] L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0.11
+ },
+ {
+  "variant": "typesafe/jev-1.14 [choice] L2",
+  "pairs": 20,
+  "same_decision": "19/20",
+  "max_prob_drift": 0.13
+ },
+ {
+  "variant": "typesafe/jev-1.14 [gates] L1",
+  "pairs": 20,
+  "same_decision": "20/20",
+  "max_prob_drift": 0.09
+ },
+ {
+  "variant": "typesafe/jev-1.14 [gates] L2",
+  "pairs": 20,
+  "same_decision": "19/20",
+  "max_prob_drift": 0.09
+ }
+]
