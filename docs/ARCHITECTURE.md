@@ -2,6 +2,8 @@
 
 **Status:** Draft v0.2 (Sprint 0). Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md). Decisions: [`docs/adr/`](adr/). Evidence: [`docs/research/`](research/).
 
+> **Companion first (26 Oct 2026).** The first thing we ship is the Eucas **companion**, which attaches to the Claude Code sessions you already run. Its architecture is separate and lives in [`architecture/companion/`](architecture/companion/SYSTEM-DESIGN.md) (proposed ADR-0007 … ADR-0015: a user-scope plugin + native guard + admin-level limits, on **Tauri 2 + Rust**, amending ADR-0001 for the companion only). This file still describes the Agent SDK team app, which follows later.
+
 ---
 
 ## 1. Stack (ADR-0001)
