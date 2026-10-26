@@ -1,4 +1,4 @@
-# Architecture — Bench
+# Architecture — Eucas
 
 **Status:** Draft v0.2 (Sprint 0). Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md). Decisions: [`docs/adr/`](adr/). Evidence: [`docs/research/`](research/).
 
@@ -14,9 +14,9 @@
 | UI | React 19 + TypeScript + Tailwind + shadcn/ui | |
 | Agent runtime | **`@anthropic-ai/claude-agent-sdk`** | Spawns the official Claude Code binary. Gives us model per agent, tools, MCP, skills, plugins, hooks, compaction, sessions and usage reporting. Subscription-compatible (ADR-0002) |
 | Local DB | SQLite + Drizzle | Messages, runs, token ledger, task board, archival memory (+ vector index later) |
-| Agent & memory storage | Plain files in the Bench home folder | Glass box: readable, diffable, git-versionable |
+| Agent & memory storage | Plain files in the Eucas home folder | Glass box: readable, diffable, git-versionable |
 | IPC | Typed IPC with zod schemas | Renderer never touches the SDK or secrets |
-| Secrets | Electron `safeStorage` (OS keychain) | Only for an optional API key and connector tokens Bench itself owns. Never Claude OAuth tokens |
+| Secrets | Electron `safeStorage` (OS keychain) | Only for an optional API key and connector tokens Eucas itself owns. Never Claude OAuth tokens |
 | Tests / CI | Vitest, Playwright-Electron, GitHub Actions matrix win/mac/linux | |
 | Packaging | electron-builder: NSIS / DMG / AppImage | |
 
@@ -36,7 +36,7 @@
 │  ├─ Background curator (Haiku): thread digests, memory extraction, dedupe         │
 │  └─ Scheduler: routines                                                           │
 │ Inventory service: reads the user's Claude Code MCP servers, plugins, skills      │
-│ Bench MCP server (in-process, createSdkMcpServer):                                │
+│ Eucas MCP server (in-process, createSdkMcpServer):                                │
 │   handoff · ask_agent · post_to_group · task_* · memory_global_* · memory_private_*│
 └───────────────────────────────────────────────────────────────────────────────────┘
                       │ spawns the official Claude Code binary (user's own `claude login`)
@@ -45,7 +45,7 @@
 ## 3. Data on disk
 
 ```
-<bench-home>/
+<eucas-home>/
   main-agent/agent.md            # the one main agent (name, model, instructions)
   agents/<slug>/
      agent.md                    # frontmatter: name, description, model, connectors, skills, plugins, permissions, budget
@@ -53,7 +53,7 @@
      memory/MEMORY.md + *.md     # PRIVATE memory: one fact per file + index
   memory/global/MEMORY.md + *.md # GLOBAL memory: every agent reads the index
   groups/<slug>.yaml             # members, settings
-  bench.sqlite                   # messages, runs, tasks, ledger, digests, archival index
+  eucas.sqlite                   # messages, runs, tasks, ledger, digests, archival index
 ```
 
 ## 4. How each agent is run (SDK options per turn)
@@ -62,12 +62,12 @@
 |---|---|---|
 | `model` | the agent's model | Haiku / Sonnet / Opus per agent |
 | `systemPrompt` | role + private core memory + **global memory index** | Stable prefix → prompt cache hits |
-| `mcpServers` + `strictMcpConfig: true` | the agent's selected connectors + `bench` | Only selected tool definitions load. Without strict mode, claude.ai connectors leak in |
+| `mcpServers` + `strictMcpConfig: true` | the agent's selected connectors + `eucas` | Only selected tool definitions load. Without strict mode, claude.ai connectors leak in |
 | `tools` / `disallowedTools` | the agent's tool set | Real restriction (`allowedTools` only auto-approves) |
 | `skills`, `plugins` | the agent's selections from the inventory | Per-agent skills and plugins |
 | `settingSources: []` | — | Isolates agents from the global Claude Code config, so we control exactly what loads |
 | `cwd` | `agents/<slug>/` | Agent works inside its own folder by default |
-| `env` | `process.env` minus `ANTHROPIC_API_KEY` (unless API mode), `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` | Subscription stays in use; Bench owns memory |
+| `env` | `process.env` minus `ANTHROPIC_API_KEY` (unless API mode), `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1` | Subscription stays in use; Eucas owns memory |
 | `resume` | the agent's session id per thread | Continuity; the SDK auto-compacts and we log `compact_boundary` |
 | `canUseTool`, hooks | approval gate + trace events | Human in the loop + full visibility |
 
@@ -90,14 +90,14 @@
 - **Curator jobs:** after each task, extract facts (Mem0-style add/update/delete). Weekly dedupe, shown to you as a diff.
 
 ## 8. Security
-Renderer sandboxed (`contextIsolation`, no `nodeIntegration`, strict CSP). Tools that act outside the app (send, post, delete, pay) always need approval. Content from email, web or files is untrusted data. Bench never handles Claude credentials (ADR-0002). No telemetry leaves the machine.
+Renderer sandboxed (`contextIsolation`, no `nodeIntegration`, strict CSP). Tools that act outside the app (send, post, delete, pay) always need approval. Content from email, web or files is untrusted data. Eucas never handles Claude credentials (ADR-0002). No telemetry leaves the machine.
 
 ## 9. Repo layout
 
 ```
 apps/desktop/            Electron (main, preload, renderer); main/platform/ = OS adapters
 packages/core/           Orchestrator, router, runner, memory, ledger (pure TS)
-packages/bench-mcp/      In-process MCP server
+packages/eucas-mcp/      In-process MCP server
 packages/shared/         Types, zod schemas, IPC contracts
 config/                  models.yaml defaults
 templates/               OPTIONAL agent templates (never pre-installed)

@@ -1,6 +1,6 @@
 # Code rules by topic
 
-Each rule: **rule** · why · *check*. Mapped to Bench (TypeScript strict, Electron main/preload/renderer, SQLite, zod, Agent SDK runs, files as memory).
+Each rule: **rule** · why · *check*. Mapped to Eucas (TypeScript strict, Electron main/preload/renderer, SQLite, zod, Agent SDK runs, files as memory).
 
 ## 1. Method
 - **Frame every task as input → black box → output.** The same shape underlies every language and tool. *Write input types, output and side effects before coding.*
@@ -18,7 +18,7 @@ Each rule: **rule** · why · *check*. Mapped to Bench (TypeScript strict, Elect
 - **Functions take inputs and return values; avoid hidden outer state.** Side effects can't be reused or tested. *No reliance on module-level mutable state; return data, let the caller print/emit.*
 - **Use the narrowest type and `readonly`.** Read-only inputs prevent whole classes of bugs. *`readonly` params, unions over `string`, no `any`.*
 - **Options objects past 3 arguments; access fields by name, not position.** Positional access breaks silently when order changes. *Tuple/row access by name; schema-checked with zod.*
-- **Separate concerns.** Logic, presentation and data stay apart (Bench: core vs renderer vs storage). *Route/IPC handlers don't build markup; renderer imports no core; core imports no Electron.*
+- **Separate concerns.** Logic, presentation and data stay apart (Eucas: core vs renderer vs storage). *Route/IPC handlers don't build markup; renderer imports no core; core imports no Electron.*
 - **One source of truth for allowed values.** Validation and UI should come from the same constant. *Enums/allowed lists defined once; UI generated from them.*
 - **Don't over-engineer.** Unused generality costs. *Delete unused options, params and state.*
 - **Readable entry points.** The story first, helpers below. *Top of a module reads as intent.*
@@ -70,7 +70,7 @@ Each rule: **rule** · why · *check*. Mapped to Bench (TypeScript strict, Elect
 - **Index what you filter and join on; measure with `EXPLAIN QUERY PLAN`.** *Hot WHERE/JOIN columns indexed.*
 - **Append-only history.** Transactions, runs, handoffs and the ledger add rows; corrections are new rows. *No overwritten amounts/statuses where history matters.*
 - **Batch writes in a transaction.** Row-by-row commits are ~100× slower. *Bulk inserts wrapped in one transaction.*
-- **Back up on a schedule; least privilege.** *Backups exist; agents can't run arbitrary SQL against Bench's DB.*
+- **Back up on a schedule; least privilege.** *Backups exist; agents can't run arbitrary SQL against Eucas's DB.*
 
 ## 8. Security
 - **Never trust input; parameterise.** String-built SQL, shell and HTML enable injection. *Bind parameters; `execFile` with arg arrays; no `innerHTML` with dynamic content.*

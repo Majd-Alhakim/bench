@@ -21,10 +21,10 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 ## Already decided (input to the phases above)
 Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo conventions (ADR-0003) · engineering workflow and skills (premium-craft, engineering-craft, ui-ux-guide).
 - Personal project, shared openly and customisable · lean mode · 3-day sprints · **full scope, open-source ready 14 days after G6** · licence MIT.
-- Positioning: Bench complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
+- Positioning: Eucas complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
 - Design: calm, chat-first Home with Atlas; dark first (charcoal) + light; copy removal test; second-person voice.
 
-**Product name:** **Eucas** (2026-10-24, [decision](../requirements/interviews/2026-10-24-product-name.md)); "Bench" stays the codename in the repo until the rename task.
+**Product name:** **Eucas** (2026-10-24, [decision](../requirements/interviews/2026-10-24-product-name.md)); the codename "Bench" was replaced in the living docs on 2026-10-26 (CR-010).
 
 ## Gate log
 

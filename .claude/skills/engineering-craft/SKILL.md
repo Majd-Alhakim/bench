@@ -1,17 +1,17 @@
 ---
 name: engineering-craft
-description: Bench's engineering rulebook for writing, designing, debugging and reviewing code. Gates before, during and after coding (cases, edge cases, Big-O, typed errors, resources, zod boundaries, parameterised SQL, transactions, idempotency), a system-design method sized for a local single-user Electron + SQLite app, and a greppable review checklist. Use on ANY coding, refactoring, debugging, code review, test design, data modelling, ADR or tech-lead design work in Bench.
+description: Eucas's engineering rulebook for writing, designing, debugging and reviewing code. Gates before, during and after coding (cases, edge cases, Big-O, typed errors, resources, zod boundaries, parameterised SQL, transactions, idempotency), a system-design method sized for a local single-user Electron + SQLite app, and a greppable review checklist. Use on ANY coding, refactoring, debugging, code review, test design, data modelling, ADR or tech-lead design work in Eucas.
 ---
 
-# Engineering craft for Bench
+# Engineering craft for Eucas
 
 **Why.** AI agents write plausible code fast. What separates good software from plausible software is the boring discipline underneath: precise problem statements, every case handled, the cost of each loop known, failures that release what they took, data that can't be corrupted by a retry or a race, and a design sized for the real problem. This skill is that discipline, written as checks an agent can run.
 
-Sources: Harvard CS50 lectures (2024–25) and a senior system-design course, paraphrased and mapped to Bench's stack. See [references/sources.md](references/sources.md).
+Sources: Harvard CS50 lectures (2024–25) and a senior system-design course, paraphrased and mapped to Eucas's stack. See [references/sources.md](references/sources.md).
 
 **Relation to other skills.** This is the *rulebook*. `test-driven-development`, `systematic-debugging`, `verification-before-completion` and `constraint-driven-development` are *processes*; run them, and apply these rules inside them. On any conflict, `docs/security-baseline.md` and `CLAUDE.md` win.
 
-Bench's stack, assumed everywhere below: TypeScript strict · Electron (`main` runs agents, `preload` is a minimal typed bridge, `renderer` is React with no Node) · SQLite for messages, runs, tasks and the ledger · agents and memory as files · zod at every trust boundary · Claude Agent SDK runs.
+Eucas's stack, assumed everywhere below: TypeScript strict · Electron (`main` runs agents, `preload` is a minimal typed bridge, `renderer` is React with no Node) · SQLite for messages, runs, tasks and the ledger · agents and memory as files · zod at every trust boundary · Claude Agent SDK runs.
 
 ## Gate 1: before coding
 
@@ -52,19 +52,19 @@ Bench's stack, assumed everywhere below: TypeScript strict · Electron (`main` r
 
 Use for any ADR, SRS section, or story that adds data, a process, IPC, or a background job. Detail: [references/system-design.md](references/system-design.md).
 
-1. **Requirements:** in scope, out of scope, open assumptions (each with an owner). Find the core: what, if removed, stops this feature being itself? Check in with the PM/client (Bench gates).
+1. **Requirements:** in scope, out of scope, open assumptions (each with an owner). Find the core: what, if removed, stops this feature being itself? Check in with the PM/client (Eucas gates).
 2. **Numbers:** NFRs as local numbers: UI response < 100 ms, agent first token, tokens and % of week per run, DB size after a year, the largest transcript or knowledge file, crash safety. Estimate rows/run and which resource dominates.
 3. **Data model + contracts:** entities, keys, indexes, record size; zod IPC/MCP schemas with error sets, pagination and "is a retry safe?". Choose storage by access pattern: SQLite for relational state, files for large or human-editable data (agents, memory), paths in the DB, never blobs.
 4. **Flow:** walk the read path and the write path end to end, including the renderer → preload → main → core → SQLite/file hops.
 5. **Deep dive + trade-offs:** consistency per operation (strong or eventual, and why), the single source of truth (indexes and caches are rebuildable from it), failure answers per component, what you rejected and why, what changes at 10×.
 
-**Patterns Bench uses:** append-only ledger and history (never overwrite an amount or a status where history matters) · durable job table + in-process worker for slow work (acknowledge fast, process async) · the one shared retry/backoff helper + a visible "failed" state the user can see (dead letter) · write-ahead journal for queued agent work and ledger events · bounded in-memory buffers (cap, drop policy stated) · scheduled cleanup (old traces, temp files, orphaned runs) whose own failures are traced · settings flags for risky features · push over IPC events, never polling · a runaway guard on agent loops and spawns.
+**Patterns Eucas uses:** append-only ledger and history (never overwrite an amount or a status where history matters) · durable job table + in-process worker for slow work (acknowledge fast, process async) · the one shared retry/backoff helper + a visible "failed" state the user can see (dead letter) · write-ahead journal for queued agent work and ledger events · bounded in-memory buffers (cap, drop policy stated) · scheduled cleanup (old traces, temp files, orphaned runs) whose own failures are traced · settings flags for risky features · push over IPC events, never polling · a runaway guard on agent loops and spawns.
 
 **Two checks on every design:**
 - **Scale check:** would this be correct with 1 user on 1 machine? Is any component here only because big systems have one?
 - **Failure check:** kill the process at the worst moment. Is state recoverable and the retry safe?
 
-**Skip unless Bench becomes multi-user or hosted:** load balancers, CDNs, read replicas, sharding, consistent hashing, Kafka/RabbitMQ, Redis, pub/sub fan-out, service discovery, multi-region, CDC into a search engine, presigned-URL blob flows.
+**Skip unless Eucas becomes multi-user or hosted:** load balancers, CDNs, read replicas, sharding, consistent hashing, Kafka/RabbitMQ, Redis, pub/sub fan-out, service discovery, multi-region, CDC into a search engine, presigned-URL blob flows.
 
 ## Review checklist (run on every diff)
 

@@ -6,7 +6,7 @@
 
 **This folder:** this file (context, containers, flows, failure and scale checks) · [CODE-STRUCTURE](CODE-STRUCTURE.md) · [CI-CD](CI-CD.md) · [SUPERVISOR](SUPERVISOR.md) · [SECURITY-PRIVACY](SECURITY-PRIVACY.md) · [TESTING](TESTING.md) · [OPERATIONS](OPERATIONS.md) · [BUILD-PLAN](BUILD-PLAN.md). Decisions: [ADR-0007 … ADR-0015](../../adr/).
 
-**Naming:** CLAUDE.md keeps "Bench" as the codename in code until the rename task. The companion is different: its binaries, plugin name, pipe names, folders and UAC publisher are **user-visible and hard to rename once installed**, so this design names them `eucas-*` / `Eucas` from day one, and the crates follow so the codebase has one name. **This needs the founder's OK** (or the rename task done first); BUILD-PLAN §1 P6. "Claude Code" appears only as the name of the thing we attach to, never as ours.
+**Naming:** everything is named Eucas (the rename is done, CR-010). Binaries, plugin name, pipe names, folders and UAC publisher are **user-visible and hard to rename once installed**, so they are `eucas-*` / `Eucas` from day one, and the crates follow so the codebase has one name; BUILD-PLAN §1 P6. "Claude Code" appears only as the name of the thing we attach to, never as ours.
 
 ---
 
@@ -40,7 +40,7 @@
 
 | What | Budget | Measured where |
 |---|---|---|
-| PreToolUse decision, p95 / p99 | **≤ 50 ms / ≤ 150 ms** on the reference PC with Defender on | Bench test in CI (synthetic) + nightly canary (real CLI) |
+| PreToolUse decision, p95 / p99 | **≤ 50 ms / ≤ 150 ms** on the reference PC with Defender on | Benchmark test in CI (synthetic) + nightly canary (real CLI) |
 | Check event lost while the app runs | ≤ 1 in 10,000 | Soak test |
 | "Not guarded" raised after an unguarded tool call | ≤ **2 s** after that tool's **result** appears in the transcript (PreToolUse runs before the tool, so a real check always lands first) | Contract test with the hook removed |
 | Tripwire: from the 200th delete in 20 s to "stopping" | ≤ 1 s; process tree gone ≤ 3 s | Tripwire e2e on a Windows runner |

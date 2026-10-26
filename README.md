@@ -6,7 +6,7 @@ Eucas ("you-kuz") is a desktop app, Windows first, that turns your half-built id
 
 The name comes from Tolkien's *eucatastrophe*: the sudden turn in a story from doom to a happy ending.
 
-> **Status: planning, docs only.** Requirements (BRD v1.2, PRD v0.3), the UX/UI prototype and the brand are done; feasibility spikes come next, then a 14-day build to v0.1. There's no app to install yet. "Bench" is the codename you'll still see in the repo. [Live status](docs/process/STATUS.md).
+> **Status: planning, docs only.** Requirements (BRD v1.2, PRD v0.3), the UX/UI prototype and the brand are done; feasibility spikes come next, then a 14-day build to v0.1. There's no app to install yet. Eucas was codenamed "Bench" until 2026-10-26; you may still see it in older notes. [Live status](docs/process/STATUS.md).
 
 Eucas runs on your own Claude subscription through the official Claude Code. It never asks for or stores your Claude credentials. It is not made by or affiliated with Anthropic.
 

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Bench (codename): a cross-platform desktop app for a glass-box team of Claude agents. Keep this file under 200 lines; details belong in `docs/`. Personal notes go in `CLAUDE.local.md` (gitignored).
+Eucas (formerly codenamed Bench): a cross-platform desktop app for a glass-box team of Claude agents. Keep this file under 200 lines; details belong in `docs/`. Personal notes go in `CLAUDE.local.md` (gitignored).
 
 ## Commands
 
@@ -8,7 +8,7 @@ Bench (codename): a cross-platform desktop app for a glass-box team of Claude ag
 
 ```bash
 pnpm bootstrap          # install deps, set up git hooks (lefthook)
-pnpm dev                # run the Electron app in dev mode (uses a separate BENCH_HOME)
+pnpm dev                # run the Electron app in dev mode (uses a separate EUCAS_HOME)
 pnpm lint               # prettier --check + eslint
 pnpm typecheck
 pnpm test               # vitest, all packages
@@ -29,8 +29,8 @@ Read first: [PRODUCT-MODEL](docs/PRODUCT-MODEL.md) · [ARCHITECTURE](docs/ARCHIT
 - `apps/desktop/`: Electron. `src/main` (Node: runs agents), `src/preload` (minimal typed bridge), `src/renderer` (React, no Node). OS-specific code only in `src/main/platform/`.
 - `packages/core/`: orchestrator, router, agent runner, memory, ledger. Pure TypeScript, **no Electron imports**.
 - `packages/shared/`: zod schemas, IPC contracts, typed errors.
-- `packages/bench-mcp/`: in-process MCP server (handoff, ask_agent, memory tools).
-- Agents and memory are **files** in the Bench home folder; SQLite holds messages, runs, tasks and the ledger only.
+- `packages/eucas-mcp/`: in-process MCP server (handoff, ask_agent, memory tools).
+- Agents and memory are **files** in the Eucas home folder; SQLite holds messages, runs, tasks and the ledger only.
 
 ## Key Concepts
 
@@ -41,7 +41,7 @@ Read first: [PRODUCT-MODEL](docs/PRODUCT-MODEL.md) · [ARCHITECTURE](docs/ARCHIT
 
 ## Things That Will Bite You
 
-- **Auth (ADR-0002):** Bench runs the official, unmodified Claude Code binary and inherits the user's `claude login`. Never build a login, never read or store `~/.claude/.credentials.json` or OAuth tokens, never share one plan between people, never name the product "Claude Code".
+- **Auth (ADR-0002):** Eucas runs the official, unmodified Claude Code binary and inherits the user's `claude login`. Never build a login, never read or store `~/.claude/.credentials.json` or OAuth tokens, never share one plan between people, never name the product "Claude Code".
 - An `ANTHROPIC_API_KEY` in the environment silently overrides the subscription (billing!). Strip it from the agent `env` unless API mode is on.
 - Without `strictMcpConfig: true`, the user's claude.ai connectors load into **every** agent.
 - `allowedTools` only auto-approves; it does **not** restrict. Restrict with `tools` / `disallowedTools`.
@@ -91,6 +91,6 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 
 - **G0, G1, G2, G4 and G5 approved; next: the logo, then Phase 3 (SRS)** (see STATUS.md). Repo: github.com/eucas-app/eucas (public; moved from Majd-Alhakim/bench on 2026-10-24, old links redirect).
 - Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
-- **Product name: Eucas** ("you-kuz"); one agent is **a Euca**. Not "Euca" alone (EUCA is a registered EU/UK software mark). "Bench" stays the codename in code and docs until the rename task ([decision](docs/requirements/interviews/2026-10-24-product-name.md)). Never name it "Claude Code".
+- **Product name: Eucas** ("you-kuz"); one agent is **a Euca**. Not "Euca" alone (EUCA is a registered EU/UK software mark). Use it everywhere in code and docs ([decision](docs/requirements/interviews/2026-10-24-product-name.md)). Never name it "Claude Code".
 - Agents save drafts and never send or post; they never delete on the computer (CR-008).
 - Roles: the founder is product owner and human in the loop; Claude acts as PM + CTO and asks before irreversible or outward-facing actions.
