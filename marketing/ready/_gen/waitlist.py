@@ -55,9 +55,9 @@ Answer every comment within the hour for the first 3 hours.
     write("d1-x", head("Day 1 · X announcement (4 posts)",
         "X, your account: post 1, then three replies to it",
         "Monday 17:00 Doha (09:00 US Eastern)",
-        "Post 1: `../media/videos/V1-s.mp4` (square, 23.5 s, motion graphics, captions burned in). Pip: Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm",
+        "Post 1: `../media/videos/V1-h.mp4` (landscape, 23.5 s, with music and Eucas's own sounds; captions burned in). Pip: Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm",
         f"Reply 2 only: `{u('x', 'social')}`") + f"""
-## Post 1 (attach V1-s.mp4)
+## Post 1 (attach V1-h.mp4)
 
 ```text
 You started three Claude Code sessions to go faster.
@@ -200,7 +200,7 @@ The pattern, and 7 things you can set up today: [the Dev.to article URL]
     write("d3-reddit-claudeai", head("Day 3 · r/ClaudeAI showcase comment",
         "reddit.com/r/ClaudeAI: a **comment in the pinned \"Built with Claude\" showcase megathread**",
         "Wednesday 17:00 Doha",
-        "`../media/gif/V1-s.gif` if the thread allows images in comments; otherwise none",
+        "`../media/gif/V1-h.gif` (silent) if the thread allows images in comments; otherwise none",
         f"`{u('reddit-claudeai', 'community')}`",
         REDDIT_BLOCKED + " Reported: showcases go in the megathread (Rule 7); a main-feed post needs roughly 50–100+ karma or is redirected. Follow the megathread's own format.") + f"""
 ## Comment

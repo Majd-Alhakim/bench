@@ -5,6 +5,7 @@
 The videos are drawn in Remotion from the design spec, not screenshots. `mg/Eyes.tsx` is Pip's eyes from DESIGN.md §2.3 and `tokens-notch.css`: eight faces only (Calm, Focused, Glance, Toward you, Concerned, Sleepy, Pleased, Closed), with their shapes, the 150 ms blink (Calm and Toward you only), the pointer follow and Focused's 2.4 s reading loop. Shapes morph between faces in about 260 ms, as in the prototype. `mg/Notch.tsx` draws the notch with its shoulders, beam, glow and marker. `mg/V1.tsx` is the first video. Everything animates with `useCurrentFrame`, `interpolate` and springs, never CSS animation.
 
 ```bash
+python -I scripts/audio.py                           # music and sounds -> public/audio
 npx remotion still eye-sheet out/eye-sheet.png      # compare with docs/design/ui/companion/screens/eyes-sheet-d.png
 npx remotion render MG-V1-v out/MG-V1-v.mp4          # also MG-V1-h (16:9) and MG-V1-s (1:1)
 ```

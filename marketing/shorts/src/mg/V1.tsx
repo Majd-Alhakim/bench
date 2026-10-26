@@ -3,16 +3,18 @@ import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { Quartet } from "../components/Quartet";
 import { FaceKey } from "./Eyes";
 import { Notch } from "./Notch";
+import { Cue, Duck, Soundtrack } from "./Soundtrack";
 import { Caption, Card, LimitRow, Pill, prog, sp, Terminal } from "./ui";
 import { easeInOut, G, mono, sans, T } from "./tokens";
 
 export type Fmt = "h" | "v" | "s";
 type Box = [number, number, number, number]; // centre x, centre y, width, height (world px = CSS px)
 
-const LAYOUT: Record<Fmt, { W: number; H: number; top: number; stage: [number, number]; cap: { x: number; y: number; w: number; size: number; align: "left" | "center" }; label: [number, number] }> = {
-  h: { W: 1920, H: 1080, top: 0, stage: [1920, 760], cap: { x: 160, y: 800, w: 1600, size: 68, align: "center" }, label: [48, 1032] },
-  v: { W: 1080, H: 1920, top: 250, stage: [1080, 960], cap: { x: 84, y: 1270, w: 912, size: 82, align: "left" }, label: [84, 1560] },
-  s: { W: 1080, H: 1080, top: 0, stage: [1080, 760], cap: { x: 70, y: 800, w: 940, size: 58, align: "center" }, label: [48, 1040] },
+const LAYOUT: Record<Fmt, { W: number; H: number; top: number; sx: number; stage: [number, number]; cap: { x: number; y: number; w: number; size: number; align: "left" | "center" } }> = {
+  // Landscape: the story on the left, the words on the right.
+  h: { W: 1920, H: 1080, top: 0, sx: 0, stage: [1200, 1000], cap: { x: 1230, y: 420, w: 610, size: 72, align: "left" } },
+  v: { W: 1080, H: 1920, top: 250, sx: 0, stage: [1080, 960], cap: { x: 84, y: 1270, w: 912, size: 82, align: "left" } },
+  s: { W: 1080, H: 1080, top: 0, sx: 0, stage: [1080, 760], cap: { x: 70, y: 800, w: 940, size: 58, align: "center" } },
 };
 
 const NOTCH: Box = [0, 26, 250, 115];
@@ -48,6 +50,29 @@ const FACES: FaceKey[] = [
 ];
 const BLINKS = [72, 108, 206, 252, 596];
 export const V1_FRAMES = 705;
+
+// Sound, synced to the motion. Eucas's own sounds carry the story beats; ticks and whooshes stay quiet.
+const CUES: Cue[] = [
+  { at: 24, sound: "needs", volume: 0.9 },
+  { at: 58, sound: "whoosh", volume: 0.21 },
+  { at: 118, sound: "tick", volume: 0.5 },
+  { at: 132, sound: "done", volume: 0.85 },
+  { at: 154, sound: "whoosh", volume: 0.18 },
+  ...[166, 178, 190, 202].map((at) => ({ at, sound: "tick" as const, volume: 0.22 })),
+  { at: 283, sound: "whoosh", volume: 0.18 },
+  { at: 346, sound: "stopped", volume: 0.95 },
+  { at: 402, sound: "whoosh", volume: 0.21 },
+  { at: 470, sound: "tick", volume: 0.4 },
+  { at: 520, sound: "whoosh", volume: 0.15 },
+  { at: 532, sound: "done", volume: 0.8 },
+  { at: 598, sound: "whoosh", volume: 0.24 },
+];
+const DUCKS: Duck[] = [
+  { at: 24, depth: 0.45, hold: 12 },
+  { at: 132, depth: 0.4, hold: 14 },
+  { at: 346, depth: 0.7, hold: 22 },
+  { at: 532, depth: 0.4, hold: 14 },
+];
 const END = 600;
 
 function camera(f: number, fmt: Fmt) {
@@ -61,7 +86,7 @@ function camera(f: number, fmt: Fmt) {
   const S = Math.exp(interpolate(p, [0, 1], [Math.log(fit(a)), Math.log(fit(b))]));
   const cx = interpolate(p, [0, 1], [a[0], b[0]]);
   const cy = interpolate(p, [0, 1], [a[1], b[1]]);
-  const tx = L.W / 2 - cx * S;
+  const tx = L.sx + L.stage[0] / 2 - cx * S;
   const ty = Math.min(L.top, L.top + L.stage[1] / 2 - cy * S);
   return { S, tx, ty };
 }
@@ -203,7 +228,7 @@ const EndCard: React.FC<{ f: number; fmt: Fmt }> = ({ f, fmt }) => {
             Join the waitlist · eucas.app
           </Pill>
         </div>
-        <div style={{ color: "rgba(255,255,255,0.55)", fontSize: u(24), ...rise(END + 32), marginTop: u(8) }}>Design preview · Windows · in development</div>
+        <div style={{ color: "rgba(255,255,255,0.55)", fontSize: u(24), ...rise(END + 32), marginTop: u(8) }}>Windows · in development</div>
       </div>
     </AbsoluteFill>
   );
@@ -262,10 +287,8 @@ export const V1: React.FC<{ fmt: Fmt }> = ({ fmt }) => {
         {caption("You see what went, and how to get it back.", 410, 520)}
         {caption("Stop babysitting your agents.", 536, END - 4)}
       </div>
-      <div style={{ position: "absolute", left: L.label[0], top: L.label[1], color: "rgba(255,255,255,0.5)", fontSize: fmt === "h" ? 20 : 26, fontFamily: sans, opacity: 1 - prog(f, END, END + 10) }}>
-        Design preview · Eucas is in development
-      </div>
       <EndCard f={f} fmt={fmt} />
+      <Soundtrack music="music-v1" level={0.8} cues={CUES} ducks={DUCKS} />
     </AbsoluteFill>
   );
 };

@@ -14,7 +14,7 @@ SHORTS = os.path.join(ROOT, "..", "shorts")
 FACE = {"": "Calm", "front": "Toward you", "focused": "Focused", "glance": "Glance", "concerned": "Concerned",
         "closed": "Closed", "pleased": "Pleased", "sleepy": "Sleepy"}
 USE = {
-    "V1-s": "d1 X · d3 r/ClaudeAI (as GIF) · LinkedIn", "V1-h": "launch X · launch Reddit · YouTube", "V1-v": "Shorts / TikTok / Reels",
+    "V1-h": "d1 X · LinkedIn · launch X · launch Reddit · YouTube", "V1-v": "Shorts / TikTok / Reels",
     "V2-s": "d3 X", "V2-v": "Shorts / TikTok / Reels", "V3-h": "d4 X thread", "V3-v": "Shorts / TikTok / Reels",
     "V4-h": "Product Hunt video · YouTube", "V4-v": "YouTube Shorts", "V5-v": "d6 Shorts / TikTok / Reels",
     "V6-v": "d6 Shorts / TikTok / Reels",
@@ -144,19 +144,19 @@ npx remotion still count-wide out/day3.png --props="{{\\"day\\":3,\\"n\\":47,\\"
 |---|---|---|---|
 {lsched}
 
-Launch media are from the prototype and say "Design preview": re-record the same shot lists from the shipped app before L.
+Launch media: re-record V1 and the V2–V6 cuts from the shipped app before L, in the same motion style.
 
 ## Media
 
-### Videos (silent H.264; add a quiet platform-library track on Shorts, TikTok and Reels)
+### Videos (H.264 + AAC, with music and sound, at −14 LUFS; credits in `media/CREDITS.md`)
 
-Motion graphics drawn in Remotion from the design spec (DESIGN.md §2, tokens-notch.css): the notch, Pip's eyes (only the eight faces of §2.3, checked against `eyes-sheet-d.png` with the `eye-sheet` still), the peek and the panels. Pip is titled "Pip · your Euca" the first time it appears, and "Design preview · Eucas is in development" stays on screen. Source: `marketing/shorts/src/mg`. **V2–V6 are being remade in this style after V1 is approved;** the old screenshot cuts were removed. Review stills: `stills/`.
+Motion graphics drawn in Remotion from the design spec (DESIGN.md §2, tokens-notch.css): the notch, Pip's eyes (only the eight faces of §2.3, checked against `eyes-sheet-d.png` with the `eye-sheet` still), the peek and the panels. Pip is titled "Pip · your Euca" the first time it appears, with original music and Eucas's own three sounds (needs you, done, stopped). The end card says "Join the waitlist · eucas.app" and "Windows · in development". Source: `marketing/shorts/src/mg`. **V2–V6 are being remade in this style after V1 is approved;** the old screenshot cuts were removed. Review stills: `stills/`.
 
 | File | Size | Length | Used in | Pip's faces, in order |
 |---|---|---|---|---|
 {chr(10).join(rows)}
 
-`gif/V1-s.gif` (480 px) is V1 for places that take a GIF but not a video.
+`gif/V1-h.gif` (640 px, silent) is V1 for places that take a GIF but not a video.
 
 ### Images
 

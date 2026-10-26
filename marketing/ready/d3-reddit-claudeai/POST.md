@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | reddit.com/r/ClaudeAI: a **comment in the pinned "Built with Claude" showcase megathread** |
 | **When** | Wednesday 17:00 Doha |
-| **Media** | `../media/gif/V1-s.gif` if the thread allows images in comments; otherwise none |
+| **Media** | `../media/gif/V1-h.gif` (silent) if the thread allows images in comments; otherwise none |
 | **Link** | `https://eucas.app/?utm_source=reddit-claudeai&utm_medium=community&utm_campaign=waitlist-w1` |
 | **Rules check** | Reddit's rules pages couldn't be read from this machine (blocked), so this comes from 2026 secondary sources. Read the sidebar, the rules and the pinned posts before posting. Reported: showcases go in the megathread (Rule 7); a main-feed post needs roughly 50–100+ karma or is redirected. Follow the megathread's own format. |
 
