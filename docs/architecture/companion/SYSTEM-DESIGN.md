@@ -34,7 +34,7 @@
 
 **Out of v0.1:** the notch (CR-009 stays with the team app), Authenticode signing (once revenue covers it), payments and licence keys (Pro; it can charge once built, CR-010), the supervisor and budgets (Pro), cloud hand-off (Pro beta; the only part that waits for Anthropic's written OK), launching sessions, "Allow once" unless S-2 passes, macOS and Linux installers (CI still builds and tests on Ubuntu).
 
-**Budgets (Pro, CR-010, founder 2026-10-26):** when a task's budget runs out, the guard **blocks the agent's next step at PreToolUse** and the core adds the needs-you item "Budget reached for this task. Continue?". The copy says Eucas "stops before the next step", never "pauses".
+**Budgets (Pro, CR-010, founder 2026-10-26):** when a task's budget runs out, the guard **blocks the agent's next step at PreToolUse** and the core adds the needs-you item "Budget reached for this session. Continue?". The copy says Eucas "stops before the next step", never "pauses".
 
 **Assumptions (owner):** Claude Code ≥ 2.1.310 on Windows for a "verified" state (founder, via docs); a plugin at user scope reaches the terminal, the desktop app's local sessions and VS Code (pre-mortem F30; confirmed in SP-H1); Windows 11 22H2+ x64 first, arm64 later (founder).
 

@@ -107,7 +107,7 @@ The server repeats step 3 and the code-fence check, and rejects (422) on a match
 | R3 | `claims_done` and the full suite passed since the last edit | `done` |
 | R4 | `claims_done` and the full suite failed or didn't run since the last edit | `nudge` with the template "Run the full test suite and fix what fails before stopping." |
 | R5 | A held harmless chained command (`… 2>&1 \| tail`) | `answer_from_rules`: "Run them one at a time." |
-| R6 | The task's budget is reached (Pro budgets; the guard already blocks the next step at PreToolUse and the core adds "Budget reached for this task. Continue?", SYSTEM-DESIGN §1; CR-010, founder 2026-10-26) | `stop` |
+| R6 | The task's budget is reached (Pro budgets; the guard already blocks the next step at PreToolUse and the core adds "Budget reached for this session. Continue?", SYSTEM-DESIGN §1; CR-010, founder 2026-10-26) | `stop` |
 | R7 | The question matches a `safety` guidance rule verbatim | `ask_user` |
 | — | Otherwise | Level 2 → model; Level 1 → `ask_user` |
 
