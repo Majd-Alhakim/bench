@@ -42,6 +42,7 @@ const SHOTS = [
   // Founder, 2026-10-26: "a small taste without sign up": setup can finish without an account
   ["setup-7-rules-d", "s-rules"],
   ["setup-7-rules-draft-d", "s-rules-draft"],
+  ["setup-7-rules-noacct-d", "s-rules-noacct"],
   ["setup-8-sent-d", "s-sent"],
   ["setup-8-sent-l", "s-sent", { theme: "light" }],
   ["setup-8-sent-sample-d", "s-sent-sample"],
@@ -97,6 +98,8 @@ const SHOTS = [
   ["tray-menu-d", "t-menu"],
   ["panel-noacct-d", "p-noacct"],
   ["panel-noacct-l", "p-noacct", { theme: "light" }],
+  ["panel-noacct-rules-d", "p-noacct-rules"],
+  ["panel-noacct-settings-d", "p-noacct-settings"],
   ["panel-noacct-empty-d", "p-noacct-empty"],
   ["noacct-tray-d", "t-noacct"],
   ["noacct-tray-l", "t-noacct", { theme: "light" }],

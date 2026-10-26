@@ -4,7 +4,7 @@ Sized for **one founder working with Claude, about 5 hours a week of business ti
 
 ## 1. Telemetry (opt-in, no content)
 
-**Off by default, and never with no account** (2026-10-26: with no account only the supervisor taste and the update check reach the server, SYSTEM-DESIGN §4.2; the question isn't asked, and it is asked at the end of steps 6 – 9 if you create an account later). Asked once, at the end of first run, in one line: "Send anonymous counts (no commands, paths or text) to help fix Eucas? [Send counts] [No]". Changeable in Settings › Privacy, with **See what's sent** (the last 7 days of payloads, verbatim).
+**Off by default, and never with no account** (2026-10-26: with no account only the supervisor taste, drafting your one own rule, and the update check reach the server, SYSTEM-DESIGN §4.2; kept off although no account otherwise sees what Free sees, BUILD-PLAN §7; the question isn't asked, and it is asked at the end of steps 6 – 9 if you create an account later). Asked once, at the end of first run, in one line: "Send anonymous counts (no commands, paths or text) to help fix Eucas? [Send counts] [No]". Changeable in Settings › Privacy, with **See what's sent** (the last 7 days of payloads, verbatim).
 
 Sent at most once a day to `POST /v1/telemetry`, schema-allowlisted on both ends (`contracts/api/telemetry.schema.json`, `.strict()`):
 
