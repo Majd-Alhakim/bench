@@ -19,6 +19,7 @@ const FILE = pathToFileURL(path.join(here, "notch.html")).href;
 const TOP = (w, h) => ({ clipTop: [w, h], scale: 2 });
 const SHOTS = [
   ["setup-1-welcome-d", "s-welcome"],
+  ["setup-1-sac-d", "s-sac"], // tech lead Q2, accepted 2026-10-26: Smart App Control blocks the unsigned guard
   ["setup-2-create-before-d", "s-create"],
   ["setup-2-create-born-d", "s-create-born"],
   ["setup-2-create-born-l", "s-create-born", { theme: "light" }],
@@ -121,6 +122,7 @@ const SHOTS = [
   ["acct-signin-d", "p-signin"],
   ["acct-signin-code-d", "p-signin-code"],
   ["acct-switch-d", "p-switch"],
+  ["acct-signin-l", "p-signin", { theme: "light" }],
   ["acct-account-d1280", "p-account", { w: 1280, h: 800 }]
 ];
 

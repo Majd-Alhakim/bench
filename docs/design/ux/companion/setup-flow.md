@@ -2,7 +2,7 @@
 
 | Date | Author | Status | Read with |
 |---|---|---|---|
-| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **Approved by the founder 26 Oct**; the honest zero in step 9 is new since approval · **CR-012 / always-on (26 Oct): step 4 "Sign in" and step 8 "What is sent" need approval** (§7) | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · [CR-010](../../../requirements/change-requests/CR-010.md) (D-4, D-5, copy) · [notch-and-panel.md](notch-and-panel.md) · [onboarding-flow.md](onboarding-flow.md) (edge paths A–Q, still valid) |
+| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **Approved by the founder 26 Oct**; the honest zero in step 9 is new since approval · **CR-012 / always-on (26 Oct): step 4 "Sign in" and step 8 "What is sent" approved by the founder 26 Oct** with decisions U-1 – U-8 (§7, [SELF-REVIEW §5b](../../ui/companion/SELF-REVIEW.md)) | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · [CR-010](../../../requirements/change-requests/CR-010.md) (D-4, D-5, copy) · [notch-and-panel.md](notch-and-panel.md) · [onboarding-flow.md](onboarding-flow.md) (edge paths A–Q, still valid) |
 
 **Replaces** the screen sequence of [onboarding-flow.md](onboarding-flow.md). **Keeps** its evidence, its timing method, its validation tasks and its edge paths **A–Q** (referenced by letter below; their copy changes only where noted).
 
@@ -11,6 +11,8 @@
 > **Founder decisions applied (26 Oct, later the same day):** the four limits are **always on**, locked or not locked per limit; **guided merge** stays in Free as a needs-you item; **budgets** stop the agent before its next step; drafting a described rule **uses the supervisor and counts on the meter**; the app says **"your default branch"**, never "main"; v0.1 is **unsigned** and shows no "signed" badge.
 
 > **CR-012 / always-on, 2026-10-26 (founder):** **accounts for everyone**: email plus a 6-digit code, no password, asked **after "Your week" and before "Choose your rules"**. **The supervisor is always on** with no off switch; **Level 1/2 is retired** and the privacy step becomes **"What is sent"**, a real redacted example from your own last session. **The trial starts when setup finishes.** The approved privacy line is used verbatim.
+
+> **Founder decisions on this design, 2026-10-26:** **sign-in is mandatory:** *"don't allow to access without sign in"*. There is **no "Sign in later"** anywhere; offline at step 4, setup waits there ("You need to be online to sign in. Pip will start once you're connected.", **Retry**, **Back**). Once signed in, the guard, limits, tripwire and rules work offline (they never read the account). Signed out later, the panel shows **only sign-in**; the guard, the four limits and your locked rules keep protecting the PC, because the locks live in the PC's managed settings and turning safety off on sign-out would be unsafe (founder, 2026-10-26, *"yes"*); the supervisor, drafting, Usage and Rules editing need sign-in. The email step has an **unticked "Send me product news"** box (U-7). Setup **never shows the unredacted original** (U-8). Step 8 says the supervisor **can't be switched off**. A **Smart App Control** screen joins step 1 (edge U). The privacy line gains *"and how much supervisor help you've used"* (*"accept all the tech lead recommendations"*).
 
 **What changed from the old first run, and why.**
 - **"Create your Euca" is step 2** (CR-011 §1). The character is made before it does anything, so every later step can speak as it ("Pip turns them into exact rules", "Watch Pip block a test").
@@ -46,7 +48,7 @@ flowchart LR
   C --> W[3 Your week]
   W --> A[4 Sign in]
   A -->|code ok| R[5 Choose rules]
-  A -.->|offline: Sign in later| R
+  A -.->|offline: waits, Retry| A
   R --> L[6 Lock: one UAC]
   L -->|Yes| T[7 Safety test]
   L -->|No / Skip| NL[6b Not locked] --> T
@@ -54,6 +56,7 @@ flowchart LR
   T -.->|not blocked| J[Edge J: stop, diagnostic]
   S --> D[9 Pip is watching] --> N[The notch + coach mark]
   F -. missing / old / policy .-> E[Edges A–D]
+  F -. Smart App Control on .-> U[Edge U: can't guard, close]
 ```
 
 ---
@@ -88,14 +91,14 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 ### Step 4 · Sign in *(new: CR-012 / always-on, 2026-10-26)*
 - **Intent:** Do. **Primary:** **Send a code**, then **Sign in** (enabled at 6 digits; the 6th digit or a paste submits by itself), then **Choose your rules**.
 - **Why here:** you've just seen what Eucas found in your week (value first), and the next step is the first that needs the server (drafting a described rule).
-- **Email screen.** Headline "Sign in with your email" · Lede "No password: Eucas emails you a 6-digit code. Your account holds only your email and your plan." · one field, **Email** (prefilled from nothing; `autocomplete=email`) · two consequence lines (the same `conseq` list as the lock step): "Your 14-day supervisor trial starts when setup finishes. No card." and "Your Claude login stays as it is. Eucas never sees it." (ADR-0002: the second line answers the question everyone asks here.)
+- **Email screen.** Headline "Sign in with your email" · Lede "No password: Eucas emails you a 6-digit code. Your account holds only your email, your plan and how much supervisor help you've used." · one field, **Email** (prefilled from nothing; `autocomplete=email`) · an **unticked** checkbox **"Send me product news"** (founder, 2026-10-26, U-7: ticking it is consent to product emails; without it, account emails only: codes, trial ending, plan changes) · two consequence lines (the same `conseq` list as the lock step): "Your 14-day supervisor trial starts when setup finishes. No card." and "Your Claude login stays as it is. Eucas never sees it." (ADR-0002: the second line answers the question everyone asks here.)
 - **Code screen.** Headline "Check your email" · "Eucas sent a 6-digit code to **sam@example.com**. Change" · six cells (one input in the build: `inputmode=numeric`, `autocomplete=one-time-code`, paste fills all six) · "Didn't get it? Check your spam folder, or send a new one." · After resending: "A new code is on its way. The old one no longer works." The resend link waits 30 s between sends ("Send a new one in 0:24"). A code works for 10 minutes.
-- **Signed in, a new account.** Headline "You're signed in" · checklist: "Signed in as sam@example.com · A new account. It holds only your email and your plan." and "Your 14-day supervisor trial · Starts when setup finishes. No card." → **Choose your rules**.
+- **Signed in, a new account.** Headline "You're signed in" · checklist: "Signed in as sam@example.com · A new account. It holds only your email, your plan and how much supervisor help you've used." and "Your 14-day supervisor trial · Starts when setup finishes. No card." → **Choose your rules**.
 - **Signed in, an existing account** (it keeps its plan and trial). Headline "Welcome back" · "Signed in as sam@example.com · Your account since 2 Oct" · the plan that carries over, one of: "Your plan carries over: Pro, Founders' price · $15/month for life · renews 26 Nov" / "Pro · renews 26 Nov" / "Your trial carries over · 9 days left, ends 4 Nov" / "Your trial was used on 2 Oct · Pip gets a small amount of supervisor help each month" · and "This PC starts fresh · Your rules and what Pip knows live on each PC, never in your account."
 - **Wrong code** (founder copy): the six cells take a red ring (no shake: the eye grammar never alarms) and one line: "**That code didn't match.** Send a new one" (the link resends). After 5 wrong tries the code stops working and the same line shows (spec).
 - **Expired code** *(spec)*: "That code has expired. Send a new one".
 - **An address that expires** (disposable email, founder copy): under the field, "Please use an address you'll keep. This one expires." **Send a code** stays disabled until the address changes.
-- **Offline or the server can't be reached:** a neutral banner (the offline pattern): "**You're offline, so Eucas can't send a code.** Pip still guards your sessions and runs your rules. Drafting rules and the supervisor wait until you sign in." → **Sign in later** (primary) · Try again. Sign in later is offered **only** here (accounts are for everyone); see edge S.
+- **Offline or the server can't be reached** *(revised, founder 2026-10-26: "don't allow to access without sign in")*: a neutral banner (the offline pattern): "**You need to be online to sign in.** Pip will start once you're connected." → **Retry** (primary) · **Back**. ~~Sign in later~~ is gone: setup **waits here**, and nothing past this step is written until you sign in (so protection is installed only after the first sign-in). See edge S.
 - **Evidence:** what happened (the checklist names the account and the plan) · how to take it back (Settings › Account: Sign out, Delete account) · what's next (the primary names it).
 - **Consequence preview:** the trial line, before you send anything; nothing on this PC changes.
 - **Emotional moment: none on purpose.** A sign-in is a chore; it should feel short.
@@ -105,9 +108,8 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 - **Headline:** "Choose your rules" · **Lede:** "The four limits are always on, and so are the tested rules. Add your own in plain words: Pip turns them into exact rules you confirm."
 - **Left: Limits** (the four, "Always on", no switch) above **Safety rules** (tested library, switches, on by default except "Ask before installing packages"). **Right: Your own** (the composer and the draft card) above **From your week** (suggestions as checkboxes; read-only ones pre-ticked; anything that runs project code shown unticked with "Runs code from the project").
 - **The draft card:** *You wrote: "don't let agents touch the migrations in api-docs"* → `block Edit, Write · in api-docs/migrations/ and everything in it` → "Last week it would have blocked 3 calls, all from api-docs. It can't loosen a locked rule." → **Add rule** · Reword · ☑ Lock it too. A quiet line: "Drafted with supervisor help · counts on the meter" (the trial covers it in setup).
-- **Signed in later (edge S)** *(CR-012 / always-on, 2026-10-26)*: the composer is the guided exact-rule form ("Write it as an exact rule: block / allow · tools · folder"), the same one used offline.
 - **Rules for rules** (unchanged from PM-T5): exact commands, never globs; scope is a folder; runners never pre-ticked or "everywhere"; nothing can allow a delete, a push to the default branch, a send or a payment; a conflict with your own Claude Code `ask`/`deny` rule disables the row with why.
-- **States:** default · drafting · draft shown · draft rejected ("That would loosen a locked rule, so Pip can't add it. Try describing what to block instead.") · thin history (5 starters) · not signed in (guided form).
+- **States:** default · drafting · draft shown · draft rejected ("That would loosen a locked rule, so Pip can't add it. Try describing what to block instead.") · thin history (5 starters) · offline after sign-in (guided form).
 
 ### Step 6 · Lock your limits and rules (the one admin prompt)
 - **Intent:** Do. **Primary:** **Lock 4 limits + 4 rules** (count = ticked rows). **Secondary:** Skip the lock.
@@ -134,6 +136,8 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 - **The original is never shown.** It's your own session, and showing it would put a real secret on screen in setup. The counts say what was taken out; the session itself is one click away in your terminal.
 - **No session yet** (edge F, or every session is older than history): the same card with a **labelled sample**: header "Not from your work: you have no sessions yet", chip **Sample**, a made-up message with the same kinds of removals. Settings › What is sent switches to your real example after your first session.
 - **Redaction fails or can't parse the last message** *(spec)*: show the sample, and the build sends nothing for that question (Pip asks you instead). Never show an unredacted message.
+- **Under the example** *(founder, 2026-10-26, tech lead Q9)*: "The supervisor is always on and can't be switched off. Your rules always decide first." (the download page says the same).
+- **Only the redacted, trimmed last message is sent** (U-6); anything more would come back to the founder first.
 - **Footer hint:** "Always in Settings › What is sent" (the evidence that this isn't a one-time promise).
 - **Removed:** the Level 1 / Level 2 cards, "Default" chip, "Needed for the 14-day supervisor trial", the trial email field and its code. Nothing else from this step survives.
 - **Emotional moment: trust, without motion.** The example is the moment; animating it would make it feel like marketing.
@@ -141,7 +145,6 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 ### Step 9 · Pip is watching (peak-end: the homecoming)
 - **Intent:** Go. **Primary:** **Send Pip to the top**.
 - **Content:** the avatar, "**Pip is watching**", "2 sessions running, both protected. Pip lives at the top of your screen and never opens by itself.", the heartbeat chip "Checked 2 s ago" (pulses every 2.4 s). Under it, **the honest zero** (new since approval): "Pip knows nothing about how you work yet. It learns from what you allow, deny and answer. You can read and delete all of it in Settings."
-- **Signed in later (edge S)** *(CR-012 / always-on, 2026-10-26)*: one more quiet line: "You're not signed in yet. The supervisor starts when you sign in from Usage or Settings."
 - **The trial starts here** *(CR-012 / always-on, 2026-10-26)*: when you press the primary, the 14-day trial starts (ends 9 Nov in the example). The meter shows it the first time you open Usage; no line here (the removal test: you were told at step 4).
 - **The flight:** the window fades; the avatar shrinks and flies to the top centre (900 ms, `--spring-smooth`) and becomes the eyes in the notch, which open with a blink; the done sound. Reduced motion: a crossfade.
 - **Coach mark, once:** under the notch: "**Pip lives here.** Hover to peek at what needs you. Click to open the panel. Nothing here opens by itself." [Got it]. It leaves on Got it, on the first click of the notch, or after the first peek.
@@ -159,8 +162,9 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 | P | Notifications off: no longer asked in setup (the notch is the surface). Settings shows it only if a full-screen notification was missed. |
 | Q | Quit during setup: before step 6 nothing was written on this PC; after step 6 protection stays on and reopening resumes at step 7. *(CR-012 / always-on, 2026-10-26)* If you signed in at step 4, the account exists but the trial hasn't started; reopening resumes where you were, signed in. |
 | R | **Closing the window at steps 2–5** (no Euca in the notch yet): reopening starts at step 2 with the name and look you had (and signed in, if you were). The notch doesn't appear until step 9. |
-| **New: S** *(CR-012 / always-on, 2026-10-26)* | **Sign in later** (offline or server unreachable at step 4): setup continues; step 5 uses the guided rule form; step 8 shows What is sent as usual (it's local); step 9 adds the not-signed-in line. After setup, the Usage › Supervisor block reads "The supervisor starts when you sign in" with **Sign in**, and Settings › Account shows "Not signed in". Never a needs-you item, never in the notch. The trial starts when you sign in (decision U-3). |
-| **New: T** *(CR-012 / always-on, 2026-10-26)* | **The code email never arrives**: the resend line after 30 s, then after a second resend: "Still nothing? Check that sam@example.com is right, or Sign in later." (Sign in later appears here too, so a broken mail provider can't block setup.) |
+| **New: S** *(revised, founder 2026-10-26: "don't allow to access without sign in")* | ~~**Sign in later** (offline or server unreachable at step 4): setup continues…~~ **Offline or server unreachable at step 4: setup waits.** "You need to be online to sign in. Pip will start once you're connected." with **Retry** and **Back**; nothing past step 4 is written. Retry sends the code once you're back online. There is no "Sign in later", and decision U-3 is moot. |
+| **New: T** *(CR-012 / always-on, 2026-10-26)* | **The code email never arrives**: the resend line after 30 s, then after a second resend: ~~"Still nothing? Check that sam@example.com is right, or Sign in later."~~ "Still nothing? Check that sam@example.com is right, or send a new one." (revised 2026-10-26: no "Sign in later"; a broken mail provider does hold setup at this step, the cost of mandatory sign-in.) |
+| **New: U** *(founder, 2026-10-26, tech lead Q2)* | **Smart App Control is on (or in evaluation)** at step 1: unsigned v0.1 can't install its guard. One screen: "**Windows is blocking Pip's guard**" · "Smart App Control is on, and it only runs signed apps. This first version of Eucas isn't signed yet, so it can't guard your sessions on this PC." · ✓ "Nothing was installed" · ✓ "A signed version is coming · Eucas will be signed before its public launch" → **Close setup** (primary) · "Read why on eucas.app". The README says the same. Signing is bought before the public launch if more than about 10 % of early installs hit this. Route `s-sac`. |
 
 ---
 
@@ -171,12 +175,12 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 | 1 Find | Checklist | Spinner glyph per line | N/A (always has lines) | "Still checking…" after 3 s | A, B, C | N/A: local | N/A | D | All ticked |
 | 2 Make | Born *(proto)* | — | Before: grey, closed eyes *(proto)* | Name or look only (hint) *(proto)* | Name too long: capped at 16 | N/A | N/A | N/A | Birth blink |
 | 3 Week | 4 cards *(proto)* | Streaming | F | G (tokens only) | Parse errors counted | N/A | Plan share shown, no warning tone | Folder unreadable → Diagnostic | — |
-| **4 Sign in** *(CR-012)* | Email *(proto)* | "Sending…" on the button; code screen *(proto)* | N/A (the field starts empty) | Code partly typed *(proto)* | Wrong code *(proto)* · expired *(spec)* · address that expires *(proto)* · email never arrives (T) *(spec)* | Sign in later *(proto)* | N/A | Too many tries: the code stops working *(spec)* | New account *(proto)* · existing account keeps its plan *(proto)* |
+| **4 Sign in** *(CR-012)* | Email *(proto)* | "Sending…" on the button; code screen *(proto)* | N/A (the field starts empty) | Code partly typed *(proto)* | Wrong code *(proto)* · expired *(spec)* · address that expires *(proto)* · email never arrives (T) *(spec)* | Setup waits: "You need to be online to sign in." · Retry · Back *(proto)* | N/A | Too many tries: the code stops working *(spec)* | New account *(proto)* · existing account keeps its plan *(proto)* |
 | 5 Rules | Lists *(proto)* | Drafting | Thin history → starters | — | Draft rejected (loosens a lock) | Offline or not signed in: the guided exact-rule form | N/A | Conflicts with your own `ask` rule | Draft shown *(proto)* |
 | 6 Lock | List + consequences *(proto)* | Waiting for Windows *(proto)* | N/A | Some unticked | I (write failed) | N/A | N/A | H: declined *(proto)* | → 7 |
 | 7 Test | Live log | Running | N/A | K (not yet tested) | J *(proto)* | Mock path needs no network | Mock path uses no tokens | N/A | Blocked *(proto)* |
 | **8 What is sent** *(CR-012)* | Your last session, redacted *(proto)* | Redacting (≤ 1 s, local) | No session: the labelled sample *(proto)* | Message shorter than 240: "not trimmed" in the footer *(spec)* | Can't redact: the sample, and nothing is sent for that question *(spec)* | N/A: local | N/A | N/A | → 9 |
-| 9 Watching | Heartbeat *(proto)* | The flight | No sessions: "None running now. Start one and Pip will watch it." | N · not signed in (S) | J carried: Not protected | Heartbeat local | Shows usage only if near a limit | D carried | Coach mark *(proto)* |
+| 9 Watching | Heartbeat *(proto)* | The flight | No sessions: "None running now. Start one and Pip will watch it." | N | J carried: Not protected | Heartbeat local | Shows usage only if near a limit | D carried | Coach mark *(proto)* |
 
 ## 5. Emotional moments (three, pinned)
 1. **Birth** (step 2): the first blink of a character you made. Goal: belonging.
@@ -185,11 +189,11 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 Not chosen: confetti (wrong tone for a safety tool), a tour of the panel (the coach mark is one sentence), any motion on sign-in or What is sent (*CR-012 / always-on, 2026-10-26*: a chore should feel short, and proof should feel plain).
 
 ## 6. Timing assumptions
-As in [onboarding-flow §4](onboarding-flow.md), plus: step 2 ~45 s (naming is the longest choice; suggestions cap it); *CR-012 / always-on, 2026-10-26:* step 4 ~40 s (typing an email, switching to the inbox, the code; the 6th digit submits), step 8 ~20 s (reading one card, no choice). The total stays about 5 minutes because step 8 lost its choice and its email field. **Activation:** reached step 9 with the test blocked, and one real session protected within 24 h. **New measure:** share of installs that choose Sign in later, and of those, signed in within 7 days.
+As in [onboarding-flow §4](onboarding-flow.md), plus: step 2 ~45 s (naming is the longest choice; suggestions cap it); *CR-012 / always-on, 2026-10-26:* step 4 ~40 s (typing an email, switching to the inbox, the code; the 6th digit submits), step 8 ~20 s (reading one card, no choice). The total stays about 5 minutes because step 8 lost its choice and its email field. **Activation:** reached step 9 with the test blocked, and one real session protected within 24 h. **New measure:** share of installs that wait at sign-in (offline or no code), and how many of those finish setup within 24 h.
 
 ---
 
-## 7. New for approval (CR-012 / always-on, 2026-10-26)
+## 7. New for approval (CR-012 / always-on, 2026-10-26): approved 26 Oct with U-1 – U-8
 
 | # | Screen or state | Route in the prototype |
 |---|---|---|
@@ -197,12 +201,13 @@ As in [onboarding-flow §4](onboarding-flow.md), plus: step 2 ~45 s (naming is t
 | 2 | Step 4 · the 6-digit code | `s-signin-code` |
 | 3 | Step 4 · wrong code ("That code didn't match. Send a new one") | `s-signin-wrong` |
 | 4 | Step 4 · an address that expires ("Please use an address you'll keep. This one expires.") | `s-signin-disposable` |
-| 5 | Step 4 · offline, Sign in later | `s-signin-offline` |
+| 5 | Step 4 · offline: setup waits (Retry, Back) | `s-signin-offline` |
 | 6 | Step 4 · signed in, a new account (the trial starts when setup finishes) | `s-signin-done` |
 | 7 | Step 4 · signed in, an existing account keeps its plan ("Welcome back") | `s-signin-back` |
 | 8 | Step 8 · What is sent, from your last session | `s-sent` |
 | 9 | Step 8 · What is sent, the labelled sample | `s-sent-sample` |
-| 10 | Step 9 · the not-signed-in line (edge S) | spec + `s-done` after Sign in later |
+| ~~10~~ | ~~Step 9 · the not-signed-in line (edge S)~~ removed 2026-10-26 (no Sign in later) | — |
+| 11 | Step 1 · Smart App Control is on (edge U) | `s-sac` |
 | — | Spec only: expired code, too many tries, resend cooldown, email never arrives (T), can't redact | — |
 
 **Removed:** the Level 1 / Level 2 choice (old step 7, routes `s-privacy` and `s-privacy-2`), the optional trial email and decision D-3 (replaced by step 4). The panel's new states are listed in [notch-and-panel.md §10](notch-and-panel.md).

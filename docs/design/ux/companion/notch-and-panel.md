@@ -2,7 +2,7 @@
 
 | Date | Author | Status | Read with |
 |---|---|---|---|
-| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **§1–§8 approved by the founder 26 Oct** (D-1 to D-8 as recommended) · **§9 "New since approval" needs approval** · **§10 CR-012 / always-on (account, What is sent) needs approval** | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · [setup-flow.md](setup-flow.md) · [UI DESIGN.md](../../ui/companion/DESIGN.md) · [the 2026-10-25 notch design](../2026-10-25-atlas-notch-design.md) |
+| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **§1–§8 approved by the founder 26 Oct** (D-1 to D-8 as recommended) · **§9 "New since approval" needs approval** · **§10 CR-012 / always-on (account, What is sent) approved 26 Oct** with decisions U-1 – U-8 (*"don't allow to access without sign in"*: signed out, the panel shows only sign-in) | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · [setup-flow.md](setup-flow.md) · [UI DESIGN.md](../../ui/companion/DESIGN.md) · [the 2026-10-25 notch design](../2026-10-25-atlas-notch-design.md) |
 
 **Replaces** the surfaces, map and flows in [ia-and-flows.md](ia-and-flows.md) (tray popover as home, six-section main window). **Keeps** from it: the honest promise, the notification budget idea, the needs-you rules, the same-file rules, the heartbeat as evidence, the tripwire's content, the diagnostic, the Pro rules that never nag, and the edge paths. Where this file is silent, those still apply.
 
@@ -164,7 +164,7 @@ Eucas stops the process tree, **verifies it stopped**, then: red notch marker "S
 Trigger: tool activity with no check, within one tool call. → The notch widens with "Not protected", red ring, concerned eyes; overrides thin line. → Item "bench isn't protected" [Fix it]. → Sub-page: a checklist (what's fine, what isn't, why), the specific repair ("Restart bench to protect it. Nothing it did was lost."), Run the diagnostic. Never green until a real check passes. **Fail-closed brick** (our guard crashes and blocks every call) keeps the old design: the only place a 15-minute off switch is offered, with an automatic return.
 
 ### 4.5 Describe a rule (prompted rules, D-4)
-Drafting uses the supervisor model and **counts on the meter** (founder, 26 Oct); the draft card says so ("Drafted with supervisor help · counts on the meter"). When the meter is empty, you're not signed in (*CR-012 / always-on*: was "at Level 1") or offline, the composer turns into a guided form ("Write it as an exact rule: block / allow · tools · folder") so you can still add rules without the model.
+Drafting uses the supervisor model and **counts on the meter** (founder, 26 Oct); the draft card says so ("Drafted with supervisor help · counts on the meter"). When the meter is empty or you're offline (*CR-012 / always-on*: was "at Level 1"; signed out, the panel shows only sign-in, so there is no composer), the composer turns into a guided form ("Write it as an exact rule: block / allow · tools · folder") so you can still add rules without the model.
 
 In Rules (or setup step 5; *CR-012 / always-on*: was step 4): "Describe a rule in your own words" → **Draft it** → a draft card: *You wrote: "…"*, the exact rule in mono (`block Edit, Write · in api-docs/migrations/ and everything in it`), what it would have done last week ("would have blocked 3 calls, all from api-docs"), "It can't loosen a locked rule." → **Add rule** · Reword · ☑ Lock it too (asks for admin). Drafts are checked against the bypass suite; anything that would relax a hard limit can't be added.
 
@@ -187,9 +187,9 @@ Usage › Supervisor shows "Help left this month · 0% · Resets 1 Dec" and, in 
 
 - **What it shows:** help left this month as a percentage and a bar in the Euca's colour, plus the reset date (trial: the end date). **Never dollars, never a call count.** The limit behind it is a hidden per-user cost budget.
 - **Value line under it**, to make the deposit visible (premium-craft gate 6): "Answered your agents 41 times so far, so they didn't wait for you. It never approves a tool call."
-- **States:** trial ("Trial · 12 days left", ends 9 Nov) · trial ended (100 %, "From now on Pip gets a small amount of supervisor help each month") · taste (55 %) · running low (9 %, "When it's empty, Pip asks you instead until 1 Dec") · empty (above) · Pro and Founders' price (64 %, resets on the renewal date) · supervisor unreachable ("The supervisor isn't reachable right now. Pip asks you until it's back.") · **not signed in** (*CR-012 / always-on, 2026-10-26*; replaces the Level 1 state): the chip "Not signed in", no bar, "**The supervisor starts when you sign in.** Until then, Pip asks you instead. Your rules and protection don't change." + **Sign in** (neutral: it opens a form, it isn't the decision).
+- **States:** trial ("Trial · 12 days left", ends 9 Nov) · trial ended (100 %, "From now on Pip gets a small amount of supervisor help each month") · taste (55 %) · running low (9 %, "When it's empty, Pip asks you instead until 1 Dec") · empty (above) · Pro and Founders' price (64 %, resets on the renewal date) · supervisor unreachable ("The supervisor isn't reachable right now. Pip asks you until it's back.") · ~~**not signed in**: the chip "Not signed in", no bar…~~ *(removed 2026-10-26: signed out, the panel shows only sign-in, so the meter has no signed-out state)*.
 - **What is sent** (*CR-012 / always-on*): a quiet link under every meter state, opening the same page as Settings › What is sent.
-- **Trial start** (*CR-012 / always-on*; replaces D-3): one trial per **account**, started **when setup finishes**. A Sign in later user starts it when they sign in (decision U-3). The meter never shows dollars.
+- **Trial start** (*CR-012 / always-on*; replaces D-3): one trial per **account**, started **when setup finishes**. ~~A Sign in later user starts it when they sign in (decision U-3).~~ (U-3 is moot: sign-in is mandatory.) The meter never shows dollars.
 
 ---
 
@@ -204,12 +204,12 @@ Every cell is designed or marked N/A with why. *(proto)* = drawn in the prototyp
 | **Panel header** | Protected line *(proto)* | — | "Protected · no sessions running" *(proto)* | — | Red line *(proto)* | Unaffected | — | "Blocked by your organisation" *(spec)* | Not locked → Locked chip after UAC *(spec)* |
 | **Needs you** | List *(proto)* | — | "Nothing needs you." *(proto)* | Show n more *(spec)* | Stale: "bench ended before you answered. Nothing ran." *(spec)* | — | — | — | Opened/snoozed toast *(proto)* |
 | **Usage** | Meters + where + supervisor *(proto)* | — | "Usage appears after your first session." *(spec)* | Tokens only, no plan data: "Claude Code hasn't reported plan limits yet" *(spec)* | Status line not reporting → Diagnostic *(spec)* | Supervisor unreachable line *(spec)* | "5-hour limit reached. Claude Code pauses new requests until 15:40. Your sessions keep their work." No upsell *(spec)* | API key mode: cost in $ (it's your bill, not ours) *(spec)* | — |
-| **Supervisor meter** | Trial *(proto)* | — | Empty *(proto)* | Low *(proto)* | Unreachable *(spec)* | Unreachable *(spec)* | Empty *(proto)* | Not signed in *(proto; CR-012, was Level 1)* | Trial ended → taste *(proto)* |
+| **Supervisor meter** | Trial *(proto)* | — | Empty *(proto)* | Low *(proto)* | Unreachable *(spec)* | Unreachable *(spec)* | Empty *(proto)* | ~~Not signed in~~ (removed 2026-10-26: signed out, the panel shows only sign-in) | Trial ended → taste *(proto)* |
 | **Rules** | Promise + lock + lists *(proto)* | Drafting ("Drafting…" on the button, ≤ 3 s) *(spec)* | Your rules empty line *(spec)* | Not locked *(proto)* | Couldn't save: "Your settings file is locked by another program. Nothing changed. Retry" *(spec)* | Drafting needs the supervisor: offline, not signed in (CR-012) or an empty meter → the guided "Write it as an exact rule" form *(spec)* | N/A | Locked rule toast *(proto)*; org policy: read-only with why *(spec)* | Added toast + Undo *(proto)* |
 | **Settings** | Groups *(proto)* | Safety test running *(spec)* | — | — | Diagnostic red lines *(spec)* | Account row: "Can't check your plan offline. Pro keeps working for 7 days." *(spec)* | — | — | — |
 | **What is sent** *(CR-012)* | Your last session, redacted *(proto)* | — | No session yet: the labelled sample, "Nothing sent yet" *(proto)* | — | Can't redact: the sample, and nothing is sent for that question *(spec)* | Unaffected: it's local *(spec)* | — | — | — |
-| **Account** *(CR-012)* | Email + plan (Free trial / Free / Pro / Founders') *(proto)* | Signing out, deleting: the button reads "Signing out…" / "Deleting…" *(spec)* | Not signed in + Sign in *(proto)* | — | Delete failed: "Couldn't reach the Eucas server, so nothing was deleted. Try again" *(spec)* | "Can't sign out or delete while offline. Your account is unchanged." (Sign in later works offline) *(spec)* | — | — | Signed out toast *(proto)*; deleted toast, no Undo *(proto)* |
-| **Sign in (panel)** *(CR-012)* | Email *(proto)* | Code *(proto)* | — | — | Same states as setup step 4 *(spec here; proto in setup)* | "You're offline, so Eucas can't send a code." *(spec)* | — | — | Toast "Signed in as …"; a different account: the warning first *(proto)* |
+| **Account** *(CR-012)* | Email + plan (Free trial / Free / Pro / Founders') *(proto)* | Signing out, deleting: the button reads "Signing out…" / "Deleting…" *(spec)* | ~~Not signed in + Sign in~~ signed out, the panel shows only sign-in *(proto)* | — | Delete failed: "Couldn't reach the Eucas server, so nothing was deleted. Try again" *(spec)* | "Can't sign out or delete while offline. Your account is unchanged." *(spec)* | — | — | Signed out toast *(proto)*; deleted toast, no Undo *(proto)* |
+| **Sign in (panel)** *(CR-012; the whole panel when signed out)* | Email + the unticked news box + what keeps guarding *(proto)* | Code *(proto)* | — | — | Same states as setup step 4 *(spec here; proto in setup)* | "You need to be online to sign in. Pip will start once you're connected." *(spec)* | — | — | Toast "Signed in as …"; a different account: the warning first *(proto)* |
 | **Setup** | see [setup-flow.md §4](setup-flow.md) |
 
 ---
@@ -318,11 +318,13 @@ Suggestion (quiet item) · learned line · undo toast · Why page · What Pip kn
 
 ## 10. CR-012 / always-on, 2026-10-26: your account and what is sent
 
-Founder decisions (26 Oct): accounts for everyone (email + a 6-digit code, no password); the supervisor is always on, with no off switch; Level 1/2 is retired; a permanent What is sent page; Settings › Account. Setup's side is in [setup-flow.md](setup-flow.md) (steps 4 and 8, edges S and T). **Calm rule, unchanged:** nothing about the account ever reaches the notch, the peek or a sound. An account problem is never a needs-you item: it only changes what the supervisor can do, and the meter already says that.
+Founder decisions (26 Oct): accounts for everyone (email + a 6-digit code, no password); the supervisor is always on, with no off switch; Level 1/2 is retired; a permanent What is sent page; Settings › Account. Setup's side is in [setup-flow.md](setup-flow.md) (steps 4 and 8, edges S, T and U). **Founder decisions, 2026-10-26 (U-1 – U-8, approved):** sign-in is mandatory (*"don't allow to access without sign in"*); signed out (Sign out or Delete account), the panel shows **only sign-in**; the guard, the four limits and your locked rules keep protecting the PC, because the locks live in the PC's managed settings and turning safety off on sign-out would be unsafe (founder, 2026-10-26, *"yes"*); the supervisor, drafting, Usage and Rules editing need sign-in; switching accounts keeps each account's data on the PC, nothing is wiped (U-2); a deleted account leaves a keyed hash of the email and "trial used", and the delete page says so (U-4); deleting on Pro stops Pro at once with no partial refund (U-5); only the redacted, trimmed last message is sent (U-6); an unticked "Send me product news" box (U-7); never the unredacted original (U-8). Locks from the PC show in another account's Rules as **"Locked on this PC"**, read-only; **only block rules can be locked**. **Calm rule, unchanged:** nothing about the account ever reaches the notch, the peek or a sound. An account problem is never a needs-you item: it only changes what the supervisor can do, and the meter already says that.
 
 ### 10.1 The approved privacy line (stored once)
 
-> "When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email and your plan."
+> "When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used."
+
+(Revised 2026-10-26, tech lead recommendation accepted: the account line names the supervisor help used; no device count is stored.)
 
 Used verbatim (with your Euca's name) as the lede of setup step 8 and of Settings › What is sent. It replaces the old line "Nothing about your work leaves this PC unless you turn it on." everywhere. The website's privacy section should quote it too (one string, like the promise).
 
@@ -342,28 +344,28 @@ Used verbatim (with your Euca's name) as the lede of setup step 8 and of Setting
 
 | State | Rows |
 |---|---|
-| Signed in | `sam@example.com` · "Holds only your email and your plan" · **Sign out** · then the plan card: **Free trial** "12 days left" ("The full supervisor until 9 Nov. Then Free: a small amount each month.") / **Free** "monthly taste" / **Pro** "$20/month · renews 26 Nov" / **Pro · Founders' price** "$15/month for life" ("Renews 26 Nov. The price stays yours for as long as you keep Pro.") · under the group, a quiet link **Delete account** |
-| Not signed in | "Not signed in" · "Pip keeps guarding. Drafting rules and the supervisor wait until you sign in." · **Sign in** |
+| Signed in | `sam@example.com` · "Holds only your email, your plan and how much supervisor help you've used" · **Sign out** · then the plan card: **Free trial** "12 days left" ("The full supervisor until 9 Nov. Then Free: a small amount each month.") / **Free** "monthly taste" / **Pro** "$20/month · renews 26 Nov" / **Pro · Founders' price** "$15/month for life" ("Renews 26 Nov. The price stays yours for as long as you keep Pro.") · under the group, a quiet link **Delete account** |
+| Not signed in | ~~"Not signed in" row~~ **Revised 2026-10-26:** there is no signed-out Settings: the **whole panel shows only sign-in** (header "Pip · Protected · signed out", "Sign in to use Pip", the email field, the unticked news box, **Send a code**, then two lines: "Pip keeps guarding while you're signed out: the four limits and your locked rules still block." and "The supervisor, drafting rules, Usage and Rules come back when you sign in."). The notch keeps its eyes (the guard's state) |
 
 Dollars appear only on the plan card (a price you choose), never on the meter.
 
 ### 10.4 Flows
 
-**Sign in (panel).** Settings › Account › Sign in, or Usage › Sign in → sub-page "Sign in": the same lede and field as setup step 4 → **Send a code** → "Check your email" with the six cells → the 6th digit signs in → back to where you were, toast "Signed in as sam@example.com". Wrong code, an address that expires, offline: the same copy as setup step 4.
+**Sign in (panel).** Signed out, the panel itself is the sign-in (revised 2026-10-26): the same lede, field and unticked news box as setup step 4 → **Send a code** → "Check your email" with the six cells → the 6th digit signs in → back to where you were, toast "Signed in as sam@example.com". Wrong code, an address that expires, offline: the same copy as setup step 4.
 
 **Sign out.** Account › Sign out → sub-page "Sign out of sam@example.com" with three lines (the evidence before the click):
-- ✓ "Pip keeps guarding · The four limits, the tripwire and your rules work without an account."
-- ◷ "Drafting rules and the supervisor wait · Until you sign in. Pip asks you instead."
+- ✓ "Pip keeps guarding · The four limits, the tripwire and your locked rules keep working while you're signed out."
+- ◷ "Everything else waits for you to sign in · Until then the panel shows only sign-in: no supervisor, drafting, Usage or Rules." *(revised 2026-10-26)*
 - ▤ "Your rules, what Pip knows and your history stay on this PC · Sign back in with this email to pick up where you left off. A different account starts with no learned items, rules or history."
-→ **Sign out** · Stay signed in. After: toast "Signed out. Pip keeps guarding." The meter switches to "Not signed in". No Undo (signing back in is the undo, and it needs a code).
+→ **Sign out** · Stay signed in. After: toast "Signed out. Pip keeps guarding." The panel shows only sign-in. No Undo (signing back in is the undo, and it needs a code).
 
-**Switching account** (founder: warn on sign-out and on switch). Signing in with an email that isn't the last account on this PC shows, under the field, before any code is sent: "**A different account from last time.** It starts with no learned items, rules or history. sam@example.com's stay on this PC for when you sign back in." (amber tint, the Not locked pattern: a consequence, not an error).
+**Switching account** (founder: warn on sign-out and on switch). Signing in with an email that isn't the last account on this PC shows, under the field, before any code is sent: "**A different account from last time.** It starts with no learned items, rules or history. sam@example.com's stay on this PC for when you sign back in. Nothing is wiped." (U-2) (amber tint, the Not locked pattern: a consequence, not an error).
 
 **Delete account.** Account › Delete account → sub-page "Delete your Eucas account" · "This removes sam@example.com from the Eucas server." · three lines:
-- ✕ "Removed from the server · Your email, your plan and your trial. Signing up again with this email doesn't start a new trial." (Pro: "Pro stops now and nothing more is charged." Founders': "+ The Founders' price ends with this account.")
+- ✕ "Removed from the server · Your email, your plan and your trial. Eucas keeps only a scrambled form of your email, so signing up again with it doesn't start a new trial." (U-4) (Pro: "Pro stops now. Nothing more is charged, and the rest of this month isn't refunded." (U-5) Founders': "+ The Founders' price ends with this account.")
 - ✓ "Stays on this PC until you uninstall · Your rules, what Pip knows and your history."
-- ✓ "Pip keeps guarding · Drafting rules and the supervisor stop until you sign in with an account."
-→ **Delete account · can't be taken back** (danger tint, the only red button in the panel) · Keep my account. After: Settings › Account shows Not signed in; toast "Account deleted. Your rules and history stay on this PC." (no Undo: the button already said it can't be taken back). This is your own action on your own server record, not an agent delete (CR-008).
+- ✓ "Pip keeps guarding · The four limits and your locked rules keep working. Everything else waits until you sign in."
+→ **Delete account · can't be taken back** (danger tint, the only red button in the panel) · Keep my account. After: the panel shows only sign-in; toast "Account deleted. Your rules and history stay on this PC." (no Undo: the button already said it can't be taken back). This is your own action on your own server record, not an agent delete (CR-008).
 
 ### 10.5 Removed: Level 1/2 everywhere
 
@@ -371,8 +373,8 @@ Dollars appear only on the plan card (a price you choose), never on the meter.
 |---|---|---|
 | Setup step 7 | Level 1 / Level 2 cards, trial email | Step 8 What is sent (no choice) |
 | Settings › Privacy | Level radio | What is sent row |
-| Supervisor meter | "The supervisor needs Level 2" | Not signed in |
-| Rules (§4.5) | guided form "at Level 1" | guided form when not signed in |
+| Supervisor meter | "The supervisor needs Level 2" | ~~Not signed in~~ no state: signed out, the panel shows only sign-in |
+| Rules (§4.5) | guided form "at Level 1" | guided form when offline or the meter is empty |
 | Why page (§9.3) | "at Level 2, the trimmed question" | "the trimmed question with code, paths and secrets removed" |
 | D-3 (trial email optional at Level 2) | approved | **replaced** by CR-012 (email at step 4 for everyone) |
 
@@ -387,12 +389,12 @@ Dollars appear only on the plan card (a price you choose), never on the meter.
 | 5 | Settings › Account, Founders' $15 for life | `p-account-founders` |
 | 6 | Account › Sign out (the three consequences) | `p-signout` |
 | 7 | Account › Delete account (can't be taken back) | `p-delete` |
-| 8 | Account deleted: not signed in + toast | `p-deleted` |
-| 9 | Usage: the meter, not signed in | `p-signedout` |
-| 10 | Settings › Sign in (panel) | `p-signin` |
+| 8 | Account deleted: the panel shows only sign-in + toast | `p-deleted` |
+| 9 | Signed out: the panel shows only sign-in + toast | `p-signedout` |
+| 10 | Sign in (the signed-out panel) | `p-signin` |
 | 11 | Sign in: the code (panel) | `p-signin-code` |
 | 12 | Sign in with a different account: the warning | `p-switch` |
-| 13 | The meter sheet gains "Not signed in" | `sheet-meter` |
+| ~~13~~ | ~~The meter sheet gains "Not signed in"~~ removed 2026-10-26 | `sheet-meter` |
 | — | Spec only: delete failed, offline sign-out/delete, Account offline plan check | — |
 
-Plus the ten setup screens in [setup-flow.md §7](setup-flow.md). Decisions U-1 to U-8 for the founder are in [SELF-REVIEW.md §5b](../../ui/companion/SELF-REVIEW.md).
+Plus the ten setup screens in [setup-flow.md §7](setup-flow.md). Decisions U-1 to U-8 are in [SELF-REVIEW.md §5b](../../ui/companion/SELF-REVIEW.md), answered by the founder on 2026-10-26.
