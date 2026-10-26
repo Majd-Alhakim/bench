@@ -1,18 +1,6 @@
 # Product Backlog — Eucas
 
-> **Provisional.** Written before requirements gathering. It will be rebuilt from the approved BRD, PRD and SRS in Phase 6 ([LIFECYCLE](process/LIFECYCLE.md)). The Sprint 0 spikes still count as Phase 0 feasibility validation.
-
-Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priority, top = next. Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md).
-
-## Now: the Eucas companion v0.1 (CR-010)
-
-[CR-010](requirements/change-requests/CR-010.md) (approved 2026-10-26) puts the **companion first**. It guards and supervises the Claude Code sessions you already run. Requirements: BRD v1.4 (UC-54 – UC-64, BR-98 – BR-119). Plan: PRD v0.5 §9 and Appendix A (epics **E17 – E26**), built from [BUILD-PLAN](architecture/companion/BUILD-PLAN.md). Everything below this section is the **team app, after the companion**: deferred, not deleted.
-
-- **Before G6, spikes only (E17, about 5 days):** SP-H1, SP-ST1, S-1, SP-TW1, S-4, S-6, S-2 (optional); SP-SUP2 is Pro, after v0.1.
-- **Alongside:** landing page and waitlist on eucas.app (26.1, the demand test; published only after the client's review).
-- **After G6 (about 32 build days, seven 3-day sprints over two lanes; CR-010's 28 plus 4 added 2026-10-26):** E18 foundation, server and release (unsigned v0.1, SHA-256 published) · E19 guard and limits · E20 proof (heartbeat, canary, tripwire) · E21 rules · E22 usage · E23 sessions (needs-you, same-file) · E24 first run and diagnostic.
-- **In v0.1, Free (founder, 2026-10-26):** 19.7 / A-2 choose and lock your rules (D-4, 1 d), 21.2 / R-2 prompted rules (1.5 d), 23.3 / M-1 guided merge (plain code, 1.5 d).
-- **After v0.1:** E25 Pro ($20/month; the first 200 payers keep $15/month for life: budgets, supervisor, unlimited details, cloud beta) · E26 launch (the Anthropic email after build and testing; signing once revenue covers it).
+> **The companion v0.1 backlog is in [backlog/](backlog/README.md)** (Phase 6, draft for Gate 6, 2026-10-26): 33 stories and 146 tasks, 58.25 build days, 11 three-day sprints over two lanes, [Sprint 1](sprints/sprint-01/README.md), [GitHub issue drafts](backlog/github-issues.md) (not created) and [the G6 decisions](backlog/G6-DECISIONS.md). It replaces the "Now" section that was here. Everything below is the **team app, after the companion**: deferred, not deleted, and still provisional.
 
 ## Sprint 0: Inception
 
