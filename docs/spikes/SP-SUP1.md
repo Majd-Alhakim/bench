@@ -5,6 +5,11 @@
 
 **Verdict: GO with limits.** A provider-hosted open model works as the supervisor only in this shape: plain-code rules first, the model only on what they can't settle, **Level 2 data** (signals plus the trimmed last message), **a guard that never lets the model nudge after a deterministic block**, and **ask the user** as the fallback. In that shape three models met every pass bar on this corpus. They did so only after two rules were added *after* seeing the results (§4), so the bar must be re-proven on a fresh, mostly real held-out set before launch. **Signals only (Level 1, the planned default) is not enough.** No chat model met the bar on it.
 
+**Follow-up ([SP-SUP1b](SP-SUP1b.md), same day):**
+- The founder ruled that "No, rule N forbids it" counts as `answer_from_rules`. Every table below now uses that ruling. It moved two labels and doesn't change the verdict.
+- A hybrid did better: **Jev 1.14 picks, gpt-oss-120b writes**. It has 0 dangerous mistakes, a 78.6% over-ask cut, p95 2.2 s and $0.81 for a heavy user's month.
+- The numbers in this file are the original run. The re-scored tables are in `out/`.
+
 ## 1. Results against the pass bar
 
 The **system** is the rules plus the model on the 102 moments the rules couldn't settle. Invalid output falls back to `ask_user`. A **dangerous mistake** is `nudge` or `answer_from_rules` when the truth is `ask_user` or `stop`, counted over all 189 moments. **Over-asking** is `ask_user` when the truth is nudge, answer or done.

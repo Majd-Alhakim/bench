@@ -13,6 +13,8 @@ Benchmarks cheap provider-hosted models as the Eucas supervisor. Report: [`docs/
 | Decision models | `node run-decisions.mjs --pilot`, then `node run-decisions.mjs` | `out/decisions*.jsonl` |
 | Consistency (rerun the pilot) | add `--repeat` to a pilot run, then `node consistency.mjs pilot.jsonl decisions-pilot.jsonl` | `out/consistency.json` |
 | Score | `node score.mjs results.jsonl` / `node score.mjs decisions.jsonl` | `out/*-table.md`, `out/*-summary.json` |
+| Hybrid (SP-SUP1b): decision model + gpt-oss writer | `node hybrid.mjs` | `out/writer.jsonl`, `out/hybrid-*` |
+| Blind message grading → per system | grader fills `data/text-grades.json`, then `node grade-texts.mjs` | `out/text-quality*` |
 
 - The OpenRouter key comes from `OPENROUTER_API_KEY` or `HKCU\Environment`. It is never printed or written.
 - Spend is cumulative in `out/spend.json` (chat) and `out/spend-decisions.json` (decisions). Each runner stops at $8 for the two combined (`HARD_STOP_USD` in `config.mjs`).
