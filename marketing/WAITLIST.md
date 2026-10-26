@@ -79,7 +79,7 @@ The low end misses. That's why the fallback exists, and why the useful post and 
 
 ## 5. Fallback if day 3 ends under 40
 
-Read two numbers first (§6): **visitors** (Cloudflare Web Analytics) and **conversion** (sign-ups ÷ visitors).
+Read two numbers first (§6): **visitors** (Umami) and **conversion** (sign-ups ÷ visitors).
 
 | What you see | Diagnosis | Days 4–7 instead |
 |---|---|---|
@@ -91,7 +91,7 @@ Read two numbers first (§6): **visitors** (Cloudflare Web Analytics) and **conv
 
 ## 6. Tracking
 
-The page saves the link's `?ref=` (or `utm_source`) on each sign-up, lower-cased, letters, digits, `.`, `_`, `-` only, 40 characters max. Visits come from **Cloudflare Web Analytics** (the page doesn't use Umami; see PLAN §8).
+The page saves the link's `?ref=` (or `utm_source`) on each sign-up, lower-cased, letters, digits, `.`, `_`, `-` only, 40 characters max. Visits come from **Umami**: its UTM report (Reports › UTM) splits them by `utm_source`, the same value that lands in `ref`, so visits and sign-ups line up per channel. HN and Reddit readers often block analytics, so treat those visit counts as low (PLAN §8).
 
 **Links for the week** (full list and naming in [PLAN §8](PLAN.md#8-metrics)):
 
@@ -104,7 +104,7 @@ The page saves the link's `?ref=` (or `utm_source`) on each sign-up, lower-cased
 | Dev.to | `https://eucas.app/?utm_source=devto&utm_medium=article&utm_campaign=waitlist-w1` |
 | Indie Hackers | `https://eucas.app/?utm_source=ih&utm_medium=community&utm_campaign=waitlist-w1` |
 
-**Every evening:**
+**Every evening:** Umami › Overview (visitors today) and Reports › UTM (by source), then the sign-ups:
 
 ```bash
 npx wrangler d1 execute eucas-waitlist --remote --command "SELECT substr(created_at,1,10) AS day, ref, count(*) AS n, sum(plan='pro') AS pro FROM waitlist GROUP BY day, ref ORDER BY day, n DESC"
@@ -126,16 +126,34 @@ Copy into a note and fill in each night.
 
 ## 8. Keeping the waitlist warm until launch
 
-**The consent line limits email.** The form promises: "We'll email you about Eucas only: a link to confirm, the first build, and Pro when it opens," and the confirm page says "Nothing else in between." So **no weekly email newsletter** under today's consent. Keep people warm in public, where they choose to follow:
+The build takes about 5–6 weeks after the test. Two tracks keep people with you: **email**, for everyone who joined, and **public build notes**, for anyone who follows.
+
+### 8.1 The email track
+
+**What the consent allows (founder, 2026-10-26; applied in PR #86):** the confirm link, occasional build updates **at most a couple a month**, the first build, and Pro when it opens, each with a one-click unsubscribe. Match the final wording on the form and `/privacy` before the first send.
+
+| When | Email | Draft | Pip in the image |
+|---|---|---|---|
+| On sign-up | Confirm (exists) | `apps/landing/lib/waitlist.ts` | — |
+| Day 8 | **Update 1 · The result**: the real count, what you decided, the first real screen of the build plan, one question to reply to | [emails.md §1](drafts/emails.md#1-update-1--the-result-day-8) | Pleased (thank you) |
+| About L−21 | **Update 2 · A sneak peek**: one thing that now works on a real Windows machine, as a GIF, and an offer to test the private build | [emails.md §2](drafts/emails.md#2-update-2--a-sneak-peek-about-three-weeks-before-launch) | Focused (the clip), Calm (the still) |
+| About L−7 | **Update 3 · The date**: launch day, what's in the no-account taste, what needs an account, the founders' price | [emails.md §3](drafts/emails.md#3-update-3--the-date-about-a-week-before-launch) | Calm |
+| Launch day | **The first build is ready** | [emails.md §4](drafts/emails.md#4-the-first-build-is-ready-launch-day) | Focused |
+| When Pro opens | **Pro is open; the first 200 keep $15 for life** | [emails.md §5](drafts/emails.md#5-pro-is-open) | Calm |
+
+**Rules for every update:**
+- At most **two a month**, so with a 5–6-week build that's the three above and no more. If the build slips, skip an update rather than add one.
+- **One real thing per email:** a real screen or GIF from the build (or the prototype, labelled "Design preview" until the app exists), with Pip's face from [PLAN §3](PLAN.md#3-pips-faces).
+- **One question to reply to.** Replies are the best signal you'll get, and you answer each one yourself.
+- Plain text look, under 150 words, from hello@eucas.app. **No tracking pixels** (the privacy note doesn't list any). Tag links with `utm_source=email&utm_campaign=update-1` (and so on), so Umami shows which update brought people back.
+- One email per person through Resend, with that person's unsubscribe link and the `List-Unsubscribe` headers (DEPLOY.md, PR #86). The broadcast script isn't built yet: it's a follow-up before day 8.
+
+### 8.2 The public track
 
 | When | What | Where |
 |---|---|---|
-| On sign-up | The confirm email (exists) | Email |
-| Day 8 | **The result post**: the real count, the Windows/Mac split, the Pro clicks, and what happens next | X, LinkedIn, Indie Hackers, a reply in each Reddit thread you posted |
-| Every week until launch, Tue + Fri | **Pip's build notes**: one real screen or 10 s clip, one thing that got built, one question ("Which limit would you add?"). Pip's face matches the screen (PLAN §3) | X, LinkedIn (Fri only), GitHub Discussions |
+| Day 8 | **The result post**: the count, the Windows/Mac split, the Pro clicks, what happens next | X, LinkedIn, Indie Hackers, a reply in each Reddit thread you posted |
+| Tue + Fri until launch | **Pip's build notes**: one real screen or 10 s clip, one thing built, one question. Pip's face matches the screen | X, LinkedIn (Fri only), GitHub Discussions |
 | Every 2 weeks | A short write-up of one hard problem (Windows path aliases, fail-closed hooks, how the supervisor decides) | Dev.to, r/ClaudeCode (discussion, no link) |
-| ~2 weeks before launch | **Private test build** for 10–20 people who said Windows + 4+ sessions, asked one by one by DM or reply, never by bulk email | DM |
-| Launch day | **"The first build is ready"**: allowed under the consent line | Email to the whole list |
-| When Pro opens | **"Pro is open; the first 200 keep $15 for life"**: allowed | Email |
-
-If you want build-note emails, add an **unticked**, optional "Send me a short build note every other week" to the form's step 2 and the privacy note first (a landing change and your call). Drafts for the three allowed emails are in [drafts/emails.md](drafts/emails.md).
+| About L−14 | **Private test build** for 10–20 people who said Windows + 4+ sessions, asked one by one (update 2 invites them to reply) | Email reply, DM |
+| Launch day | The launch posts | [launch-week.md](drafts/launch-week.md) |

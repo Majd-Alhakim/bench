@@ -239,7 +239,7 @@ Check the 189-moment and 68% figures against `docs/research/supervisor-model-com
 
 > The landing page for my (unbuilt) Windows app has a live notch at the top edge. Its eyes follow your pointer and blink, its state follows the section in view, and hovering it opens a peek that melts out of the notch with an SVG goo filter.
 >
-> Stack: static HTML, CSS and a little JS on Cloudflare Pages, D1 for the waitlist, Turnstile, no framework, Lighthouse 100. Happy to share how the goo effect and the scroll-linked states work.
+> Stack: static HTML, CSS and a little JS on Cloudflare Workers, D1 for the waitlist, Turnstile, no framework, Lighthouse 100. Happy to share how the goo effect and the scroll-linked states work.
 >
 > <link-reddit-webdev>
 
@@ -286,9 +286,9 @@ Title V5: "Two Claude Code sessions, one file". Title V6: "Hit your usage limit 
 
 ## FAQ answers to paste
 
-**"Is it open source?"** **Settle the licence before go-live:** the repo's `LICENSE` is **MIT** today, while the page and `llms.txt` say **FSL**. Someone will notice the mismatch in the first hour. Then use the matching answer:
-- *If FSL:* "The source is public on GitHub under the FSL: you can read, run and change it, but not sell a competing product with it, and each version becomes open source two years after release. It isn't open source by the OSI definition yet, so I don't call it that."
-- *If MIT:* "Yes, MIT. The code is on GitHub."
+**"Is it open source?"** "The source is public on GitHub under FSL-1.1-MIT: you can read, run and change it, just not sell a competing product with it, and each version becomes MIT two years after release. It isn't open source by the OSI definition today, so I don't call it that."
+
+**"Do I need an account?"** "Not for the four limits and the stop on bulk deletes: they work without signing up. Your rules, your usage and the supervisor need a free account; more supervisor help and budgets are Pro."
 
 **"Does it use my Claude login / is this allowed?"** Eucas never sees or stores your Claude login. Your sessions stay your own, unmodified Claude Code. The supervisor runs on a separate open model that Eucas pays for, not on your Claude plan.
 

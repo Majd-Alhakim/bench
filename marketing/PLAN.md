@@ -10,18 +10,18 @@
 | [drafts/waitlist-week.md](drafts/waitlist-week.md) | Every waitlist-week post, ready to paste, plus the FAQ answers |
 | [drafts/launch-week.md](drafts/launch-week.md) | Show HN, Reddit, X thread, LinkedIn, the Product Hunt kit, newsletters, awesome-claude-code |
 | [drafts/video-scripts.md](drafts/video-scripts.md) | Six short videos from real prototype screens, step by step, with Pip's face per shot |
-| [drafts/emails.md](drafts/emails.md) | The two emails the consent line allows: the first build, and Pro |
+| [drafts/emails.md](drafts/emails.md) | Three build-update emails for the keep-warm track, the first-build email and the Pro email |
 | [research/channels-2026-10-26.md](research/channels-2026-10-26.md) | The evidence: community sizes and rules, comparable launches, incidents, newsletters, benchmarks |
 
 ## 0. Decisions for you before go-live
 
 | # | Decision | Why it matters | Recommendation |
 |---|---|---|---|
-| D1 | **The licence.** The repo's `LICENSE` is **MIT**; the page, `llms.txt` and CR-010 say **FSL** | Someone will spot the mismatch in the first hour, and "is it open source?" is the first HN question | Settle it, then make the repo and the page say the same thing |
-| D2 | **Does the free guard run without an account?** Today, everything needs sign-in | HN treats a sign-up wall as a landing page; awesome-claude-code lists sign-up as a blocker | Let the four limits and the bulk-delete stop run without an account; the supervisor and rules need one |
+| D1 | ~~The licence~~ **Decided 2026-10-26: FSL-1.1-MIT** (PR #91) | "Is it open source?" is still the first HN question | Answer it plainly with the FAQ line: source-available now, MIT after two years. Never call it "open source" |
+| D2 | ~~A free guard without an account?~~ **Decided 2026-10-26: a no-account taste.** The four limits and the tripwire work without sign-up; everything else needs an account or Pro | This makes Show HN and awesome-claude-code possible once a build runs | Say "no account needed for the four limits and the bulk-delete stop" in every launch post |
 | D3 | **Go live on a Monday** | Reddit peaks Mon–Thu; day 6 lands on Showoff Saturday | Yes |
 | D4 | Three small landing changes ([WAITLIST §4](WAITLIST.md#4-turning-visitors-into-sign-ups)): the founders' line by the form, a share link after joining, a "your Claude login" FAQ | Conversion and the terms-of-service question | Make them in a landing PR before go-live |
-| D5 | An optional, unticked build-notes opt-in | The consent line allows only 3 emails; no newsletter today | Not for week 1; decide after the test |
+| D5 | ~~Build-update emails?~~ **Decided 2026-10-26:** the consent now allows occasional build updates, at most a couple a month, with one-click unsubscribe (PR #86) | Keeps the list warm through 5–6 weeks of build | The keep-warm track in [WAITLIST §8](WAITLIST.md#8-keeping-the-waitlist-warm-until-launch) |
 | D6 | **Don't post the 51 s showcase** (`marketing/showcase/`) for the companion | It shows the pre-pivot team app (Atlas, a bakery site), not the notch | Record V1–V6 instead |
 
 ## 1. Positioning
@@ -82,7 +82,7 @@ Reach figures are planning ranges from the research file, not promises. Effort i
 | **Reddit: r/ChatGPTCoding, r/vibecoding, r/AI_Agents** | AI-coding generalists | Weekly self-promo threads; one adapted value post | Day 4 or the fallback | Read each sidebar | 50–300 visits each | 30 min each | Both |
 | **Reddit: r/webdev** (1.5M) | Web developers | Showoff Saturday only, about how the page was built | Saturdays | Projects only on Saturday; ad-like posts removed | 50–300 visits | 1 h | Waitlist |
 | **Avoid:** r/programming (LLM content restricted), r/opensource (FSL), r/LocalLLaMA, r/cursor (off topic) | | | | | | | |
-| **Hacker News** | Senior developers, skeptics | Show HN of the **runnable** build; your first comment says what it can't do | Tue–Wed, 16:00–17:00 (8–9 am ET) | No landing pages or sign-up walls; never ask for votes; an aged account | Comparable posts: 60–250 points; front page 2K–13K visits; or nothing | 1 h + 6 h in the thread | **Launch only** |
+| **Hacker News** | Senior developers, skeptics | Show HN of the **runnable** build (the no-account taste is what makes it eligible); your first comment says what it can't do | Tue–Wed, 16:00–17:00 (8–9 am ET) | No landing pages or sign-up walls; never ask for votes; an aged account | Comparable posts: 60–250 points; front page 2K–13K visits; or nothing | 1 h + 6 h in the thread | **Launch only** |
 | **X** | Builders in public, Claude Code people | Native video clips (V1–V6), short threads, the link in a reply; the evening count | Daily in waitlist week, 3×/week after | No tagging people to ask for shares | Depends on your audience: 50–400 visits in week 1 from a small account | 30 min/day | Both |
 | **LinkedIn** | Your professional network, Gulf tech community | Text + one image, no link in the post; story-led | Day 1, 5, 7, 8; launch | Links cut reach (vendor estimate ~60%) | 1K–5K impressions, 30–150 visits | 30 min | Both |
 | **Dev.to** (+ Hashnode cross-post with canonical URL) | Developers searching for help | The useful article | Day 2 | Tag honestly; no promo-only posts | 300–2,000 reads, long tail via search | 3 h | Both |
@@ -137,7 +137,7 @@ The full table with targets is in [WAITLIST §3](WAITLIST.md#3-day-by-day). In s
 | L+5 | Numbers post | "5 days of Eucas: installs, what broke, what's next" | X, IH, LinkedIn | You |
 | L+7 (Tue) 11:01 | Product Hunt | the kit | PH, X, LinkedIn | You |
 | L+9 | Useful post #2 | "What 5 days of real sessions told us about permission prompts" (only with real, anonymous aggregate numbers people agreed to share) | Dev.to, r/ClaudeCode | You |
-| L+14 | awesome-claude-code issue form (if D2 allows) | — | GitHub | You |
+| L+14 | awesome-claude-code issue form (eligible through the no-account taste) | — | GitHub | You |
 | L+14 | V5/V6 refresh from the real app | — | Shorts, TikTok, X | You |
 | L+21 | Release notes post for v0.1.x | "What changed because you asked" | X, GitHub release, r/ClaudeCode (if allowed) | You |
 | L+28 | When Pro opens (if ready): the Pro email | "The first 200 keep $15/month for life" | Email, X, LinkedIn | You |
@@ -146,7 +146,7 @@ The full table with targets is in [WAITLIST §3](WAITLIST.md#3-day-by-day). In s
 
 ## 6. Launch plan
 
-1. **Ready means runnable.** The download works on Windows 10 22H2 and 11, the four limits work without an account (D2), and a stranger can install it from the README in under 2 minutes. Until then, no Show HN.
+1. **Ready means runnable.** The download works on Windows 10 22H2 and 11, the no-account taste works (the four limits and the tripwire, no sign-up), and a stranger can install it from the README in under 2 minutes. Until then, no Show HN.
 2. **Stagger the big three** so each gets its own day and you can answer every comment: HN on L, Reddit on L+1, Product Hunt on L+7.
 3. **The waitlist goes first**: the "first build" email goes out the hour HN is posted, so early installs and real comments exist when strangers arrive. Don't ask the list to vote anywhere.
 4. **Say what it can't do** in every launch post, before anyone else does. On HN this is the difference between "honest tool" and "another denylist".
@@ -163,8 +163,9 @@ Six cuts from real prototype screens, every Euca titled, Pip's face per shot: [d
 ### What the page records today
 
 - **Sign-ups by source:** the waitlist table's `ref` column keeps `?ref=` or `utm_source` (lower-cased; letters, digits, `.`, `_`, `-`; 40 characters). Also `plan` (`pro` = clicked the founding-member button), `agents`, `sessions`, `os`, `status` (confirmed or not).
-- **Visits:** Cloudflare Web Analytics (enabled in the Pages project; no cookies, no banner). Referrers and pages, not who signed up.
-- **Umami:** the brief mentions it, but **the page doesn't use Umami**. Cloudflare's numbers plus the `ref` column cover the test. If you want per-link visit counts later, Umami Cloud's free tier (check the current limits) needs one script tag and a CSP change in `public/_headers`: a landing PR, not this one.
+- **Visits: Umami Cloud** (in the page since PR #86; cookie-free, no banner; don't also turn on Cloudflare Web Analytics, two counters disagree). Umami records each page view's referrer and the full URL, so its **UTM report** (Reports › UTM) shows visits by `utm_source`, `utm_medium` and `utm_campaign`, and *Referrers* catches the visits that came without a tagged link.
+- **Conversion by source** = Umami visits for a `utm_source` ÷ D1 sign-ups with that `ref`. HN and Reddit readers often block analytics, so Umami undercounts them: read those sources' conversion as an upper bound.
+- **Optional follow-up (landing PR):** a Umami event on a successful sign-up (`umami.track('signup', { ref })`) would put visits and sign-ups in one dashboard. Not needed for the test; D1 already has the sign-ups.
 
 ### Link naming
 
@@ -197,8 +198,8 @@ Example: `https://eucas.app/?utm_source=reddit-claudecode&utm_medium=community&u
 | Metric | Source | Target |
 |---|---|---|
 | **Sign-ups, cumulative** | D1 query in WAITLIST §6 | 25 / 40 / 55 (≥ 40 on day 3) / 70 / 82 / 92 / 105 |
-| Visitors per day | Cloudflare Web Analytics | 150–300 |
-| Conversion (sign-ups ÷ visitors) | both | ≥ 5% |
+| Visitors per day | Umami (Overview) | 150–300 |
+| Conversion (sign-ups ÷ visitors) | D1 ÷ Umami, per source from Umami's UTM report | ≥ 5% |
 | Sign-ups by `ref` | D1 | Know your top 3 by day 3 |
 | Founding-member clicks (`plan = pro`) | D1 | Report the share; 20%+ is a strong pay signal |
 | Windows share, 4+ sessions share | D1 (step 2 answers) | The quality of the 100 |
@@ -214,7 +215,8 @@ Example: `https://eucas.app/?utm_source=reddit-claudecode&utm_medium=community&u
 
 | Item | Cost |
 |---|---|
-| Cloudflare Pages, D1, Turnstile, Web Analytics | $0 |
+| Cloudflare Workers, D1, Turnstile | $0 |
+| Umami Cloud (free plan; check the monthly event allowance) | $0 |
 | Resend (confirm emails; free tier) | $0 |
 | OBS or the Xbox Game Bar for recording | $0 |
 | Remotion (already in `marketing/showcase/`; free for individuals, check its licence for companies) | $0 |
@@ -238,7 +240,7 @@ Example: `https://eucas.app/?utm_source=reddit-claudecode&utm_medium=community&u
 | **"AI slop" backlash** | Templated text, hype words, an AI-written article, a too-perfect video | Rewrite every draft in your words; specific numbers and sources; real screens with the "design preview" label; answer comments yourself; say what it can't do | Agree with what's fair, show the human process (the pre-mortem, the 93-state prototype, the test) |
 | **Overclaiming safety** | "Never deletes", "100% safe", or a demo that implies it | Only the fixed sentence; the "what it can't do" paragraph in every launch post | Correct the post in public, fast |
 | **"Vaporware"** | Promoting an unbuilt app | Say "design preview" and "in development" everywhere; the demand test framing makes it honest | Point to the public repo and the design docs |
-| **The licence mismatch** | MIT in the repo, FSL on the page (D1) | Settle before go-live | Fix it the same day and say so |
+| **"Not open source" thread** | FSL-1.1-MIT on HN and Reddit | Say it first: source-available, MIT after two years; never use the words "open source"; skip r/opensource | Answer once with the FAQ line, don't debate licences |
 | **Terms-of-service question** | Anthropic's 2026 crackdown on third-party harnesses | The FAQ: your login stays yours; unmodified Claude Code; the supervisor is a separate open model | Link the FAQ; don't argue |
 | **Exploiting incidents** | Fear marketing around people's lost data | Lead with help (the 7 steps work without Eucas); cite user reports as reports; never name or mock the people | Remove the line that crossed it |
 | **Wrong audience** | X's build-in-public crowd is mostly Mac | Reddit and LinkedIn first; welcome Mac sign-ups as a signal | Count Mac demand; it's PM-3 in the pre-mortem |

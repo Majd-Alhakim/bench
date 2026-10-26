@@ -2,7 +2,7 @@
 
 For **launch day L**, the day the first Windows build can be downloaded and run. The schedule is in [PLAN §6](../PLAN.md#6-launch-plan). Same voice rules as [waitlist-week.md](waitlist-week.md): rewrite in your own words, no hype, the fixed safety sentence only, and "Claude Code" is the tool you guard, never the product's name.
 
-**Two conditions before Show HN** (from HN's rules): people can **run it without signing up**, and there's something real to try. If the account is still required before the guard works, either let the four limits and the bulk-delete stop run without an account (setup already guards before sign-in) or wait. HN readers treat a sign-up wall as a landing page.
+**Why Show HN is possible (founder decision, 2026-10-26):** Eucas has a **no-account taste**: the four limits and the tripwire work without signing up, which meets HN's "try it without signups" rule. Check before posting: a stranger can install from the README and see the four limits hold **without creating an account**. If that path breaks in the release build, wait. HN readers treat a sign-up wall as a landing page.
 
 ---
 
@@ -35,7 +35,9 @@ Alternatives: "Show HN: Eucas – get asked less by your Claude Code sessions, o
 >
 > Stack: [Tauri + Rust, per the ADRs]. Windows 10 22H2 and 11. v0.1 isn't code-signed, so Windows will say "Unknown publisher".
 >
-> Licence: [the settled licence, see waitlist-week FAQ].
+> Licence: FSL-1.1-MIT. The source is on GitHub; you can read, run and change it, just not sell a competing product with it, and each version becomes MIT two years after release. So it's source-available, not open source, today.
+>
+> No account needed for the four limits and the bulk-delete stop. Rules, usage and the supervisor need a free account; more supervisor help and budgets are Pro.
 >
 > I'd love to hear where the guard is wrong. Especially: Windows path tricks I haven't covered.
 
@@ -59,7 +61,7 @@ Alternatives: "Show HN: Eucas – get asked less by your Claude Code sessions, o
 >
 > **What it can't do:** [the limits paragraph, in two sentences]
 >
-> **Free:** the four limits, the bulk-delete stop, rules, usage, and the supervisor in full for 14 days.
+> **No account needed:** the four limits and the bulk-delete stop. **Free account:** rules, usage, and the supervisor in full for 14 days.
 >
 > Download and source: <link-reddit-claudecode-launch>. Tell me what breaks.
 
@@ -115,7 +117,7 @@ Same as above, framed as "how it was built with Claude": the design-to-build pro
 **Name:** Eucas
 **Tagline** (60 characters max): `A notch that watches your Claude Code sessions on Windows`
 **Alternative:** `Get asked less by your coding agents. Windows, free.`
-**Topics:** Developer Tools, Artificial Intelligence, Windows, Productivity, Open Source (only if the licence is MIT)
+**Topics:** Developer Tools, Artificial Intelligence, Windows, Productivity (not Open Source: FSL-1.1-MIT is source-available)
 **Pricing:** Free + paid (Pro $20/month; the first 200 keep $15/month for life)
 **Links:** eucas.app with `utm_source=producthunt`, the GitHub repo
 
@@ -157,7 +159,7 @@ Re-capture each with the sample project renamed from `bench` to `web-app`, and a
 >
 > Hi, Eucas is a Windows app that watches the Claude Code sessions you already run: it never auto-approves a delete, a push to your default branch, a send or a payment, stops bulk deletes, and answers safe prompts within your rules so you get asked less. v0.1, individual sign-up, free tier, source on GitHub: [link]. Happy to answer anything. [Name]
 
-**Changelog News** ([submit form](https://changelog.com/news/submit)): the GitHub repo, one plain sentence, only if the licence is MIT (it excludes commercial products).
+**Changelog News** ([submit form](https://changelog.com/news/submit)): it excludes commercial products, and Eucas has a paid plan, so it may not qualify. If you submit, send the GitHub repo with one plain sentence and say it's FSL-1.1-MIT.
 
 **The Rundown AI** ([tool form](https://www.rundown.ai/submit)): the free "recommend a tool" route only.
 
@@ -165,7 +167,7 @@ Re-capture each with the sample project renamed from `bench` to `web-app`, and a
 
 ## 7. awesome-claude-code (L+14 or later)
 
-Only when: the repo is at least 14 days old with commits after day 1, and **the free core runs without sign-up or payment** (the list's CONTRIBUTING calls those blockers). Submit through the **web issue form only**, by hand.
+Eligible through the no-account taste: the four limits and the tripwire run **without sign-up or payment** (the list's CONTRIBUTING calls those blockers). Also needed: the repo is at least 14 days old with commits after day 1 (true since 24 Oct). Submit through the **web issue form only**, by hand, and say in the description that the core works without an account.
 
 > **Name:** Eucas
 > **Description:** A Windows notch that shows which Claude Code session needs you, holds deletes, pushes to the default branch, sends and payments for your approval, and stops sessions that delete files in bulk.
