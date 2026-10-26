@@ -398,7 +398,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-008 | Performance | Notch: **< 2 MB private; < 0.3 % CPU at rest; < 1.5 % while the eyes follow at 30 Hz**; the timer stops when nothing moves. **Measured 0.9 MB / 0.16 % / 0.94 % (SP-ST1)** | ADR-0016 | `perf` notch sampler (fake cursor 60 s), every PR |
 | NFR-009 | Performance | Active (panel open, 6 sessions working): < 3 % CPU, < 180 MB | SD §2 | Nightly perf |
 | NFR-010 | Performance | Panel and peek first frame < 150 ms from the click (panel) or the end of the 280 ms dwell (peek); the pre-warmed webview is shown, never created. **Measured p95 8 ms (SP-ST1)** | SD §2, BR-121 | Playwright trace, every PR |
-| NFR-011 | Performance | The notch hides within 1 s of a full-screen app and returns without taking focus. **Passed on Windows 11 (G6 manual checklist, 2026-10-26)**; Windows 10 22H2 pass due before launch (G3-5) | ADR-0016 | Win32 probe test + release checklist |
+| NFR-011 | Performance | The notch hides within 1 s of a full-screen app and returns without taking focus. **Passed on Windows 11 (G6 manual checklist, 2026-10-26)**; Windows 10 22H2 VM pass due before launch (G3-5) | ADR-0016 | Win32 probe test + release checklist |
 | NFR-012 | Performance | Setup detection checklist ≤ 3 s; retro first card ≤ 5 s and all cards ≤ 30 s for 7 days / 300 sessions / 500 MB of transcripts | SD §2, §5.6, UC-54 | Nightly fixture corpus |
 | NFR-013 | Performance | Setup median time to the notch ≈ 5:00 including UAC and the email round trip | UC-54, setup-flow §6 `[default (CR-011 design)]` | Opt-in telemetry `firstRun`; release checklist |
 | NFR-014 | Performance | Supervisor: `/v1/supervise` p95 < 2.5 s including the model (**model p95 1.1 s, measured SP-SUP1**) and the D1 reserve (≤ 150 ms); app deadline 3 s; guard's ask-pipe wait 8 s; Stop hook timeout 10 s; late = `ask_user` | ADR-0011, SUPERVISOR §6, SD §2 | Worker analytics; SP-SUP2 p95 < 3 s |
@@ -499,13 +499,13 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-134 | Accessibility | Never colour alone; the notch reads in a 1-bit render; forced colours map to system colours | BR-127, DESIGN §8 | 1-bit golden image; forced-colours e2e |
 | NFR-135 | Usability | Targets ≥ 32 px in the panel, ≥ 40 px for setup primaries | DESIGN §8 | Component tests |
 | NFR-136 | Usability | Nothing opens by itself; the notch never takes focus at rest; Windows notifications only as the BR-108 (3) fallback, ≤ 1 per event, ≤ 1 per 2 min per session | BR-108, BR-121 | Win32 foreground probe; policy unit tests |
-| NFR-137 | Usability | Correct placement at 100/125/150 % and with multiple monitors. **Passed on Windows 11 (G6 manual checklist, 2026-10-26)**; Windows 10 22H2 pass due before launch (G3-5) | ADR-0016 | Golden images; release checklist |
+| NFR-137 | Usability | Correct placement at 100/125/150 % and with multiple monitors. **Passed on Windows 11 (G6 manual checklist, 2026-10-26)**; Windows 10 22H2 VM pass due before launch; real-hardware scaling and multi-monitor stay partial on Windows 10 (G3-5) | ADR-0016 | Golden images; release checklist |
 | NFR-138 | Usability | Fixed strings render exactly; the product never calls itself "Claude Code" | DESIGN §7.1, BR-99 | Copy-key e2e |
 
 ### 3.7 Portability and compatibility
 | ID | Category | Requirement (measurable) | Source | Verification |
 |---|---|---|---|---|
-| NFR-150 | Portability | v0.1 supports **Windows 10 22H2 and Windows 11 22H2+, x64** (G3-5); on older Windows or arm64 the installer stops with a plain reason and writes nothing. Smart App Control exists only on Windows 11, so FR-002's check is skipped on Windows 10. GitHub has no Windows 10 runner, so every release also passes the G6 manual checklist on a Windows 10 22H2 PC | AS-11, SD §1, G3-5 | Installer OS-check unit test; Windows 10 manual checklist per release |
+| NFR-150 | Portability | v0.1 supports **Windows 10 22H2 and Windows 11 22H2+, x64** (G3-5); on older Windows or arm64 the installer stops with a plain reason and writes nothing. Smart App Control exists only on Windows 11, so FR-002's check is skipped on Windows 10. GitHub has no Windows 10 runner, so every release also passes the G6 manual checklist on Windows 10 22H2 in a free virtual machine (VirtualBox, since Windows 11 Home has no Hyper-V). Screen-scaling and second-monitor checks in the VM count as partial until someone runs them on a real Windows 10 PC | AS-11, SD §1, G3-5 | Installer OS-check unit test; Windows 10 VM checklist per release |
 | NFR-151 | Compatibility | Guarded hosts: terminal CLI, desktop app local sessions, VS Code. **Passed (G6 manual checklist, 2026-10-26)**; hosts identified by image path | AS-10, SP-H1, S-4 | Release checklist; diagnostic host table |
 | NFR-152 | Compatibility | Every hook is exec form with `args`; works with Git Bash present or absent, PowerShell 5.1 and 7, paths with spaces and non-ASCII | SP-H1 finding 1 | Hooks-schema contract test; `guard-contract` matrix |
 | NFR-153 | Portability | Ubuntu CI builds and runs unit, fixture-contract and smoke e2e tests; OS-specific code only in `eucas-platform` | ADR-0008, CODE-STRUCTURE §3 | CI matrix |
@@ -939,7 +939,7 @@ The supervisor is always on, so every signed-in install spends. ADR-0018's worst
 
 ### G3-5. Windows 10?
 
-**Answered 2026-10-26: (b)**, *"why not win 10 also?"*, then *"okay lets do this"*. Windows 10 22H2 x64 is supported in v0.1, at about one extra build day and a manual Windows 10 checklist pass per release. Applied in NFR-150, NFR-011, NFR-137.
+**Answered 2026-10-26: (b)**, *"why not win 10 also?"*, then *"okay lets do this"*. Windows 10 22H2 x64 is supported in v0.1, at about one extra build day and a manual Windows 10 checklist pass per release. The founder has no Windows 10 PC, so it is tested in a free Windows 10 virtual machine on the founder's PC (*"Keep Windows 10 in v0.1 and test it in a free Windows 10 virtual machine on my PC."*); screen-scaling and multi-monitor checks are partial there. Applied in NFR-150, NFR-011, NFR-137.
 
 The sources say Windows 11 22H2+ x64 first. Windows 10 is out of support since October 2025 but still common; it has no Smart App Control, but it would add a second OS to the manual checklist, CI and notch tests.
 - **(a) Recommended:** Windows 11 22H2+ x64 only for v0.1; the installer says so plainly on Windows 10; ask "which Windows?" on the waitlist and revisit.
