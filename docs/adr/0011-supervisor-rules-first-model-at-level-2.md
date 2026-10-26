@@ -6,7 +6,7 @@
 - **Amended again 2026-10-26 (founder decisions, relayed by the PM):**
   1. The trial and taste **ship in v0.1**, with **SP-SUP2 as the gate**.
   2. **Level 1 / Level 2 are retired.** The supervisor is **always on for every user, Free included, with no off switch**: *"The supervisor is the main thing for this tool so keep it on and tell the user what is being sent."* What is sent equals the old Level 2 (signals + the trimmed, redacted last message), through the Worker to the zero-data-retention provider. Setup and Settings show exactly what is sent.
-  3. The tiers differ only in budget. The 14-day trial starts when setup finishes, one per account.
+  3. The tiers differ only in budget. The 14-day trial ~~starts when setup finishes~~ starts **when the account is created** (revised 2026-10-26, founder: (b) "yes"), one per account. Without an account, an install gets a 10-decision taste instead ([ADR-0017](0017-accounts-email-code-d1.md), [ADR-0018](0018-supervisor-hidden-dollar-budget.md)).
   4. When the budget is empty, the supervisor falls back to rules only and asks the user more.
 
   Decisions 2, 4 and 6 below are rewritten to match; struck text is kept for history.
