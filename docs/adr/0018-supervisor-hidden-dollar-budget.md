@@ -1,6 +1,6 @@
 # ADR-0018: The supervisor allowance is a hidden dollar budget per account, metered on the server
 
-- **Status:** Proposed (2026-10-26). Requirement: [CR-011](../requirements/change-requests/CR-011.md) §4–5 (approved), the founder's answer on drafting ([2026-10-26](../requirements/interviews/2026-10-26-v1.4-open-items.md)), [CR-012](../requirements/change-requests/CR-012.md) (the budget belongs to the account). **Amends ADR-0011** (allowance) and **ADR-0012** (quota). Evidence: the running-cost study §7b–7c (`docs/business/ops-cost-study-2026-10-26.md`). **Amended 2026-10-26** for the no-account taste (per install; amendment at the end).
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. Requirement: [CR-011](../requirements/change-requests/CR-011.md) §4–5 (approved), the founder's answer on drafting ([2026-10-26](../requirements/interviews/2026-10-26-v1.4-open-items.md)), [CR-012](../requirements/change-requests/CR-012.md) (the budget belongs to the account). **Amends ADR-0011** (allowance) and **ADR-0012** (quota). Evidence: the running-cost study §7b–7c (`docs/business/ops-cost-study-2026-10-26.md`). **Amended 2026-10-26** for the no-account taste (per install; amendment at the end).
 - **Date:** 2026-10-26
 
 ## Context
