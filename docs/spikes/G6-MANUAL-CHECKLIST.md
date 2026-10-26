@@ -10,12 +10,12 @@ Start the spike app with the notch on (PowerShell, from the repo root):
 ```powershell
 $env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--remote-debugging-port=9222"; $env:ST1_NOTCH="1"; & "$env:TEMP\eucas-spikes\st1\target\release\eucas-st1.exe"
 ```
-1. ☐ **Tray click.** Click the small green dot in the tray (it may sit under the `^`). A dark panel opens just above it, aligned with the icon. Click elsewhere and it closes. *Result:*
-2. ☐ **Toast buttons.** In a second terminal: `node spikes/SP-ST1/toast.mjs`. A notification "Eucas spike: a session needs you" appears with **Open session** and **Dismiss**. Click **Open session**: the spike's main window should appear. Then check `%TEMP%\eucas-spikes\st1\log.jsonl` for a `toast_activated` line with `"action":"open"`. *Result:*
+1. ☑ **Tray click.** Done on screen with your OK (first frame 66 ms after the click, closed by clicking away).
+2. ☐ **Toast buttons.** In a second terminal: `node spikes/SP-ST1/toast.mjs`. A notification "Eucas spike: a session needs you" appears with **Open session** and **Dismiss**. If no banner shows, Windows put it straight into Notification Center (that happened during the spike, with Windows in its "busy" state): open Notification Center from the clock and click it there. Click **Open session**: the spike's main window should appear. Then check `%TEMP%\eucas-spikes\st1\log.jsonl` for a `toast_activated` line with `"action":"open"`. *Result:*
 3. ☐ **Scale 100 % and 150 %.** Settings › Display › Scale: set 100 %, restart the spike app (same command), and check that the black notch sits centred at the very top and the tray panel opens at the icon. Repeat at 150 %, then **set it back to 125 %**. *Result:*
 4. ☐ **Second monitor** (if you have one): drag nothing. Just check the notch is on the main display, centred. *Result:*
 5. ☐ **Full screen.** With the notch showing, open any video in full screen (or press F11 in a browser). The notch should disappear within about 1 s and come back when you leave full screen, without taking focus. *Result:*
-6. ☐ **Hover.** Move the mouse over the notch: it grows slightly and the eyes follow the pointer. *Result:*
+6. ☑ **Hover.** Done on screen with your OK (hover detected; panel opened on click and closed on Esc).
 
 Quit the spike app from its tray menu (right-click › Quit).
 
