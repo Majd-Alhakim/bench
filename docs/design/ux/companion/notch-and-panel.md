@@ -83,17 +83,19 @@ Carried from the approved 25 Oct design (hover not pop, the eyes, the glow, soun
 
 ### 3.1 One notch, many truths: what it shows
 
-Only one state shows at a time. **Priority:** Not protected › Tripwire stop › Needs you › Working › Resting › Dozing.
+Only one state shows at a time. **Priority:** Not protected › Tripwire stop › Needs you › Working › Resting › Dozing. Caught up adds **Pleased** for 1.6 s on top of whatever comes next.
+
+The eyes are always one of the eight faces of the eye grammar (§9.6; the spec is [DESIGN §2.3](../../ui/companion/DESIGN.md#23-the-eye-grammar-the-only-faces)).
 
 | State | Eyes | Glow | Marker / words | When |
 |---|---|---|---|---|
-| **Resting** | Open, follow the pointer (≤ 2.5 px), blink every 3.8–7.2 s | none | none | Protected; no session is running a tool |
-| **Working** | Same | The composer's voice glow gathered into a **beam that sweeps** under the eyes, in the Euca's colour | none | At least one session ran a tool in the last 20 s |
-| **Needs you** | Glance at the marker once, then back | as above | **Amber count**, stays until dealt with | Any needs-you item |
+| **Resting** | **Calm**: follow the pointer (≤ 2.5 px), blink every 3.8–7.2 s | none | none | Protected; no session is running a tool |
+| **Working** | **Focused**: narrower, read left to right with the beam | The composer's voice glow gathered into a **beam that sweeps** under the eyes, in the Euca's colour | none | At least one session ran a tool in the last 20 s |
+| **Needs you** | **Glance** at the marker (900 ms), then **Toward you** while it waits | as above | **Amber count**, stays until dealt with | Any needs-you item |
 | **Not protected** | **Concerned** | off | "**Not protected**" in red, red ring | The heartbeat failed: tool activity with no matching check, the guard missing, or the safety test failed |
-| **Tripwire stop** | Concerned | off | Red marker "**Stopped: notes**" (the project after a colon) | The tripwire stopped a session |
-| **Dozing** | **Sleepy** (closed arcs, dimmed) | off | none | No input for 5 min **and** nothing running. Pointer movement or a session starting wakes it with a blink |
-| Before setup ends | Closed, grey | off | none | First run, until the Euca is made |
+| **Tripwire stop** | **Concerned** | off | Red marker "**Stopped: notes**" (the project after a colon) | The tripwire stopped a session |
+| **Dozing** | **Sleepy** (flat dashes, dimmed) | off | none | No input for 5 min **and** nothing running. Pointer movement or a session starting wakes it with a blink |
+| Before setup ends | **Closed** (grey dashes) | off | none | First run, until the Euca is made |
 
 **Why dozing can't be misread as "off".** The Euca only dozes when there is nothing to watch. If any session runs while you're away, the eyes stay open. And "off" has its own unmistakable state with words. (BRAND §8: idle is calm; only paused sleeps.)
 
@@ -288,6 +290,8 @@ Each says the cause, what's safe, one next step, and catches you up after (9.4).
 | **A write failed** | Inline, where it happened (Rules draft) | "**Didn't save:** Pip couldn't write your Claude Code settings (another app has the file open). Your rule is still here." | **Try again** |
 
 ### 9.6 Eye grammar for the notch (moments-and-motion §3, adapted)
+
+These eight are the only faces Pip shows, on every surface (founder, 2026-10-26). Shapes, sizes and the state → face order: [DESIGN §2.3](../../ui/companion/DESIGN.md#23-the-eye-grammar-the-only-faces).
 
 | Eyes | When | Motion |
 |---|---|---|

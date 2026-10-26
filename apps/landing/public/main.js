@@ -57,9 +57,22 @@
     rest: ["", "protected, nothing waiting"],
     pleased: ["", "protected, you're all caught up"],
   };
+  // State → face (DESIGN.md §2.3). Glance is one look at the marker, then Toward you while it waits;
+  // Pleased lasts 1.6 s, then Calm.
+  const FACE = { working: "focused", marker: "glance", trip: "concerned", focused: "focused", rest: "", pleased: "pleased" };
+  const THEN = { glance: ["front", 900], pleased: ["", 1600] };
+  const follows = () => !eyes.dataset.face || eyes.dataset.face === "front";
+  let faceT = 0;
+  function setFace(f) {
+    clearTimeout(faceT);
+    eyes.dataset.face = f;
+    if (!follows()) { eyes.style.removeProperty("--ex"); eyes.style.removeProperty("--ey"); }
+    if (THEN[f]) faceT = setTimeout(() => setFace(THEN[f][0]), THEN[f][1]);
+  }
   function setState(s) {
     if (notch.dataset.state === s || !STATES[s]) return;
     notch.dataset.state = s;
+    setFace(FACE[s]);
     marker.textContent = STATES[s][0];
     label.textContent = `Your Euca, in the Eucas notch: ${STATES[s][1]}. ${notch.getAttribute("aria-expanded") === "true" ? "Hide" : "Show"} the peek.`;
   }
@@ -78,6 +91,7 @@
     addEventListener("pointermove", e => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
+        if (!follows()) return;
         const r = notch.getBoundingClientRect();
         const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
         const k = Math.min(1, Math.hypot(dx, dy) / 260);
@@ -87,7 +101,7 @@
       });
     }, { passive: true });
     const blink = () => {
-      if (!document.hidden) { eyes.classList.remove("blink"); void eyes.offsetWidth; eyes.classList.add("blink"); }
+      if (!document.hidden && follows()) { eyes.classList.remove("blink"); void eyes.offsetWidth; eyes.classList.add("blink"); }
       setTimeout(blink, 3800 + Math.random() * 3400);
     };
     setTimeout(blink, 2400);
