@@ -49,7 +49,38 @@ const FACES: FaceKey[] = [
   { at: 580, face: "calm" },
 ];
 const BLINKS = [72, 108, 206, 252, 596];
-const PUNCHES = [24, 132, 346, 532];
+// The story is written in "story frames"; WARP maps them onto the music. Each pair is [story frame, video frame], and
+// the video frames are accents measured in the score by scripts/onsets.py (98 bpm; the swell starts at the 11.4 s join).
+const WARP: [number, number][] = [
+  [0, 0],
+  [24, 25], // 0.83 s: the needs-you marker lands
+  [66, 52.5], // 1.75 s: the peek opens on the first big accent
+  [132, 121.5], // 4.05 s: done
+  [160, 170.7], // 5.69 s: the limits card
+  [234, 245], // 8.17 s: "No rule can change that."
+  [285, 288], // 9.61 s: the session starts deleting
+  [346, 342], // 11.40 s: the stop, on the swell
+  [412, 396], // 13.21 s: the recovery card
+  [470, 454], // 15.13 s: git restore lights up
+  [532, 545], // 18.17 s: done, all caught up
+  [600, 583], // 19.44 s: the end card
+  [624, 656], // 21.88 s: Join the waitlist
+  [705, 705],
+];
+const lerpMap = (x: number, from: 0 | 1) => {
+  const to = 1 - from;
+  for (let i = 1; i < WARP.length; i++) {
+    const a = WARP[i - 1], b = WARP[i];
+    if (x <= b[from]) return a[to] + ((x - a[from]) / (b[from] - a[from])) * (b[to] - a[to]);
+  }
+  return x;
+};
+/** Video frame → story frame. */
+const toStory = (n: number) => lerpMap(n, 1);
+/** Story frame → video frame. */
+const toVideo = (f: number) => Math.round(lerpMap(f, 0));
+// A small punch-in on the score's strongest accents, in video frames.
+const PUNCHES = [25, 52, 122, 245, 342, 396, 545, 583, 656];
 export const V1_FRAMES = 705;
 
 // Sound, synced to the motion. Eucas's own sounds carry the story beats; ticks and whooshes stay quiet.
@@ -76,7 +107,7 @@ const DUCKS: Duck[] = [
 ];
 const END = 600;
 
-function camera(f: number, fmt: Fmt) {
+function camera(f: number, fmt: Fmt, n: number) {
   const L = LAYOUT[fmt];
   let i = 0;
   while (i + 1 < CAM.length && CAM[i + 1][0] <= f) i++;
@@ -85,7 +116,7 @@ function camera(f: number, fmt: Fmt) {
   const p = fb === fa ? 1 : interpolate(f, [fa, fb], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeInOut });
   const fit = (bx: Box) => Math.min(L.stage[0] / bx[2], L.stage[1] / bx[3]);
   // A small punch-in on the story beats (needs you, done, the stop), timed to the music's accents.
-  const punch = PUNCHES.reduce((m, at) => m + (f >= at ? 0.055 * Math.exp(-(f - at) / 6) * Math.min(1, (f - at + 1) / 2) : 0), 0);
+  const punch = PUNCHES.reduce((m, at) => m + (n >= at ? 0.05 * Math.exp(-(n - at) / 6) * Math.min(1, (n - at + 1) / 2) : 0), 0);
   const S = Math.exp(interpolate(p, [0, 1], [Math.log(fit(a)), Math.log(fit(b))])) * (1 + punch);
   const cx = interpolate(p, [0, 1], [a[0], b[0]]);
   const cy = interpolate(p, [0, 1], [a[1], b[1]]);
@@ -209,29 +240,30 @@ const Recovery: React.FC<{ f: number }> = ({ f }) => {
 
 const EndCard: React.FC<{ f: number; fmt: Fmt }> = ({ f, fmt }) => {
   const L = LAYOUT[fmt];
-  const a = prog(f, END, END + 14);
+  const a = prog(f, END, END + 3); // a quick cut on the accent, so the two notches never cross-fade
   if (a <= 0) return null;
   const k = fmt === "h" ? 4.2 : 4.6;
   const u = (n: number) => n * (fmt === "h" ? 1 : 1.05);
-  const rise = (at: number) => ({ opacity: prog(f, at, at + 12), transform: `translateY(${(1 - prog(f, at, at + 14)) * 24}px)` });
+  // Story frames here are stretched about 3× by WARP, so short ranges still read as smooth on the accents.
+  const rise = (at: number) => ({ opacity: prog(f, at, at + 4), transform: `translateY(${(1 - prog(f, at, at + 5)) * 24}px)` });
   return (
     <AbsoluteFill style={{ background: "radial-gradient(90% 70% at 50% 0%, #1d2133 0%, #0b0c11 65%)", opacity: a }}>
       <div style={{ position: "absolute", left: L.W / 2, top: 0 }}>
         <Notch k={k} frame={f} faces={[{ at: 0, face: "calm" }]} blinks={[END + 40, END + 82]} />
       </div>
       <div style={{ position: "absolute", left: 0, right: 0, top: fmt === "v" ? 620 : fmt === "s" ? 330 : 330, display: "flex", flexDirection: "column", alignItems: "center", gap: u(26), fontFamily: sans }}>
-        <div style={{ display: "flex", alignItems: "center", gap: u(22), ...rise(END + 8) }}>
+        <div style={{ display: "flex", alignItems: "center", gap: u(22), ...rise(END + 1) }}>
           {/* The mark as on eucas.app: one colour, no eyes (only Pip has eyes). */}
           <Quartet size={u(104)} fill="#eceef3" />
           <span style={{ color: "#f4f4f6", fontSize: u(150), fontWeight: 600, letterSpacing: -5 }}>eucas</span>
         </div>
-        <div style={{ color: "#c9cbd3", fontSize: u(48), ...rise(END + 16) }}>Stop babysitting your agents.</div>
-        <div style={{ ...rise(END + 24), marginTop: u(14) }}>
+        <div style={{ color: "#c9cbd3", fontSize: u(48), ...rise(END + 7) }}>Stop babysitting your agents.</div>
+        <div style={{ ...rise(623), marginTop: u(14) }}>
           <Pill size={u(42)} style={{ padding: `${u(20)}px ${u(44)}px` }}>
             Join the waitlist · eucas.app
           </Pill>
         </div>
-        <div style={{ color: "rgba(255,255,255,0.55)", fontSize: u(24), ...rise(END + 32), marginTop: u(8) }}>Windows · in development</div>
+        <div style={{ color: "rgba(255,255,255,0.55)", fontSize: u(24), ...rise(630), marginTop: u(8) }}>Windows · in development</div>
       </div>
     </AbsoluteFill>
   );
@@ -239,9 +271,10 @@ const EndCard: React.FC<{ f: number; fmt: Fmt }> = ({ f, fmt }) => {
 
 /** V1 · "Four things always come to you": motion graphics drawn from the design spec, not screenshots. */
 export const V1: React.FC<{ fmt: Fmt }> = ({ fmt }) => {
-  const f = useCurrentFrame();
+  const n = useCurrentFrame();
+  const f = toStory(n);
   const L = LAYOUT[fmt];
-  const cam = camera(f, fmt);
+  const cam = camera(f, fmt, n);
   const markerIn = sp(f, 24, 11, 190) * (1 - prog(f, 124, 132));
   const peekOpen = prog(f, 60, 72, easeInOut) * (1 - prog(f, 138, 150, easeInOut));
   const w = interpolate(peekOpen, [0, 1], [interpolate(markerIn, [0, 1], [G.notchW, G.notchWMarker]), G.peekW]);
@@ -291,7 +324,7 @@ export const V1: React.FC<{ fmt: Fmt }> = ({ fmt }) => {
         {caption("Stop babysitting your agents.", 536, END - 4)}
       </div>
       <EndCard f={f} fmt={fmt} />
-      <Soundtrack music="music-v1-spring" level={0.85} cues={CUES} ducks={DUCKS} />
+      <Soundtrack music="music-v1-spring" level={0.85} cues={CUES.map((c) => ({ ...c, at: toVideo(c.at) }))} ducks={DUCKS.map((d) => ({ ...d, at: toVideo(d.at) }))} />
     </AbsoluteFill>
   );
 };
