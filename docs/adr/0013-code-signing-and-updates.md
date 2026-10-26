@@ -1,6 +1,6 @@
 # ADR-0013: Code signing (D-3) and auto-update channels
 
-- **Status:** Proposed (2026-10-26), with **D-3 decided: v0.1 ships unsigned (option E), with signed updates and published hashes** (CR-010, founder 2026-10-26). Authenticode (route A, or B if a company exists) comes once revenue covers it, **or before the public launch if the waitlist is large** (founder, 2026-10-26; amendment at the end); the options table below is that later plan.
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26, with **D-3 decided: v0.1 ships unsigned (option E), with signed updates and published hashes** (CR-010, founder 2026-10-26). Authenticode (route A, or B if a company exists) comes once revenue covers it, **or before the public launch if the waitlist is large** (founder, 2026-10-26; amendment at the end); the options table below is that later plan.
 - **Date:** 2026-10-26
 
 ## Context

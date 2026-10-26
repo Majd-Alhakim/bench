@@ -1,6 +1,6 @@
 # ADR-0012: A thin server on Cloudflare Workers (config, accounts and budgets since CR-012, model routing; no content stored)
 
-- **Status:** Proposed (2026-10-26). ~~Pro traffic only when Pro opens; v0.1 uses only the config, update-manifest, waitlist-count, opt-in telemetry and prompted-rule (`/v1/draft-rule`) routes (CR-010, founder 2026-10-26).~~ **Since CR-011, CR-012 and the founder's 2026-10-26 decisions, v0.1 uses every route except the Lemon Squeezy webhook:** config, updates, telemetry, accounts, meter, draft-rule and supervise (always on for every signed-in user).
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. ~~Pro traffic only when Pro opens; v0.1 uses only the config, update-manifest, waitlist-count, opt-in telemetry and prompted-rule (`/v1/draft-rule`) routes (CR-010, founder 2026-10-26).~~ **Since CR-011, CR-012 and the founder's 2026-10-26 decisions, v0.1 uses every route except the Lemon Squeezy webhook:** config, updates, telemetry, accounts, meter, draft-rule and supervise (always on for every signed-in user).
 - **Date:** 2026-10-26
 - **Amended 2026-10-26 (CR-011, CR-012, founder answers):**
   - The server now has **accounts** (email + one-time code, [ADR-0017](0017-accounts-email-code-d1.md)). "No accounts" in the context below no longer holds; "no user content stored, no payload logs" still does.

@@ -1,6 +1,6 @@
 # ADR-0016: The notch is a native Rust layered window; the panel is the one webview
 
-- **Status:** Proposed (2026-10-26). Evidence: [SP-ST1](../spikes/SP-ST1.md). Requirement: [CR-011](../requirements/change-requests/CR-011.md) §2–3 (the Euca lives in the notch; a panel, no main window). **Amends ADR-0008** (surfaces) and supersedes the "no notch in v0.1" line of SYSTEM-DESIGN §1.
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. Evidence: [SP-ST1](../spikes/SP-ST1.md). Requirement: [CR-011](../requirements/change-requests/CR-011.md) §2–3 (the Euca lives in the notch; a panel, no main window). **Amends ADR-0008** (surfaces) and supersedes the "no notch in v0.1" line of SYSTEM-DESIGN §1.
 - **Date:** 2026-10-26
 
 ## Context

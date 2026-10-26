@@ -1,6 +1,6 @@
 # ADR-0011: Supervisor: rules first, then a provider-hosted open model, never approves (always on since 2026-10-26; was "only at Level 2")
 
-- **Status:** Proposed (2026-10-26). Evidence: [SP-SUP1](https://github.com/eucas-app/eucas/pull/56). Pro feature; **not in v0.1** (Pro is a waitlist), designed now so v0.1 doesn't paint it into a corner.
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. Evidence: [SP-SUP1](https://github.com/eucas-app/eucas/pull/56). Pro feature; **not in v0.1** (Pro is a waitlist), designed now so v0.1 doesn't paint it into a corner.
 - **Date:** 2026-10-26
 - **Amended 2026-10-26 (CR-011, CR-012, founder answers):** the allowance is a **hidden dollar budget per account**, never shown as dollars, with prompts capped at about 2,000 tokens ([ADR-0018](0018-supervisor-hidden-dollar-budget.md)). **Free gets the supervisor too:** a 14-day trial (about $0.50) at sign-up, then a monthly taste (about $0.02). Every call needs a Eucas account token ([ADR-0017](0017-accounts-email-code-d1.md)). Pressing **Draft** is the opt-in for that one sentence.
 - **Amended again 2026-10-26 (founder decisions, relayed by the PM):**

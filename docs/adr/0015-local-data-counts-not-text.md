@@ -1,6 +1,6 @@
 # ADR-0015: Local data: counts and metadata in SQLite, never the text of prompts or files
 
-- **Status:** Proposed (2026-10-26). Includes a **copy change for the founder** (the privacy line, below).
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. Includes a **copy change for the founder** (the privacy line, below).
 - **Date:** 2026-10-26
 
 ## Context
