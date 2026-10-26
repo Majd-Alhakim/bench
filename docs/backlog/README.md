@@ -148,7 +148,7 @@ Before Sprint 1, S1-1 pre-creates every module file and splits copy, error codes
 
 ## 5. GitHub Issues
 
-Drafted in [github-issues.md](github-issues.md) and approved at G6 (7a). The labels and the Sprint 0–11 milestones are on GitHub; the issues are next. Later sprints get their task issues at each `/plan-sprint`.
+Drafted in [github-issues.md](github-issues.md) and approved at G6 (7a). They're on GitHub as #100–#150 ([the list](https://github.com/eucas-app/eucas/issues?q=is%3Aissue+label%3Acompanion)), with the Sprint 0–11 milestones. Later sprints get their task issues at each `/plan-sprint`.
 
 ## 6. Requirement coverage
 
