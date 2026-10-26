@@ -20,7 +20,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 
 ## Already decided (input to the phases above)
 Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo conventions (ADR-0003) · engineering workflow and skills (premium-craft, engineering-craft, ui-ux-guide).
-- Personal project, shared openly and customisable · lean mode · 3-day sprints · **companion first (CR-010)**; the 14-day full-scope target now applies to the team app only · licence **FSL** (CR-010; was MIT).
+- Personal project, shared openly and customisable · lean mode · 3-day sprints · **companion first (CR-010)**; the 14-day full-scope target now applies to the team app only · licence **proprietary, all rights reserved** (founder, 2026-10-26; was FSL per CR-010, before that MIT). The repo stays public to read.
 - Positioning: Eucas complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
 - Design: calm, chat-first Home with Atlas; dark first (charcoal) + light; copy removal test; second-person voice.
 

@@ -358,7 +358,7 @@ Build start = G6 = **day 1**. Two Claude developer lanes work in separate worktr
 - **Anthropic:** the email goes **after the companion is built and tested**, and only if it's worth pursuing (26.3). The free tool needs no approval: it adds hooks around the official CLI, and the supervisor doesn't use your plan. **Pro can charge once it's built** (§11.1 #8). **Only the cloud beta waits for Anthropic's written OK,** because it starts work on your plan.
 - **v0.6 accounts (CR-012):** sign-in codes go out through Cloudflare Email Service or Resend (free tier at our volume); accounts live in a D1 table on the Worker; no change to the $100/month ceiling.
 - **v0.6 design gate (CR-011 §6):** the landing page (#64) is rebuilt on the approved design and isn't used before the client approves it.
-- **Licence:** FSL. **Payments:** Lemon Squeezy (client, 2026-10-26). **Supporter tier:** pay what you want, $10 minimum, plus GitHub Sponsors (26.4).
+- **Licence:** ~~FSL~~ **proprietary, all rights reserved; the repo stays public to read** (founder, 2026-10-26). **Payments:** Lemon Squeezy (client, 2026-10-26). **Supporter tier:** pay what you want, $10 minimum, plus GitHub Sponsors (26.4).
 - **Channels:** `beta` (from `staging` tags), which you dogfood, and `stable` (from `main` tags), with a staged rollout (ADR-0013).
 - **The name is Eucas everywhere;** "Claude Code" appears only as the thing Eucas attaches to.
 

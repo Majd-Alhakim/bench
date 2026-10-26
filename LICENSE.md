@@ -1,110 +1,39 @@
-# Functional Source License, Version 1.1, MIT Future License
+# Eucas Proprietary License
 
-## Abbreviation
+Copyright © 2026 Majd Alhakim. All rights reserved.
 
-FSL-1.1-MIT
+This repository is public so that people can **read** the source code of Eucas and see how it works. Being able to read it does not give you any right to use it.
 
-## Notice
+## What you may do
 
-Copyright 2026 Majd Alhakim
+- View and read the source code on GitHub.
+- Link to it and quote short parts of it in reviews, articles, security reports or discussions, with attribution.
 
-## Terms and Conditions
+## What you may not do
 
-### Licensor ("We")
+Without the copyright holder's prior written permission, you may not:
 
-The party offering the Software under these Terms and Conditions.
+1. copy, reproduce, download for reuse, or mirror the code or any substantial part of it;
+2. modify it, translate it, or create derivative works based on it;
+3. build, run, deploy, distribute, publish, sell, sublicense, rent or otherwise make it available, in source or compiled form;
+4. use it, its design, its rules library, its prompts, its copy or its assets to make, train or market a product or service, competing or not;
+5. remove or bypass any licence check, account check, usage limit or paywall;
+6. use the names "Eucas" and "Euca", the logo, or the character "Pip" and its faces, except to refer to this project.
 
-### The Software
+Official builds of Eucas are licensed separately by their own end-user terms. This license covers the source code in this repository.
 
-The "Software" is each version of the software that we make available under
-these Terms and Conditions, as indicated by our inclusion of these Terms and
-Conditions with the Software.
+## Earlier versions
 
-### License Grant
+Commits published before this license was added were offered under the MIT License. That grant still applies to those earlier commits only. Every later commit is covered by this license.
 
-Subject to your compliance with this License Grant and the Patents,
-Redistribution and Trademark clauses below, we hereby grant you the right to
-use, copy, modify, create derivative works, publicly perform, publicly display
-and redistribute the Software for any Permitted Purpose identified below.
+## Contributions
 
-### Permitted Purpose
+By submitting a contribution (for example a pull request, issue or suggestion), you assign to the copyright holder all rights in it, so it can be used under this license.
 
-A Permitted Purpose is any purpose other than a Competing Use. A Competing Use
-means making the Software available to others in a commercial product or
-service that:
+## No warranty
 
-1. substitutes for the Software;
+The code is provided "as is", without warranty of any kind. The copyright holder is not liable for any claim, damages or other liability arising from it.
 
-2. substitutes for any other product or service we offer using the Software
-   that exists as of the date we make the Software available; or
+## Permissions
 
-3. offers the same or substantially similar functionality as the Software.
-
-Permitted Purposes specifically include using the Software:
-
-1. for your internal use and access;
-
-2. for non-commercial education;
-
-3. for non-commercial research; and
-
-4. in connection with professional services that you provide to a licensee
-   using the Software in accordance with these Terms and Conditions.
-
-### Patents
-
-To the extent your use for a Permitted Purpose would necessarily infringe our
-patents, the license grant above includes a license under our patents. If you
-make a claim against any party that the Software infringes or contributes to
-the infringement of any patent, then your patent license to the Software ends
-immediately.
-
-### Redistribution
-
-The Terms and Conditions apply to all copies, modifications and derivatives of
-the Software.
-
-If you redistribute any copies, modifications or derivatives of the Software,
-you must include a copy of or a link to these Terms and Conditions and not
-remove any copyright notices provided in or with the Software.
-
-### Disclaimer
-
-THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING WITHOUT LIMITATION WARRANTIES OF FITNESS FOR A PARTICULAR
-PURPOSE, MERCHANTABILITY, TITLE OR NON-INFRINGEMENT.
-
-IN NO EVENT WILL WE HAVE ANY LIABILITY TO YOU ARISING OUT OF OR RELATED TO THE
-SOFTWARE, INCLUDING INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES,
-EVEN IF WE HAVE BEEN INFORMED OF THEIR POSSIBILITY IN ADVANCE.
-
-### Trademarks
-
-Except for displaying the License Details and identifying us as the origin of
-the Software, you have no right under these Terms and Conditions to use our
-trademarks, trade names, service marks or product names.
-
-## Grant of Future License
-
-We hereby irrevocably grant you an additional license to use the Software under
-the MIT license that is effective on the second anniversary of the date we make
-the Software available. On or after that date, you may use the Software under
-the MIT license, in which case the following will apply:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+For permission, a commercial licence or any question: hello@eucas.app

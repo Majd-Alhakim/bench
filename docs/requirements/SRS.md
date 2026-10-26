@@ -352,7 +352,7 @@ flowchart LR
 | FR-185 | On the PC the system shall keep counts and metadata, never prompt or file text (transcripts read, never copied), with retention: raw checks rolled up after 24 h and 90 days, file touches 24 h, receipts 30 days, usage samples 90 days `[default (CR-010 design)]`; **Clear history** deletes them. | — | BR-115 (1), (7) | Must | DB scan for fixture prompt text. §8.8; ADR-0015 |
 | FR-186 | The system shall never read `~/.claude/.credentials.json`, OAuth tokens, Claude Code's OS credential entries, `.env` or key files, or routine `/fire` tokens. | — | BR-124 (6) | Must | File-access audit. §8.8 |
 | FR-187 | Settings › Remove Eucas shall list exactly what will be restored, ask Windows once, and restore only Eucas's keys (your later edits stay; your status line comes back only if ours is still set), and delete the database and spool. | UC-55 (A6) | BR-119, BR-106 | Must | Uninstall restore test. PRD 18.4 |
-| FR-188 | The licence shown in the repo and in Settings › Help shall be the FSL. | — | BR-116 | Should | Licence file check. PRD 18.1 |
+| FR-188 | The licence shown in the repo and in Settings › Help shall be the **proprietary, all-rights-reserved** licence (`LICENSE.md`; was FSL; founder 2026-10-26). | — | BR-116 | Should | Licence file check. PRD 18.1 |
 | FR-189 | The build shall implement only screens and copy from approved designs (BR-128); "Claude Code" shall appear only as the thing Eucas attaches to. | all | BR-128, BR-98 | Must | Review against the approved routes (SET §7, NP §10.6) |
 
 ---
@@ -535,7 +535,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 ### 3.9 Licensing and compliance
 | ID | Category | Requirement (measurable) | Source | Verification |
 |---|---|---|---|---|
-| NFR-200 | Licensing | Eucas code is FSL; third-party only MIT, Apache-2.0, BSD, ISC, Unicode, Zlib, MPL-2.0; AGPL/GPL/SSPL/BUSL rejected; `THIRD_PARTY_NOTICES.md` committed | BR-116, CI-CD §2 | `licences`, `dependency-review` |
+| NFR-200 | Licensing | Eucas code is proprietary, all rights reserved (was FSL; founder 2026-10-26); third-party only MIT, Apache-2.0, BSD, ISC, Unicode, Zlib, MPL-2.0; AGPL/GPL/SSPL/BUSL rejected; `THIRD_PARTY_NOTICES.md` committed | BR-116, CI-CD §2 | `licences`, `dependency-review` |
 | NFR-201 | Compliance | Runs only the official, unmodified Claude Code; inherits the user's login; never ships a CLI; never shares a plan | ADR-0002 | Review; installer content check |
 | NFR-202 | Compliance | The disposable-domain list is the CC0 upstream at a recorded SHA, refreshed by weekly PR, never fetched at runtime | ADR-0017 | Workflow |
 
@@ -729,7 +729,7 @@ Machine-level (shared across profiles): guard, plugin, `rulebook.bin`, spool, tr
 |---|---|---|
 | Claude Code | Eucas attaches to the user's **official, unmodified** Claude Code through plugin hooks, managed settings and the status line only; it never ships, patches or wraps the CLI, never builds a Claude login, never reads or stores credentials or OAuth tokens (NFR-068), never shares a plan, and is **never named "Claude Code"** ("Claude Code" appears only as what Eucas attaches to) | ADR-0002, CLAUDE.md, BR-98 |
 | Anthropic terms | Hooks around the official CLI need no approval; the supervisor and drafting use Eucas's own provider budget, never the user's plan (0 Claude tokens, NFR-116). Pro can charge once built. **Only the cloud beta (UC-64) waits for Anthropic's written OK**; the email goes after v0.1 is built and tested | BRD §2 Policy, BR-114, BR-117 (7) |
-| Licence | FSL (each version becomes Apache/MIT after 2 years); third-party allow-list NFR-200 | BR-116 |
+| Licence | Proprietary, all rights reserved; the repo is public to read (was FSL; founder 2026-10-26); third-party allow-list NFR-200 | BR-116 |
 | Payments | Lemon Squeezy for **Pro only**, after v0.1 (webhooks set the plan). **The supporter tier is dropped (founder, 2026-10-26):** support is through GitHub Sponsors only, from the v0.1 launch, with no payment code and no supporter interface | BR-117, founder 2026-10-26 |
 | Windows policy: UAC | Exactly one UAC prompt in setup (step 4, the four limits); every later admin action (lock change, repair, pause/resume, limits-guard update, remove) is its own prompt with the reason stated first | ADR-0007, BR-102 (13) |
 | Windows policy: unsigned v0.1 | No Authenticode; UAC shows "Unknown publisher" (yellow) and setup says so; SmartScreen "More info → Run anyway" explained on the download page with the installer SHA-256; integrity rests on the updater Ed25519 key, published hashes and the pinned helper hash. Signing before public launch is decided on waitlist size; fallback trigger > 10 % of early installs hitting Smart App Control | ADR-0013, §10 #47 |
