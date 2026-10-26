@@ -948,7 +948,7 @@ The sources say Windows 11 22H2+ x64 first. Windows 10 is out of support since O
 
 ### G3-6. Approve the proposed numbers as a set?
 
-**Answered 2026-10-26: (a)**, *"okay lets do this"*. Approved as a set; marked `[set at G3-6]` in the text.
+**Answered 2026-10-26: (a)**, *"approve the numbers"*. Approved as a set; marked `[set at G3-6]` in the text.
 
 Where no source gave a number, this SRS proposes one, marked `[set at G3-6]`: guard compute p95 ≤ 2 ms (NFR-002), status-line wrapper ≤ 30 ms (NFR-006), canary ≤ 2 s (NFR-016), same-file warning ≤ 2 s (NFR-019), Worker non-model routes ≤ 300 ms (NFR-020), `failing` raised within 2 s (NFR-037), Worker availability ≥ 99.5 % (NFR-048), kill switch reaches the app within 15 min (NFR-049), rulebook tamper restored ≤ 2 s (NFR-062), abuse limits 30/min per account and 120/min per IP (NFR-073), delete account ≤ 5 s (NFR-099), 90 % coverage on the rules and redactor code (NFR-181), app log 10 MB / 7 days (NFR-188), the retention periods in §5 and the `503 supervisor_off` code (§4.6).
 - **(a) Recommended:** approve as a set. None changes what you see, so each can be re-tuned later without a change request.
