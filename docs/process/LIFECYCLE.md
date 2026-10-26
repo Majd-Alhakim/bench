@@ -60,9 +60,9 @@ Every document has a version table. Traceability chain: **Use case (BRD) → Req
 
 ## Environments ("regions")
 
-| Stage | For Bench (desktop app) | Who uses it |
+| Stage | For Eucas (desktop app) | Who uses it |
 |---|---|---|
-| **Development** | `pnpm dev` on a feature branch, with a separate dev Bench home folder (never real data) | Developer agents |
+| **Development** | `pnpm dev` on a feature branch, with a separate dev Eucas home folder (never real data) | Developer agents |
 | **Testing** | CI build artifacts per PR, plus a **beta / prerelease** installer from `main` for QA and client UAT | QA agent, client |
 | **Production** | Stable GitHub Release, with auto-update | Client (and later the public) |
 

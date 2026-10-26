@@ -1,10 +1,10 @@
 # System design method (tech lead)
 
-Paraphrased from a senior system-design course and adapted to Bench: a local, single-user Electron app with SQLite, files as memory, and Agent SDK runs.
+Paraphrased from a senior system-design course and adapted to Eucas: a local, single-user Electron app with SQLite, files as memory, and Agent SDK runs.
 
-## The five steps (each ends with a check-in at a Bench gate)
+## The five steps (each ends with a check-in at a Eucas gate)
 1. **Clarify requirements.** Functional scope, explicit out-of-scope, users, and non-functional limits. Find the core by asking what, if removed, stops the product being itself. Write in-scope, out-of-scope and open assumptions (owner + answer). Jumping straight to a solution is the classic failure.
-2. **Data model + API.** Entities, keys, indexes, record sizes, per-entity consistency; contracts with request schema, error set, pagination and retry safety. In Bench: zod IPC and MCP tool schemas.
+2. **Data model + API.** Entities, keys, indexes, record sizes, per-entity consistency; contracts with request schema, error set, pagination and retry safety. In Eucas: zod IPC and MCP tool schemas.
 3. **High-level design.** Components, then walk the read path and the write path end to end (renderer → preload → main → core → SQLite/files → back).
 4. **Deep dives.** Bottlenecks, single points of failure, fallbacks, monitoring (trace + ledger).
 5. **Trade-offs and extensions.** What was prioritised, what was sacrificed, rejected alternatives, what changes at 10×.
@@ -12,12 +12,12 @@ Paraphrased from a senior system-design course and adapted to Bench: a local, si
 Start simple; scale only when numbers force it. Plan before code: mid-level engineers code first, seniors decide first.
 
 ## Numbers
-- NFRs as numbers. Course examples: search < 500 ms, booking confirmation in 2–3 s, 99.9 % availability, message delivery ~500 ms. Bench equivalents: UI response < 100 ms, time to an agent's first token, tokens and % of week per run, cold start, DB size after a year, crash safety of runs.
-- Back-of-envelope from one anchor number: which resource dominates, read-heavy or write-heavy. For Bench, estimate trace/ledger rows per run, tokens per run, DB size per year, largest transcript/knowledge file. Usually: SQLite is far more than enough.
+- NFRs as numbers. Course examples: search < 500 ms, booking confirmation in 2–3 s, 99.9 % availability, message delivery ~500 ms. Eucas equivalents: UI response < 100 ms, time to an agent's first token, tokens and % of week per run, cold start, DB size after a year, crash safety of runs.
+- Back-of-envelope from one anchor number: which resource dominates, read-heavy or write-heavy. For Eucas, estimate trace/ledger rows per run, tokens per run, DB size per year, largest transcript/knowledge file. Usually: SQLite is far more than enough.
 
 ## Local vs distributed
 
-| Idea | Bench (local) | Only if multi-user/hosted |
+| Idea | Eucas (local) | Only if multi-user/hosted |
 |---|---|---|
 | Single source of truth; derived copies rebuildable | SQLite authoritative; FTS index, caches, UI state rebuilt from it | CDC into a search engine |
 | Consistency chosen per operation | Strong for ledger, tasks, approvals; eventual for UI previews | Replica lag, read-after-write routing |

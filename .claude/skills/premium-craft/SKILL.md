@@ -1,9 +1,9 @@
 ---
 name: premium-craft
-description: Bench's always-on premium design process. Takes a screen past "looks decent" to "feels premium" through evidence of quality (system status, undo, recovery), cross-screen coherence, designed worst moments, a visible intelligence layer, emotional moments and motion, and a craft checklist, scored with a Beginner→Staff rubric that blocks hand-off below Senior. Use it with ui-ux-guide on ANY UX or UI work: designing, prototyping, redesigning, reviewing, critiquing or fixing a screen, flow, component, token, copy, animation or brand element, and in UI review of PRs.
+description: "Eucas's always-on premium design process. Takes a screen past \"looks decent\" to \"feels premium\" through evidence of quality (system status, undo, recovery), cross-screen coherence, designed worst moments, a visible intelligence layer, emotional moments and motion, and a craft checklist, scored with a Beginner→Staff rubric that blocks hand-off below Senior. Use it with ui-ux-guide on ANY UX or UI work: designing, prototyping, redesigning, reviewing, critiquing or fixing a screen, flow, component, token, copy, animation or brand element, and in UI review of PRs."
 ---
 
-# Premium craft for Bench
+# Premium craft for Eucas
 
 **Why this exists.** AI tools give every competitor a "decent" UI in a day. That level is the *commodity ceiling*. Users don't judge a product premium because it is pretty. They judge it premium from the evidence that it is good: it tells them what is happening, lets them undo, catches them when things fail, and feels like one product someone cared about. That evidence lives in states, connective tissue and worst moments, the parts AI-built UIs most often skip (the video calls the gap *design theater*: the reasoning is stated but never makes it into the interface).
 
@@ -12,7 +12,7 @@ Source: eight design-education videos shared by the client on 2026-10-22, paraph
 **Relation to `ui-ux-guide`.** That skill is the rulebook: screen card, UX laws, type, color, components, copy. This skill is the process and quality bar on top of it. Load both. **When they conflict, `ui-ux-guide` wins on accessibility, the BRD and the security baseline.**
 
 ## When to use
-Every time you design, prototype, redesign, review or fix any part of Bench's UX or UI, at low-fi and hi-fi alike. It doesn't apply to text-only docs work.
+Every time you design, prototype, redesign, review or fix any part of Eucas's UX or UI, at low-fi and hi-fi alike. It doesn't apply to text-only docs work.
 
 ## The process (gates)
 
@@ -29,7 +29,7 @@ Run the gates in order. Each one adds to the `ui-ux-guide` screen card. Record t
 ### During: design the movie, not the frames
 4. **Remove, then add back.** Start with everything removed. Re-add each element only when it has a job. Hide secondary actions and reveal complexity when it is needed. Common actions are ≤ 3 clicks from anywhere (Send, Approve, Stop, New agent, open an agent).
 5. **Spatial continuity.** Screens don't swap; they *transition*. An element that persists keeps its place and morphs, panels slide from where they live, and a handoff chip travels between agents. The user builds a mental map.
-6. **Intelligence layer check.** Does session 1000 work measurably better than session 10? Show it: what the team has learned, the client's preferences applied ("using your PR style"), lessons, a memory growing. Make the deposit automatic (no "save preference" chores). Ask the **exit question**: what would the client have to rebuild elsewhere? See [references/intelligence-layer.md](references/intelligence-layer.md). Bench is local and open source, so the value stays **visible and exportable** (Markdown memory) and there is no dark lock-in. Trust is the moat.
+6. **Intelligence layer check.** Does session 1000 work measurably better than session 10? Show it: what the team has learned, the client's preferences applied ("using your PR style"), lessons, a memory growing. Make the deposit automatic (no "save preference" chores). Ask the **exit question**: what would the client have to rebuild elsewhere? See [references/intelligence-layer.md](references/intelligence-layer.md). Eucas is local and open source, so the value stays **visible and exportable** (Markdown memory) and there is no dark lock-in. Trust is the moat.
 7. **Craft checklist.** Run [references/craft-checklist.md](references/craft-checklist.md) on every view: color 60-30-10, ≤ 4 type sizes and 2 weights per view, 4/8-pt spacing by relationship, consistent corner language, the full interaction-state set, icons sized to line height, subtle shadows.
 
 ### After: prove it, then hand off
@@ -56,7 +56,7 @@ Score each axis at its level. **Any axis below Senior blocks hand-off.** Fix it,
 | Axis | Junior | Mid | Senior (minimum) | Staff |
 |---|---|---|---|---|
 | **Copy** | Labels are vague or repeated | Clear, written for a user | Says more with less; every line passes the removal test ("would the user be confused without it?"); never repeats a label the heading already gives; second-person voice | Copy anticipates the next question and frames warmly ("guest pass", not "trial") |
-| **Visuals** | Decorative effects, layered shadows | Polished but overworked | Emphasis only where it matters; visual patterns reused to connect related parts | Custom visual language (shapes, avatars, icons) that is unmistakably Bench |
+| **Visuals** | Decorative effects, layered shadows | Polished but overworked | Emphasis only where it matters; visual patterns reused to connect related parts | Custom visual language (shapes, avatars, icons) that is unmistakably Eucas |
 | **Color** | Too much or too little brand color | Tints and shades of one hue | 60-30-10, color only for meaning, one blue action | Color carries identity (agent hues) and state, with nothing decorative |
 | **Type** | 5+ sizes, 3+ weights | Fewer sizes, some off | ≤ 4 sizes and 2 weights per view, tight tracking on large type, tabular figures | Type does the hierarchy with no extra chrome needed |
 | **Structure** | Random spacing, misaligned | 8-pt grid mostly | Spacing by relationship (multipliers), grouped, aligned; the hierarchy test passes | Breaks the grid on purpose for rhythm |
@@ -76,7 +76,7 @@ Score each axis at its level. **Any axis below Senior blocks hand-off.** Fix it,
 - **Change gradually.** When behaviour changes between versions, step users through it rather than swapping it overnight.
 - **Progressive disclosure of what happens next.** For anything multi-step (a routine, a project kickoff), show the itinerary up front: "Atlas drafts → you approve → team starts".
 
-## Bench applications (concrete)
+## Eucas applications (concrete)
 - **Run/Send buttons** carry their consequence: estimated tokens and % of the week, and the files or connectors touched.
 - **Usage limit (worst moment):** don't show a dead end. Say what paused, what is saved, when it resets (an exact date and time), and which runs will resume automatically. Offer "Continue with a smaller model" when it is allowed. Show a count badge ("2 of 2 runs paused") rather than a generic message.
 - **Failed run:** a calm card with the cause in plain words, what was kept (checkpoint, diff), and one primary action: Retry / Ask Karim / Open trace. Never a raw stack trace first.
@@ -90,7 +90,7 @@ Score each axis at its level. **Any axis below Senior blocks hand-off.** Fix it,
   - the new agent's first blink at Create
   - the handoff chip travelling between agents
   - all-green checks closing a task
-  - the first time Bench applies a learned preference
+  - the first time Eucas applies a learned preference
   - the sprint-complete ending
 - **Physics:**
   - Panels and tickets use spring easing.

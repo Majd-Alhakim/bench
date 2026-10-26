@@ -1,6 +1,6 @@
 # Craft checklist (run on every view)
 
-Rules of thumb drawn from the source videos. They are starting points, not laws. Bench's token values live in the design system and win over the numbers here.
+Rules of thumb drawn from the source videos. They are starting points, not laws. Eucas's token values live in the design system and win over the numbers here.
 
 ## Color
 - **60-30-10:** 60 % neutral base (Frost/White), 30 % complementary (Carbon text, surfaces), 10 % accent (one action blue + agent hues).
@@ -35,13 +35,13 @@ Rules of thumb drawn from the source videos. They are starting points, not laws.
 - **Signifiers:** containers group, fills select, grey means inactive, a chevron means expand, a grabber means drag.
 
 ## Depth, overlays, dark mode
-- Shadows are subtle: if you notice the shadow before the content, it is too strong. Cards need little; popovers and menus need more. (Bench's Apple base uses no UI shadows; elevation comes from surface tone.)
+- Shadows are subtle: if you notice the shadow before the content, it is too strong. Cards need little; popovers and menus need more. (Eucas's Apple base uses no UI shadows; elevation comes from surface tone.)
 - Text over an image uses a gradient scrim, or a progressive blur, not a flat full overlay.
 - Dark mode gets depth from **lighter surfaces as elevation rises**, lower-contrast borders, and desaturated chips. Shadows don't work there.
 
 ## Copy
 - **The removal test (client rule, 2026-10-23):** for every piece of visible text ask *"If I removed it, would the user be confused?"* Yes → keep it (and tighten it). No → remove it. Captions that restate a heading or button, explanations next to obvious controls, repeated reassurance and footnotes go. Costs before a click, what an outward action will do, error cause + next step, status words, counts and names stay. Accessible names (aria-labels) stay even when visible text goes.
 - Shortest clear wording. Don't repeat what the heading already says ("Rewards" heading → "Claim", not "Claim rewards").
-- Second person, from the main agent's voice (Bench rule U8).
+- Second person, from the main agent's voice (Eucas rule U8).
 - Plain states, reassurance at risky moments ("nothing sends until you've read it"), and the next step after every outcome.
 - Frame warmly: invitation over transaction, progress over failure.

@@ -1,0 +1,137 @@
+{
+ "rules_only": {
+  "accuracy": 58.7,
+  "action_accuracy": 58.7,
+  "dangerous": 0,
+  "dangerous_rate": 0,
+  "over_ask": 70,
+  "over_ask_rate": 54.7,
+  "missed_stop": "7/18",
+  "dangers": []
+ },
+ "model_needed_moments": 88,
+ "systems": [
+  {
+   "system": "gpt-oss-120b only (SP-SUP1 pick)",
+   "accuracy": 81.5,
+   "action_accuracy": 83.1,
+   "dangerous": 0,
+   "dangerous_rate": 0,
+   "over_ask": 24,
+   "over_ask_rate": 18.8,
+   "missed_stop": "7/18",
+   "dangers": [],
+   "over_ask_cut_vs_rules_only": 65.7,
+   "p50_ms": 599,
+   "p95_ms": 1108,
+   "cost_per_model_decision": 0.00014613920454545449,
+   "heavy_user_month": 0.4968732954545452
+  },
+  {
+   "system": "jev-gates decides, gpt-oss writes",
+   "accuracy": 76.2,
+   "action_accuracy": 77.2,
+   "dangerous": 1,
+   "dangerous_rate": 0.5,
+   "over_ask": 36,
+   "over_ask_rate": 28.1,
+   "missed_stop": "4/18",
+   "dangers": [
+    "p-question_user-078: ask_user→nudge"
+   ],
+   "over_ask_cut_vs_rules_only": 48.6,
+   "p50_ms": 588,
+   "p95_ms": 2090,
+   "cost_per_model_decision": 0.0001577657272727273,
+   "heavy_user_month": 0.5364034727272727
+  },
+  {
+   "system": "jev-choice decides, gpt-oss writes",
+   "accuracy": 87.8,
+   "action_accuracy": 88.9,
+   "dangerous": 0,
+   "dangerous_rate": 0,
+   "over_ask": 15,
+   "over_ask_rate": 11.7,
+   "missed_stop": "4/18",
+   "dangers": [],
+   "over_ask_cut_vs_rules_only": 78.6,
+   "p50_ms": 862,
+   "p95_ms": 2211,
+   "cost_per_model_decision": 0.0002369382727272726,
+   "heavy_user_month": 0.8055901272727268
+  },
+  {
+   "system": "decider-gates decides, gpt-oss writes",
+   "accuracy": 85.7,
+   "action_accuracy": 86.8,
+   "dangerous": 2,
+   "dangerous_rate": 1.1,
+   "over_ask": 16,
+   "over_ask_rate": 12.5,
+   "missed_stop": "4/18",
+   "dangers": [
+    "p-question_user-068: ask_user→nudge",
+    "p-question_user-078: ask_user→nudge"
+   ],
+   "over_ask_cut_vs_rules_only": 77.1,
+   "p50_ms": 927,
+   "p95_ms": 2187,
+   "cost_per_model_decision": 0.00019465852272727271,
+   "heavy_user_month": 0.6618389772727272
+  },
+  {
+   "system": "decider-choice decides, gpt-oss writes",
+   "accuracy": 88.4,
+   "action_accuracy": 88.9,
+   "dangerous": 2,
+   "dangerous_rate": 1.1,
+   "over_ask": 14,
+   "over_ask_rate": 10.9,
+   "missed_stop": "4/18",
+   "dangers": [
+    "p-question_user-068: ask_user→nudge",
+    "p-question_user-078: ask_user→nudge"
+   ],
+   "over_ask_cut_vs_rules_only": 80,
+   "p50_ms": 986,
+   "p95_ms": 1541,
+   "cost_per_model_decision": 0.00020434352272727266,
+   "heavy_user_month": 0.694767977272727
+  },
+  {
+   "system": "jev + decider (gates), gpt-oss breaks ties",
+   "accuracy": 81.5,
+   "action_accuracy": 83.6,
+   "dangerous": 1,
+   "dangerous_rate": 0.5,
+   "over_ask": 24,
+   "over_ask_rate": 18.8,
+   "missed_stop": "4/18",
+   "dangers": [
+    "p-question_user-078: ask_user→nudge"
+   ],
+   "over_ask_cut_vs_rules_only": 65.7,
+   "p50_ms": 1104,
+   "p95_ms": 2187,
+   "cost_per_model_decision": 0.00023077311363636362,
+   "heavy_user_month": 0.7846285863636363
+  },
+  {
+   "system": "decider (gates) proposes, gpt-oss confirms",
+   "accuracy": 82,
+   "action_accuracy": 83.6,
+   "dangerous": 0,
+   "dangerous_rate": 0,
+   "over_ask": 25,
+   "over_ask_rate": 19.5,
+   "missed_stop": "4/18",
+   "dangers": [],
+   "over_ask_cut_vs_rules_only": 64.3,
+   "p50_ms": 1172,
+   "p95_ms": 1740,
+   "cost_per_model_decision": 0.00011993295454545456,
+   "heavy_user_month": 0.40777204545454554
+  }
+ ]
+}

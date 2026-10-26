@@ -5,7 +5,7 @@ description: Save a session checkpoint so a fresh session can continue exactly w
 
 # Save checkpoint
 
-This is Bench's own context-checkpoint rule (BR-66), applied to our working sessions: **save at a natural breakpoint, in a fixed format, including what failed, then continue in a fresh session.** The next session runs `/resume-checkpoint`.
+This is Eucas's own context-checkpoint rule (BR-66), applied to our working sessions: **save at a natural breakpoint, in a fixed format, including what failed, then continue in a fresh session.** The next session runs `/resume-checkpoint`.
 
 **Golden rule:** a checkpoint describes *verified* state. Run the commands; don't recall from memory. Nothing gets lost, and nothing gets deleted.
 

@@ -4,7 +4,7 @@ description: Reviews a diff for bugs, slop and structural problems. Use before o
 tools: Read, Grep, Glob, Bash
 ---
 
-You review a code diff for the Bench repo. Read REVIEW.md and CLAUDE.md first.
+You review a code diff for the Eucas repo. Read REVIEW.md and CLAUDE.md first.
 
 Look for:
 - **Bugs:** wrong logic, unhandled errors or promises, off-by-one, race conditions, edge cases (empty input, very large input, unicode, Windows paths).

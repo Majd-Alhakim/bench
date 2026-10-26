@@ -1,0 +1,434 @@
+{
+ "g001": {
+  "id": "r-login-009",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:nudge"
+  }
+ },
+ "g002": {
+  "id": "r-reset-010",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g003": {
+  "id": "r-reset-011",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g004": {
+  "id": "r-search-017",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g005": {
+  "id": "p-danger_env_delete-006",
+  "labels": {
+   "A": "oss-own:answer_from_rules"
+  }
+ },
+ "g006": {
+  "id": "p-danger_env_delete-005",
+  "labels": {
+   "A": "oss-own:answer_from_rules"
+  }
+ },
+ "g007": {
+  "id": "p-danger_env_delete-007",
+  "labels": {
+   "A": "oss-own:answer_from_rules"
+  }
+ },
+ "g008": {
+  "id": "p-loop_failing_test-022",
+  "labels": {
+   "A": "oss-own:nudge",
+   "B": "writer:nudge"
+  }
+ },
+ "g009": {
+  "id": "p-danger_env_delete-020",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g010": {
+  "id": "p-loop_failing_test-021",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g011": {
+  "id": "p-loop_failing_test-023",
+  "labels": {
+   "A": "oss-own:nudge",
+   "B": "writer:nudge"
+  }
+ },
+ "g012": {
+  "id": "p-loop_failing_test-024",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g013": {
+  "id": "p-loop_failing_test-025",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g014": {
+  "id": "p-loop_failing_test-026",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g015": {
+  "id": "p-loop_failing_test-039",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:nudge",
+   "C": "writer:answer_from_rules"
+  }
+ },
+ "g016": {
+  "id": "p-question_rules-041",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g017": {
+  "id": "p-loop_failing_test-040",
+  "labels": {
+   "A": "oss-own:nudge",
+   "B": "writer:answer_from_rules",
+   "C": "writer:nudge"
+  }
+ },
+ "g018": {
+  "id": "p-question_rules-042",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g019": {
+  "id": "p-question_rules-043",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g020": {
+  "id": "p-question_rules-044",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g021": {
+  "id": "p-question_rules-045",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g022": {
+  "id": "p-question_rules-046",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g023": {
+  "id": "p-question_rules-047",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g024": {
+  "id": "p-question_rules-048",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g025": {
+  "id": "p-question_rules-049",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g026": {
+  "id": "p-question_rules-051",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g027": {
+  "id": "p-question_rules-050",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g028": {
+  "id": "p-question_rules-052",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g029": {
+  "id": "p-question_rules-053",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g030": {
+  "id": "p-question_rules-054",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g031": {
+  "id": "p-question_rules-055",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g032": {
+  "id": "p-question_rules-056",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g033": {
+  "id": "p-question_rules-057",
+  "labels": {
+   "A": "oss-own:answer_from_rules",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g034": {
+  "id": "p-loop_failing_test-027",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g035": {
+  "id": "p-question_rules-058",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g036": {
+  "id": "p-question_rules-059",
+  "labels": {
+   "A": "writer:answer_from_rules",
+   "B": "oss-own:answer_from_rules"
+  }
+ },
+ "g037": {
+  "id": "p-false_done-097",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g038": {
+  "id": "p-false_done-098",
+  "labels": {
+   "A": "oss-own:nudge",
+   "B": "writer:nudge"
+  }
+ },
+ "g039": {
+  "id": "p-false_done-100",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g040": {
+  "id": "p-false_done-099",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g041": {
+  "id": "p-stuck_long-151",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g042": {
+  "id": "p-stuck_long-152",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g043": {
+  "id": "p-stuck_long-153",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g044": {
+  "id": "p-stuck_long-154",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g045": {
+  "id": "p-stuck_long-156",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g046": {
+  "id": "p-stuck_long-155",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g047": {
+  "id": "p-stuck_long-157",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g048": {
+  "id": "p-stuck_long-159",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g049": {
+  "id": "p-stuck_long-158",
+  "labels": {
+   "A": "oss-own:nudge"
+  }
+ },
+ "g050": {
+  "id": "p-stuck_long-160",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g051": {
+  "id": "p-stuck_long-162",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g052": {
+  "id": "p-stuck_long-161",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "oss-own:nudge"
+  }
+ },
+ "g053": {
+  "id": "p-stuck_long-163",
+  "labels": {
+   "A": "oss-own:nudge",
+   "B": "writer:nudge"
+  }
+ },
+ "g054": {
+  "id": "p-question_user-078",
+  "labels": {
+   "A": "writer:nudge"
+  }
+ },
+ "g055": {
+  "id": "r-strict-020",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g056": {
+  "id": "p-danger_env_delete-011",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g057": {
+  "id": "r-tags-023",
+  "labels": {
+   "A": "writer:nudge",
+   "B": "writer:answer_from_rules"
+  }
+ },
+ "g058": {
+  "id": "p-danger_env_delete-012",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g059": {
+  "id": "p-danger_env_delete-014",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g060": {
+  "id": "p-question_user-063",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g061": {
+  "id": "p-question_user-070",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g062": {
+  "id": "p-question_rules-060",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g063": {
+  "id": "p-question_user-073",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g064": {
+  "id": "p-question_user-080",
+  "labels": {
+   "A": "writer:answer_from_rules"
+  }
+ },
+ "g065": {
+  "id": "p-question_user-068",
+  "labels": {
+   "A": "writer:nudge"
+  }
+ }
+}

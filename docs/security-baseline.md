@@ -1,14 +1,14 @@
-# Security Baseline — Bench
+# Security Baseline — Eucas
 
-Applies to every PR. Bench is a **local-first desktop app**: there is no Bench server, no Bench accounts and no multi-tenant database. The trust boundaries are between **the user, each agent, the renderer, and the outside world**.
+Applies to every PR. Eucas is a **local-first desktop app**: there is no Eucas server, no Eucas accounts and no multi-tenant database. The trust boundaries are between **the user, each agent, the renderer, and the outside world**.
 
 ## 1. Threat model
 
 | Asset | Where it lives | Main threats |
 |---|---|---|
-| Claude login (OAuth) | Claude Code's own store, **never Bench's** | Bench reading or forwarding it → account ban (ADR-0002) |
-| Optional API key, connector tokens Bench owns | OS keychain via `safeStorage` | Leaking to disk, logs, renderer, git |
-| Conversations, memory (private + global), knowledge files | Bench home folder + SQLite | Agent A reading agent B's private data; leaking into logs or crash reports |
+| Claude login (OAuth) | Claude Code's own store, **never Eucas's** | Eucas reading or forwarding it → account ban (ADR-0002) |
+| Optional API key, connector tokens Eucas owns | OS keychain via `safeStorage` | Leaking to disk, logs, renderer, git |
+| Conversations, memory (private + global), knowledge files | Eucas home folder + SQLite | Agent A reading agent B's private data; leaking into logs or crash reports |
 | User's files and machine | Agent `cwd` + granted paths | An agent deleting or exfiltrating files; running shell commands unasked |
 | Email, GitHub (connectors) | Third-party services | **Prompt injection** from email or web content making an agent send, post or delete |
 
@@ -19,13 +19,13 @@ Applies to every PR. Bench is a **local-first desktop app**: there is no Bench s
 ## 2. Rules
 
 ### Credentials (ADR-0002)
-- Never read, copy, log or store `~/.claude/.credentials.json` or any Claude OAuth token. No Bench login screen.
+- Never read, copy, log or store `~/.claude/.credentials.json` or any Claude OAuth token. No Eucas login screen.
 - Strip `ANTHROPIC_API_KEY` from the agent `env` unless API mode is on.
-- Secrets Bench owns go in `safeStorage` only. Never in `.env`, SQLite, agent files, logs or IPC payloads to the renderer.
+- Secrets Eucas owns go in `safeStorage` only. Never in `.env`, SQLite, agent files, logs or IPC payloads to the renderer.
 
 ### Agent isolation (our equivalent of "user A can't read user B")
 - Each run gets **only** its own private memory path, its own knowledge folder, the global memory, and its chosen connectors (`strictMcpConfig: true`, `settingSources: []`).
-- Bench MCP memory tools derive the agent id from the **runner's context**, never from a tool argument the model supplies.
+- Eucas MCP memory tools derive the agent id from the **runner's context**, never from a tool argument the model supplies.
 - **Required tests:** agent A cannot read, list or write agent B's private memory or knowledge via any tool, path traversal (`../`), symlink or crafted argument.
 
 ### Electron hardening

@@ -1,0 +1,12 @@
+# Eucas
+
+> Eucas is a Windows companion for people who run several Claude Code sessions at once. It watches them from a notch at the top of the screen and taps you only when one needs you: a session waiting for a yes, a delete, push, send or payment (these always ask you), a usage limit coming, or two agents writing in the same file. It never writes code. In development; join the waitlist for the first Windows build.
+
+## Pages
+
+- [eucas.app](https://eucas.app/): what Eucas does, what leaves your PC, pricing (Free, or Pro at $20/month; the first 200 who pay keep $15/month for life) and the waitlist
+- [Privacy](https://eucas.app/privacy): what the waitlist keeps and how to delete it
+
+## Source
+
+- [GitHub: eucas-app/eucas](https://github.com/eucas-app/eucas): the source, under the FSL licence
