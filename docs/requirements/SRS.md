@@ -2,7 +2,7 @@
 
 | Status | Version | Owners | Approver | Upstream |
 |---|---|---|---|---|
-| Draft for G3: all §9 questions answered 2026-10-26 | 0.2 | BA (functional), Tech Lead (non-functional, interfaces, data) | Client | [BRD](BRD.md) v1.5, [PRD](PRD.md) v0.6, [CR-010](change-requests/CR-010.md), [CR-011](change-requests/CR-011.md), [CR-012](change-requests/CR-012.md), [founder answers](interviews/2026-10-26-v1.4-open-items.md), ADR-0007 – ADR-0018 |
+| **Approved / Baselined** at G3 (2026-10-26, on v0.2); changes only via change request | 1.0 | BA (functional), Tech Lead (non-functional, interfaces, data) | Client | [BRD](BRD.md) v1.5, [PRD](PRD.md) v0.6, [CR-010](change-requests/CR-010.md), [CR-011](change-requests/CR-011.md), [CR-012](change-requests/CR-012.md), [founder answers](interviews/2026-10-26-v1.4-open-items.md), ADR-0007 – ADR-0018 |
 
 Audience: developers, designers and QA. Every requirement is **testable** and traces to a use case (UC-54 – UC-67), a business rule (BR-98 – BR-129) and its acceptance criteria. **Scope: the Eucas companion v0.1 only.** The team app (UC-01 – UC-53, BR-01 – BR-97) comes later and gets its own SRS.
 
@@ -968,7 +968,7 @@ You asked the tech lead to propose library rules from the bypass suite. [Appendi
 
 | Client | Tech Lead | Date |
 |---|---|---|
-| G3: pending | Drafted | |
+| Approved: *"Approve G3 on SRS v0.2. Record it and move on."* | Drafted | 2026-10-26 |
 
 ---
 
