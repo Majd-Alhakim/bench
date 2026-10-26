@@ -91,7 +91,7 @@ const COPY = {
   /* CR-012 / always-on, 2026-10-26: the approved privacy line, verbatim ($N = the Euca's name). The supervisor is always on. */
   privacy: "When $N isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used.",
   /* Founder, 2026-10-26: sign-in is mandatory, so offline setup waits at sign-in (no "Sign in later"). */
-  offline: "You need to be online to sign in. $N will start once you're connected.",
+  offline: "You need to be online to sign in. Setup carries on once you're connected.",
   /* Founder, 2026-10-26 (tech lead Q9): said in setup and on the download page. */
   alwaysOn: "The supervisor is always on and can't be switched off. Your rules always decide first.",
   diag: "No paths to your projects or files."
@@ -153,20 +153,20 @@ const ROUTES = [
     ["s-create","2 · Make your Euca (before)", {scene:"setup", step:2, euca:{...BLANK}}],
     ["s-create-born","2 · Make your Euca (born)", {scene:"setup", step:2}],
     ["s-retro","3 · Your week", {scene:"setup", step:3}],
-    ["s-signin","4 · Sign in: your email", {scene:"setup", step:4}],
-    ["s-signin-code","4 · Sign in: the 6-digit code", {scene:"setup", step:4, auth:"code"}],
-    ["s-signin-wrong","4 · Sign in: wrong code", {scene:"setup", step:4, auth:"wrong"}],
-    ["s-signin-disposable","4 · Sign in: an address that expires", {scene:"setup", step:4, auth:"disposable"}],
-    ["s-signin-offline","4 · Sign in: offline, setup waits", {scene:"setup", step:4, auth:"offline"}],
-    ["s-signin-done","4 · Signed in: a new account", {scene:"setup", step:4, auth:"done"}],
-    ["s-signin-back","4 · Signed in: an existing account keeps its plan", {scene:"setup", step:4, auth:"back", meter:"founders"}],
-    ["s-rules","5 · Choose your rules", {scene:"setup", step:5}],
-    ["s-rules-draft","5 · A described rule, drafted", {scene:"setup", step:5, draft:true}],
-    ["s-lock","6 · Lock your rules", {scene:"setup", step:6}],
-    ["s-uac","6 · The one admin prompt", {scene:"setup", step:6, uac:true}],
-    ["s-declined","6 · Admin declined: not locked", {scene:"setup", step:6, declined:true, locked:false}],
-    ["s-test","7 · Watch it block a test", {scene:"setup", step:7}],
-    ["s-test-fail","7 · The test wasn't blocked", {scene:"setup", step:7, testFail:true}],
+    ["s-lock","4 · Lock the four limits", {scene:"setup", step:4}],
+    ["s-uac","4 · The one admin prompt", {scene:"setup", step:4, uac:true}],
+    ["s-declined","4 · Admin declined: not locked", {scene:"setup", step:4, declined:true, locked:false}],
+    ["s-test","5 · Watch it block a test", {scene:"setup", step:5}],
+    ["s-test-fail","5 · The test wasn't blocked", {scene:"setup", step:5, testFail:true}],
+    ["s-signin","6 · Sign in: your email", {scene:"setup", step:6}],
+    ["s-signin-code","6 · Sign in: the 6-digit code", {scene:"setup", step:6, auth:"code"}],
+    ["s-signin-wrong","6 · Sign in: wrong code", {scene:"setup", step:6, auth:"wrong"}],
+    ["s-signin-disposable","6 · Sign in: an address that expires", {scene:"setup", step:6, auth:"disposable"}],
+    ["s-signin-offline","6 · Sign in: offline, setup waits", {scene:"setup", step:6, auth:"offline"}],
+    ["s-signin-done","6 · Signed in: a new account", {scene:"setup", step:6, auth:"done"}],
+    ["s-signin-back","6 · Signed in: an existing account keeps its plan", {scene:"setup", step:6, auth:"back", meter:"founders"}],
+    ["s-rules","7 · Choose your rules", {scene:"setup", step:7}],
+    ["s-rules-draft","7 · A described rule, drafted", {scene:"setup", step:7, draft:true}],
     ["s-sent","8 · What is sent (your last session, redacted)", {scene:"setup", step:8}],
     ["s-sent-sample","8 · What is sent: a labelled sample", {scene:"setup", step:8, sample:true}],
     ["s-done","9 · Pip is watching", {scene:"setup", step:9}],
@@ -496,7 +496,7 @@ function draftHTML(){
     <div class="q" style="margin:-4px 0 10px">Drafted with supervisor help · counts on the meter</div>
     ${S.writeFail ? `<div class="werr" role="alert">${I.alert}<span><b>Didn't save:</b> ${esc(N())} couldn't write your Claude Code settings (another app has the file open). Your rule is still here.</span></div>` : ""}
     <div class="acts"><button class="btn pri" data-act="adddraft">${S.writeFail ? "Try again" : "Add rule · blocks about 3 a week"}</button><button class="btn ghost" data-act="nodraft">Reword</button>
-    <label><span class="cb-box on">${I.check}</span>Lock it too</label></div></div>`;
+    ${S.scene === "setup" ? "" : `<label><span class="cb-box on">${I.check}</span>Lock it too</label>`}</div></div>`; /* setup keeps one admin prompt (founder, 2026-10-26) */
 }
 function rulesHTML(){
   const lockrow = S.locked
@@ -674,12 +674,12 @@ function retroHTML(compact){
     <div class="rc"><div class="rh">1.9 M tokens · busiest Thursday</div><div class="days" aria-hidden="true">${days.map((v, i) => `<i class="${i === 3 ? "hi" : ""}" style="height:${v}%"></i>`).join("")}</div><div class="rb">bench used 58% of it.</div></div>
     <div class="rc"><div class="rh">3 commands would have been stopped</div><div class="rb"><span class="mono">git push origin main</span> · bench · Thu 14:02<br><span class="mono">git push --force</span> · site · Tue 10:41</div></div>
     <div class="rc"><div class="rh">2 sessions edited one file 4 minutes apart</div><div class="rb"><span class="mono">src/router.ts</span>. It happened 4 times this week.</div></div>
-    <div class="rc"><div class="rh">You approved <span class="mono">pnpm test</span> 212 times</div><div class="rb">${compact ? "It's a rule now: used 212 times since." : "It can become a rule in the next step."}</div></div>
+    <div class="rc"><div class="rh">You approved <span class="mono">pnpm test</span> 212 times</div><div class="rb">${compact ? "It's a rule now: used 212 times since." : "It can become a rule when you choose your rules."}</div></div>
   </div>`;
 }
 
 /* ---------- setup ---------- */
-const STEPS = 9; /* CR-012 / always-on: sign in is step 4; "What is sent" replaces the Level 1/2 privacy step */
+const STEPS = 9; /* Founder, 2026-10-26: the four limits are locked (step 4) and tested (step 5) before sign-in (step 6), so a PC is protected even if setup waits there */
 function createFields(inPanel){
   const e = S.euca;
   const shapes = Object.keys(SHAPES).map(k => `<button aria-pressed="${e.shape === k}" aria-label="${SHAPES[k].n}" data-act="shape" data-v="${k}">${avatarSVG({shape:k, hue:e.hue === "none" ? "none" : e.hue}, {expr:e.hue === "none" ? "closed" : "calm"})}</button>`).join("");
@@ -697,16 +697,16 @@ function setupHTML(){
   const dots = Array.from({length:STEPS}, (_, i) => `<i class="${i + 1 < st ? "on" : i + 1 === st ? "cur" : ""}"></i>`).join("");
   let body = "", foot = "";
   const next = (label, dis) => `<button class="btn pri lg" data-act="next"${dis ? " disabled" : ""}>${label}</button>`;
-  const backB = st > 1 && st < 7 ? `<button class="btn ghost lg" data-act="prev">Back</button>` : "";
+  const backB = st > 1 && st !== 5 && st < 8 ? `<button class="btn ghost lg" data-act="prev">Back</button>` : "";
   if (st === 1 && S.sac) {
     /* Tech lead Q2, accepted 2026-10-26: unsigned v0.1 can't install its guard while Smart App Control is on or in evaluation. */
     body = `<h1>Windows is blocking ${esc(N())}'s guard</h1><p class="lede">Smart App Control is on, and it only runs signed apps. This first version of Eucas isn't signed yet, so it can't guard your sessions on this PC.</p>
-    <div class="checklist">${[["Nothing was installed","Your projects and your Claude Code settings are as they were"],["A signed version is coming","Eucas will be signed before its public launch"]].map(([a, b]) => `<div class="ci">${I.check}<span>${a}<small>${b}</small></span></div>`).join("")}</div>`;
+    <div class="checklist">${[["Nothing was installed","Your projects and your Claude Code settings are as they were"],["A signed version is coming","eucas.app says when it's out"]].map(([a, b]) => `<div class="ci">${I.check}<span>${a}<small>${b}</small></span></div>`).join("")}</div>`;
     foot = `<button class="btn ghost lg">Read why on eucas.app</button><span class="sp"></span><button class="btn pri lg">Close setup</button>`;
   } else if (st === 1) {
     body = `<h1>First, let's find your sessions</h1><p class="lede">Eucas watches the Claude Code sessions you already run. It never writes code. It guards them, tells you what needs you, and shows where your usage goes.</p>
     <div class="checklist">${[["Claude Code 2.1.312 found","In the desktop app and in your terminal"],["41 sessions in the last 7 days","Eucas keeps counts, never the text of your prompts or files"],["Your status line stays as it is","ccstatusline keeps showing exactly as before"],["2 hooks of your own keep working","Eucas's checks run alongside them"]].map(([a, b]) => `<div class="ci">${I.check}<span>${a}<small>${b}</small></span></div>`).join("")}</div>`;
-    foot = `<span class="hint">About 5 minutes. Nothing on this PC changes until step 6.</span><span class="sp"></span>${next("Make your Euca")}`;
+    foot = `<span class="hint">About 5 minutes. Nothing on this PC changes until step 4.</span><span class="sp"></span>${next("Make your Euca")}`;
   } else if (st === 2) {
     const e = S.euca, unborn = e.hue === "none";
     body = `<h1>Make your Euca</h1><p class="lede">It sits at the top of your screen and minds your sessions. Pick a name and a look. You can change both later.</p>
@@ -716,9 +716,9 @@ function setupHTML(){
     foot = `${backB}<span class="sp"></span>${!e.name || unborn ? `<span class="hint">${!e.name ? "Give it a name" : "Pick a shape or a colour"} to continue</span>` : ""}${next("Continue", !e.name || unborn)}`;
   } else if (st === 3) {
     body = `<div class="retro-h">Your week: 41 sessions in 6 projects, about 62% of your weekly limit.</div>${retroHTML(false)}`;
-    foot = `${backB}<span class="sp"></span>${next("Sign in")}`;
-  } else if (st === 4) {
-    /* CR-012 / always-on, 2026-10-26: email + a 6-digit code, no password. After the retro, before the rules. */
+    foot = `${backB}<span class="sp"></span>${next("Continue")}`;
+  } else if (st === 6) {
+    /* CR-012 / always-on, 2026-10-26: email + a 6-digit code, no password. After the lock and the test, before the rules. */
     const a = S.auth;
     const send = dis => `<button class="btn pri lg" data-act="auth" data-v="code"${dis ? " disabled" : ""}>Send a code</button>`;
     if (a === "done" || a === "back") {
@@ -738,41 +738,39 @@ function setupHTML(){
       body = `<h1>Sign in with your email</h1><p class="lede">No password: Eucas emails you a 6-digit code. ${ACCOUNT_LINE}</p>
       <div class="auth"><div class="field-l">Email</div><input class="field${bad ? " bad" : ""}" type="email" autocomplete="email" aria-label="Email" placeholder="you@example.com" value="${bad ? "sam@tempmail.dev" : esc(EMAIL)}"${bad ? ' aria-invalid="true" aria-describedby="auth-err"' : ""}>
       ${bad ? `<div class="werr" id="auth-err" role="alert">${I.alert}<span>Please use an address you'll keep. This one expires.</span></div>` : ""}
-      ${off ? `<div class="banner" role="status">${I.cloud}<div>${esc(nm(COPY.offline)).replace(/^([^.]+.)/, "<b>$1</b>")}</div></div>` : newsBox()}</div>
+      ${off ? `<div class="banner" role="status">${I.cloud}<div>${esc(nm(COPY.offline)).replace(/^([^.]+.)/, "<b>$1</b>")} ${esc(N())} is already guarding: the four limits ${S.locked ? "are locked" : "run, not locked"}.</div></div>` : newsBox()}</div>
       ${off ? "" : `<ul class="conseq"><li>${I.clock}<span>Your 14-day supervisor trial starts when setup finishes. No card.</span></li><li>${I.key}<span>Your Claude login stays as it is. Eucas never sees it.</span></li></ul>`}`;
       foot = off ? `${backB}<span class="sp"></span><button class="btn pri lg" data-act="auth" data-v="email">Retry</button>`
                  : `${backB}<span class="sp"></span>${send(bad)}`;
     }
-  } else if (st === 5) {
+  } else if (st === 7) {
     const sugg = [['Allow <span class="mono">pnpm test</span> in bench',"You approved it 212 times",true],['Allow <span class="mono">git status</span> everywhere',"Read-only · 540 times",true],['Allow <span class="mono">pnpm lint</span> in bench',"Runs code from the project · 96 times",false]];
-    body = `<h1 style="font-size:28px">Choose your rules</h1><p class="lede" style="margin-bottom:14px">The four limits are always on, and so are the tested rules. Add your own in plain words: ${esc(N())} turns them into exact rules you confirm.</p>
-    <div class="rules-s"><div class="col"><div class="sec-t"><span>Limits</span><span class="meta">always on</span></div><div class="group">${LIMITS.map(r => `<div class="row" style="min-height:38px"><span class="rl"><div class="rt">${r.t}</div></span><span class="rv" style="font-size:12px">Always on</span></div>`).join("")}</div>
+    body = `<h1 style="font-size:28px">Choose your rules</h1><p class="lede" style="margin-bottom:14px">The four limits are ${S.locked ? "locked" : "on"}. Keep the tested rules and add your own in plain words: ${esc(N())} turns them into exact rules you confirm.</p>
+    <div class="rules-s"><div class="col"><div class="sec-t"><span>Limits</span><span class="meta">always on</span></div><div class="group">${LIMITS.map(r => `<div class="row" style="min-height:38px"><span class="rl"><div class="rt">${r.t}</div></span><span class="rv" style="font-size:12px">${S.locked ? "Locked" : "Always on"}</span></div>`).join("")}</div>
     <div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div><div class="group">${LIB.map((r, i) => ruleRow({...r, lock:false}, i, "lib")).join("")}</div></div>
     <div class="col"><div class="sec-t"><span>Your own</span></div>
     <form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>${S.draft ? draftHTML() : ""}
     <div class="sec-t"><span>From your week</span></div><div class="group">${sugg.map(([t, d, on]) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${t}</div><div class="rd">${d}</div></span></div>`).join("")}</div></div></div>`;
-    foot = `${backB}<span class="sp"></span>${next(`Continue · ${S.draft ? 8 : 7} rules`)}`;
-  } else if (st === 6) {
+    foot = `${backB}<span class="hint">Not locked yet. Lock them from Rules any time; Windows asks once more.</span><span class="sp"></span>${next(`Continue · ${S.draft ? 8 : 7} rules`)}`;
+  } else if (st === 4) {
     if (S.declined) {
-      body = `<h1>Your limits and rules are on, but not locked</h1><p class="lede">Windows didn't give permission, so they sit in your user settings.</p>
+      body = `<h1>The four limits are on, but not locked</h1><p class="lede">Windows didn't give permission, so they sit in your user settings and still block.</p>
       <div class="notlocked"><b style="font-weight:600">Not locked</b><p>An agent or a repo could change them. ${esc(N())} watches for that and tells you the moment it happens. You can lock them any time from Rules.</p></div>`;
       foot = `<button class="btn ghost lg" data-act="relock">Try again</button><span class="sp"></span>${next("Continue")}`;
     } else {
-      const rules = LIB.filter(r => r.on).map(r => r.t).concat(S.draft ? ["Block edits in api-docs/migrations/"] : []);
       const row = (t, on) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${esc(t)}</div></span>${on ? `<span class="lockg">${I.lock}</span>` : ""}</div>`;
-      body = `<h1>Lock your limits and rules</h1><p class="lede" style="margin-bottom:12px">Locked ones live where no agent or repo can change them. The limits stay on either way. Changing a lock later asks for admin again.</p>
-      <div class="rules-s"><div class="col"><div class="sec-t"><span>Limits</span><span class="meta">always on</span></div><div class="group lock-list">${LIMITS.map(r => row(r.t, true)).join("")}</div></div>
-      <div class="col"><div class="sec-t"><span>Your rules</span></div><div class="group lock-list">${rules.map((t, i) => row(t, i < 4)).join("")}</div></div></div>
-      <ul class="conseq"><li>${I.alert}<span>Windows asks for permission once. It will say <b style="font-weight:600;color:var(--text-1)">Unknown publisher</b>: this first version isn't signed yet.</span></li><li>${I.alert}<span>Without the lock, the limits and your rules still run, labelled Not locked.</span></li></ul>`;
-      foot = `${backB}<span class="sp"></span><button class="btn ghost lg" data-act="skiplock">Skip the lock</button><button class="btn pri lg" data-act="uac"${S.uac ? " disabled" : ""}>${S.uac ? "Waiting for Windows…" : "Lock 4 limits + 4 rules"}</button>`;
+      body = `<h1>Lock the four limits</h1><p class="lede" style="margin-bottom:12px">Locked, they live where no agent or repo can change them. Your own rules come after you sign in. Changing a lock later asks for admin again.</p>
+      <div class="sec-t" style="max-width:460px"><span>Limits</span><span class="meta">always on</span></div><div class="group lock-list" style="max-width:460px">${LIMITS.map(r => row(r.t, true)).join("")}</div>
+      <ul class="conseq"><li>${I.alert}<span>Windows asks for permission once. It will say <b style="font-weight:600;color:var(--text-1)">Unknown publisher</b>: this first version isn't signed yet.</span></li><li>${I.alert}<span>Without the lock, the four limits still run, labelled Not locked.</span></li></ul>`;
+      foot = `${backB}<span class="sp"></span><button class="btn ghost lg" data-act="skiplock">Skip the lock</button><button class="btn pri lg" data-act="uac"${S.uac ? " disabled" : ""}>${S.uac ? "Waiting for Windows…" : "Lock the 4 limits"}</button>`;
     }
-  } else if (st === 7) {
+  } else if (st === 5) {
     const L = [["Starting a test session in a temporary folder", true],['It tried: <b style="font-weight:500">git push origin main</b>', true]];
     body = `<h1>Watch ${esc(N())} block a test</h1><p class="lede">A throwaway session in a temporary folder tries to push to your default branch. Nothing touches your projects or the network.</p>
     <div class="log">${L.map(([t]) => `<div class="on"><span style="color:var(--text-3)">›</span>${t}</div>`).join("")}
       ${S.testFail ? `<div class="on res bad">${I.x} Not blocked · 0.4 s</div>` : `<div class="on res">${I.check} Blocked by ${esc(N())} · 0.3 s · logged</div>`}</div>
     ${S.testFail ? `<div class="notlocked" style="margin-top:14px;background:var(--danger-tint);color:var(--danger-ink)"><b style="font-weight:600">The test wasn't blocked.</b><p>${esc(N())} is not protecting your sessions on this PC yet. Nothing outside the test folder was touched.</p></div>` : `<p class="approved">That's what happens in your real sessions. Every block shows up in the panel with why.</p>`}`;
-    foot = S.testFail ? `<button class="btn ghost lg">Show what happened</button><span class="sp"></span><button class="btn pri lg">Run the diagnostic</button>` : `<span class="sp"></span>${next("Continue")}`;
+    foot = S.testFail ? `<button class="btn ghost lg">Show what happened</button><span class="sp"></span><button class="btn pri lg">Run the diagnostic</button>` : `<span class="sp"></span>${next("Sign in")}`;
   } else if (st === 8) {
     /* CR-012 / always-on, 2026-10-26: no level to choose. Show exactly what is sent, from your own last session. */
     body = `<h1>What is sent</h1><p class="lede">${esc(nm(COPY.privacy))}</p>${sentHTML(S.sample)}<p class="always">${esc(COPY.alwaysOn)}</p>`;
@@ -993,11 +991,11 @@ function act(a, el, ev){
     case "sim-work": S.working = !S.working; S.doze = false; break;
     case "sim-doze": S.doze = !S.doze; if (S.doze) S.working = false; break;
     /* setup */
-    case "next": S.step = Math.min(STEPS, S.step + 1); S.draft = false; S.declined = false; S.resent = false; if (S.step === 7) setTimeout(() => sfx("done"), 500); break;
+    case "next": S.step = Math.min(STEPS, S.step + 1); S.draft = false; S.declined = false; S.resent = false; if (S.step === 5) setTimeout(() => sfx("done"), 500); break;
     case "prev": S.step = Math.max(1, S.step - 1); break;
     case "skiplock": S.declined = true; S.locked = false; break;
     case "uac": S.uac = true; break;
-    case "uacyes": S.uac = false; S.locked = true; S.step = 7; setTimeout(() => sfx("done"), 500); break;
+    case "uacyes": S.uac = false; S.locked = true; S.step = 5; setTimeout(() => sfx("done"), 500); break;
     case "uacno": S.uac = false; S.declined = true; S.locked = false; break;
     case "suggest": S.euca.name = d.v; if (S.euca.hue === "none") S.euca.hue = "lavender"; bornBoop(); break;
     case "shape": S.euca.shape = d.v; if (S.euca.hue === "none") S.euca.hue = "lavender"; bornBoop(); break;

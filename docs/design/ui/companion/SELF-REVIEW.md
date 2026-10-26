@@ -10,10 +10,21 @@
 
 ---
 
+## 000. Setup reorder, 2026-10-26: protect the PC before sign-in
+
+**Founder decision (*"okay do that"*):** the admin lock and the four limits move before sign-in, so a PC is protected even when setup waits at sign-in (offline, or the code email doesn't arrive). New order: 1 Find your sessions · 2 Make your Euca · 3 Your week · **4 Lock the four limits** (one UAC prompt) · **5 Watch it block a test** · **6 Sign in** · **7 Choose your rules** · 8 What is sent · 9 Pip is watching. Spec: [setup-flow.md](../../ux/companion/setup-flow.md) §1–§7.
+
+- **One admin prompt in setup, limits only.** Step 7's rules run at user scope, shown Not locked, with the hint "Not locked yet. Lock them from Rules any time; Windows asks once more." Locking later uses the existing rule that changing the locked set asks for admin again.
+- **Copy mirrored from the prototype:** step 1 "Nothing on this PC changes until step 4."; step 4 "Lock the four limits" / **Lock the 4 limits** / "Locked, they live where no agent or repo can change them. Your own rules come after you sign in."; declined "The four limits are on, but not locked"; step 5's primary is **Sign in**; step 3's is **Continue**; step 6 offline "You need to be online to sign in. Setup carries on once you're connected. Pip is already guarding: the four limits are locked." (panel: "Pip keeps guarding while you wait."); Smart App Control's second check "A signed version is coming · eucas.app says when it's out" (signing before launch is decided on waitlist size; the ~10 % trigger is the fallback).
+- **Screens renamed** (ids unchanged): `setup-4-lock-d`, `setup-4-uac-d`, `setup-4-declined-d`, `setup-5-test-d`, `setup-5-test-failed-d`, `setup-6-signin-*`, `setup-7-rules-d`, `setup-7-rules-draft-d`. The old `setup-4-signin-*`, `setup-5-rules-*`, `setup-6-lock/uac/declined-d` and `setup-7-test-*` PNGs are deleted.
+- **Why it's better:** the proof moment (step 5) now lands before any chore, and the worst wait in setup (no code) no longer leaves the PC unguarded. Emotional moments are unchanged in kind; the proof moved from step 7 to step 5.
+- **Prototype matches:** the setup draft card no longer shows **Lock it too** (it would be a second admin prompt); the Rules panel keeps it. **Open:** between step 4 and step 9 the guard runs with no Euca in the notch (edges Q, R): acceptable for a five-minute window, but worth a look if setup is abandoned mid-way.
+- **Rendered and looked at:** every `setup-*` screen re-rendered with `capture.mjs setup` (plus `panel-rules-draft-d`); lock, declined, test, offline sign-in, rules and rules-draft checked at 1440×900: no clipping or overflow. The step-7 footer hint fits on one line beside Back and the primary.
+
 ## 00a. CR-012 / always-on, 2026-10-26: accounts for everyone, What is sent
 
-**What changed** (spec: [setup-flow.md](../../ux/companion/setup-flow.md) steps 4 and 8, edges S and T, §7 · [notch-and-panel.md §10](../../ux/companion/notch-and-panel.md) · [DESIGN §12](DESIGN.md)):
-- **Setup has 9 steps.** New step 4 **Sign in** (email, 6-digit code, wrong code, an address that expires, offline (revised 2026-10-26: setup waits, no Sign in later), new account, existing account keeps its plan). Step 8 **What is sent** replaces the Level 1/2 step: the approved privacy line verbatim and a real redacted example from your last session, or a labelled sample.
+**What changed** (spec: [setup-flow.md](../../ux/companion/setup-flow.md) steps 6 and 8 (sign-in was step 4 until the reorder in §000), edges S and T, §7 · [notch-and-panel.md §10](../../ux/companion/notch-and-panel.md) · [DESIGN §12](DESIGN.md)):
+- **Setup has 9 steps.** New step 4 (step 6 since §000) **Sign in** (email, 6-digit code, wrong code, an address that expires, offline (revised 2026-10-26: setup waits, no Sign in later), new account, existing account keeps its plan). Step 8 **What is sent** replaces the Level 1/2 step: the approved privacy line verbatim and a real redacted example from your last session, or a labelled sample.
 - **Level 1/2 is gone everywhere:** setup, Settings › Privacy (now a What is sent row), the meter's Level 1 state (now Not signed in; removed 2026-10-26, signed out the panel shows only sign-in), the guided rule form's trigger, the Why page, the prototype state (`level`), its CSS (`.levels`, `.lvl`, `.trial-f`, `.radio`) and its routes (`s-privacy`, `s-privacy-2`). D-3 is replaced.
 - **Settings › Account** replaces Settings › Plan: email, plan (Free trial / Free / Pro / Founders' $15 for life), Sign out, Delete account; sign-in in the panel with the different-account warning.
 - **What is sent** is a permanent page and a link under every meter state.
@@ -21,7 +32,7 @@
 **How it was checked, and what wasn't.** This session had **no shell**, so `build.mjs` and `capture.mjs` could not run. Instead:
 - `notch.html` was brought up to date by applying **the same edits** to it as to `src/` (the build is a verbatim concatenation; line offsets were checked: `src/app.js` line *n* is `notch.html` line *n* + 997, as before plus the 14 net CSS lines). Running `node docs/design/ui/companion/prototype/build.mjs` should produce a byte-identical file; please run it once to confirm.
 - The new code was read back for syntax and every new route traced by hand through `go()`, `render()` and `act()`.
-- **Not rendered and not looked at:** every screen listed in [DESIGN §12.7](DESIGN.md). Render-and-look (premium-craft gate 10) is **still owed** for this round: `node docs/design/ui/companion/prototype/capture.mjs setup-4 setup-8 acct panel-settings panel-usage panel-needs meter plan new-why` covers them. Risks to look for: the step 8 lede (3 sentences) plus the card inside 600 px; the code cells in light theme; the delete button's wrap at 400 px; the toast length "Account deleted. Your rules and history stay on this PC." in the 400 px panel.
+- **Not rendered and not looked at:** every screen listed in [DESIGN §12.7](DESIGN.md). Render-and-look (premium-craft gate 10) is **still owed** for this round: `node docs/design/ui/companion/prototype/capture.mjs setup-4 setup-8 acct panel-settings panel-usage panel-needs meter plan new-why` covers them (*after §000*: `setup-4 setup-5 setup-6 setup-7 setup-8`). Risks to look for: the step 8 lede (3 sentences) plus the card inside 600 px; the code cells in light theme; the delete button's wrap at 400 px; the toast length "Account deleted. Your rules and history stay on this PC." in the 400 px panel.
 - **Stale PNGs to delete** after re-rendering (their names now mean other steps): `setup-4-rules-d`, `setup-4-rules-draft-d`, `setup-5-lock-d`, `setup-5-uac-d`, `setup-5-declined-d`, `setup-6-test-d`, `setup-6-test-failed-d`, `setup-7-privacy-d`, `setup-7-privacy-level2-d`, `setup-8-watching-d`, `setup-9-coach-d`.
 
 **State matrix:** setup-flow §4 (rows 4 and 8 new) and notch-and-panel §6 (rows What is sent, Account, Sign in; the meter's denied cell). **Emotional moments:** unchanged on purpose; sign-in and What is sent carry no motion (a chore should feel short; proof should feel plain). **Worst moments:** offline at sign-in (revised 2026-10-26: setup waits with Retry and Back; after the first sign-in, everything local keeps working offline), wrong / expired code, an expiring address, the code never arriving (edge T), redaction failing (send nothing, show the sample), delete with Pro or Founders' (says what ends), signing in to a different account (warned before the code is sent). **Coherence:** one `SignIn` in setup and the panel; one `SentExample` in setup and Settings; the privacy line stored once; the offline banner, inline error, checklist and consequence list reused, no new pattern; "Sign in" is neutral navigation everywhere and the blue goes to the decision (Send a code, Sign out).
@@ -34,7 +45,7 @@
 | Visuals | **Senior** | Plain on purpose; the one new idea, the in-place redaction tag, reuses the mono language |
 | Color | **Senior** | No new colour; one Cobalt per view; amber only for the different-account consequence; delete is a danger tint, not a solid red |
 | Type | **Senior** | ≤ 4 sizes per new view, 2 weights, tabular digits in the code cells |
-| Structure | **Senior** | Hierarchy test: step 4 headline → field → primary; step 8 headline → privacy line → example; Account email → plan → delete (quiet, last) |
+| Structure | **Senior** | Hierarchy test: sign-in (step 6) headline → field → primary; step 8 headline → privacy line → example; Account email → plan → delete (quiet, last) |
 | States and recovery | **Senior** | Full matrix rows; every error has a cause and one next step; nothing on this PC depends on the account |
 | Motion and emotion | **Senior** | No new motion, deliberately; reduced motion is identical; the three pinned moments are untouched |
 | Coherence | **Senior** | One pattern per situation, reused (above) |
@@ -59,7 +70,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 |---|---|
 | Guided merge stays in Free | New needs-you item and its result (`p-needs`, `p-merge-done`, `n-peek-merge`); notch-and-panel §4.7 |
 | Choose your rules and prompted rules stay; drafting uses the supervisor and counts on the meter | Draft card line; guided exact-rule form when the meter is empty, you're not signed in (CR-012; was "at Level 1") or offline (§4.5) |
-| The four limits are always on; lock per limit | `LimitRow` in Rules and setup 4–5; no switch; Locked / Not locked chips |
+| The four limits are always on; lock per limit | `LimitRow` in Rules and setup 4 and 7 (renumbered in §000); no switch; Locked / Not locked chips |
 | "Your default branch", not "main" | All prose; `main` only in literal commands |
 | Budgets stop before the next step | `p-budget`, notch-and-panel §4.8 |
 | v0.1 unsigned, no "signed" badge | UAC copy says Unknown publisher; nothing claims signing |
@@ -67,7 +78,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 ## 1. Fixed after looking at the renders
 1. The Euca's name overlapped the mini notch on the setup stage → the mini notch moved into the flow.
 2. The panel header's status line truncated ("…2 working · c…") → the lock chip moved onto the name row; the status line now has the full width; "working" is left to the beam.
-3. The drafted rule in setup step 4 was below the fold → "Your own" moved above "From your week"; the window grew to 600 px (still fits a 768 px laptop).
+3. The drafted rule in setup's rules step (then step 4, now step 7) was below the fold → "Your own" moved above "From your week"; the window grew to 600 px (still fits a 768 px laptop).
 4. The trial chip was green (green is only for proven checks) → neutral.
 5. The meter said "Help left … left until 9 Nov" → one label, the date on the right.
 6. The tripwire page repeated "Stopped notes" twice → the page title is "Tripwire stop".
@@ -102,7 +113,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 
 ## 3. `premium-craft` outputs
 - **State matrix:** [notch-and-panel.md §6](../../ux/companion/notch-and-panel.md), [setup-flow.md §4](../../ux/companion/setup-flow.md).
-- **Emotional moments (3):** birth (setup 2), the proof (setup 7), the homecoming (setup 9) (*CR-012*: renumbered from 6 and 8). Everyday micro-moment: the glance when something arrives.
+- **Emotional moments (3):** birth (setup 2), the proof (setup 5; setup 7 before §000), the homecoming (setup 9) (*CR-012*: renumbered from 6 and 8). Everyday micro-moment: the glance when something arrives.
 - **Worst moments:** tripwire stop, not protected, test not blocked, admin declined, meter empty, 5-hour limit, stale item, long names. Each names the cause, what's safe and one next step.
 - **Coherence fixed:** "Guarded" retired for "Protected" (one word, CR-011's); one needs-you item in peek and panel; one Euca editor; one rule row and draft card in setup and Rules; one status line in peek, header and setup end.
 - **Intelligence:** rule counters, the supervisor's value line, the forecast, Your week.
@@ -129,7 +140,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 |---|---|---|---|
 | **D-1** | Tab order in the panel | **Usage · Rules · Settings** (by how often you open them) | Settings · Rules · Usage (your words' order) |
 | **D-2** | The notch colour in the light theme | **Always black** (it belongs to the screen, like a hardware notch) | Follows the theme (white notch in light) |
-| ~~D-3~~ | ~~Where the trial email is asked~~ | **Replaced by CR-012 / always-on, 2026-10-26:** everyone signs in at setup step 4; Level 2 no longer exists | — |
+| ~~D-3~~ | ~~Where the trial email is asked~~ | **Replaced by CR-012 / always-on, 2026-10-26:** everyone signs in during setup (step 6 since §000); Level 2 no longer exists | — |
 | **D-4** | Hover when nothing needs you | **A two-line status peek** ("Protected · 3 sessions · checked 2 s ago" + usage) — answers "is it on?" | Nothing happens (the 25 Oct design's rule for Atlas) |
 | **D-5** | When the eyes doze | **Only when you're away 5 min *and* nothing is running** (so dozing never reads as "off") | Whenever you're away |
 | **D-6** | The Pro button in v0.1 | **"Join the Pro waitlist"** until checkout exists (CR-010 D-2) — the prototype shows "Get Pro · $20/month" so you can see the final copy | Real checkout at launch |
@@ -144,7 +155,7 @@ Also worth a glance: the example Euca is "Pip", a lavender sphere; the name sugg
 
 | # | Decision | Recommended | Alternative | Answer |
 |---|---|---|---|---|
-| **U-1** | When "Sign in later" is offered | **Only when the code can't be sent or doesn't arrive** (offline, server down, edge T): accounts stay for everyone, and a broken mail provider can't block setup | Always, as a secondary on the email screen (more installs finish setup without an account) | **Revised: sign-in is mandatory:** *"don't allow to access without sign in"*. No "Sign in later" anywhere; offline, setup waits at sign-in ("You need to be online to sign in. Pip will start once you're connected.", Retry, Back). Signed out, the panel shows only sign-in; the guard and the locked limits keep protecting (*"yes"*) |
+| **U-1** | When "Sign in later" is offered | **Only when the code can't be sent or doesn't arrive** (offline, server down, edge T): accounts stay for everyone, and a broken mail provider can't block setup | Always, as a secondary on the email screen (more installs finish setup without an account) | **Revised: sign-in is mandatory:** *"don't allow to access without sign in"*. No "Sign in later" anywhere; offline, setup waits at sign-in ("You need to be online to sign in. Setup carries on once you're connected. Pip is already guarding: the four limits are locked.", Retry, Back; copy revised with the reorder in §000, where the limits are locked before sign-in). Signed out, the panel shows only sign-in; the guard and the locked limits keep protecting (*"yes"*) |
 | **U-2** | What happens to this PC's data when a different account signs in | **Kept per account on this PC**: the new account starts empty, the old one's rules, learning and history wait for it to sign back in (nothing is deleted without asking, CR-008's spirit) | Wiped on switch (simpler, but a mistyped email would erase your learning) | **Yes** |
 | **U-3** | When the trial starts for someone who chose Sign in later | **When they sign in** (the trial belongs to the account) | When setup finishes, account or not (they'd lose trial days while offline) | **Moot** (no Sign in later) |
 | **U-4** | After Delete account, can the same email get a new trial? | **No: the server keeps a one-way hash of the email and a "trial used" flag, nothing else**, and the delete page says so ("Signing up again with this email doesn't start a new trial") | Delete everything; the same email gets a fresh trial (easy trial abuse) | **Yes** (also tech lead Q1) |
@@ -158,4 +169,4 @@ Also worth a glance: the example Euca is "Pip", a lavender sphere; the name sugg
 - **Spec-only, not drawn:** the supervisor unreachable meter line (the Level 1 line is retired); org policy; offline plan check; the "supervisor wasn't sure" item; "Show n more"; the fail-closed brick (unchanged from #57's spec).
 - **Not rendered:** 125 % / 150 % display scaling; multi-monitor; a real Windows title bar under the notch (browser tabs at the top centre) to test the 280 ms hover intent against real pointer paths — **this is the biggest UX risk and needs a test on the founder's laptop in SP-ST1**.
 - **Fonts** load from Google Fonts in the prototype; the app bundles them.
-- The unsigned-build UAC copy ("Unknown publisher") follows CR-010's no-signing decision; it changes when a certificate is bought.
+- The unsigned-build UAC copy ("Unknown publisher") follows CR-010's no-signing decision; it changes when a certificate is bought. Whether that happens before launch is decided on waitlist size (founder, 26 Oct), with the ~10 %-of-early-installs Smart App Control trigger as the fallback.
