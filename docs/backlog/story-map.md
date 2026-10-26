@@ -21,7 +21,7 @@ Estimates are BUILD-PLAN focused build days (they win where the PRD's "Days" col
 | SUP-3 | (enabler) know the supervisor never regresses on dangerous cases or leaks | 17.8, 25.3 | UC-63 | Must | 1 | B | 2 | Ready |
 | G-5 | (enabler) know a red bypass suite blocks every merge | 19.5 | UC-55 | Must | 1.25 | A | 4 | Ready |
 | H-1 | know within 2 s when a session isn't protected | 20.1 | UC-55, UC-60 | Must | 2 | A | 4 | Needs AC fix: 20.1 still fires a toast and says "Not guarded" (BR-108, SRS App. B #4) |
-| AC-1 | sign in with email and a code, served by the Worker | 28.1, 27.6 (trial start route) | UC-65 | Must | 1.75 | B | 4 | **Needs SP-AC1 and P9** |
+| AC-1 | sign in with email and a code, served by the Worker | 28.1, 27.6 (the trial starts at `verify` when the account is created; no trial route, founder answer (b)) | UC-65 | Must | 1.5 (was 1.75) | B | 4 | **Needs SP-AC1 and P9** |
 | BU-1 | have your supervisor help, trial and taste tracked per account, never overspent | 27.5, 27.6, 28.4 | UC-63, UC-66 | Must | 1 | B | 4 | Ready |
 | C-1 | see Eucas prove itself after every Claude Code update | 20.2 | UC-55 | Must | 1.25 | A | 5 | Ready |
 | D-1 | press one button to learn what's wrong and what to send | 24.2 | UC-61 | Must | 0.5 | A | 5 | Ready |
@@ -39,12 +39,12 @@ Estimates are BUILD-PLAN focused build days (they win where the PRD's "Days" col
 | SUP-1 | have Pip answer what your rules already answer, ask you otherwise, and show exactly what it sent | 25.3, 27.8 (receipts, Why?), 27.11 | UC-63, UC-66 | Must | 3.25 | B | 8 | Ready to build; **release-gated on SP-SUP2** (50 of ≥ 300 moments) |
 | L-1 | see your tokens and plan share live, and when you'll hit the limits | 22.1 | UC-58 | Must (v0.1.1 only with your OK) | 1.5 | B | 6 | Ready |
 | A-2 | lock the four limits in setup and lock your own block rules later | 19.7 | UC-54, UC-57 | Must | 1.5 | A | 8 | Ready |
-| O-1 | make your Euca, see your week, get protected, sign in (or continue without an account, NA-1.3) and finish setup in about 5 minutes | 24.1, 27.4 (setup editor), 27.6 (trial start), 27.11 (setup step), 28.2 (step 6) | UC-54 | Must | 3.25 | B | 9 | Needs UX fix: setup step 8 still shows the old privacy line (SRS App. B B-1). **Revised 2026-10-26:** step 6 no longer waits offline; step 9 no longer starts the trial (pending (b)) |
+| O-1 | make your Euca, see your week, get protected, sign in (or continue without an account, NA-1.3) and finish setup in about 5 minutes | 24.1, 27.4 (setup editor), 27.6 (trial start), 27.11 (setup step), 28.2 (step 6) | UC-54 | Must | 3.25 | B | 9 | Needs UX fix: setup step 8 still shows the old privacy line (SRS App. B B-1). **Revised 2026-10-26:** step 6 no longer waits offline; step 9 no longer starts the trial (founder answer (b): it starts at `verify`) |
 | **LY-1** | have your Euca learn from what you allow, deny and answer, show what it knows, and let you forget it | 27.7, 27.8 ("That was wrong"), 27.9 (proposed, §2) | UC-67 | Must (FR-167, FR-172, FR-173 Should) | 3 | A | 9 – 10 (split) | **Needs** a BUILD-PLAN row (files, tests, depends: R-1, N-1, SUP-1, AC-2) and a firm estimate (decision 5) |
-| **NA-1** | try Eucas without an account: the four limits, the tripwire and about 10 supervisor answers, with Pip in a minimal notch and panel; sign up later from there; sign out back to it | 24.1, 25.3, 27.5, 28.2, 28.3 (all as revised 2026-10-26) | UC-54, UC-55, UC-56, UC-60, UC-63, UC-65 | Must (founder, 2026-10-26) | 5.25 | A + B (11 tasks) | 5 – 10 | **Needs** founder answers (a) surface, (b) trial start, (c) taste size; the design branch's `s-noacct-done`, `p-noacct`, `p-noacct-empty`, `t-noacct` merged; NA-Q1 (PM) and NA-Q2 (UX); the BRD / SRS / ADR revisions listed in README §2 |
+| **NA-1** | try Eucas without an account: everything a Free account sees except memory, with 10 supervisor answers and 1 rule of your own; sign up later; sign out back to it | 24.1, 25.3, 27.5, 28.2, 28.3 (all as revised 2026-10-26) | UC-54, UC-55, UC-56, UC-57, UC-60, UC-63, UC-65 | Must (founder, 2026-10-26) | 4.5 net (4.75 of tasks; AC-1 −0.25) | A + B (10 tasks) | 5 – 10 | Founder answers (a), (b), (c) and the install ID are in. **Needs** the design branch's `s-noacct-done` and the panel's no-account states (rule cap, taste meter, used-up line) merged; NA-Q2 (UX); the BRD / SRS v1.1 / ADR revisions listed in README §2 |
 | Q-1 | get a hardened build that's ready for the first outside user | 18.5 | all | Must | 2.5 | A | 11 | Needs the Windows 10 VM pass added (G3-5) |
 
-**Totals:** the tech leads' estimate is **63.75 build days** over 34 stories and 157 tasks (BUILD-PLAN had 48.25; LY-1 3.0, Windows 10 1.0 and NA-1 5.25 are inside; it was 58.5 over 146 tasks before the no-account decisions of 2026-10-26). Lane and sprint follow the [sprint plan](README.md#4-sprint-plan) (11 sprints), which supersedes BUILD-PLAN §4. Some DoR notes below are already resolved in the task files (the 10 library rules in R-1, sounds in N-1, the Windows 10 VM pass in Q-1.4, B-2 confirmed in AC-2.3, LY-1 sized); the rest are document fixes listed in [G6-DECISIONS](G6-DECISIONS.md#documents-to-correct-after-g6-owners-not-decisions).
+**Totals:** the tech leads' estimate is **63.0 build days** over 34 stories and 156 tasks (BUILD-PLAN had 48.25; LY-1 3.0, Windows 10 1.0 and NA-1 4.5 net are inside; it was 58.5 over 146 tasks before the no-account decisions of 2026-10-26). Lane and sprint follow the [sprint plan](README.md#4-sprint-plan) (11 sprints), which supersedes BUILD-PLAN §4. Some DoR notes below are already resolved in the task files (the 10 library rules in R-1, sounds in N-1, the Windows 10 VM pass in Q-1.4, B-2 confirmed in AC-2.3, LY-1 sized); the rest are document fixes listed in [G6-DECISIONS](G6-DECISIONS.md#documents-to-correct-after-g6-owners-not-decisions).
 
 **Sprint 1 goal:** see [sprint-01](../sprints/sprint-01/README.md).
 
@@ -60,7 +60,7 @@ Estimates are BUILD-PLAN focused build days (they win where the PRD's "Days" col
 
 **Build → PRD.** No build story is an orphan. Two trace oddities to fix in the PRD: SUP-1, SUP-2 and SUP-3 trace to **25.3**, which still sits in the Pro epic (E25) marked "Pending"; and **SP-ST2** and **SP-AC1** are in BUILD-PLAN §2 but not in E17.
 
-**Not in the 48 days, in v0.1 by your decisions:** Windows 10 support (G3-5, about 1 day), LY-1 (2 – 3 days, PRD §11.1 #18) and NA-1, no account with a supervisor taste (5.25 days, 2026-10-26).
+**Not in the 48 days, in v0.1 by your decisions:** Windows 10 support (G3-5, about 1 day), LY-1 (2 – 3 days, PRD §11.1 #18) and NA-1, no account: Free without memory, with a supervisor taste and 1 own rule (4.5 days net, 2026-10-26).
 
 **E17 spikes:** 17.1 – 17.6 done (SP-H1, SP-ST1, S-1, SP-TW1, S-4, S-6); 17.7 (S-2, Allow once) optional and not run, so no "Allow once" in v0.1 unless it runs (FR-122 is Won't); 17.8 (SP-SUP2) running alongside the build.
 
@@ -111,4 +111,10 @@ Moved to [G6-DECISIONS.md](G6-DECISIONS.md), which merges these with the tech le
 - **PRD:** move 25.3 out of E25 into the v0.1 epics; add SP-ST2 and SP-AC1 to E17; fix 18.2, 20.1, 20.3 and 23.2 (toasts, export, popover; see DoR column); C3 → about 5:00 (SRS App. B #12). Owner: PM.
 - **BUILD-PLAN:** add LY-1 and the Windows 10 day; fix §2's SP-SUP2 line (decision 4); drop export from P-1. Owner: tech lead.
 - **STATUS.md:** still lists BRD #56 – #63 as open; all are answered (#65 too). Owner: PM.
-- **No-account decisions (2026-10-26):** BRD §10 #57 revised with the founder's quotes (old text struck), #65 (a) "setup waits" superseded; PRD 24.1, 27.5, 28.2, 28.3; SRS FR-020, FR-144 (if (b)), FR-155, NFR-090; ADR-0011 (trial start, the taste), ADR-0017 (an install row without an account). Owners: PM (BRD, PRD, SRS), tech lead (ADRs).
+- **No-account decisions and founder answers (2026-10-26):**
+  - BRD §10 #57 revised with the founder's quotes (old text struck), #65 (a) "setup waits" superseded, BR-124 (11) / #64 reconciled with the approved random install ID, BR-122 (2) "never a count" → "never dollars or money".
+  - PRD 24.1, 27.5, 28.2, 28.3.
+  - SRS revision note to v1.1 (founder: "Yes update SRS"; no new CR or gate): FR-020, FR-140, FR-144, FR-155, NFR-090.
+  - CR-011, notch-and-panel §5, DESIGN `SupervisorMeter`: counts as a meter are fine, never dollars or money.
+  - ADR-0011 (trial start, the taste), ADR-0017 (an install row without an account), ADR-0018 (counts allowed).
+  - Owners: PM (BRD, PRD, SRS, CR), UI (DESIGN, notch-and-panel), tech lead (ADRs).

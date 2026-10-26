@@ -1,7 +1,7 @@
 # Gate 6: what you decide
 
 **For:** you (the client) · **From:** PM, with the two tech leads · **Date:** 2026-10-26
-**On:** [the backlog](README.md) (34 stories, 157 tasks, 63.75 build days; 58.5 before NA-1, the no-account taste, 2026-10-26), [the sprint plan](README.md#4-sprint-plan) (11 three-day sprints over two lanes) and [Sprint 1](../sprints/sprint-01/README.md).
+**On:** [the backlog](README.md) (34 stories, 156 tasks, 63.0 build days; 58.5 before NA-1, no account with a supervisor taste, 2026-10-26), [the sprint plan](README.md#4-sprint-plan) (11 three-day sprints over two lanes) and [Sprint 1](../sprints/sprint-01/README.md).
 
 **Already settled, not asked again:**
 - the manual checklist (passed);
@@ -23,7 +23,7 @@
 | # | Answer | What it means now |
 |---|---|---|
 | 1 | (a) | The backlog, the sprint plan and Sprint 1 are approved as drafted. |
-| 2 | (a) | 63.75 build days (with NA-1), 11 sprints; sequence, don't cut. A 12th sprint is the named fallback. |
+| 2 | (a) | 63.75 build days (with NA-1), 11 sprints; sequence, don't cut. A 12th sprint is the named fallback. **Re-estimated the same day to 63.0 d** (156 tasks) after the founder's no-account answers cut the minimal panel; still 11 sprints. |
 | 3 | (a) | **Condition:** the page goes live now. The build starts on day 8 after it goes live, and only if the waitlist has ≥ 100 sign-ups. |
 | 4 | (a) | ADR-0007 to ADR-0018 are **Accepted**; the stale wording is fixed in a Sprint 1 docs PR. |
 | 5 | (a) | **Conditions:** SP-ST2 is GO before Sprint 2; SP-AC1 and P9 are done before Sprint 4. |
@@ -42,7 +42,7 @@ Still open: 2b (a)–(c), the no-account answers, needed before Sprints 6–10 (
 
 **Recommendation: (a).** Sprint 1 is pure foundation (the scaffold, the guard's parser and the shell). It needs nothing still open, and its demo takes five minutes.
 
-**2. Accept the estimate going from about 48 to 63.75 build days (11 sprints, about 33 working days)?** *(Updated 2026-10-26: 58.5 + 5.25 for NA-1, setup without an account with a small supervisor taste; slack drops from 7.5 to 2.25 lane-days, and a 12th sprint is the named fallback, never a cut. See [README §2](README.md#2-totals).)*
+**2. Accept the estimate going from about 48 to 63.0 build days (11 sprints, about 33 working days)?** *(Updated 2026-10-26: 58.5 + 4.5 for NA-1 (no account: Free without memory, a 10-decision supervisor taste, 1 own rule; the tech lead's estimate after your answers, was 5.25); slack drops from 7.5 to 3.0 lane-days, and a 12th sprint is the named fallback, never a cut. See [README §2](README.md#2-totals).)*
 - What's in the +10.25: +3 is learns-you and +1 is Windows 10, both of which you approved; +0.25 is your eight-face order. The other +6 is work no story owned (the SQLite store, sounds, tamper restore) and approved scope nobody had sized (the 10 library rules, the gooey peek and switches). The breakdown is in [README §2](README.md#2-totals).
 - (a) Accept it, and sequence rather than cut.
 - (b) Hold to 10 sprints by moving F-1 and L-1 to v0.1.1.
@@ -50,10 +50,11 @@ Still open: 2b (a)–(c), the no-account answers, needed before Sprints 6–10 (
 
 **Recommendation: (a).** It's your rule ("sequence, don't cut"). Sprints 5, 7, 9 and 10 already hold buffer. If actuals beat the numbers at the day-6 re-plan, Q-1 starts a sprint early and v0.1 ends in 10 sprints.
 
-**2b. No account (NA-1, founder 2026-10-26: *"a small taste without sign up"*, *"try the supervisor also but like small number of usage"*): three answers the build needs before Sprint 9.**
-- (a) **What does a no-account user see?** Recommendation: **a minimal notch and panel** (the eight-face eyes, what needs you, protection, the taste meter, Create an account), because the supervisor's asks need a visible place. Alternative: the tray only (−0.5 d net).
-- (b) **Does the 14-day trial start at sign-up?** Recommendation: **yes**, whenever the account is made; the no-account taste doesn't count against it.
-- (c) **How big is the taste?** Recommendation: **10 supervised answers per install, in total** (about $0.002 each). Alternatives: 5 or 25.
+**2b. No account (NA-1, founder 2026-10-26: *"a small taste without sign up"*, *"try the supervisor also but like small number of usage"*). ✅ Answered by you, 2026-10-26; applied to the backlog.**
+- (a) **What does a no-account user see?** ~~Recommendation: a minimal notch and panel. Alternative: the tray only.~~ **Answered:** *"Everything a free account sees but with limited supervisour usage and no memory and 1 custom role"* ("role" read as rule). So: the full notch and panel as on Free; no memory (learns-you, What Pip knows, learned suggestions off); exactly 1 own rule ("Create an account for more rules"); setup step 7 runs on the no-account path.
+- (b) **Does the 14-day trial start at sign-up?** **Answered: yes**, when the account is created (at `verify`, no trial route); the no-account taste doesn't count against it.
+- (c) **How big is the taste?** **Answered: 10 decisions per install, in total.**
+- Also answered: counts may show as a meter everywhere, never dollars or money (*"Show counts always, but as meter not dollars or money"*); a random per-install ID is approved (*"Yes install ID"*); the SRS gets a revision note to v1.1 (*"Yes update SRS"*).
 
 **3. The demand test: does the build wait for week 1?** Your rule is that under 100 waitlist sign-ups in the week after the page goes live means don't build. The page is on `main` but not deployed yet.
 - (a) Put the page live now. The build starts on day 8 if there are ≥ 100 sign-ups. The week goes on SP-ST2, SP-AC1, P9, creating the issues and recording SP-SUP2 moments.
@@ -114,7 +115,7 @@ Options:
 - (a) R-2's "Describe a rule" can return a guidance rule on the same draft card. That's one card variant for you to approve, and +0.25 d in R-2.
 - (b) v0.1 has no guidance rules: the group shows its empty line, and the supervisor answers only from block and allow rules.
 
-**Recommendation: (a).** It's the cheapest way to make "learns you" real, and R-2 sits in Sprint 10, where there is 1.25 d of buffer. The +0.25 is not in the 58.5.
+**Recommendation: (a).** It's the cheapest way to make "learns you" real, and R-2.3 (the draft card) sits in lane A's Sprint 10, which has 0.5 d of buffer. The +0.25 is not in the 63.0.
 
 **10. F-1 and L-1: decide their v0.1.1 escape now?**
 - (a) No pre-approval: I ask at the day-6 re-plan, with the numbers.

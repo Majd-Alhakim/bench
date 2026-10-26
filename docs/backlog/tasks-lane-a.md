@@ -870,7 +870,7 @@
   - Hostile strings render as text.
   - Every reversible change in FR-169's list offers a 10-s Undo, and each irreversible one says so before you commit.
   - The fixed strings render exactly.
-  - The set includes NA-1.6's no-account spec, and axe runs on `s-noacct-done`, `p-noacct` and `p-noacct-empty`.
+  - The set includes the no-account spec written in NA-1.3, and axe runs on `s-noacct-done` and on the panel's no-account states (the rule cap, the taste meter, the used-up line).
 - **Test approach:** Playwright + `@axe-core/playwright`; a Narrator pass on the top 5 flows (manual).
 - **Estimate:** 0.5 · **Depends:** Q-1.1 · **Blocked by spike:** **SP-ST2 (acceptance)**: the notch's UIA and keyboard checks follow the route SP-ST2 chooses (a UIA provider, or the hidden-companion fallback)
 - **Trace event:** n/a
@@ -944,7 +944,7 @@
 
 17 stories and 67 tasks. The largest task is 0.75 d (M-1.2).
 
-**Added 2026-10-26 (sprint plan, not this file's stories):** lane A also runs four NA-1 tasks written in [tasks-lane-b.md §NA-1](tasks-lane-b.md): NA-1.8 the install token on the Worker (Sprint 7), NA-1.9 the taste route, NA-1.10 the taste counter and NA-1.2 the tray fallback (Sprint 9); 1.75 d. To make room, the sprint plan moves R1 (lane B's story) into lane A earlier (R1.1, R1.2 in Sprint 5; R1.4 in Sprint 6; R1.3 in Sprint 7), and LY-1 and R-2 run in lane A over Sprints 9 and 10.
+**Added 2026-10-26 (sprint plan, not this file's stories):** lane A also runs three NA-1 tasks written in [tasks-lane-b.md §NA-1](tasks-lane-b.md): NA-1.8 the install token on the Worker (Sprint 7), NA-1.9 the taste route and NA-1.10 the taste counter (Sprint 9); 1.5 d. (NA-1.2, the no-account tray menu, was dropped by the founder's answer (a).) To make room, the sprint plan moves R1 earlier (R1.1, R1.2 in Sprint 5; R1.4 in Sprint 6; R1.3 in Sprint 7), and LY-1 and R-2 run in lane A over Sprints 9 and 10 (R-2.1, R-2.2 in Sprint 9).
 
 ## 4. Tasks blocked by a spike
 

@@ -4,8 +4,8 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 
 **Current phase:** 6 (backlog and Sprint 1), **G6 approved 2026-10-26**, lean mode. G0–G6 approved. Sprint 0 (SP-ST2, SP-AC1, P9) runs in the waitlist week; Sprint 1 starts on day 8 after the page goes live, only with ≥ 100 sign-ups (G6-3a).
 **Next step:** put the landing page live (starts the demand test), then Sprint 0. G6 approved [the companion v0.1 backlog](../backlog/README.md):
-- 34 stories and 157 tasks, each traced to SRS FR/NFR ids;
-- 63.75 build days in 11 three-day sprints over two lanes (58.5 before NA-1, setup without an account with a small supervisor taste, founder 2026-10-26);
+- 34 stories and 156 tasks, each traced to SRS FR/NFR ids;
+- 63.0 build days in 11 three-day sprints over two lanes (58.5 before NA-1: no account = Free without memory, a 10-decision supervisor taste and 1 own rule, founder 2026-10-26);
 - [Sprint 1](../sprints/sprint-01/README.md);
 - [the decisions and your answers](../backlog/G6-DECISIONS.md).
 
@@ -23,7 +23,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 | 3 | SRS / specs | ✅ Companion v0.1 SRS **v1.0** baselined (189 FRs, 118 NFRs, interfaces, data model, traceability; 7 G3 answers applied: supervisor on from launch, no export in What Pip knows, learns-you from structured events, $10/day spend cap, Windows 10 22H2 (tested in a VM) + 11, proposed numbers, 10 library rules) | [SRS](../requirements/SRS.md) | G3 ✅ 2026-10-26 |
 | 4 | UX design | ✅ Premium spec, Laws of UX audit; flows proven in prototype v0.8.2 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ✅ 2026-10-24 |
 | 5 | UI design & brand | ✅ Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.8.2** (review rounds 5–7 applied); **name: Eucas** (one agent is a Euca) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ✅ 2026-10-24 |
-| 6 | Backlog & Sprint 1 | ✅ Companion v0.1 backlog approved (34 stories, 157 tasks, 63.75 d, 11 sprints), Sprint 1 planned, issue labels and milestones created (issues next); ADR-0007–0018 accepted | [backlog](../backlog/README.md), [Sprint 1](../sprints/sprint-01/README.md), [G6 decisions](../backlog/G6-DECISIONS.md) | G6 ✅ 2026-10-26 (with conditions) |
+| 6 | Backlog & Sprint 1 | ✅ Companion v0.1 backlog approved (34 stories, 156 tasks, 63.0 d, 11 sprints), Sprint 1 planned, issue labels and milestones created (issues next); ADR-0007–0018 accepted | [backlog](../backlog/README.md), [Sprint 1](../sprints/sprint-01/README.md), [G6 decisions](../backlog/G6-DECISIONS.md) | G6 ✅ 2026-10-26 (with conditions) |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
 
 ## Already decided (input to the phases above)
