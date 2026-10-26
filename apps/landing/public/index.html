@@ -36,7 +36,7 @@
   <div class="goo" aria-hidden="true"><i class="goo-notch"></i><i class="goo-peek"></i></div>
   <button class="notch" type="button" data-ui aria-expanded="false" aria-controls="live-peek" data-notch data-state="working">
     <span class="sr" data-notch-label>Your Euca, in the Eucas notch: protected, sessions working. Show the peek.</span>
-    <span class="eyes" aria-hidden="true" data-eyes><i></i><i></i></span>
+    <span class="eyes" aria-hidden="true" data-eyes data-face="focused"><i></i><i></i></span>
     <span class="n-marker" aria-hidden="true" data-marker></span>
     <span class="beam" aria-hidden="true"><i></i></span>
   </button>
@@ -81,7 +81,7 @@
     </div>
   </div>
   <div class="hero-stage" data-shutter>
-    <div class="screen-edge" aria-hidden="true"><span class="mini-notch"><i></i><i></i><b>3</b></span></div>
+    <div class="screen-edge" aria-hidden="true"><span class="mini-notch mini-front"><i></i><i></i><b>3</b></span></div>
     <picture class="hero-panel">
       <img src="screens/needs-dark.webp" data-dark="screens/needs-dark.webp" data-light="screens/needs-light.webp" width="800" height="1280" fetchpriority="high" decoding="async" alt="The Eucas panel under the notch. Pip: protected, 3 sessions, checked 2 seconds ago. Needs you, 3: web-app is waiting for you and wants to run pnpm build; two sessions are editing one file, src/router.ts; search is ready, open a PR for search with the tests first.">
     </picture>
@@ -102,7 +102,7 @@
 <!-- Showcase: the panel's own three tabs pick the screen on the plate. -->
 <section class="show wrap" id="panel" data-state="marker" aria-labelledby="show-title">
   <div class="plate" data-rise>
-    <div class="screen-edge" aria-hidden="true"><span class="mini-notch"><i></i><i></i></span></div>
+    <div class="screen-edge" aria-hidden="true"><span class="mini-notch mini-front"><i></i><i></i></span></div>
     <picture class="plate-panel">
       <img src="screens/needs-dark.webp" data-dark="screens/needs-dark.webp" data-light="screens/needs-light.webp" width="800" height="1280" loading="lazy" decoding="async" alt="" data-show-img>
     </picture>

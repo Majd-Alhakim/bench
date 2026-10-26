@@ -29,21 +29,35 @@ const SHAPES = {
   triangle:{n:"Triangle",d:'<polygon points="50,16 88,82 12,82"/>',round:14,eye:[50,64,10],hl:[42,44],bottom:89},
   square:{n:"Rounded square",d:'<rect x="12" y="13" width="76" height="76" rx="22"/>',eye:[50,50,13],hl:[30,30],bottom:89}
 };
+/* The eye grammar (DESIGN §2.3) on an avatar: the notch's eight faces at the avatar's scale (Calm 7 × 16, so ×1.3).
+   Static: Focused's reading loop lives only in the notch. */
+const FACE = {
+  "":        {w:7, h:16, rot:-12},
+  focused:   {w:8, h:12, rot:0},
+  glance:    {w:7, h:16, rot:-12, dx:4, dy:1.3},
+  front:     {w:7, h:16, rot:-12, dy:-2},
+  concerned: {w:7, h:16, rot:16, mirror:true, dy:2},
+  sleepy:    {w:12, h:3.4, rot:0, dy:4, op:.62},
+  pleased:   {w:12, h:6.5, rot:0, dy:-1.3, arc:true},
+  closed:    {w:10.4, h:3.1, rot:0, dy:2.6, op:.45}
+};
 function eyesFor(expr, gap){
-  const L = -gap, R = gap;
-  if (expr === "closed" || expr === "sleepy") return [L, R].map(x => `<path d="M${x - 5} -1 Q${x} 4 ${x + 5} -1" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>`).join("");
-  if (expr === "concerned") return `<rect x="${L - 3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(16 ${L} 0)"/><rect x="${R - 3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(-16 ${R} 0)"/>`;
-  return [L, R].map(x => `<rect x="${x - 3.5}" y="-8" width="7" height="16" rx="3.5" transform="rotate(-12 ${x} 0)"/>`).join("");
+  const f = FACE[expr] || FACE[""], dx = f.dx || 0, dy = f.dy || 0;
+  return [-gap, gap].map((x, i) => {
+    const cx = x + dx, rot = f.mirror && i ? -f.rot : f.rot, op = f.op ? ` opacity="${f.op}"` : "";
+    if (f.arc) return `<path d="M${cx - f.w / 2} ${dy + f.h / 2} V${dy} A${f.w / 2} ${f.h} 0 0 1 ${cx + f.w / 2} ${dy} V${dy + f.h / 2} Z"${op}/>`;
+    return `<rect x="${cx - f.w / 2}" y="${dy - f.h / 2}" width="${f.w}" height="${f.h}" rx="${Math.min(f.w, f.h) / 2}" transform="rotate(${rot} ${cx} ${dy})"${op}/>`;
+  }).join("");
 }
 let UID = 0;
 /* One renderer: flat (lists) or soft-dimensional (hero, panel header). Eyes only, always white. */
 function avatarSVG(a, o = {}){
   const P = HUE[a.hue] || HUE.none, S = SHAPES[a.shape] || SHAPES.sphere, id = "a" + (++UID);
-  const [ex, ey, gap] = S.eye, expr = o.expr || (a.hue === "none" ? "closed" : "calm");
+  const [ex, ey, gap] = S.eye, expr = o.expr ?? (a.hue === "none" ? "closed" : "");
   const paint = o.soft ? `url(#${id}f)` : P.base;
   const stroke = S.round ? ` stroke="${paint}" stroke-width="${S.round}" stroke-linejoin="round"` : "";
   const body = `<g fill="${paint}"${stroke}>${S.d}</g>`;
-  const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"${o.follow ? ' data-follow="1"' : ""}><g class="blinker" fill="#fff">${eyesFor(expr, gap)}</g></g></g>`;
+  const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"${o.follow ? ' data-follow="1"' : ""}><g class="blinker" fill="#fff" data-x="${expr}">${eyesFor(expr, gap)}</g></g></g>`;
   if (!o.soft) return `<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
   const [hx, hy] = S.hl, gy = Math.min(S.bottom + 5, 101);
   return `<svg viewBox="0 0 100 106" width="100%" height="100%" aria-hidden="true" focusable="false"><defs>
@@ -344,15 +358,33 @@ function renderDesk(){
 }
 
 /* ---------- the notch ---------- */
+/* State → face, the eye grammar (DESIGN §2.3), first match wins: Closed before setup · Concerned for not protected or a stop ·
+   Glance when something arrives, then Toward you while it waits · Pleased for 1.6 s when you're caught up · Focused while
+   sessions work · Sleepy when you're away and nothing runs · Calm ("") otherwise. */
+function faceOf(s = S){
+  const danger = s.needs.find(k => NEEDS[k].sev === "danger");
+  if (s.unborn) return "closed";
+  if (s.guard === "off" || danger === "trip") return "concerned";
+  if (loud(s.needs).length) return s.arrive ? "glance" : "front";
+  if (s.pleased) return "pleased";
+  if (s.working && !s.doze) return "focused";
+  return s.doze ? "sleepy" : "";
+}
+const FOLLOWS = x => x === "" || x === "front";
+/* Changes a live face in place (no re-render), keeping follow and blink to Calm and Toward you. */
+function setFace(el, x){
+  if (!el) return;
+  el.dataset.x = x;
+  el.toggleAttribute("data-follow", FOLLOWS(x));
+  if (!FOLLOWS(x)) { el.style.removeProperty("--ex"); el.style.removeProperty("--ey"); }
+}
 function notchHTML(o = {}){
   const s = Object.assign({}, S, o);
   const danger = s.needs.find(k => NEEDS[k].sev === "danger");
   const count = loud(s.needs).length;
   const markerKind = s.guard === "off" ? null : danger === "trip" ? "danger" : count ? "attn" : null;
   const working = s.working && s.guard !== "off" && !s.doze && !danger ? 1 : 0;
-  /* Eye grammar (moments-and-motion §3, for the notch): calm · focused while sessions work · glance, then toward you, when
-     something needs you · concerned for a stop or not protected · sleepy when dozing · pleased for 1.6 s when you're caught up. */
-  const expr = s.guard === "off" || danger === "trip" ? "concerned" : s.doze ? "sleepy" : s.unborn ? "closed" : s.arrive ? "glance" : s.pleased ? "pleased" : count ? "front" : working ? "focused" : "";
+  const expr = faceOf(s);
   const marker = markerKind === "danger" ? `<span class="marker danger">${I.stop} Stopped: notes</span>` : `<span class="marker attn num">${count}</span>`;
   const label = s.guard === "off"
     ? `${N()}: not protected. ${s.needs.length} need you. Open the panel.`
@@ -360,7 +392,7 @@ function notchHTML(o = {}){
   return `<button class="notch${s.arrive ? " arrive" : ""}${s.born ? " born" : ""}${s.peek ? " peeking" : ""}" data-act="notch" aria-label="${esc(label)}" aria-expanded="${s.panel ? "true" : "false"}"
     data-guard="${s.guard}" data-working="${working}" data-mode="${s.mode}" data-doze="${s.doze ? 1 : 0}"${markerKind ? ` data-marker="${markerKind}"` : ""}>
     <span class="label">Not protected</span><span class="m-spacer"></span>
-    <span class="eyes" data-x="${expr}"${o.static || !["", "front"].includes(expr) ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
+    <span class="eyes" data-x="${expr}"${o.static || !FOLLOWS(expr) ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
     ${marker}<span class="beam"><i></i></span><span class="glow"></span><span class="thin-dot${markerKind === "danger" ? " danger" : ""}"></span>
   </button>`;
 }
@@ -393,7 +425,7 @@ function panelHTML(){
   const st = statusLine();
   const lock = S.locked ? `<button class="chip" data-act="tab" data-tab="rules" title="Your rules are locked with Windows admin">${I.lock}Locked</button>`
                         : `<button class="chip attn" data-act="tab" data-tab="rules">${I.unlock}Not locked</button>`;
-  const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:true, expr:S.guard === "off" ? "concerned" : undefined})}</span>
+  const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:FOLLOWS(faceOf()), expr:faceOf()})}</span>
     <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span>${lock}</div><div class="st${st.off ? " off" : ""}">${st.off ? '<span class="offd"></span>' : '<span class="okd"></span>'}${esc(st.t)}</div></div></div>`;
   if (!S.signedIn) return signedOutPanel();
   if (S.sub) return `<div class="panel" role="dialog" aria-label="${esc(N())}">${subHTML()}${S.toast ? toastHTML() : ""}</div>`;
@@ -541,7 +573,7 @@ function sentHTML(sample){
 }
 /* The code field: one input in the build (inputmode numeric, autocomplete one-time-code, paste fills all six), drawn as six cells. */
 function codeCells(v, o = {}){
-  return `<div class="code${o.bad ? " bad" : ""}" role="group" aria-label="6-digit code" data-act="fillcode" title="Prototype: click to enter the code">${Array.from({length:6}, (_, i) => `<i class="${i === v.length && !o.bad ? "cur" : ""}">${v[i] || ""}</i>`).join("")}</div>`;
+  return `<div class="codefield${o.bad ? " bad" : ""}" role="group" aria-label="6-digit code" data-act="fillcode" title="Prototype: click to enter the code">${Array.from({length:6}, (_, i) => `<i class="${i === v.length && !o.bad ? "cur" : ""}">${v[i] || ""}</i>`).join("")}</div>`;
 }
 const ACCOUNT_LINE = "Your account holds only your email, your plan and how much supervisor help you've used.";
 function authPanelHTML(){
@@ -682,7 +714,7 @@ function retroHTML(compact){
 const STEPS = 9; /* Founder, 2026-10-26: the four limits are locked (step 4) and tested (step 5) before sign-in (step 6), so a PC is protected even if setup waits there */
 function createFields(inPanel){
   const e = S.euca;
-  const shapes = Object.keys(SHAPES).map(k => `<button aria-pressed="${e.shape === k}" aria-label="${SHAPES[k].n}" data-act="shape" data-v="${k}">${avatarSVG({shape:k, hue:e.hue === "none" ? "none" : e.hue}, {expr:e.hue === "none" ? "closed" : "calm"})}</button>`).join("");
+  const shapes = Object.keys(SHAPES).map(k => `<button aria-pressed="${e.shape === k}" aria-label="${SHAPES[k].n}" data-act="shape" data-v="${k}">${avatarSVG({shape:k, hue:e.hue === "none" ? "none" : e.hue}, {expr:e.hue === "none" ? "closed" : ""})}</button>`).join("");
   const hues = HUE_ORDER.map(k => `<button aria-pressed="${e.hue === k}" aria-label="${HUE[k].n}" style="background:${HUE[k].base}" data-act="hue" data-v="${k}"></button>`).join("");
   const note = ["coral","honey","tangerine"].includes(e.hue) ? `Fine to keep: ${esc(N())}'s warnings always come with words, never colour alone.` : "";
   const preview = inPanel ? `<div style="display:flex;align-items:center;gap:12px;margin:2px 2px 14px"><span style="width:56px;height:58px" class="hero">${avatarSVG(e, {soft:true, follow:true})}</span><span class="m-line">The notch, the panel and the tray all use this look.</span></div>` : "";
@@ -835,6 +867,7 @@ function demoHTML(){
 }
 
 /* ---------- render ---------- */
+let LASTFACE;
 function render(){
   ROOT.dataset.theme = S.theme; ROOT.classList.toggle("rm", S.rm);
   eucaVars(); renderDesk();
@@ -851,7 +884,14 @@ function render(){
   if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped the notes session</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
   html += demoHTML();
   $("#app").innerHTML = html;
-  if (S.arrive && !FREEZE) setTimeout(() => { const n = $(".notch"); n && n.classList.remove("arrive"); $(".eyes[data-x='glance']")?.setAttribute("data-x", ""); S.arrive = false; }, 1100);
+  /* Sleepy wakes with a blink, whatever face it wakes into */
+  const eyes = $(".notch .eyes");
+  if (eyes) {
+    if (LASTFACE === "sleepy" && eyes.dataset.x !== "sleepy" && !S.rm && !FREEZE) { eyes.classList.add("blink"); setTimeout(() => eyes.classList.remove("blink"), 160); }
+    LASTFACE = eyes.dataset.x;
+  }
+  /* Glance is one look at the marker (900 ms), then Toward you while it waits */
+  if (S.arrive && !FREEZE) setTimeout(() => { $(".notch")?.classList.remove("arrive"); S.arrive = false; setFace($(".notch .eyes"), LASTFACE = faceOf()); }, 900);
   if (S.draft) $(".panel .draft, .swin .draft")?.scrollIntoView({block:"nearest"});
   follow();
 }
@@ -875,8 +915,8 @@ function blinkLoop(){
   if (FREEZE) return;
   setTimeout(() => {
     if (!S.rm) {
-      document.querySelectorAll(".eyes").forEach(e => { if (!e.dataset.x) { e.classList.add("blink"); setTimeout(() => e.classList.remove("blink"), 160); } });
-      document.querySelectorAll(".blinker").forEach(b => { b.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:150, easing:"ease-in-out"}); });
+      document.querySelectorAll(".eyes").forEach(e => { if (FOLLOWS(e.dataset.x || "")) { e.classList.add("blink"); setTimeout(() => e.classList.remove("blink"), 160); } });
+      document.querySelectorAll(".blinker").forEach(b => { if (!FOLLOWS(b.dataset.x || "")) return; b.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:150, easing:"ease-in-out"}); });
     }
     blinkLoop();
   }, 3800 + Math.random() * 3400);
@@ -1008,7 +1048,7 @@ function act(a, el, ev){
 /* Resolving the last item ends on "all caught up" (peak-end): pleased eyes for 1.6 s and the done sound. */
 function resolve(k){
   const before = loud().length; S.needs = S.needs.filter(x => x !== k);
-  if (before && !loud().length) { S.caught = true; S.pleased = true; sfx("done", 200); setTimeout(() => { S.pleased = false; if (!S.panel) render(); else { const e = $(".notch .eyes"); e && e.setAttribute("data-x", ""); } }, 1600); }
+  if (before && !loud().length) { S.caught = true; S.pleased = true; sfx("done", 200); setTimeout(() => { S.pleased = false; if (!S.panel) render(); else setFace($(".notch .eyes"), LASTFACE = faceOf()); }, 1600); }
 }
 function bornBoop(){ setTimeout(() => { const h = $("#hero"); if (h) { h.classList.remove("boop"); void h.offsetWidth; h.classList.add("boop"); } $(".blinker")?.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:180}); }, 0); }
 function fly(){
