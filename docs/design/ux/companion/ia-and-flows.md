@@ -1,5 +1,7 @@
 # Information architecture and core flows: the Eucas companion
 
+> **Partly superseded 2026-10-26 by [notch-and-panel.md](notch-and-panel.md)** ([CR-011](../../../requirements/change-requests/CR-011.md)): the surfaces (tray popover as home, six-section main window), the map and the screen layouts are retired. The trust rules, honest copy, needs-you and same-file rules, the tripwire content, the diagnostic, the Pro rules and the edge paths still apply where the new file is silent. Kept as history.
+
 | Date | Author | Status | Read with |
 |---|---|---|---|
 | 2026-10-26 | Lead UX researcher (Claude) | Draft for the UI designer and the client | [ux-research.md](ux-research.md) · [onboarding-flow.md](onboarding-flow.md) · [DESIGN-SYSTEM](../../ui/system/DESIGN-SYSTEM.md) |

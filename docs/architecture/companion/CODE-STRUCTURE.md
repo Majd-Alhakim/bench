@@ -82,7 +82,7 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 ├─ packages/
 │  ├─ contracts-ts/                # GENERATED: zod schemas + types from contracts/ (do not edit)
 │  ├─ copy/                        # typed accessor over contracts/copy/en.json (+ the fixed-strings module)
-│  ├─ ui-tokens/                   # tokens.css + tokens-companion.css (moved from docs/design at S1-1; docs link here)
+│  ├─ ui-tokens/                   # tokens.css + tokens-notch.css (moved from docs/design at S1-1; docs link here)
 │  └─ test-fixtures/               # transcript corpora (synthetic), status-line samples, hook inputs for unit tests
 │
 ├─ evals/supervisor/               # SP-SUP1 harness as a regression suite (SUPERVISOR §10)

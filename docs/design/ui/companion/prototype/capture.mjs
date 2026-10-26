@@ -1,8 +1,8 @@
-// Renders every key state of companion.html with headless Edge and saves PNGs to ../screens/.
-//   node docs/design/ui/companion/prototype/capture.mjs              # every shot
-//   node docs/design/ui/companion/prototype/capture.mjs today usage  # only shots whose name contains a word
+// Renders the key states of notch.html with headless Edge and saves PNGs to ../screens/.
+//   node docs/design/ui/companion/prototype/capture.mjs            # every shot
+//   node docs/design/ui/companion/prototype/capture.mjs notch peek # only shots whose name contains a word
 // Needs puppeteer-core: set PUPPETEER_CORE to its folder, or have it resolvable from here.
-// Shots are taken with ?bar=0 (no demo bar) and ?freeze=1 (no live ticks), so they are stable.
+// Shots use ?bar=0 (no demo controls) and ?freeze=1 (no motion), so they are stable.
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -13,109 +13,105 @@ const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_CORE || "puppeteer-core");
 const EDGE = process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
 const OUT = process.env.OUT ?? path.resolve(here, "../screens");
-const FILE = pathToFileURL(path.join(here, "companion.html")).href;
+const FILE = pathToFileURL(path.join(here, "notch.html")).href;
 
-// [name, route, {w, h, theme, os, query, wait}]
-const D = { w: 1440, h: 900 };
+// [name, route, {w, h, theme, clip: [x, y, w, h] in CSS px around the top centre, scale}]
+const TOP = (w, h) => ({ clipTop: [w, h], scale: 2 });
 const SHOTS = [
-  ["fr-1-install-d1440", "fr-install"],
-  ["fr-2-welcome-d1440", "fr-welcome"],
-  ["fr-3-building-d1440", "fr-building"],
-  ["fr-4-retro-d1440", "fr-retro"],
-  ["fr-5-protect-d1440", "fr-protect"],
-  ["fr-6-uac-d1440", "fr-uac"],
-  ["fr-7-writing-d1440", "fr-writing"],
-  ["fr-8-canary-d1440", "fr-canary"],
-  ["fr-9-protected-d1440", "fr-protected"],
-  ["fr-edge-j-canary-not-blocked-d1440", "fr-edge-j"],
-  ["fr-edge-d-org-policy-d1440", "fr-edge-d"],
-  ["fr-edge-h-weaker-d1440", "fr-edge-h"],
-  ["fr-edge-f-thin-history-d1440", "fr-edge-f"],
-  ["tray-states-d1440", "sheet-tray"],
-  ["popover-needs-d1440", "popover"],
-  ["popover-calm-d1440", "popover-calm"],
-  ["popover-empty-d1440", "popover-empty"],
-  ["popover-not-guarded-d1440", "popover-off"],
-  ["popover-not-verified-d1440", "popover-unverified"],
-  ["popover-paused-d1440", "popover-paused"],
-  ["popover-125-d1440", "popover-125"],
-  ["popover-150-d1440", "popover-150"],
-  ["tray-menu-d1440", "menu"],
-  ["toasts-sheet-d1440", "sheet-toasts"],
-  ["today-d1440", "today"],
-  ["today-d1280", "today", { w: 1280, h: 800 }],
-  ["today-caught-up-d1440", "today-caught-up"],
-  ["today-empty-d1440", "today-empty"],
-  ["today-error-d1440", "today-error"],
-  ["rules-d1440", "rules"],
-  ["rules-limits-d1440", "rules-limits"],
-  ["rules-add-runner-d1440", "rules-add"],
-  ["protection-d1440", "protection"],
-  ["protection-d1280", "protection", { w: 1280, h: 800 }],
-  ["protection-receipt-d1440", "protection-row"],
-  ["usage-d1440", "usage"],
-  ["usage-d1280", "usage", { w: 1280, h: 800 }],
-  ["usage-tokens-only-d1440", "usage-tokens"],
-  ["usage-api-d1440", "usage-api"],
-  ["retro-d1440", "retro"],
-  ["settings-d1440", "settings"],
-  ["settings-reads-d1440", "settings-reads"],
-  ["settings-diagnostic-d1440", "settings-diagnostic"],
-  ["settings-turn-off-d1440", "settings-protection"],
-  ["settings-remove-d1440", "settings-remove"],
-  ["worst-tripwire-live-d1440", "tripwire-live"],
-  ["worst-tripwire-stopped-d1440", "tripwire-stopped"],
-  ["worst-tripwire-toast-d1440", "tripwire-toast", { wait: 900 }],
-  ["worst-not-guarded-d1440", "guard-off"],
-  ["worst-not-guarded-protection-d1440", "guard-off-protection"],
-  ["worst-fail-closed-d1440", "fail-closed"],
-  ["worst-protection-off-d1440", "protection-off"],
-  ["worst-not-verified-d1440", "not-verified"],
-  ["worst-user-level-d1440", "user-level"],
-  ["worst-org-blocked-d1440", "org-blocked"],
-  ["worst-same-file-d1440", "same-file"],
-  ["worst-usage-limit-d1440", "usage-limit"],
-  ["pro-usage-forecast-d1440", "pro-usage"],
-  ["pro-fourth-session-d1440", "pro-sessions"],
-  ["pro-supervisor-d1440", "pro-supervisor"],
-  ["pro-retro-d1440", "pro-retro"],
-  ["pro-about-d1440", "pro-about"],
-  // Light (app theme light, Windows light)
-  ["today-l1440", "today", { theme: "light", os: "light" }],
-  ["popover-needs-l1440", "popover", { theme: "light", os: "light" }],
-  ["protection-l1440", "protection", { theme: "light", os: "light" }],
-  ["usage-l1440", "usage", { theme: "light", os: "light" }],
-  ["rules-l1440", "rules", { theme: "light", os: "light" }],
-  ["fr-4-retro-l1440", "fr-retro", { theme: "light", os: "light" }],
-  ["fr-9-protected-l1440", "fr-protected", { theme: "light", os: "light" }],
-  ["worst-tripwire-stopped-l1440", "tripwire-stopped", { theme: "light", os: "light" }],
-  ["toasts-sheet-l1440", "sheet-toasts", { theme: "light", os: "light" }],
-  // Mixed: dark app on a light Windows taskbar (they follow different themes)
-  ["popover-needs-d-oslight1440", "popover", { os: "light" }],
+  ["setup-1-welcome-d", "s-welcome"],
+  ["setup-2-create-before-d", "s-create"],
+  ["setup-2-create-born-d", "s-create-born"],
+  ["setup-2-create-born-l", "s-create-born", { theme: "light" }],
+  ["setup-3-retro-d", "s-retro"],
+  ["setup-4-rules-d", "s-rules"],
+  ["setup-4-rules-draft-d", "s-rules-draft"],
+  ["setup-5-lock-d", "s-lock"],
+  ["setup-5-uac-d", "s-uac"],
+  ["setup-5-declined-d", "s-declined"],
+  ["setup-6-test-d", "s-test"],
+  ["setup-6-test-failed-d", "s-test-fail"],
+  ["setup-7-privacy-d", "s-privacy"],
+  ["setup-7-privacy-level2-d", "s-privacy-2"],
+  ["setup-8-watching-d", "s-done"],
+  ["setup-9-coach-d", "s-coach"],
+  ["desk-working-d", "n-working"],
+  ["desk-working-l", "n-working", { theme: "light" }],
+  ["notch-sheet-d", "sheet-notch"],
+  ["notch-sheet-l", "sheet-notch", { theme: "light" }],
+  ["notch-rest-zoom", "n-rest", TOP(360, 70)],
+  ["notch-working-zoom", "n-working", TOP(360, 70)],
+  ["notch-marker-zoom", "n-marker", TOP(360, 70)],
+  ["notch-off-zoom", "n-off", TOP(360, 70)],
+  ["notch-trip-zoom", "n-trip", TOP(360, 70)],
+  ["notch-doze-zoom", "n-doze", TOP(360, 70)],
+  ["notch-thin-zoom", "n-thin", TOP(360, 70)],
+  ["notch-thin-needs-zoom", "n-thin-needs", TOP(360, 70)],
+  ["peek-needs-d", "n-peek", TOP(520, 300)],
+  ["peek-calm-d", "n-peek-calm", TOP(520, 160)],
+  ["peek-merge-d", "n-peek-merge", TOP(520, 200)],
+  ["peek-off-d", "n-off-peek", TOP(520, 220)],
+  ["peek-trip-d", "n-trip-peek", TOP(520, 260)],
+  ["desk-peek-d", "n-peek"],
+  ["desk-fullscreen-d", "n-fullscreen"],
+  ["panel-needs-usage-d", "p-needs"],
+  ["panel-needs-usage-l", "p-needs", { theme: "light" }],
+  ["panel-needs-usage-d1280", "p-needs", { w: 1280, h: 800 }],
+  ["panel-usage-d", "p-usage"],
+  ["panel-merge-done-d", "p-merge-done"],
+  ["panel-budget-d", "p-budget"],
+  ["panel-rules-d", "p-rules"],
+  ["panel-rules-l", "p-rules", { theme: "light" }],
+  ["panel-rules-draft-d", "p-rules-draft"],
+  ["panel-rules-unlocked-d", "p-rules-unlocked"],
+  ["panel-settings-d", "p-settings"],
+  ["panel-settings-l", "p-settings", { theme: "light" }],
+  ["panel-edit-d", "p-edit"],
+  ["panel-retro-d", "p-retro"],
+  ["panel-same-file-d", "p-same"],
+  ["panel-tripwire-d", "p-trip"],
+  ["panel-not-protected-d", "p-off"],
+  ["panel-fix-d", "p-fix"],
+  ["panel-idle-d", "p-idle"],
+  ["meter-sheet-d", "sheet-meter"],
+  ["meter-sheet-l", "sheet-meter", { theme: "light" }],
+  ["meter-empty-d", "m-empty"],
+  ["plan-trial-d", "m-plan-trial"],
+  ["plan-taste-d", "m-plan-taste"],
+  ["tray-menu-d", "t-menu"],
+  ["eyes-sheet-d", "sheet-eyes"],
+  ["peek-away-d", "n-away-peek", TOP(520, 260)],
+  ["new-suggest-d", "p-suggest"],
+  ["new-learned-d", "p-learned"],
+  ["new-knows-d", "p-knows"],
+  ["new-knows-l", "p-knows", { theme: "light" }],
+  ["new-knows-empty-d", "p-knows-empty"],
+  ["new-why-d", "p-why"],
+  ["new-undo-d", "p-undo"],
+  ["new-away-d", "p-away"],
+  ["new-away-l", "p-away", { theme: "light" }],
+  ["new-caught-up-d", "p-caught"],
+  ["worst-offline-d", "w-offline"],
+  ["worst-login-d", "w-login"],
+  ["worst-week-d", "w-week"],
+  ["worst-claude-d", "w-claude"],
+  ["worst-write-failed-d", "w-write"],
+  ["worst-back-to-normal-d", "w-back"]
 ];
 
 const only = process.argv.slice(2);
+const shots = only.length ? SHOTS.filter(([n]) => only.some(w => n.includes(w))) : SHOTS;
 fs.mkdirSync(OUT, { recursive: true });
-const browser = await puppeteer.launch({ executablePath: EDGE, headless: "new", args: ["--hide-scrollbars", "--force-color-profile=srgb"] });
+const browser = await puppeteer.launch({ executablePath: EDGE, headless: true, args: ["--hide-scrollbars", "--force-color-profile=srgb"] });
 const page = await browser.newPage();
-const errors = [];
-page.on("pageerror", e => errors.push(String(e)));
-page.on("console", m => { if (m.type() === "error") errors.push(m.text()); });
-let n = 0;
-for (const [name, route, o = {}] of SHOTS) {
-  if (only.length && !only.some(w => name.includes(w))) continue;
-  const { w, h } = { ...D, ...o };
-  await page.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
-  const q = new URLSearchParams({ bar: "0", freeze: "1" });
-  if (o.theme) q.set("theme", o.theme);
-  if (o.os) q.set("os", o.os);
-  await page.goto("about:blank");
-  await page.goto(`${FILE}?${q}#${route}`, { waitUntil: "networkidle0" });
+for (const [name, route, o = {}] of shots) {
+  const w = o.w ?? 1440, h = o.h ?? 900;
+  await page.setViewport({ width: w, height: h, deviceScaleFactor: o.scale ?? 1 });
+  const q = new URLSearchParams({ r: route, bar: "0", freeze: "1", ...(o.theme ? { theme: o.theme } : {}) });
+  await page.goto(`${FILE}?${q}`, { waitUntil: "networkidle0" });
   await page.evaluate(() => document.fonts.ready);
-  await new Promise(r => setTimeout(r, o.wait ?? 700));
-  await page.screenshot({ path: path.join(OUT, name + ".png") });
-  n++;
+  await new Promise(r => setTimeout(r, 250));
+  const clip = o.clipTop ? { x: (w - o.clipTop[0]) / 2, y: 0, width: o.clipTop[0], height: o.clipTop[1] } : undefined;
+  await page.screenshot({ path: path.join(OUT, `${name}.png`), clip });
+  console.log(name);
 }
 await browser.close();
-console.log(`${n} screens → ${OUT}`);
-if (errors.length) { console.log("Page errors:\n" + [...new Set(errors)].join("\n")); process.exitCode = 1; }
