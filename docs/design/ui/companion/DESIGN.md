@@ -2,9 +2,9 @@
 
 | Date | Author | Status | Builds on |
 |---|---|---|---|
-| 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **§1–§10 approved by the founder 26 Oct** with D-1 to D-8 as recommended · **§11 "New since approval" needs approval** · **§12 CR-012 / always-on (account, What is sent) needs approval** · **2026-10-26 setup reorder** (founder, *"okay do that"*): the four limits are locked (step 4) and tested (step 5) before sign-in (step 6); rules (step 7) start Not locked | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
+| 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **§1–§10 approved by the founder 26 Oct** with D-1 to D-8 as recommended · **§11 "New since approval" needs approval** · **§12 CR-012 / always-on (account, What is sent) needs approval** · **§13 The website (eucas.app)**, from the founder's review of PR #81, 2026-10-26 · **2026-10-26 setup reorder** (founder, *"okay do that"*): the four limits are locked (step 4) and tested (step 5) before sign-in (step 6); rules (step 7) start Not locked | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
 
-**In this folder:** this file · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (78 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
+**In this folder:** this file (§13: the website) · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (78 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
 
 **Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 93 states (*CR-012 / always-on, 2026-10-26*: 74 + 19, a new group "Account and what is sent"), light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
 
@@ -165,7 +165,7 @@ Second person; your Euca speaks of itself by name ("Pip will check with you more
 
 ### 7.1 Fixed strings (stored once)
 - **Promise:** "Eucas never auto-approves a delete, a push to your default branch, a send or a payment, and no rule can change that."
-- **Privacy (approved, CR-012 / always-on, 2026-10-26; replaces "Nothing about your work leaves this PC unless you turn it on."):** "When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used." (revised 2026-10-26: *"accept all the tech lead recommendations"*)
+- **Privacy (approved, CR-012 / always-on, 2026-10-26; replaces "Nothing about your work leaves this PC unless you turn it on."; in the app the first word is your Euca's name, `$N` in the prototype; **on the website it reads "When Eucas isn't sure"**, founder, 2026-10-26, §13):** "When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used." (revised 2026-10-26: *"accept all the tech lead recommendations"*)
 - **Always on (founder, 2026-10-26):** "The supervisor is always on and can't be switched off. Your rules always decide first." (setup step 8 and the download page)
 - **Offline at sign-in (founder, 2026-10-26; revised with the reorder):** setup: "**You need to be online to sign in.** Setup carries on once you're connected. Pip is already guarding: the four limits are locked." (declined lock: "…the four limits run, not locked.") · panel: "You need to be online to sign in. Pip keeps guarding while you wait."
 - **Diagnostic (approved):** "No paths to your projects or files."
@@ -282,3 +282,27 @@ Labels: "Email", "6-digit code". Errors use `role=alert` and `aria-describedby` 
 
 ### 12.7 Screens to render (capture IDs in `prototype/capture.mjs`)
 Setup: `setup-1-sac-d` (new 2026-10-26), `setup-6-signin-d` / `-l`, `setup-6-signin-code-d`, `setup-6-signin-wrong-d`, `setup-6-signin-disposable-d`, `setup-6-signin-offline-d`, `setup-6-signin-done-d`, `setup-6-signin-back-d`, `setup-8-sent-d` / `-l`, `setup-8-sent-sample-d`; renumbered (*2026-10-26 reorder: lock and test before sign-in*): `setup-4-lock-d`, `setup-4-uac-d`, `setup-4-declined-d`, `setup-5-test-d`, `setup-5-test-failed-d`, `setup-7-rules-d`, `setup-7-rules-draft-d`; unchanged: `setup-9-watching-d`, `setup-10-coach-d`. Panel: `acct-sent-d` / `-l`, `acct-sent-sample-d`, `acct-sent-link-d`, `acct-account-d` / `-l` / `-d1280`, `acct-account-founders-d`, `acct-signout-d`, `acct-delete-d`, `acct-deleted-d`, `acct-signedout-d`, `acct-signin-d` / `-l`, `acct-signin-code-d`, `acct-switch-d`. Changed and to re-render: `panel-settings-d` / `-l`, `panel-usage-d`, `panel-needs-usage-d` / `-l` / `-d1280`, `meter-sheet-d` / `-l`, `meter-empty-d`, `plan-trial-d`, `plan-taste-d`, `new-why-d`. **Not yet rendered** (no shell in this session): see [SELF-REVIEW.md §00a](SELF-REVIEW.md).
+
+---
+
+## 13. The website (eucas.app), 2026-10-26
+
+The landing page in `apps/landing/` is built on this design (PR #81). The founder reviewed it on 26 Oct; these are the rules that came out of that review. They apply to the website only, unless a line says otherwise.
+
+### 13.1 The notch on a web page
+- **No shoulders, no ring, no glow.** The concave shoulders and the 1 px ring join the notch to a black screen bezel; a web page has none, so on the page they read as hooks and a grey outline. The page draws only the black body: flat top, 16 px bottom radius. Captures hide them too (`apps/landing/scripts/capture-screens.mjs`).
+- **Only the eye grammar (§11).** Calm, Focused, Glance, Toward you, Concerned, Sleepy, Pleased, drawn to the spec in the sheet. **No red "Stopped" marker and no "Not protected" label** on the page; a stop shows Concerned eyes. The amber needs-you count stays.
+- **A live notch** sits on the page's top edge: the eyes follow the pointer and blink, its state follows the section in view (Focused → Glance with the count → Concerned → Calm → Pleased), and hover or tap opens the peek, which folds back into the notch (300 ms).
+
+### 13.2 Words
+- **Why before what.** The page opens with the visitor's day ("You started three Claude Code sessions to go faster. Now you spend the day checking on them.") and names four pains before any feature: a session waiting for a yes, a delete you didn't read, the limit hit mid-task, two agents writing in the same file.
+- **Name the four limits.** Write "deletes, pushes, sends and payments"; never "the four limits" on its own, which a visitor can't decode.
+- **The privacy line names Eucas, not Pip:** "When Eucas isn't sure, it sends…" (founder, 2026-10-26); the rest is §7.1 word for word.
+- **Introduce the supervisor before the privacy line:** "Eucas has a supervisor: an AI model that keeps stopped sessions going within your rules, so fewer of them wait for you." Then the privacy line (§7.1) and "The supervisor is always on and can't be switched off."
+- **Say each thing once.** No line restates a list, a heading or another section (the promise sentence under the four things was cut for this).
+- **No jargon from our side:** the sample project is **web-app**, never "bench" (our old codename; captures rename it). "Pip" appears only as the name inside the screens; the page doesn't explain it.
+- **Plain plan words:** "The supervisor in full for 14 days, then a little every month", not "trial" and "taste"; "where your usage went", not "the ledger".
+- **Left out on purpose:** export of any kind (founder, #15: removed in Free and Pro); a supporter tier (support is GitHub Sponsors only, linked in the footer); the unsigned-build note; the founders' plan-card capture (the price line says "$15/month for life").
+
+### 13.3 Pictures
+Every product picture is a real capture from `prototype/notch.html`, cut out with a transparent background, dark and light: the panel (Needs you, Usage, Rules), the same-file warning, the tripwire stop and What is sent. The panel's tabs on the page switch the capture with a 220 ms crossfade.
