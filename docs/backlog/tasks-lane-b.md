@@ -1242,7 +1242,7 @@ Founder answer (a), 2026-10-26: no account sees everything Free sees, so there i
   - The install's taste continues from where it is (per install, founder answer (c); a used-up taste stays used up).
   - **Machine-locked rules keep blocking** (managed settings, "Locked on this PC"); the limits and the tripwire never drop during the switch (`rulebook.bin` never missing).
   - A failed refresh (401) does the same switch.
-  - **Open (UX, NA-Q2):** whether the invite reads "Create an account" or "Sign in" after a sign-out; built from one copy key either way.
+  - **NA-Q2 answered** (founder, 2026-10-26: *"Say Sign in"*): signed out, the invite reads **Sign in** (Settings › Account, tray, Rules, the used-up meter); no account or deleted, **Create an account**. Built from one copy key.
 - **Test approach:**
   - Playwright: signed in with 3 own rules → Sign out → the panel shows the no-account gates and none of the account's rules or memory; an agent's delete and a default-branch push are still blocked; a machine-locked rule still blocks; sign back in → the 3 rules and memory are back.
   - The same after Delete account (the server row gone, `trial_claim` kept).
