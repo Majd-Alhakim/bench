@@ -49,11 +49,14 @@ Time: about 1.5 hours, plus waiting for nameservers (minutes to hours) and DNSSE
 
 - [ ] **11. Turnstile widget**: *Turnstile* → *Add widget*: name "eucas waitlist", hostnames **only** `eucas.app` and `www.eucas.app` (no `localhost`; local runs use Cloudflare's test keys), mode Managed. Put the **site key** in `public/index.html` (`<meta name="turnstile-sitekey" content="…">`) through a PR; it's public. Keep the **secret key** in your password manager until step 14.
   Why: the server checks every token with siteverify (success, action `waitlist`, hostname) and refuses sign-ups if the secret is missing, so a skipped step fails safe instead of silently turning bot protection off. [Server-side validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/), [testing keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
-- [ ] **12. Create the database** from `apps/landing`:
+- [ ] **12. Create the database in the EU** from `apps/landing`:
   ```bash
   npx wrangler login
-  npx wrangler d1 create eucas-waitlist
+  npx wrangler d1 create eucas-waitlist --jurisdiction=eu
   ```
+  > **This can't be changed later.** A jurisdiction is set only when the database is created. Forgetting `--jurisdiction=eu` means deleting and recreating the database (easy today while it's empty, painful later). Check with `npx wrangler d1 info eucas-waitlist` before going on.
+
+  Why EU (founder decision, 2026-10-26): the list holds personal data (emails), and the companion's account database (ADR-0017) will be EU too, so both keep the same promise. The database then runs and stores data only in the EU; the Worker can still reach it from anywhere, so nothing else changes. Time Travel and `d1 export` work the same. We don't use read replication (one small table), so replica locations don't matter here. A jurisdiction replaces a location hint (it wins over `--location`). [Data location](https://developers.cloudflare.com/d1/configuration/data-location/)
   Put the printed `database_id` in `wrangler.toml` through a PR (the id isn't a secret). Then:
   ```bash
   npx wrangler d1 migrations apply eucas-waitlist --remote
@@ -63,7 +66,7 @@ Time: about 1.5 hours, plus waiting for nameservers (minutes to hours) and DNSSE
   ```bash
   npx wrangler d1 export eucas-waitlist --remote --output waitlist-YYYY-MM-DD.sql
   ```
-  The export contains every email: keep it out of the repo and in an encrypted folder. [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/)
+  The export contains every email: keep it out of the repo and in an encrypted folder. It's also how you export the list for yourself, or send one person a copy of their row, as `/privacy` promises. [Time Travel](https://developers.cloudflare.com/d1/reference/time-travel/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/)
 
 ## E. The Worker
 
@@ -91,14 +94,33 @@ Time: about 1.5 hours, plus waiting for nameservers (minutes to hours) and DNSSE
 
 - [ ] **17. hello@eucas.app**: *Email* → *Email Routing* → enable, then route `hello@eucas.app` to your inbox (verify the destination). It adds the MX and SPF records for the root domain.
   Why: the page, privacy note and errors point people to this address. [Email Routing](https://developers.cloudflare.com/email-routing/get-started/enable-email-routing/)
-- [ ] **Resend (optional, recommended)**: resend.com → *Domains* → add `eucas.app`, then add exactly the records it lists in Cloudflare *DNS* (DKIM, plus SPF and MX on its sending subdomain). Keep **one** SPF record per name. Create an API key with **sending access only, for this domain only**, and store it as `RESEND_API_KEY` (step 14).
+- [ ] **Resend (optional, recommended)**: resend.com → *Domains* → add `eucas.app` (pick the EU region if it offers one, to match the database), then add exactly the records it lists in Cloudflare *DNS* (DKIM, plus SPF and MX on its sending subdomain). Keep **one** SPF record per name. Create an API key with **sending access only, for this domain only**, and store it as `RESEND_API_KEY` (step 14).
 - [ ] **DMARC**: *Email* → *DMARC Management* → enable. It adds a `_dmarc` record that starts at `p=none` and collects reports. After 2–4 weeks of clean reports (Resend and Email Routing both pass), change it to `p=quarantine`.
   Why: stops others sending mail as eucas.app, which protects the confirm emails' inbox placement. [DMARC Management](https://developers.cloudflare.com/dmarc-management/)
 
+### Sending more than 100 emails a day, and list updates
+
+Resend's free plan sends **100 emails a day** (3,000 a month). The code already handles a busy day: past the cap, people are still stored (as `unconfirmed`) and the page tells them they're on the list; only their confirm email is missing.
+
+| Option | Cost | Daily limit | Fit |
+|---|---|---|---|
+| **Resend Free** (today) | $0 | 100 | Fine until a launch post |
+| **Resend Pro** | $20/month, 50,000 a month | No daily cap | Predictable for a launch week; no code change, just upgrade |
+| **Cloudflare Email Service** | Needs Workers Paid ($5/month): 3,000 included, then $0.35 per 1,000 | New accounts start on a **conservative daily quota that grows with reputation**; Email Sending is **beta** and meant for transactional mail | Same vendor as everything else, no API key. Needs a code change (the `send_email` binding) |
+
+**Recommendation:** launch on Resend Free. **Before the first big launch post, upgrade to Resend Pro for that month**: it's the only option with a known, high daily limit on day one. Move the confirm email to Cloudflare Email Service later, together with the companion (ADR-0017 picks it for sign-in codes), once Workers Paid is on and the account's sending quota has grown; keep Resend as the fallback, as ADR-0017 does. Sources: [Email Service pricing](https://developers.cloudflare.com/email-service/platform/pricing/), [Email Service limits](https://developers.cloudflare.com/email-service/platform/limits/).
+
+**List updates (broadcasts).** Keep D1 as the only list. Don't copy it into a second tool's audience: two unsubscribe lists drift apart and someone who left gets mailed again. To send an update:
+1. Export the people who confirmed: `npx wrangler d1 execute eucas-waitlist --remote --json --command "SELECT email, token FROM waitlist WHERE status = 'confirmed'"` (or `status != 'pending'` if you never set up confirm emails).
+2. Send **one email per person** (never one email with many recipients) through Resend's batch API, each with that person's link `https://eucas.app/api/unsubscribe?t=<token>` in the text and the headers `List-Unsubscribe: <that link>` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click`. The Worker already serves both (RFC 8058). Gmail and Yahoo require one-click unsubscribe from bulk senders.
+3. Send from `hello@eucas.app`, so replies reach you through Email Routing.
+
+This needs a small script that isn't built yet (a follow-up). **Before the first update, check the consent.** Today the form and `/privacy` promise "three emails at most: a link to confirm, the first build, and Pro when it opens". Either keep updates inside that promise, or change the consent line (`CONSENT` in `lib/waitlist.ts`) and the privacy page **before launch**; each row stores the exact consent text its person agreed to.
+
 ## G. Counting visits
 
-- [ ] **Web Analytics**: *Analytics & Logs* → *Web Analytics* → add `eucas.app` (automatic setup for proxied sites). No cookies, no banner; the CSP already allows its beacon.
-  Why: you need visits ÷ sign-ups for the demand test, without tracking anyone. [Web Analytics](https://developers.cloudflare.com/web-analytics/get-started/)
+- [ ] **Umami** is already in `public/index.html` (the website id is public by design). Nothing to switch on in Cloudflare. **Don't also turn on Cloudflare Web Analytics**: two counters would disagree, and the CSP in `public/_headers` now allows only Umami (`cloud.umami.is` for the script, `gateway.umami.is` for events). If you ever turn Web Analytics on, add its two hosts back to the CSP first.
+  Why: you need visits ÷ sign-ups for the demand test. Umami is cookie-free, so there's no banner, and `/privacy` says what it records.
 
 ## H. Try it (the smoke test)
 
@@ -112,6 +134,7 @@ Time: about 1.5 hours, plus waiting for nameservers (minutes to hours) and DNSSE
      npx wrangler d1 execute eucas-waitlist --remote --command "SELECT count(*) FROM waitlist"
      ```
   6. Open *Workers Logs*: the confirm and unsubscribe requests show no `?t=`.
+  7. **Umami: confirm events arrive after deploy.** Open `https://eucas.app` in a normal browser window (turn off any ad blocker for this check), then open the Umami dashboard → *Realtime*: your visit shows within a minute with the page `/`. In DevTools → *Console* there are no CSP errors; in *Network*, `script.js` from `cloud.umami.is` and `POST /api/send` to `gateway.umami.is` both return 200.
 - [ ] **19. Sign out of Wrangler** when you're done: `npx wrangler logout`. Day-to-day reads can use a fresh `wrangler login` when needed.
   Why: `wrangler login` grants broad account access on this PC; it can't be scoped. [Authorization](https://developers.cloudflare.com/workers/authorization/)
 
@@ -139,11 +162,13 @@ Time: about 1.5 hours, plus waiting for nameservers (minutes to hours) and DNSSE
 | D1 | 5 GB; 5 million rows read and 100,000 written a day. Over the limit, queries fail until midnight UTC | ~4 rows written per sign-up |
 | Time Travel | 7 days | — |
 | Workers Logs | 200,000 events a day, 3-day retention (Free gets 0.5 GB a day after 1 Dec 2026) | A few per request |
-| WAF rate limit, Free Managed Ruleset, Bot Fight Mode, Turnstile, Email Routing, DMARC Management, Web Analytics, DNSSEC | Free | — |
+| WAF rate limit, Free Managed Ruleset, Bot Fight Mode, Turnstile, Email Routing, DMARC Management, DNSSEC | Free | — |
+| Umami Cloud | Its free plan (check the monthly event allowance in your Umami account) | 1 event per page view |
+| Resend | 100 emails a day, 3,000 a month; Pro $20/month | 1 per sign-up |
 
 Sources: [Workers pricing](https://developers.cloudflare.com/workers/platform/pricing/), [Workers limits](https://developers.cloudflare.com/workers/platform/limits/), [D1 limits](https://developers.cloudflare.com/d1/platform/limits/), [Workers Logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/), [Observability pricing](https://developers.cloudflare.com/observability/pricing/).
 
-**Total: $0 a month.** Move to **Workers Paid ($5/month)** when any of these is true: a single day nears 25,000 sign-ups (D1 writes); you want 30 days of Time Travel because the list is now worth protecting (from about 500 sign-ups, or before a big launch post); or you want 7-day logs. Resend's free tier (100 emails a day) runs out long before any of these; see the README.
+**Total: $0 a month.** Move to **Workers Paid ($5/month)** when any of these is true: a single day nears 25,000 sign-ups (D1 writes); you want 30 days of Time Travel because the list is now worth protecting (from about 500 sign-ups, or before a big launch post); or you want 7-day logs. Resend's free tier (100 emails a day) runs out long before any of these; see "Sending more than 100 emails a day" above.
 
 ## The top 10, if you only have 20 minutes
 

@@ -54,7 +54,7 @@ Double opt-in: with Resend set up, new rows are `pending` until the confirm link
 
 ## Going live (founder steps)
 
-Follow [DEPLOY.md](DEPLOY.md): a checkbox runbook with the reason and the Cloudflare doc for each step, from two-factor sign-in to the smoke test, rollback and costs. In short: lock the account, put eucas.app on Cloudflare with DNSSEC and Full (strict), add the rate-limit rule and Bot Fight Mode, create the Turnstile widget and the D1 database, connect the repo with Workers Builds (`main` only, previews off), add the two secrets, attach the custom domains, set up email (Email Routing, Resend, DMARC) and Web Analytics, then run the smoke test. Before a PR, `npm run check:deploy` validates the Worker config without deploying.
+Follow [DEPLOY.md](DEPLOY.md): a checkbox runbook with the reason and the Cloudflare doc for each step, from two-factor sign-in to the smoke test, rollback and costs. In short: lock the account, put eucas.app on Cloudflare with DNSSEC and Full (strict), add the rate-limit rule and Bot Fight Mode, create the Turnstile widget and the D1 database, connect the repo with Workers Builds (`main` only, previews off), add the two secrets, attach the custom domains, set up email (Email Routing, Resend, DMARC), then run the smoke test, including a check that Umami events arrive. The database is created in the **EU jurisdiction** (`--jurisdiction=eu`), which can't be changed after creation. Before a PR, `npm run check:deploy` validates the Worker config without deploying.
 
 Reading the results later:
 
@@ -70,7 +70,8 @@ npx wrangler d1 execute eucas-waitlist --remote --command "SELECT ref, plan, cou
 | Workers static assets (the site) | Free and unlimited | $0 |
 | Worker requests (`/api/*` only) | 100,000 a day (Workers Free) | $0 |
 | D1 | 5 GB, 5 million rows read and 100,000 written a day | $0 |
-| Turnstile, Web Analytics, Email Routing | Free | $0 |
+| Turnstile, Email Routing | Free | $0 |
+| Umami Cloud (page analytics) | Free plan | $0 |
 | Resend | 3,000 emails a month, 100 a day | $0; $20/month for 50,000 if you outgrow it |
 | eucas.app | Already yours | the yearly renewal only |
 
