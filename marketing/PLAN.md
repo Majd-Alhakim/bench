@@ -17,7 +17,7 @@
 
 | # | Decision | Why it matters | Recommendation |
 |---|---|---|---|
-| D1 | ~~The licence~~ **Decided 2026-10-26: FSL-1.1-MIT** (PR #91) | "Is it open source?" is still the first HN question | Answer it plainly with the FAQ line: source-available now, MIT after two years. Never call it "open source" |
+| D1 | ~~The licence~~ **Decided 2026-10-26: fair source, FSL-1.1-MIT** (PR #96); the name Eucas, Pip, the 8 faces and the visual identity are all rights reserved (TRADEMARKS.md) | "Is it open source?" is still the first HN question | Say "fair source" and "the code is public on GitHub, so you can read exactly what it does". Never "open source" |
 | D2 | ~~A free guard without an account?~~ **Decided 2026-10-26: a no-account taste.** The four limits and the tripwire work without sign-up; everything else needs an account or Pro | This makes Show HN and awesome-claude-code possible once a build runs | Say "no account needed for the four limits and the bulk-delete stop" in every launch post |
 | D3 | **Go live on a Monday** | Reddit peaks Mon–Thu; day 6 lands on Showoff Saturday | Yes |
 | D4 | Three small landing changes ([WAITLIST §4](WAITLIST.md#4-turning-visitors-into-sign-ups)): the founders' line by the form, a share link after joining, a "your Claude login" FAQ | Conversion and the terms-of-service question | Make them in a landing PR before go-live |
@@ -81,7 +81,7 @@ Reach figures are planning ranges from the research file, not promises. Effort i
 | **Reddit: r/SideProject** (826K) | Makers | The demand-test story | Day 3 | Promotion allowed (UNVERIFIED) | 100–500 visits | 1 h | Both |
 | **Reddit: r/ChatGPTCoding, r/vibecoding, r/AI_Agents** | AI-coding generalists | Weekly self-promo threads; one adapted value post | Day 4 or the fallback | Read each sidebar | 50–300 visits each | 30 min each | Both |
 | **Reddit: r/webdev** (1.5M) | Web developers | Showoff Saturday only, about how the page was built | Saturdays | Projects only on Saturday; ad-like posts removed | 50–300 visits | 1 h | Waitlist |
-| **Avoid:** r/programming (LLM content restricted), r/opensource (FSL), r/LocalLLaMA, r/cursor (off topic) | | | | | | | |
+| **Avoid:** r/programming (LLM content restricted), r/opensource (fair source isn't open source), r/LocalLLaMA, r/cursor (off topic) | | | | | | | |
 | **Hacker News** | Senior developers, skeptics | Show HN of the **runnable** build (the no-account taste is what makes it eligible); your first comment says what it can't do | Tue–Wed, 16:00–17:00 (8–9 am ET) | No landing pages or sign-up walls; never ask for votes; an aged account | Comparable posts: 60–250 points; front page 2K–13K visits; or nothing | 1 h + 6 h in the thread | **Launch only** |
 | **X** | Builders in public, Claude Code people | Native video clips (V1–V6), short threads, the link in a reply; the evening count | Daily in waitlist week, 3×/week after | No tagging people to ask for shares | Depends on your audience: 50–400 visits in week 1 from a small account | 30 min/day | Both |
 | **LinkedIn** | Your professional network, Gulf tech community | Text + one image, no link in the post; story-led | Day 1, 5, 7, 8; launch | Links cut reach (vendor estimate ~60%) | 1K–5K impressions, 30–150 visits | 30 min | Both |
@@ -240,7 +240,7 @@ Example: `https://eucas.app/?utm_source=reddit-claudecode&utm_medium=community&u
 | **"AI slop" backlash** | Templated text, hype words, an AI-written article, a too-perfect video | Rewrite every draft in your words; specific numbers and sources; real screens with the "design preview" label; answer comments yourself; say what it can't do | Agree with what's fair, show the human process (the pre-mortem, the 93-state prototype, the test) |
 | **Overclaiming safety** | "Never deletes", "100% safe", or a demo that implies it | Only the fixed sentence; the "what it can't do" paragraph in every launch post | Correct the post in public, fast |
 | **"Vaporware"** | Promoting an unbuilt app | Say "design preview" and "in development" everywhere; the demand test framing makes it honest | Point to the public repo and the design docs |
-| **"Not open source" thread** | FSL-1.1-MIT on HN and Reddit | Say it first: source-available, MIT after two years; never use the words "open source"; skip r/opensource | Answer once with the FAQ line, don't debate licences |
+| **"Not open source" thread** | Fair source on HN and Reddit | Say it first: fair source, the code is public to read; never call it "open source"; skip r/opensource | Answer once with the FAQ line, don't debate licences |
 | **Terms-of-service question** | Anthropic's 2026 crackdown on third-party harnesses | The FAQ: your login stays yours; unmodified Claude Code; the supervisor is a separate open model | Link the FAQ; don't argue |
 | **Exploiting incidents** | Fear marketing around people's lost data | Lead with help (the 7 steps work without Eucas); cite user reports as reports; never name or mock the people | Remove the line that crossed it |
 | **Wrong audience** | X's build-in-public crowd is mostly Mac | Reddit and LinkedIn first; welcome Mac sign-ups as a signal | Count Mac demand; it's PM-3 in the pre-mortem |

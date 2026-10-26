@@ -1,5 +1,7 @@
 # Short-video scripts (week 1)
 
+> **Rendered (2026-10-26).** The final cuts are in [`marketing/ready/media/videos`](../ready/INDEX.md#media), built from [`marketing/shorts`](../shorts). Where a shot list below names a face that differs from the one the captured screen shows (panels open while sessions work show **Focused**, not Calm), the rendered video follows the screen: the screen is the source of truth for the eye grammar.
+
 Six short videos, each built from **real screens of the approved notch prototype** (`docs/design/ui/companion/prototype/notch.html`), step by step, with every Euca titled on screen. Drafts only: the founder records and posts.
 
 ## Before you record

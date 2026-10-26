@@ -286,7 +286,7 @@ Title V5: "Two Claude Code sessions, one file". Title V6: "Hit your usage limit 
 
 ## FAQ answers to paste
 
-**"Is it open source?"** "The source is public on GitHub under FSL-1.1-MIT: you can read, run and change it, just not sell a competing product with it, and each version becomes MIT two years after release. It isn't open source by the OSI definition today, so I don't call it that."
+**"Is it open source?"** "No, it's fair source (FSL-1.1-MIT). The code is public on GitHub, so you can read exactly what it does before you install it. The name Eucas, Pip and its faces are trademarks."
 
 **"Do I need an account?"** "Not for the four limits and the stop on bulk deletes: they work without signing up. Your rules, your usage and the supervisor need a free account; more supervisor help and budgets are Pro."
 
