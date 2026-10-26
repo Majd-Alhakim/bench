@@ -1,4 +1,4 @@
-// eucas.app: the theme switch, the live tray panel, the screens row, the rule switches, questions and the waitlist.
+// eucas.app: the theme switch, the live notch, the panel tabs, the rule switches, questions and the waitlist.
 (() => {
   const root = document.documentElement;
   root.classList.add("js");
@@ -10,7 +10,7 @@
     set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
   };
 
-  // Theme: dark by default, light as the option. Screens swap to the matching capture.
+  // Theme: dark by default, light as the option. Panel screens swap to the matching capture.
   const toggle = $("[data-theme-toggle]");
   function applyTheme(t) {
     root.dataset.theme = t;
@@ -26,8 +26,8 @@
     store.set("theme", t);
   });
 
-  // Entrances: heading, then text, then picture, once per section.
-  const rise = $$("[data-rise]");
+  // Entrances: heading, then text, then picture, once per section. The hero screen opens like a shutter.
+  const rise = $$("[data-rise], [data-shutter]");
   if (reduce || !("IntersectionObserver" in window)) rise.forEach(el => el.classList.add("in"));
   else {
     const groups = new Map();
@@ -43,102 +43,109 @@
     rise.forEach(el => io.observe(el));
   }
 
-  // The tray panel: the heartbeat ticks only when a "check" lands, and the needs-you card changes slowly.
-  const strip = $("[data-strip]");
-  const ago = $("[data-ago]");
-  const dot = $(".hb-dot");
-  const BARS = 44;
-  const heights = Array.from({ length: BARS }, (_, i) => (i % 7 === 3 ? 0 : 20 + ((i * 37) % 70)));
-  strip.innerHTML = heights.map(() => "<i></i>").join("");
-  const bars = $$("i", strip);
-  const draw = () => bars.forEach((b, i) => {
-    b.style.setProperty("--h", heights[i] ? `${heights[i]}%` : "2px");
-    b.classList.toggle("now", i === BARS - 1);
-  });
-  draw();
-  let since = 2;
-  const cards = $$("[data-cards] .fl-card");
-  const logText = $("[data-log-text]");
-  const LOG = [
-    "Allowed by your rule: <code>pnpm test</code> in bench/",
-    "Allowed by your rule: <code>git diff</code> in api-docs/",
-    "Allowed by your rule: <code>Read src/router.ts</code>",
-    "Allowed by your rule: <code>git status</code> in notes/",
-  ];
-  let card = 0, log = 0, t = 0;
-  if (!reduce) {
-    setInterval(() => {
-      if (document.hidden) return;
-      t++;
-      if (t % 3 === 0) {
-        since = 0;
-        heights.shift();
-        heights.push(30 + Math.round(Math.random() * 60));
-        draw();
-        dot.classList.remove("beat"); void dot.offsetWidth; dot.classList.add("beat");
-      } else since++;
-      ago.textContent = String(since);
-      if (t % 6 === 0) {
-        log = (log + 1) % LOG.length;
-        logText.innerHTML = LOG[log];
-      }
-      if (t % 7 === 0) {
-        cards[card].classList.remove("is-on");
-        card = (card + 1) % cards.length;
-        cards[card].classList.add("is-on");
-      }
-    }, 1000);
-  }
-
-  // The screens row: the panel nearest the centre is lit and names itself underneath.
-  const row = $("[data-row]");
-  const panels = $$(".panel", row);
-  const pName = $("[data-panel-name]");
-  const pText = $("[data-panel-text]");
-  let lit = -1;
-  function light() {
-    const mid = row.scrollLeft + row.clientWidth / 2;
-    let best = 0, dist = Infinity;
-    panels.forEach((p, i) => {
-      const d = Math.abs(p.offsetLeft + p.offsetWidth / 2 - mid);
-      if (d < dist) { dist = d; best = i; }
-    });
-    if (best === lit) return;
-    lit = best;
-    panels.forEach((p, i) => p.classList.toggle("is-lit", i === best));
-    pName.textContent = panels[best].dataset.name;
-    pText.textContent = panels[best].dataset.text;
-  }
-  const go = dir => {
-    const i = Math.max(0, Math.min(panels.length - 1, lit + dir));
-    const p = panels[i];
-    row.scrollTo({ left: p.offsetLeft + p.offsetWidth / 2 - row.clientWidth / 2, behavior: reduce ? "auto" : "smooth" });
+  // The live notch. Its state follows the section in view; its eyes follow the pointer and blink.
+  const notch = $("[data-notch]");
+  const eyes = $("[data-eyes]");
+  const marker = $("[data-marker]");
+  const label = $("[data-notch-label]");
+  const peek = $("[data-peek]");
+  const STATES = {
+    working: ["", "protected, sessions working"],
+    marker: ["2", "protected, 2 need you"],
+    trip: ["Stopped: notes", "the tripwire stopped the notes session"],
+    focused: ["", "protected, checking with the supervisor"],
+    rest: ["", "protected, nothing waiting"],
+    pleased: ["", "protected, you're all caught up"],
   };
-  row.addEventListener("scroll", () => requestAnimationFrame(light), { passive: true });
-  $("[data-prev]").addEventListener("click", () => go(-1));
-  $("[data-next]").addEventListener("click", () => go(1));
-  row.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
-    if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+  function setState(s) {
+    if (notch.dataset.state === s || !STATES[s]) return;
+    notch.dataset.state = s;
+    marker.textContent = STATES[s][0];
+    label.textContent = `Pip, the Eucas notch: ${STATES[s][1]}. ${notch.getAttribute("aria-expanded") === "true" ? "Hide" : "Show"} the peek.`;
+  }
+  if ("IntersectionObserver" in window) {
+    const seen = new Map();
+    const so = new IntersectionObserver(es => {
+      es.forEach(e => seen.set(e.target, e.intersectionRatio));
+      let best = null, top = 0;
+      seen.forEach((r, el) => { if (r > top) { top = r; best = el; } });
+      if (best) setState(best.dataset.state);
+    }, { threshold: [0, 0.25, 0.5, 0.75, 1], rootMargin: "-30% 0px -30% 0px" });
+    $$("main section[data-state]").forEach(s => so.observe(s));
+  }
+  if (!reduce) {
+    let raf = 0;
+    addEventListener("pointermove", e => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = notch.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        const k = Math.min(1, Math.hypot(dx, dy) / 260);
+        const a = Math.atan2(dy, dx);
+        eyes.style.setProperty("--ex", `${(Math.cos(a) * 2.5 * k).toFixed(2)}px`);
+        eyes.style.setProperty("--ey", `${(Math.sin(a) * 1.5 * k).toFixed(2)}px`);
+      });
+    }, { passive: true });
+    const blink = () => {
+      if (!document.hidden) { eyes.classList.remove("blink"); void eyes.offsetWidth; eyes.classList.add("blink"); }
+      setTimeout(blink, 3800 + Math.random() * 3400);
+    };
+    setTimeout(blink, 2400);
+  }
+  // The peek: opens after a short rest on the notch, folds a moment after the pointer leaves; click or tap toggles it.
+  const live = $("[data-live]");
+  let openT = 0, closeT = 0, foldT = 0;
+  function showPeek(on) {
+    clearTimeout(openT); clearTimeout(closeT); clearTimeout(foldT);
+    if (on) { peek.classList.remove("folding"); peek.hidden = false; }
+    else if (!peek.hidden && !peek.classList.contains("folding")) {
+      peek.classList.add("folding");
+      foldT = setTimeout(() => { peek.hidden = true; peek.classList.remove("folding"); }, reduce ? 0 : 300);
+    }
+    notch.setAttribute("aria-expanded", String(on));
+    label.textContent = label.textContent.replace(/(Show|Hide) the peek\./, `${on ? "Hide" : "Show"} the peek.`);
+  }
+  live.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") { clearTimeout(closeT); openT = setTimeout(() => showPeek(true), 280); } });
+  live.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { clearTimeout(openT); closeT = setTimeout(() => showPeek(false), 360); } });
+  const isOpen = () => !peek.hidden && !peek.classList.contains("folding");
+  notch.addEventListener("click", () => showPeek(!isOpen()));
+  addEventListener("keydown", e => { if (e.key === "Escape" && isOpen()) { showPeek(false); notch.focus(); } });
+  document.addEventListener("click", e => { if (isOpen() && !live.contains(e.target)) showPeek(false); });
+
+  // The panel's own tabs pick the screen on the plate.
+  const SHOW = {
+    needs: ["One click under the notch.", "Hover the notch for a peek; click it for the panel. Everything that waits on you sits at the top, with one action each. Nothing opens by itself, and Pip never says yes for you.", "needs",
+      "The panel. Needs you, 3: bench is waiting for you and wants to run pnpm build; two sessions are editing one file; search is ready, open a PR for search with the tests first."],
+    usage: ["Where your usage went.", "Your 5-hour and weekly Claude usage, when you'll reach the limit at today's pace, and which sessions and projects used it. The supervisor's own meter sits under it.", "usage",
+      "The Usage tab: the 5-hour window at 46 percent, resetting at 15:40, with a forecast of when you reach it; the week at 62 percent; where it went by project; the supervisor meter."],
+    rules: ["Your rules, locked or not.", "The four limits are locked. Your own rules sit under them, each with a switch, and suggestions come from what you approved by hand.", "rules",
+      "The Rules tab: the promise, the four limits locked, and your rules with switches, such as allow pnpm test in bench."],
+  };
+  const tabs = $$("[data-show]");
+  const showImg = $("[data-show-img]");
+  const panel = $("#show-text");
+  function pickTab(btn, focus) {
+    const [title, text, shot, alt] = SHOW[btn.dataset.show];
+    tabs.forEach(b => { const on = b === btn; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; });
+    panel.setAttribute("aria-labelledby", btn.id);
+    $("[data-show-title]").textContent = title;
+    $("[data-show-text]").textContent = text;
+    showImg.dataset.dark = `screens/${shot}-dark.webp`;
+    showImg.dataset.light = `screens/${shot}-light.webp`;
+    showImg.src = showImg.dataset[root.dataset.theme === "light" ? "light" : "dark"];
+    showImg.alt = alt;
+    if (focus) btn.focus();
+  }
+  pickTab(tabs[0], false);
+  tabs.forEach((b, i) => {
+    b.addEventListener("click", () => pickTab(b, false));
+    b.addEventListener("keydown", e => {
+      const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      pickTab(tabs[(i + step + tabs.length) % tabs.length], true);
+    });
   });
-  panels.forEach((p, i) => p.addEventListener("click", () => { if (i !== lit) go(i - lit); }));
-  // Drag to scroll with a mouse; touch scrolls natively.
-  let drag = null;
-  row.addEventListener("pointerdown", e => { if (e.pointerType === "mouse") drag = { x: e.clientX, left: row.scrollLeft, moved: false }; });
-  addEventListener("pointermove", e => {
-    if (!drag) return;
-    const dx = e.clientX - drag.x;
-    if (Math.abs(dx) > 4) { drag.moved = true; row.style.scrollSnapType = "none"; }
-    row.scrollLeft = drag.left - dx;
-  });
-  addEventListener("pointerup", () => {
-    if (!drag) return;
-    row.style.scrollSnapType = "";
-    if (drag.moved) go(0);
-    drag = null;
-  });
-  requestAnimationFrame(() => { go(0); light(); });
-  addEventListener("resize", () => { lit = -1; light(); });
 
   // Rule switches. The last one is the promise: it doesn't move.
   $$(".band").forEach(band => {
@@ -148,7 +155,7 @@
     sw.addEventListener("click", () => {
       if (sw.hasAttribute("data-locked")) {
         sw.classList.remove("nope"); void sw.offsetWidth; sw.classList.add("nope");
-        $("[data-locked-text]", band).textContent = "This one stays on. Eucas asks you every time, whatever your rules say.";
+        $("[data-locked-text]", band).textContent = "This one stays on. Pip asks you every time, whatever your rules say.";
         return;
       }
       sw.setAttribute("aria-checked", String(sw.getAttribute("aria-checked") !== "true"));
@@ -156,34 +163,15 @@
     });
   });
 
-  // Questions: one answer at a time. Wide screens show it in the pane; phones open it under the question.
-  const faq = $("[data-faq]");
-  const pane = $("[data-faq-pane]");
-  const qs = $$("button", faq);
-  function pick(btn) {
-    qs.forEach(b => {
-      const on = b === btn;
-      b.setAttribute("aria-expanded", String(on));
-      $("#" + b.getAttribute("aria-controls")).hidden = !on;
+  // Questions: one card open at a time.
+  const qs = $$("[data-faq] button");
+  qs.forEach(b => b.addEventListener("click", () => {
+    qs.forEach(o => {
+      const on = o === b;
+      o.setAttribute("aria-expanded", String(on));
+      $("#" + o.getAttribute("aria-controls")).hidden = !on;
     });
-    const html = $("#" + btn.getAttribute("aria-controls")).innerHTML;
-    if (pane.innerHTML !== html) {
-      pane.style.opacity = "0";
-      setTimeout(() => { pane.innerHTML = html; pane.style.opacity = "1"; }, reduce ? 0 : 150);
-    }
-  }
-  qs.forEach(b => {
-    b.addEventListener("click", () => pick(b));
-    b.addEventListener("focus", () => { if (matchMedia("(min-width: 721px)").matches) pick(b); });
-    b.addEventListener("mouseenter", () => { if (matchMedia("(hover: hover) and (min-width: 721px)").matches) pick(b); });
-  });
-
-  // The clock in Doha.
-  const clock = $("[data-clock]");
-  const tick = () => {
-    clock.textContent = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Qatar" }).format(new Date());
-  };
-  tick(); setInterval(tick, 30000);
+  }));
 
   // The waitlist.
   const form = $("[data-form]");

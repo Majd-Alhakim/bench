@@ -1,13 +1,13 @@
 # eucas.app: landing page and waitlist
 
-The demand test for the Eucas companion. A static page on Cloudflare Pages, a waitlist stored in Cloudflare D1 through Pages Functions, Turnstile against bots, and an optional confirm email through Resend. **Nothing here is deployed.** Going live is the founder's job; the steps are below.
+The demand test for the Eucas companion, built on the approved notch design (`docs/design/ui/companion/DESIGN.md`): Pip lives in a live notch at the top of the page, its state follows the section you read, and every product picture is a real capture from the notch prototype. A static page on Cloudflare Pages, a waitlist stored in Cloudflare D1 through Pages Functions, Turnstile against bots, and an optional confirm email through Resend. **Nothing here is deployed.** Going live is the founder's job; the steps are below.
 
 ```
 public/          the site: index.html, privacy.html, styles.css, main.js, fonts/, screens/, og.png, _headers
 functions/api/   subscribe (POST), details (POST), confirm (GET), unsubscribe (GET page, POST delete)
 lib/waitlist.ts  validation, Turnstile siteverify, the Resend call, small HTML pages
 migrations/      the D1 schema
-scripts/         capture-screens.mjs (real screens from the companion prototype), og.mjs, check.mjs
+scripts/         capture-screens.mjs (cut-outs from docs/design/ui/companion/prototype/notch.html), og.mjs, check.mjs
 review/          screenshots for the PR (dark and light, desktop and phone)
 ```
 
@@ -21,7 +21,7 @@ npx wrangler d1 migrations apply eucas-waitlist --local
 npx wrangler pages dev                  # http://localhost:8788
 ```
 
-To test the form with the Turnstile widget, set `<meta name="turnstile-sitekey" content="1x00000000000000000000AA">` in `public/index.html` (Cloudflare's test site key) and change it back before committing. Then `node scripts/check.mjs` renders both themes at 1440 and 390 px and submits the form (set `PUPPETEER_CORE` to a puppeteer-core folder). Read the list with:
+To test the form with the Turnstile widget, set `<meta name="turnstile-sitekey" content="1x00000000000000000000AA">` in `public/index.html` (Cloudflare's test site key) and change it back before committing. Then `node scripts/check.mjs` renders both themes at 1440 and 390 px and submits the form (set `PUPPETEER_CORE` to a puppeteer-core folder; `BROWSER` to a Chrome or Edge binary if Edge isn't at its default path). After a design change in the prototype, `node scripts/capture-screens.mjs` re-renders `public/screens/` and `node scripts/og.mjs` the share card. Read the list with:
 
 ```bash
 npx wrangler d1 execute eucas-waitlist --local --command "SELECT email, status, agents, sessions, os, plan, ref, created_at FROM waitlist"
