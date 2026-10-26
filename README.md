@@ -23,4 +23,4 @@ Eucas runs on your own Claude subscription through the official Claude Code. It 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) (work branches merge into `dev` by PR, never push to `main`) and [REVIEW.md](REVIEW.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
 
 ## License
-[FSL-1.1-MIT](LICENSE.md) (Functional Source License): the source is open to read, use and change for anything except a competing product, and each version becomes MIT two years after its release.
+**Fair source:** [FSL-1.1-MIT](LICENSE.md). You can read, run and change the code for anything except a competing product, and each version becomes MIT two years after its release. The name, Pip and the visual identity are **not** licensed; see [TRADEMARKS.md](TRADEMARKS.md).
