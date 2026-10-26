@@ -1,8 +1,10 @@
-// Shared helpers for the waitlist Pages Functions: validation, Turnstile, mail, small HTML pages.
+// Shared helpers for the waitlist API: validation, Turnstile, mail, small HTML pages.
 
 export interface Env {
   DB: D1Database;
-  /** Turnstile secret. Unset = no challenge (local runs only). */
+  /** Per-IP limit on POST /api/*. Unset = no limit (unit tests only). */
+  RATE_LIMITER?: RateLimit;
+  /** Turnstile secret. Unset = every sign-up is refused; local runs use the test secret in .dev.vars. */
   TURNSTILE_SECRET?: string;
   /** Comma list of hostnames the Turnstile token must come from, e.g. "eucas.app,www.eucas.app". */
   TURNSTILE_HOSTNAMES?: string;
@@ -22,11 +24,12 @@ export interface D1PreparedStatement {
   run(): Promise<D1Result>;
 }
 export interface D1Database { prepare(query: string): D1PreparedStatement }
+export interface RateLimit { limit(options: { key: string }): Promise<{ success: boolean }> }
 
 export interface Ctx { request: Request; env: Env }
 
 export const CONSENT =
-  "We'll email you about Eucas only: a link to confirm, the first build, and Pro when it opens. Every email has a one-click unsubscribe.";
+  "We'll email you about Eucas only: a link to confirm, the first build, Pro when it opens, and occasional build updates (a couple a month at most). Every email has a one-click unsubscribe.";
 
 export const AGENTS = new Set(["claude-code", "cursor", "codex", "other"]);
 export const SESSIONS = new Set(["", "1", "2-3", "4-6", "7+"]);
@@ -78,7 +81,7 @@ export async function readJson(request: Request): Promise<Record<string, unknown
 
 /** Canonical Turnstile siteverify: success, the expected action and an approved hostname. Fails closed. */
 export async function verifyTurnstile(env: Env, token: unknown, ip: string | null, action: string): Promise<boolean> {
-  if (!env.TURNSTILE_SECRET) return true;
+  if (!env.TURNSTILE_SECRET) return false;
   const hostnames = new Set((env.TURNSTILE_HOSTNAMES ?? "").split(",").map(h => h.trim()).filter(Boolean));
   if (typeof token !== "string" || token.length === 0 || token.length > 2048 || hostnames.size === 0) return false;
   try {
@@ -106,7 +109,7 @@ export async function sendConfirm(env: Env, email: string, token: string): Promi
   const confirm = `${env.SITE_URL}/api/confirm?t=${token}`;
   const leave = `${env.SITE_URL}/api/unsubscribe?t=${token}`;
   const text = [
-    "Confirm you want the first Eucas build:",
+    "Confirm you want the first Eucas build, plus occasional build updates (a couple a month at most):",
     "",
     confirm,
     "",

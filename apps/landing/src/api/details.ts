@@ -1,5 +1,5 @@
 // POST /api/details: the two optional answers after sign-up (sessions at once, which computer).
-import { OSES, SESSIONS, type Ctx, isToken, json, readJson } from "../../lib/waitlist";
+import { OSES, SESSIONS, type Ctx, isToken, json, readJson } from "../../lib/waitlist.ts";
 
 export const onRequestPost = async ({ request, env }: Ctx): Promise<Response> => {
   const body = await readJson(request);
