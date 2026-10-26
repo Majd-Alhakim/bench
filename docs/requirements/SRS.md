@@ -2,7 +2,7 @@
 
 | Status | Version | Owners | Approver | Upstream |
 |---|---|---|---|---|
-| Draft for G3 | 0.1 | BA (functional), Tech Lead (non-functional, interfaces, data) | Client | [BRD](BRD.md) v1.5, [PRD](PRD.md) v0.6, [CR-010](change-requests/CR-010.md), [CR-011](change-requests/CR-011.md), [CR-012](change-requests/CR-012.md), [founder answers](interviews/2026-10-26-v1.4-open-items.md), ADR-0007 – ADR-0018 |
+| Draft for G3: all §9 questions answered 2026-10-26 | 0.2 | BA (functional), Tech Lead (non-functional, interfaces, data) | Client | [BRD](BRD.md) v1.5, [PRD](PRD.md) v0.6, [CR-010](change-requests/CR-010.md), [CR-011](change-requests/CR-011.md), [CR-012](change-requests/CR-012.md), [founder answers](interviews/2026-10-26-v1.4-open-items.md), ADR-0007 – ADR-0018 |
 
 Audience: developers, designers and QA. Every requirement is **testable** and traces to a use case (UC-54 – UC-67), a business rule (BR-98 – BR-129) and its acceptance criteria. **Scope: the Eucas companion v0.1 only.** The team app (UC-01 – UC-53, BR-01 – BR-97) comes later and gets its own SRS.
 
@@ -30,7 +30,7 @@ FD-1, FD-2 and FD-4 are product and plan decisions (PRD §8 – §9) and add no 
 ```mermaid
 flowchart LR
   U([You])
-  subgraph PC[Your Windows 11 PC]
+  subgraph PC[Your Windows 10/11 PC]
     CC[Claude Code CLI, official and unmodified<br/>terminal · desktop app · VS Code]
     LG[Limits guard<br/>Program Files, admin-only]
     MS[(Managed settings<br/>file or HKLM)]
@@ -389,25 +389,25 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | ID | Category | Requirement (measurable) | Source | Verification |
 |---|---|---|---|---|
 | NFR-001 | Performance | Wall time a PreToolUse hook adds to a tool call, as Claude Code times it: **p95 ≤ 50 ms, p99 ≤ 150 ms**, excluding the first run of a newly written guard binary. Both guards (limits + plugin) run in parallel; the bar applies to the slower one. **Measured (SP-H1, one guard): p50 25 / p95 33 / p99 44 / max 48 ms** | ADR-0009, SD §2, SP-H1 | `perf` job every PR (2,000 sequential + 4 × 500 parallel; fails over budget or > 20 % slower than `dev`); nightly inside the real CLI with both guards installed |
-| NFR-002 | Performance | Guard decision compute (stdin parsed → decision written) p95 ≤ 2 ms `[proposed – G3]`. **Measured 0.55 ms (SP-H1)** | SP-H1 | Guard self-timing in the bench |
+| NFR-002 | Performance | Guard decision compute (stdin parsed → decision written) p95 ≤ 2 ms `[set at G3-6]`. **Measured 0.55 ms (SP-H1)** | SP-H1 | Guard self-timing in the bench |
 | NFR-003 | Performance | The check-event emit (pipe connect ≤ 3 ms, else one spool append, else drop + count) takes ≤ 5 ms in total and starts only after the decision is on stdout | ADR-0009 | Bench with the pipe absent, slow and full |
 | NFR-004 | Performance | After any guard binary is written (install, update, Repair), the core runs it once (`--version`) before the plugin manifest is repointed, so no real hook pays the Defender first-scan cost. **Measured first run 130–196 ms (SP-H1)** | ADR-0009 amendment, ADR-0013 | Integration test: warm-up precedes the repoint |
 | NFR-005 | Performance | Observational hooks (`post-tool-use`, `notification`, `session-end`, `config-change`, `user-prompt-submit`) are `async: true` and add 0 ms of waiting | ADR-0009 amendment | Hooks-schema contract test (TEST §3.1) |
-| NFR-006 | Performance | The status-line wrapper adds ≤ 30 ms p95 over the user's own command `[proposed – G3]`; its usage send is capped at 10 ms | SD §5.3 | Bench with a fixture status-line command |
+| NFR-006 | Performance | The status-line wrapper adds ≤ 30 ms p95 over the user's own command `[set at G3-6]`; its usage send is capped at 10 ms | SD §5.3 | Bench with a fixture status-line command |
 | NFR-007 | Performance | Idle (panel hidden, notch resting, 3 idle sessions), all Eucas processes together: **< 0.5 % of one core and < 90 MB private bytes** over 10 min. **Measured (SP-ST1): ≈ 80 MB (tray + hidden panel 78.5 MB, notch 0.9 MB, two runs summed); the webview alone used 0.7 % CPU**, so the CPU bar is at risk and is re-measured on the combined build | SD §2, ADR-0016 | `perf` job (Windows), every PR |
 | NFR-008 | Performance | Notch: **< 2 MB private; < 0.3 % CPU at rest; < 1.5 % while the eyes follow at 30 Hz**; the timer stops when nothing moves. **Measured 0.9 MB / 0.16 % / 0.94 % (SP-ST1)** | ADR-0016 | `perf` notch sampler (fake cursor 60 s), every PR |
 | NFR-009 | Performance | Active (panel open, 6 sessions working): < 3 % CPU, < 180 MB | SD §2 | Nightly perf |
 | NFR-010 | Performance | Panel and peek first frame < 150 ms from the click (panel) or the end of the 280 ms dwell (peek); the pre-warmed webview is shown, never created. **Measured p95 8 ms (SP-ST1)** | SD §2, BR-121 | Playwright trace, every PR |
-| NFR-011 | Performance | The notch hides within 1 s of a full-screen app and returns without taking focus. **Passed (G6 manual checklist, 2026-10-26)** | ADR-0016 | Win32 probe test + release checklist |
+| NFR-011 | Performance | The notch hides within 1 s of a full-screen app and returns without taking focus. **Passed on Windows 11 (G6 manual checklist, 2026-10-26)**; Windows 10 22H2 pass due before launch (G3-5) | ADR-0016 | Win32 probe test + release checklist |
 | NFR-012 | Performance | Setup detection checklist ≤ 3 s; retro first card ≤ 5 s and all cards ≤ 30 s for 7 days / 300 sessions / 500 MB of transcripts | SD §2, §5.6, UC-54 | Nightly fixture corpus |
 | NFR-013 | Performance | Setup median time to the notch ≈ 5:00 including UAC and the email round trip | UC-54, setup-flow §6 `[default (CR-011 design)]` | Opt-in telemetry `firstRun`; release checklist |
 | NFR-014 | Performance | Supervisor: `/v1/supervise` p95 < 2.5 s including the model (**model p95 1.1 s, measured SP-SUP1**) and the D1 reserve (≤ 150 ms); app deadline 3 s; guard's ask-pipe wait 8 s; Stop hook timeout 10 s; late = `ask_user` | ADR-0011, SUPERVISOR §6, SD §2 | Worker analytics; SP-SUP2 p95 < 3 s |
 | NFR-015 | Performance | Sign-in code in the inbox p95 < 30 s (Gmail, Outlook, iCloud); `/v1/auth/verify` p95 < 500 ms | SD §2, ADR-0017 | SP-AC1 (10/10 in inbox), then Worker analytics |
-| NFR-016 | Performance | Local canary p95 ≤ 2 s `[proposed – G3]`. **Measured p95 1.06 s (S-1)** | ADR-0014, S-1 | Canary integration test |
+| NFR-016 | Performance | Local canary p95 ≤ 2 s `[set at G3-6]`. **Measured p95 1.06 s (S-1)** | ADR-0014, S-1 | Canary integration test |
 | NFR-017 | Performance | Tripwire: kill starts ≤ 1 s after the threshold delete (200 in 20 s); process tree gone ≤ 3 s. **Measured kill 16–49 ms, tree gone 16–25 ms (SP-TW1)** | SD §2, §5.5, BR-101 | Tripwire integration test, every PR (Windows) |
 | NFR-018 | Performance | "Not protected" ≤ 2 s after an unchecked tool's result appears in the transcript, or after a PostToolUse with no matching check (**PostToolUse ~60 ms after tool start, measured SP-H1**) | SD §2, §5.2, BR-100 | Contract test with the hook removed; e2e |
-| NFR-019 | Performance | Same-file warning ≤ 2 s after the second session's PostToolUse on the same file `[proposed – G3]` | UC-59 | Integration test |
-| NFR-020 | Performance | Worker non-model routes (`/v1/config`, `/v1/meter`, `/v1/account`, `/v1/auth/start`) p95 ≤ 300 ms `[proposed – G3]` | ADR-0012 | Worker analytics |
+| NFR-019 | Performance | Same-file warning ≤ 2 s after the second session's PostToolUse on the same file `[set at G3-6]` | UC-59 | Integration test |
+| NFR-020 | Performance | Worker non-model routes (`/v1/config`, `/v1/meter`, `/v1/account`, `/v1/auth/start`) p95 ≤ 300 ms `[set at G3-6]` | ADR-0012 | Worker analytics |
 | NFR-021 | Performance | Installer < 20 MB, per-user install < 10 s, no admin; guard < 4 MB, no runtime dependencies. **Measured installer 2.4 MB (SP-ST1)** | SD §2 | `build` job size check |
 | NFR-022 | Performance | Updates download in the background and install on quit or when no session runs. **Measured round trip 3.1 s (SP-ST1)** | ADR-0013, CI-CD §5 | `verify` release job |
 
@@ -421,7 +421,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-034 | Reliability | Check events lost while the app runs ≤ 1 in 10,000 | SD §2 | Nightly soak: 6 sessions × 1 call/s × 30 min |
 | NFR-035 | Reliability | Spool bounded to 7 days or 50 MB total, oldest first; every drop counted and shown in the diagnostic; ingest idempotent by `event_id` | ADR-0009 | Integration test |
 | NFR-036 | Reliability | No surface shows Protected without a real check event; idle never shows a tick | BR-100, SD §5.2 | Cartesian derive-function table test |
-| NFR-037 | Reliability | ≥ 3 guard-caused blocks in 60 s → `failing` within 2 s `[proposed – G3]`; **Off for 15 minutes** re-enables at 15 min ± 5 s; Repair re-runs the canary | SD §5.2, §7.1 | e2e failing → off → back |
+| NFR-037 | Reliability | ≥ 3 guard-caused blocks in 60 s → `failing` within 2 s `[set at G3-6]`; **Off for 15 minutes** re-enables at 15 min ± 5 s; Repair re-runs the canary | SD §5.2, §7.1 | e2e failing → off → back |
 | NFR-038 | Reliability | The canary runs at setup step 5, at the first session after a CLI version change, and on demand; 0 Claude tokens; "Verified for Claude Code x.y" only if x.y is in the signed list **and** the local canary passed; the nightly CI suite ≤ 15 min per OS | ADR-0014, S-1 | Badge table unit test; canary workflow |
 | NFR-039 | Reliability | Tripwire accuracy: 0 wrong trips with 3 concurrent sessions; no trip on 50,000 deletes inside git-ignored folders; exact count after overflow (recount); never "stopped" while the count moves; < 200 deletes after the kill with an orphaned `Start-Process` deleter. **Measured: 0/14 wrong trips; 50,000/50,000 counted under 96 overflows; 81 deletes after the kill (SP-TW1)** | SD §5.5, SP-TW1 | Tripwire PR + nightly tests |
 | NFR-040 | Reliability | Every write is atomic (temp, flush, rename) and recorded as a JSON patch; a setup failure rolls back in reverse; after a crash or quit, setup resumes at the first unfinished step; quitting before step 4b leaves Claude Code's settings byte-equal | SD §5.6, UC-54 A9 | Kill-at-each-step integration test |
@@ -432,15 +432,15 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-045 | Reliability | A failed app or plugin update leaves the previous version working; running sessions keep the plugin version they loaded; a version folder is deleted only when no live session reports it | SD §7, SP-H1 | Upgrade integration test |
 | NFR-046 | Reliability | Smart App Control: setup refuses to install the guard when `VerifiedAndReputablePolicyState` ≠ 0; re-read at start and daily; SAC turning on → `failing` with Off for 15 minutes and Remove Eucas | ADR-0013 amendment | Unit table (0/1/2/missing); e2e edge U |
 | NFR-047 | Reliability | A panic in the notch window or drawing is caught: the notch hides, the tray shows the state, the core keeps running | SD §7 | Fault-injection test |
-| NFR-048 | Reliability | Worker monthly availability ≥ 99.5 % `[proposed – G3]`; alert on 5xx > 2 % for 10 min | OPERATIONS §5 | Cloudflare analytics |
-| NFR-049 | Reliability | `killSwitches.supervisor` takes effect at the Worker on the next call and in the app within 15 min (signed config re-fetched every 15 min while running) `[proposed – G3]` | SEC §8, SUPERVISOR §8 | Staging smoke |
+| NFR-048 | Reliability | Worker monthly availability ≥ 99.5 % `[set at G3-6]`; alert on 5xx > 2 % for 10 min | OPERATIONS §5 | Cloudflare analytics |
+| NFR-049 | Reliability | `killSwitches.supervisor` takes effect at the Worker on the next call and in the app within 15 min (signed config re-fetched every 15 min while running) `[set at G3-6]` | SEC §8, SUPERVISOR §8 | Staging smoke |
 
 ### 3.3 Security
 | ID | Category | Requirement (measurable) | Source | Verification |
 |---|---|---|---|---|
 | NFR-060 | Security | Locked limits live in admin-written managed settings: merged into whichever admin source exists (file or HKLM; the same JSON to both if both exist), only keys inside Eucas's marker object; never `allowManagedHooksOnly`, `disableAllHooks` or `HKCU\…\Policies`; never into an organisation's source. **Measured: survived 33 / 33 lower-scope disables (SP-H1)** | ADR-0007, SEC §5 | Precedence tests on the admin Windows runner (nightly) |
 | NFR-061 | Security | The four limits are always on; no rule (user, template, suggestion, library, drafted) can auto-approve any of them; the compiler rejects allow-rule overlap; **0 known bypasses** among in-scope tool calls at launch | ADR-0010, BR-102, PRD C5 | ~400 limit cases; published bypass suite (TEST §5); property test "unresolved never allow" |
-| NFR-062 | Security | Self-protection denies tool calls that write `~/.claude/settings*.json`, `~/.claude/plugins/**`, Eucas's per-user folders or the managed paths, or run `claude` with `--settings`, `--setting-sources`, `--dangerously-skip-permissions`, `plugin disable/uninstall`; a rulebook change Eucas didn't make is detected, restored and logged within 2 s `[proposed – G3]` | SEC T2, T5 | Bypass suite "settings tampering"; integration test |
+| NFR-062 | Security | Self-protection denies tool calls that write `~/.claude/settings*.json`, `~/.claude/plugins/**`, Eucas's per-user folders or the managed paths, or run `claude` with `--settings`, `--setting-sources`, `--dangerously-skip-permissions`, `plugin disable/uninstall`; a rulebook change Eucas didn't make is detected, restored and logged within 2 s `[set at G3-6]` | SEC T2, T5 | Bypass suite "settings tampering"; integration test |
 | NFR-063 | Security | Elevate helper: fixed operations only; limit ids as an enum set; block-rule list validated against a deny-only schema (no allow, globs or free text); payload embedded; first run only after the core's SHA-256 matches the hash pinned in the app build; every later run from `Program Files\Eucas` | SEC T7, ADR-0013 | Swapped-helper test; forged-allow rejection test |
 | NFR-064 | Security | Updates verified with the Tauri updater Ed25519 key before install; bad signature or older version refused; `SHA256SUMS` on every release; installer hash on the site | ADR-0013, CI-CD §6 | `verify` job; tampered manifest (**refused, measured SP-ST1**) |
 | NFR-065 | Security | Runtime config is Ed25519-signed with an offline key, with anti-rollback `version`; the canary key is trusted for `verified-versions.json` only | ADR-0012, ADR-0014 | Bad-signature and rollback tests |
@@ -451,7 +451,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-070 | Security | Account tokens: HMAC-SHA256, access 1 h, refresh 60 days, revoked by epoch bump or row deletion; `CryptProtectData` user-scope blobs only; never in the DB, logs, diagnostic, telemetry or renderer | ADR-0017 | Unit tests; diagnostic and renderer-store scans |
 | NFR-071 | Security | Auth: CSPRNG 6-digit code stored as HMAC, 10-min expiry, dies on the 6th wrong try, constant-time compare; ≤ 3 codes/email/h, ≤ 10/IP/h, global daily send cap; identical responses for known and unknown emails; disposable domains (and parents, IDNA-normalised) → `422 disposable_email` | ADR-0017, SEC T17 | Worker tests (TEST §8) |
 | NFR-072 | Security | Worker bodies: `.strict()` zod (unknown key → 400); ≤ 8 KiB model routes, ≤ 2 KiB auth; text ≤ 1,200 chars; secrets and code fences re-scanned → 422; no `console.log`; error logs carry route, status, request id only | ADR-0012 | Lint + spy-logger test; staging smoke |
-| NFR-073 | Security | Abuse limits on model routes: ≤ 30 requests/min per account, ≤ 120/min per IP `[proposed – G3]`; over → 429 → `ask_user` | ADR-0012, SEC T10 | Worker test |
+| NFR-073 | Security | Abuse limits on model routes: ≤ 30 requests/min per account, ≤ 120/min per IP `[set at G3-6]`; over → 429 → `ask_user` | ADR-0012, SEC T10 | Worker test |
 | NFR-074 | Security | The app ships no secret; Worker secrets rotate every 90 days (token key: previous accepted 60 days); the updater key exists only in CI `production`; gitleaks blocks merges | SEC §6 | `secret-scan` job; rotation calendar |
 | NFR-075 | Security | SHA-pinned Actions, frozen lockfiles, `cargo deny`, dependency review (high), CycloneDX SBOM and SLSA provenance on every release | SEC T12, CI-CD §4 | CI jobs |
 | NFR-076 | Security | The supervisor can never approve a tool call: no allow variant; its crate isn't a guard dependency; overrides (block → ask; `done` needs green signals; ≤ 3 nudges; late/invalid → ask) always run | ADR-0011, SUPERVISOR §5 | Unit tests on every SP-SUP1 dangerous case |
@@ -471,7 +471,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-096 | Privacy | Server data per person = the `account` fields of §5.2 only; no IP, user agent, device id or count, event history or content; `auth_code` ≤ 10 min; after delete only `trial_claim` (keyed HMAC) remains | ADR-0017, BR-124 | D1 schema review; Worker tests |
 | NFR-097 | Privacy | Every provider call carries `provider: { zdr: true, data_collection: "deny" }` | ADR-0011, SEC T9 | Contract test on every call path |
 | NFR-098 | Privacy | Telemetry and crash reports off by default, separately opt-in, schema-allowlisted, ≤ daily, no account token or id, no IP stored | OPERATIONS §1, ADR-0015 | Schema tests |
-| NFR-099 | Privacy | Delete account: one statement removes the row and pending code, keeps only `trial_claim`, cancels any Lemon Squeezy subscription, removes local tokens and email; p95 ≤ 5 s `[proposed – G3]`; a failure leaves the account intact and says so | ADR-0017, BR-124 (7) | Worker + e2e |
+| NFR-099 | Privacy | Delete account: one statement removes the row and pending code, keeps only `trial_claim`, cancels any Lemon Squeezy subscription, removes local tokens and email; p95 ≤ 5 s `[set at G3-6]`; a failure leaves the account intact and says so | ADR-0017, BR-124 (7) | Worker + e2e |
 | NFR-100 | Privacy | Profile isolation: one folder per account (`sha256(account id)`); account B reads none of A's rules, history, receipts, ledger, learned items or sent log; nothing synced; machine locks show to B as "Locked on this PC", read-only | ADR-0015, ADR-0017, BR-125 (9) | Profile isolation e2e (mandatory) |
 | NFR-101 | Privacy | The diagnostic has no prompts, file contents, tokens, email, payload text or project paths | BR-109, OPERATIONS §3 | Redaction test |
 | NFR-102 | Privacy | `news_opt_in` set only by ticking the unticked box; `false` never clears earlier consent | ADR-0017, BR-124 (13) | e2e + Worker test |
@@ -482,7 +482,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 |---|---|---|---|---|
 | NFR-110 | Cost | Model spend per account ≤ its period cap from signed config: setup $0.02, trial $0.50 (14 days), taste $0.02/calendar month, Pro $1.48/month | ADR-0018, BR-123, §10 #56 | NFR-044 test; monthly review |
 | NFR-111 | Cost | Prompt ≤ 2,000 tokens (`ceil(utf8 bytes / 3)`; guidance trimmed first, else `413`); `max_tokens` 300; drafting schema ≤ 800 tokens | ADR-0018 | Worker test; CI token count |
-| NFR-112 | Cost | Server-wide daily model spend ≤ `dailyUsdCircuitBreaker` (value: G3-4); over it, rules only for everyone until 00:00 UTC; alerts at 50 % and 90 %; OpenRouter key credit limit $50 production, $5 staging | ADR-0012, SUPERVISOR §9 | `spend_day` test |
+| NFR-112 | Cost | Server-wide daily model spend ≤ `dailyUsdCircuitBreaker` = **$10** at launch (G3-4), raised by signed config when the 50 % alert fires on normal days; over it, rules only for everyone until 00:00 UTC; alerts at 50 % and 90 %; OpenRouter key credit limit $50 production, $5 staging | ADR-0012, SUPERVISOR §9 | `spend_day` test |
 | NFR-113 | Cost | Infrastructure (Workers Paid, D1, KV, Email) < $100/month excluding model spend | ADR-0012, ADR-0017 | Monthly bill |
 | NFR-114 | Cost | ≤ 3 D1 writes per model call; ≤ 50 M writes/month | ADR-0018 | D1 analytics |
 | NFR-115 | Cost | No response the app receives has a money or count field; no `$` or call count renders in the panel | ADR-0018, BR-122 | Key scan; panel text scan |
@@ -499,13 +499,13 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-134 | Accessibility | Never colour alone; the notch reads in a 1-bit render; forced colours map to system colours | BR-127, DESIGN §8 | 1-bit golden image; forced-colours e2e |
 | NFR-135 | Usability | Targets ≥ 32 px in the panel, ≥ 40 px for setup primaries | DESIGN §8 | Component tests |
 | NFR-136 | Usability | Nothing opens by itself; the notch never takes focus at rest; Windows notifications only as the BR-108 (3) fallback, ≤ 1 per event, ≤ 1 per 2 min per session | BR-108, BR-121 | Win32 foreground probe; policy unit tests |
-| NFR-137 | Usability | Correct placement at 100/125/150 % and with multiple monitors. **Passed (G6 manual checklist, 2026-10-26)** | ADR-0016 | Golden images; release checklist |
+| NFR-137 | Usability | Correct placement at 100/125/150 % and with multiple monitors. **Passed on Windows 11 (G6 manual checklist, 2026-10-26)**; Windows 10 22H2 pass due before launch (G3-5) | ADR-0016 | Golden images; release checklist |
 | NFR-138 | Usability | Fixed strings render exactly; the product never calls itself "Claude Code" | DESIGN §7.1, BR-99 | Copy-key e2e |
 
 ### 3.7 Portability and compatibility
 | ID | Category | Requirement (measurable) | Source | Verification |
 |---|---|---|---|---|
-| NFR-150 | Portability | v0.1 supports **Windows 11 22H2+ x64 only**; on Windows 10 or arm64 the installer stops with a plain reason and writes nothing `[proposed – G3]` (G3-5) | AS-11, SD §1 | Installer OS-check unit test |
+| NFR-150 | Portability | v0.1 supports **Windows 10 22H2 and Windows 11 22H2+, x64** (G3-5); on older Windows or arm64 the installer stops with a plain reason and writes nothing. Smart App Control exists only on Windows 11, so FR-002's check is skipped on Windows 10. GitHub has no Windows 10 runner, so every release also passes the G6 manual checklist on a Windows 10 22H2 PC | AS-11, SD §1, G3-5 | Installer OS-check unit test; Windows 10 manual checklist per release |
 | NFR-151 | Compatibility | Guarded hosts: terminal CLI, desktop app local sessions, VS Code. **Passed (G6 manual checklist, 2026-10-26)**; hosts identified by image path | AS-10, SP-H1, S-4 | Release checklist; diagnostic host table |
 | NFR-152 | Compatibility | Every hook is exec form with `args`; works with Git Bash present or absent, PowerShell 5.1 and 7, paths with spaces and non-ASCII | SP-H1 finding 1 | Hooks-schema contract test; `guard-contract` matrix |
 | NFR-153 | Portability | Ubuntu CI builds and runs unit, fixture-contract and smoke e2e tests; OS-specific code only in `eucas-platform` | ADR-0008, CODE-STRUCTURE §3 | CI matrix |
@@ -522,14 +522,14 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | ID | Category | Requirement (measurable) | Source | Verification |
 |---|---|---|---|---|
 | NFR-180 | Maintainability | Every ✅ job in CI-CD §2 is a required check on `dev`, `staging`, `main` | CI-CD §2 | Ruleset audit |
-| NFR-181 | Maintainability | Line coverage ≥ 90 % for `eucas-rules` and the supervisor trimmer/redactor/overrides; no global gate elsewhere `[proposed – G3]` (TESTING sets layers, no number) | TEST §1–2 | `cargo llvm-cov` gate |
+| NFR-181 | Maintainability | Line coverage ≥ 90 % for `eucas-rules` and the supervisor trimmer/redactor/overrides; no global gate elsewhere `[set at G3-6]` (TESTING sets layers, no number) | TEST §1–2 | `cargo llvm-cov` gate |
 | NFR-182 | Maintainability | CODE-STRUCTURE §3 crate graph and ESLint boundaries hold | CODE-STRUCTURE §3 | `xtask check-deps`, lint |
 | NFR-183 | Operability | Every failure has a typed error code and lands in a visible state (log row, banner or needs-you), never only a log line | CLAUDE.md, engineering-craft | Review checklist |
 | NFR-184 | Operability | The diagnostic builds in ≤ 5 s with the OPERATIONS §3 sections | OPERATIONS §3, BR-109 | Unit + e2e |
 | NFR-185 | Maintainability | `contracts/` JSON Schemas are the single source; generated types current; fixtures round-trip | ADR-0008 | `contracts` job |
 | NFR-186 | Operability | D1 migrations additive only; Worker rollback is one command with no down-migration | CI-CD §7 | Migration lint |
 | NFR-187 | Operability | Beta from `staging`, stable from `main` with founder approval; stable to 10 % for 48 h then 100 % unless paused | ADR-0013, CI-CD §4 | Release workflow |
-| NFR-188 | Operability | Local app log rotates at ≤ 10 MB, keeps 7 days, redacted with the supervisor redactor `[proposed – G3]` | SEC T14 | Unit test |
+| NFR-188 | Operability | Local app log rotates at ≤ 10 MB, keeps 7 days, redacted with the supervisor redactor `[set at G3-6]` | SEC T14 | Unit test |
 | NFR-189 | Operability | Founder maintenance ≤ 5 h/week, with the OPERATIONS §7 load-shedding order | OPERATIONS §7, PRD C13 | Weekly log |
 
 ### 3.9 Licensing and compliance
@@ -635,7 +635,7 @@ All JSON over TLS; bodies `.strict()`; `Authorization: Bearer <access token>` wh
 | `GET /v1/account` | ✅ | Bearer | — | `{ email, plan, planUntil?, meter }` | 401 | — |
 | `DELETE /v1/account` | ✅ | Bearer | — | 204 | 401, 5xx (account intact) | Keeps `trial_claim`; cancels LS subscription |
 | `GET /v1/meter` | ✅ | Bearer | — | `{ period: trial\|taste\|pro, percentLeft: 0–100 int, resetsAt }` | 401 | No money, no counts |
-| `POST /v1/supervise` | ✅ (behind `killSwitches.supervisor`) | Bearer | `{ signals, message (≤ 1,200), rules[] (id, appliesTo, text), idempotencyKey }` ≤ 8 KiB | `{ decision: nudge\|answer_from_rules\|ask_user\|stop\|done, ruleId?, text? (≤ 280), configVersion, meter }` | 400, 401, 402 `budget_empty`, 413 `prompt_too_large`, 422 `secret_detected`, 429, 503 `supervisor_off` `[proposed – G3]` | Deadline 2.8 s server, 3 s app; abuse limits NFR-073 |
+| `POST /v1/supervise` | ✅ (behind `killSwitches.supervisor`) | Bearer | `{ signals, message (≤ 1,200), rules[] (id, appliesTo, text), idempotencyKey }` ≤ 8 KiB | `{ decision: nudge\|answer_from_rules\|ask_user\|stop\|done, ruleId?, text? (≤ 280), configVersion, meter }` | 400, 401, 402 `budget_empty`, 413 `prompt_too_large`, 422 `secret_detected`, 429, 503 `supervisor_off` `[set at G3-6]` | Deadline 2.8 s server, 3 s app; abuse limits NFR-073 |
 | `POST /v1/draft-rule` | ✅ | Bearer | `{ text (≤ 1,200), idempotencyKey }` | `{ draft (rulebook rule), meter }` | 400, 401, 402, 413, 422 `secret_detected` / `draft_invalid` | Same budget; app re-validates |
 | `POST /v1/waitlist` | ✅ | — | `{ moment, installHash }` | 204 | 400 | Counter only; sets `waitlist_at` when called signed in via the core |
 | `POST /v1/telemetry` | ✅ opt-in | — (never a token) | allowlisted daily counts (OPERATIONS §1) | 204 | 400 | ≤ 1/day/install |
@@ -682,9 +682,9 @@ Source of truth: ADR-0015 (local), ADR-0017 (server), CODE-STRUCTURE §5 (SQLite
 | `file_touch` | profile `eucas.db` | (session, path, time) | worktree, path relative to the project, lines changed | 24 h | Retention job |
 | `usage_sample` | profile `eucas.db` | (session, time) | tokens, cost (API mode), 5-hour %, 7-day %, reset times | 90 days | Retention job |
 | `rule_counter` | profile `eucas.db` | rule id | count, last used (atomic `ON CONFLICT` increment) | Life of the rule | Rule delete; Clear history |
-| `suggestion` | profile `eucas.db` | (program + args redacted, folder) | manual allows, last seen, dismissed | 90 days since last seen `[proposed – G3]` | Retention job |
-| `needs_item` | profile `eucas.db` | id | kind, session, since, summary, snoozed, resolved | 30 days after resolved `[proposed – G3]` | Retention job |
-| `canary_run` | profile `eucas.db` | id | CLI version, path (hook-only), result, time | Last 50 `[proposed – G3]` | Retention job |
+| `suggestion` | profile `eucas.db` | (program + args redacted, folder) | manual allows, last seen, dismissed | 90 days since last seen `[set at G3-6]` | Retention job |
+| `needs_item` | profile `eucas.db` | id | kind, session, since, summary, snoozed, resolved | 30 days after resolved `[set at G3-6]` | Retention job |
+| `canary_run` | profile `eucas.db` | id | CLI version, path (hook-only), result, time | Last 50 `[set at G3-6]` | Retention job |
 | `sent_payload` | profile `eucas.db` (payload DPAPI-encrypted) | id | time, session, payload (verbatim as sent), outcome | Last 20 and ≤ 7 days | Retention; Clear history; Remove Eucas |
 | `learned_item` *(UC-67; in `eucas.db`, G3-3)* | profile | id | kind (allowed, denied, answered), structured key (program + args or question kind), source (dates, counts), use count, applied at | Until Forget | Forget, Forget everything, Clear history |
 | `setting` | profile `eucas.db` | key | Euca name and look, notch look, sounds, learning on/off, telemetry and crash opt-ins, setup step reached, account email, last known plan + meter (7-day grace), shortcut | Life of the profile | Remove Eucas |
@@ -702,7 +702,7 @@ Machine-level (shared across profiles): guard, plugin, `rulebook.bin`, spool, tr
 | `account` | D1 | `id` (random 128-bit) | `email` (normalised, unique), `plan` (`free\|pro\|founder`), `plan_until`, `period_kind` (`pending\|trial\|taste\|pro`), `trial_used`, `period_start`, `period_end`, `used_micro_usd`, `reserved_micro_usd`, `token_epoch`, `waitlist_at`, `news_opt_in`, `created_at` | Until Delete account | One `DELETE` (with pending code) |
 | `trial_claim` | D1 | `email_key` = HMAC-SHA256(trial key, trial-normalised email) | — | Indefinitely (outlives delete, by founder decision U-4) | Not deleted |
 | `auth_code` | D1 | `email` | `code_hmac`, `expires_at`, `tries` | ≤ 10 min | On use; hourly cron |
-| `spend_day` | D1 | `day` (UTC) | `micro_usd` (no user key) | 90 days `[proposed – G3]` | Cron |
+| `spend_day` | D1 | `day` (UTC) | `micro_usd` (no user key) | 90 days `[set at G3-6]` | Cron |
 | Runtime config, verified list | KV | channel | Signed JSON | Current + previous | Overwrite |
 | Waitlist and telemetry counters | Analytics Engine | — | `moment`, `installHash` (per-release salted) / allowlisted counts; no IP | Analytics Engine default | — |
 | Idempotency outcomes | Worker memory | key | outcome code | 60 s | Eviction |
@@ -840,7 +840,7 @@ Every `[ASSUMPTION – confirm]` tag in the companion parts of BRD v1.5 (§2 com
 |---|---|---|---|---|
 | A-01 | BRD §2 AS-9, l. 264 | Claude Code 2.1.310+ on Windows needed for "verified" | **Resolved** | SP-H1 (2.1.310 tested; 2.1.303 and the desktop app's bundled 2.1.308 sit below the floor), SD §1 assumptions (founder via docs), ADR-0014; the badge is per host and per session. FR-004, FR-046 |
 | A-02 | BRD §2 AS-10, l. 265 | A user-scope plugin reaches the terminal, desktop app and VS Code; running sessions may not pick up a new plugin | **Resolved** | SP-H1: terminal confirmed; a running session never loads a new plugin (so "restart it"). Desktop app and VS Code reach: G6 manual checklist passed (FD-6, 2026-10-26). FR-028, FR-052 |
-| A-03 | BRD §2 AS-11, l. 266 | Windows 11 22H2+ x64 first; arm64 later | **Resolved** | SD §1 assumptions ("Windows 11 22H2+ x64 first, arm64 later (founder)"). NFR, not an FR |
+| A-03 | BRD §2 AS-11, l. 266 | Windows 11 22H2+ x64 first; arm64 later | **Resolved** | G3-5: Windows 10 22H2 and Windows 11 22H2+ x64; arm64 later. NFR-150, not an FR |
 | A-04 | BRD §2 AS-13, l. 268 | Hidden budget numbers from the cost study; Pro not set | **Resolved** | BRD §10 #56 (Pro ~$1.48, *"Approve all"*), ADR-0018 config table (trial $0.50, taste $0.02, setup $0.02, Pro $1.48), re-run with SP-SUP2 prompt sizes before launch. FR-143 |
 | A-05 | UC-54 step 7, l. 3674 | Drafts made during setup count on the account's budget "as part of the trial" | **Resolved** (differently) | ADR-0018 §1 (Proposed): a new account is in the `pending` period and setup drafts draw on a separate `setupMicroUsd` ($0.02) allowance; the trial starts only at setup's end. SET step 7's "the trial covers it in setup" should be corrected to match. FR-025 |
 | A-06 | UC-54 step 8, l. 3675 | With no session yet, a sample message is shown and labelled | **Resolved** | Approved design SET step 8 and §4 (labelled **Sample**, also on redaction failure), PRD 27.11. FR-027 |
@@ -876,7 +876,7 @@ Scope: `[ASSUMPTION – confirm]` tags (all variants) in the companion parts of 
 |---|---|---|---|---|
 | 1 | BRD §2 AS-9 (l. 264) | Claude Code 2.1.310+ on Windows is needed for "verified" | **Resolved.** SP-H1 ran on 2.1.310 and 2.1.303 with identical results; the floor is `verifiedCliFloor.windows = 2.1.310` in signed config; the badge is per host and session (desktop app bundled 2.1.308 → "Not verified") | ADR-0014 amendment, SP-H1; NFR-154 |
 | 2 | BRD §2 AS-10 (l. 265) | A user-scope plugin reaches the terminal, the desktop app and VS Code; whether running sessions pick up a new plugin is unproven | **Resolved.** Terminal: SP-H1. Desktop app and VS Code: G6 manual checklist **passed 2026-10-26**. Running sessions never pick up a new plugin (SP-H1 finding 3), so setup lists them "Not protected until restarted" | SP-H1, G6-MANUAL-CHECKLIST; NFR-151, NFR-160 |
-| 3 | BRD §2 AS-11 (l. 266) | Windows 11 22H2+, x64 first; arm64 later | **Set by this SRS** (Windows 11 22H2+ x64 only; installer refuses Windows 10 and arm64), with the Windows 10 trade-off as **G3-5** | NFR-150 |
+| 3 | BRD §2 AS-11 (l. 266) | Windows 11 22H2+, x64 first; arm64 later | **Resolved at G3-5:** Windows 10 22H2 and Windows 11 22H2+, x64; arm64 later | NFR-150 |
 | 4 | BRD §2 AS-13 (l. 268) | Budget numbers from the cost study; Pro's budget not set | **Resolved.** Caps in signed config: setup $0.02, trial $0.50 / 14 days, taste $0.02/month, Pro $1.48/month (§10 #56); re-set after SP-SUP2 measures real prompts | ADR-0018 table; NFR-110 |
 | 5 | BRD UC-54 step 7 (l. 3674) | Drafts made during setup count on the account's budget as part of the trial | **Resolved, with a correction:** drafts during setup draw on the separate `setupMicroUsd` allowance ($0.02) of the `pending` period; the trial only starts at `setup_finish` | ADR-0018 Decision 1; NFR-110 |
 | 6 | BRD UC-54 step 8 (l. 3675) | With no session message yet, a labelled sample is shown | **Resolved.** A fixed example, labelled as one (route `s-sent-sample`) | SUPERVISOR §3, setup-flow §7 |
@@ -897,7 +897,7 @@ Scope: `[ASSUMPTION – confirm]` tags (all variants) in the companion parts of 
 
 ## 9. Open questions for G3
 
-Only decisions the sources don't already settle; everything the founder answered on 2026-10-26 is applied, not re-asked. Each question has a recommendation, and **this SRS is written to the recommendation until you answer**.
+Only decisions the sources don't already settle; everything the founder answered on 2026-10-26 is applied, not re-asked. **All seven were answered on 2026-10-26**; each answer is recorded under its question and applied in the text.
 
 ### G3-1. When does a trial start if the supervisor is still switched off at launch?
 
@@ -929,19 +929,28 @@ UC-67 and BR-125 learn from what you **allowed, denied or answered**, kept as "p
 - **Why (a):** it keeps the approved privacy line true word for word and costs nothing extra. Hiding or encrypting the files adds little, because no-export is a product choice, not a security boundary: the trial cap (BR-123) is what limits abuse. **Affects:** NFR-093, NFR-100, NFR-103; FR-166, FR-168, FR-185; BR-115 (7), BR-125.
 
 ### G3-4. What daily cap on model spend before Pro revenue?
+
+**Answered 2026-10-26: (a)**, *"okay lets do this"*. $10 a day at launch, alerts at 50 % and 90 %; raised by signed config when the 50 % alert fires on normal days (about 10,000 free users plus 1,000 trials a month). Applied in NFR-112.
+
 The supervisor is always on, so every signed-in install spends. ADR-0018's worst case is about $700 a month; the PRD ceiling is about $300 a month; the config draft sets the server-wide breaker at $25 a day (about $750 a month). When it trips, everyone falls back to rules only until midnight UTC.
 - **(a) Recommended:** $10 a day (about $300 a month), alerts at 50 % and 90 %, raised by signed config once SP-SUP2 and the first month give real numbers.
 - (b) $25 a day as drafted. (c) $5 a day (trips on a busy launch day).
 - **Why (a):** it matches your stated ceiling and can be raised without a release. **Affects:** NFR-110, NFR-112.
 
 ### G3-5. Windows 10?
+
+**Answered 2026-10-26: (b)**, *"why not win 10 also?"*, then *"okay lets do this"*. Windows 10 22H2 x64 is supported in v0.1, at about one extra build day and a manual Windows 10 checklist pass per release. Applied in NFR-150, NFR-011, NFR-137.
+
 The sources say Windows 11 22H2+ x64 first. Windows 10 is out of support since October 2025 but still common; it has no Smart App Control, but it would add a second OS to the manual checklist, CI and notch tests.
 - **(a) Recommended:** Windows 11 22H2+ x64 only for v0.1; the installer says so plainly on Windows 10; ask "which Windows?" on the waitlist and revisit.
 - (b) Support Windows 10 22H2 too: about one more day of testing, and a second checklist pass per release.
 - **Affects:** NFR-011, NFR-137, NFR-150.
 
 ### G3-6. Approve the proposed numbers as a set?
-Where no source gave a number, this SRS proposes one, marked `[proposed – G3]`: guard compute p95 ≤ 2 ms (NFR-002), status-line wrapper ≤ 30 ms (NFR-006), canary ≤ 2 s (NFR-016), same-file warning ≤ 2 s (NFR-019), Worker non-model routes ≤ 300 ms (NFR-020), `failing` raised within 2 s (NFR-037), Worker availability ≥ 99.5 % (NFR-048), kill switch reaches the app within 15 min (NFR-049), rulebook tamper restored ≤ 2 s (NFR-062), abuse limits 30/min per account and 120/min per IP (NFR-073), delete account ≤ 5 s (NFR-099), 90 % coverage on the rules and redactor code (NFR-181), app log 10 MB / 7 days (NFR-188), the retention periods in §5 and the `503 supervisor_off` code (§4.6).
+
+**Answered 2026-10-26: (a)**, *"okay lets do this"*. Approved as a set; marked `[set at G3-6]` in the text.
+
+Where no source gave a number, this SRS proposes one, marked `[set at G3-6]`: guard compute p95 ≤ 2 ms (NFR-002), status-line wrapper ≤ 30 ms (NFR-006), canary ≤ 2 s (NFR-016), same-file warning ≤ 2 s (NFR-019), Worker non-model routes ≤ 300 ms (NFR-020), `failing` raised within 2 s (NFR-037), Worker availability ≥ 99.5 % (NFR-048), kill switch reaches the app within 15 min (NFR-049), rulebook tamper restored ≤ 2 s (NFR-062), abuse limits 30/min per account and 120/min per IP (NFR-073), delete account ≤ 5 s (NFR-099), 90 % coverage on the rules and redactor code (NFR-181), app log 10 MB / 7 days (NFR-188), the retention periods in §5 and the `503 supervisor_off` code (§4.6).
 - **(a) Recommended:** approve as a set. None changes what you see, so each can be re-tuned later without a change request.
 
 ### G3-7. Approve the extra library safety rules?
