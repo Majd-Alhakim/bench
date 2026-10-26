@@ -14,16 +14,9 @@ const BROWSER = process.env.BROWSER ?? "C:/Program Files (x86)/Microsoft/Edge/Ap
 const OUT = process.env.OUT ?? path.resolve(here, "../public/screens");
 const FILE = pathToFileURL(path.resolve(here, "../../../docs/design/ui/companion/prototype/notch.html")).href;
 
-// [file name, route, what to capture, themes]. A selector captures that element (plus `pad` px);
-// `top: [w, h]` captures a box of that size at the top centre of the screen (the notch).
-const NOTCH = { top: [300, 56] };
+// [file name, route, what to capture, themes]. A selector captures that element; `top: [w, h]` captures a box of
+// that size at the top centre of the screen. The notch states on the page are drawn in CSS to the eye grammar.
 const SHOTS = [
-  ["notch-rest", "n-rest", NOTCH, ["dark"]],
-  ["notch-working", "n-working", NOTCH, ["dark"]],
-  ["notch-marker", "n-marker", NOTCH, ["dark"]],
-  ["notch-trip", "n-trip", NOTCH, ["dark"]],
-  ["notch-off", "n-off", NOTCH, ["dark"]],
-  ["notch-doze", "n-doze", NOTCH, ["dark"]],
   ["needs", "p-needs", { sel: ".panel" }],
   ["usage", "p-usage", { sel: ".panel" }],
   ["rules", "p-rules", { sel: ".panel" }],

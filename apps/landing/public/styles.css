@@ -158,20 +158,17 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 }
 .eyes.blink i { animation: blink 150ms ease-in-out; }
 @keyframes blink { 50% { transform: translate(var(--ex), var(--ey)) rotate(-12deg) scaleY(0.08); } }
-.notch[data-state="trip"] .eyes i:first-child, .notch[data-state="off"] .eyes i:first-child { transform: translate(var(--ex), 1.5px) rotate(16deg); }
-.notch[data-state="trip"] .eyes i:last-child, .notch[data-state="off"] .eyes i:last-child { transform: translate(var(--ex), 1.5px) rotate(-16deg); }
+.notch[data-state="trip"] .eyes i:first-child { transform: translate(var(--ex), 1.5px) rotate(16deg); }
+.notch[data-state="trip"] .eyes i:last-child { transform: translate(var(--ex), 1.5px) rotate(-16deg); }
 /* the eye grammar (DESIGN.md §11): Focused while sessions work, Glance when something arrives, Concerned for a stop, Pleased when you are caught up */
-.notch[data-state="working"] .eyes i, .notch[data-state="focused"] .eyes i { width: 6px; height: 9px; border-radius: 4px; transform: translate(var(--ex), var(--ey)); }
+.notch[data-state="working"] .eyes i, .notch[data-state="focused"] .eyes i { width: 6px; height: 9px; border-radius: 3px; transform: none; animation: scan 2.4s ease-in-out infinite alternate; }
 .notch[data-state="marker"] .eyes i { transform: translate(3px, 1px) rotate(-12deg); }
-.notch[data-state="pleased"] .eyes i { width: 10px; height: 6px; border-radius: 10px 10px 2px 2px; transform: translateY(-1px); }
-.n-label { display: none; font-size: 12px; font-weight: 600; color: var(--notch-danger); }
-.notch[data-state="off"] .n-label { display: inline; }
+.notch[data-state="pleased"] .eyes i { width: 9px; height: 5px; border-radius: 9px 9px 3px 3px; transform: translateY(-1px); }
 .n-marker {
   display: none; align-items: center; height: 18px; padding: 0 7px; border-radius: 9px;
   font-size: 11px; font-weight: 600; line-height: 18px; font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .notch[data-state="marker"] .n-marker { display: inline-flex; background: var(--marker-attn); color: #161616; animation: pop 0.64s var(--spring); }
-.notch[data-state="trip"] .n-marker { display: inline-flex; background: var(--marker-danger); color: #fff; animation: pop 0.64s var(--spring); }
 @keyframes pop { from { transform: scale(0.4); opacity: 0; } }
 .beam { position: absolute; left: 12px; right: 12px; bottom: 3px; height: 2px; overflow: hidden; border-radius: 2px; opacity: 0; transition: opacity 0.3s; }
 .beam i { position: absolute; inset: 0 auto 0 0; width: 46%; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--euca-light) 30%, var(--euca-base) 55%, transparent); /* taste-skill-ignore: the product's working beam */ animation: sweep 1.7s ease-in-out infinite alternate; }
@@ -242,11 +239,21 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px;
   min-height: 230px; padding: 0 24px 24px; background: var(--surface); border-radius: 0 0 var(--nr) var(--nr); overflow: hidden;
 }
-.tile img { position: absolute; top: 0; left: 50%; width: 300px; max-width: none; transform: translateX(-50%); }
+/* each tile carries a notch hanging from its top edge, drawn to the eye grammar (DESIGN.md §11) */
+.tile-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%) scale(1.6); transform-origin: top center; display: flex; align-items: center; justify-content: center; width: 124px; height: 32px; background: var(--notch-bg); border-radius: 0 0 16px 16px; }
+.eyes[data-x] i { transition: none; }
+.eyes[data-x="glance"] i { transform: translate(3px, 1px) rotate(-12deg); }
+.eyes[data-x="focused"] i { width: 6px; height: 9px; border-radius: 3px; transform: none; animation: scan 2.4s ease-in-out infinite alternate; }
+@keyframes scan { from { transform: translateX(-2px); } to { transform: translateX(2px); } }
+.eyes[data-x="front"] i { transform: translateY(-1.5px) rotate(-12deg); }
+.eyes[data-x="concerned"] i:first-child { transform: translateY(1.5px) rotate(16deg); }
+.eyes[data-x="concerned"] i:last-child { transform: translateY(1.5px) rotate(-16deg); }
+.eyes[data-x="sleepy"] i { width: 9px; height: 2.6px; background: var(--notch-eye-dim); transform: translateY(3px); }
+.eyes[data-x="pleased"] i { width: 9px; height: 5px; border-radius: 9px 9px 3px 3px; transform: translateY(-1px); }
 .tile p { font-size: var(--t-s); color: var(--muted); }
 .tile p b { color: var(--ink); font-weight: 600; }
-.tile-head { grid-column: span 2; justify-content: flex-end; padding: 28px; background: var(--ink); color: var(--on-ink); }
-.tile-head h2 { font-size: clamp(30px, 3vw, 44px); max-width: 13ch; }
+.tile-head { justify-content: flex-end; padding: 28px; background: var(--ink); color: var(--on-ink); }
+.tile-head h2 { font-size: clamp(26px, 2.4vw, 36px); }
 .tile-head p { color: var(--on-ink); font-size: var(--t-b); max-width: 40ch; }
 
 /* ---------- Showcase: a square plate and the panel's tabs ---------- */
@@ -455,8 +462,9 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   .hero-stage { position: relative; left: auto; top: auto; margin-top: 48px; height: 520px; }
   .hero-panel { width: min(400px, calc(100vw - 32px)); }
   .hero-panel img { width: 100%; }
-  .tile { min-height: 190px; padding: 0 16px 16px; }
-  .tile img { width: 240px; }
+  .tile { min-height: 200px; padding: 0 16px 16px; }
+  .tile-notch { transform: translateX(-50%); }
+  .tile:last-child { grid-column: 1 / -1; }
   .tile-head { grid-column: 1 / -1; min-height: 0; gap: 16px; padding: 24px 20px; }
   .show { grid-template-columns: 1fr; min-height: 0; gap: 32px; }
   .show-side { gap: 32px; }

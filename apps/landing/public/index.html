@@ -35,7 +35,6 @@
 <div class="live" data-ui data-live>
   <button class="notch" type="button" data-ui aria-expanded="false" aria-controls="live-peek" data-notch data-state="working">
     <span class="sr" data-notch-label>Your Euca, in the Eucas notch: protected, sessions working. Show the peek.</span>
-    <span class="n-label" aria-hidden="true">Not protected</span>
     <span class="eyes" aria-hidden="true" data-eyes><i></i><i></i></span>
     <span class="n-marker" aria-hidden="true" data-marker></span>
     <span class="beam" aria-hidden="true"><i></i></span>
@@ -91,12 +90,13 @@
 <section class="states wrap" data-state="marker" aria-labelledby="states-title">
   <ul class="board">
     <li class="tile tile-head" data-rise><h2 id="states-title">Read your Euca at a glance.</h2></li>
-    <li class="tile" data-rise><img src="screens/notch-working.webp" width="600" height="112" loading="lazy" decoding="async" alt="The notch with a moving beam under the eyes."><p><b>Working.</b> The beam runs while your sessions run.</p></li>
-    <li class="tile" data-rise><img src="screens/notch-marker.webp" width="600" height="112" loading="lazy" decoding="async" alt="The notch with an amber marker: 2."><p><b>2 need you.</b> The count stays until you deal with them.</p></li>
-    <li class="tile" data-rise><img src="screens/notch-trip.webp" width="600" height="112" loading="lazy" decoding="async" alt="The notch with concerned eyes and a red marker: Stopped: notes."><p><b>Stopped: notes.</b> The tripwire stopped a session.</p></li>
-    <li class="tile" data-rise><img src="screens/notch-off.webp" width="600" height="112" loading="lazy" decoding="async" alt="The notch reads Not protected in red, with concerned eyes."><p><b>Not protected.</b> It says so until it's back.</p></li>
-    <li class="tile" data-rise><img src="screens/notch-rest.webp" width="600" height="112" loading="lazy" decoding="async" alt="The notch at rest: two white eyes."><p><b>Calm.</b> Protected, nothing waiting.</p></li>
-    <li class="tile" data-rise><img src="screens/notch-doze.webp" width="600" height="112" loading="lazy" decoding="async" alt="The notch with sleepy eyes."><p><b>Dozing.</b> Nothing running and you're away.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="calm"><i></i><i></i></span></span><p><b>Calm.</b> Protected, nothing running. It follows your pointer and blinks.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="focused"><i></i><i></i></span></span><p><b>Focused.</b> Your sessions are working. The eyes read left to right.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="glance"><i></i><i></i></span></span><p><b>Glance.</b> Something just arrived: one look at it.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="front"><i></i><i></i></span></span><p><b>Toward you.</b> A session is waiting for you.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="concerned"><i></i><i></i></span></span><p><b>Concerned.</b> Something needs a look. Softened, never alarmed.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="sleepy"><i></i><i></i></span></span><p><b>Sleepy.</b> You're away and nothing runs.</p></li>
+    <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="pleased"><i></i><i></i></span></span><p><b>Pleased.</b> You're all caught up.</p></li>
   </ul>
 </section>
 

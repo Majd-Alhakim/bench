@@ -52,7 +52,7 @@
   const STATES = {
     working: ["", "protected, sessions working"],
     marker: ["2", "protected, 2 need you"],
-    trip: ["Stopped: notes", "the tripwire stopped the notes session"],
+    trip: ["", "concerned: something needs a look"],
     focused: ["", "protected, checking with the supervisor"],
     rest: ["", "protected, nothing waiting"],
     pleased: ["", "protected, you're all caught up"],
