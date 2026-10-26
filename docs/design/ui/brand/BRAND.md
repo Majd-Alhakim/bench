@@ -115,7 +115,7 @@ It's the one element that's ours already (it came from the client's avatar refer
 **Rules for the Look**
 - Eyes only. Never a mouth, brows, a nose, hands or accessories.
 - Eyes are always white on an agent; the Look inside glyph takes the colour of its text.
-- Expressions change the eye shape, never the count or the colour (see §8).
+- Expressions change the eye shape, never the count or the colour (see §8). Only the eight faces of the eye grammar exist ([companion DESIGN §2.3](../companion/DESIGN.md#23-the-eye-grammar-the-only-faces)).
 - The glyph is never used as decoration: if it's on screen, it either is someone or opens something.
 
 ---
@@ -169,7 +169,7 @@ The drawn monoline wordmark of v1.0 (letters built from the eye stroke) is retir
 | Two renders, one design | **Flat** (the base hue, white eyes) in lists, chat lines, tickets, mentions. **Soft dimensional** (radial light, a highlight, a soft ground shadow, no fur or noise) at the top of a conversation, on the profile and in the hero row (D-UI2). |
 | Sizes | 16 mention · 24 ticket and stack · 32 chat and sidebar · 40 lists and approvals · 64 profile · 96 hero. Status badge from 24 px; at 96 px the status is a line under the name. |
 | Status | Always a word too (tag, label or the line under the hero). Badge glyphs: Idle ring, Thinking dots, Working arc, Needs you "!" on amber, Blocked bar on Ink, Paused bars, Error "×" on red, Done check on green. |
-| Expressions | Calm (idle, needs you) · Curious (thinking) · Focused (working) · Pleased (done, 1.6 s) · Concerned (blocked, error: never alarmed) · Sleepy (paused, stopped) · Surprised (interrupted, 0.4 s). **Change from v0.2:** Idle is now calm (eyes open, slow blink) and only Paused sleeps, so "idle" never reads as "off"; Error is concerned, not surprised. |
+| Expressions | **Since 2026-10-26 (founder: "make sure everyone is using this faces everywhere"), the only faces are the eye grammar's eight:** Calm · Focused · Glance · Toward you · Concerned · Sleepy · Pleased · Closed, with the state → face table in [companion DESIGN §2.3](../companion/DESIGN.md#23-the-eye-grammar-the-only-faces). **Retired:** Curious and Surprised. *Was (team-of-agents era): Calm (idle, needs you) · Curious (thinking) · Focused (working) · Pleased (done, 1.6 s) · Concerned (blocked, error) · Sleepy (paused, stopped) · Surprised (interrupted, 0.4 s).* |
 | How you get one | At Create, Atlas proposes a shape and a free hue from the job. You keep it or pick: hues already used in the project are dimmed. The preview blinks when you choose; that first blink is the agent's birth moment. |
 | Unassigned | A grey "Unassigned" shape with closed eyes, used only while an agent is being drafted. |
 | Group | The team chat uses a cluster of three members' avatars; stacks show four and a count. |

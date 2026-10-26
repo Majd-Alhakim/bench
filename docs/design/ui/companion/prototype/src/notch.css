@@ -67,16 +67,20 @@ html[data-theme="light"] .tray-btn:hover{background:rgb(0 0 0 / .06)}
 
 .eyes{position:relative;display:flex;gap:var(--notch-eye-gap);align-items:center;justify-content:center;flex:none;--ex:0px;--ey:0px}
 .eyes .eye{width:var(--notch-eye-w);height:var(--notch-eye-h);background:var(--notch-eye);border-radius:99px;transform:translate(var(--ex),var(--ey)) rotate(-12deg);transition:transform 140ms ease-out,height var(--dur-short) var(--spring-smooth),background-color var(--dur-short) ease,border-radius var(--dur-short) ease}
+/* blink squashes with `scale`, not `transform`, so it never undoes a face's own transform */
 .eyes.blink .eye{animation:blink 150ms ease-in-out}
-@keyframes blink{50%{transform:translate(var(--ex),var(--ey)) rotate(-12deg) scaleY(.08)}}
-/* expressions: the shape changes, never the count or colour (BRAND §8) */
-.eyes[data-x="focused"] .eye{height:9px;width:7px;border-radius:4px;transform:translate(var(--ex),var(--ey))}
-.eyes[data-x="concerned"] .eye:first-child{transform:translate(var(--ex),var(--ey)) rotate(16deg)}
-.eyes[data-x="concerned"] .eye:last-child{transform:translate(var(--ex),var(--ey)) rotate(-16deg)}
-.eyes[data-x="sleepy"] .eye{height:2.6px;width:9px;background:var(--notch-eye-dim);transform:translate(0,3px)}
-.eyes[data-x="closed"] .eye{height:2.4px;width:8px;background:#6a6a6a;transform:translate(0,2px)}
+@keyframes blink{50%{scale:1 .08}}
+/* The eye grammar (DESIGN §2.3): eight faces and no others. The shape changes, never the count or the colour (BRAND §8).
+   Calm is the base rule above; only Calm and Toward you follow the pointer and blink; only Focused loops. */
+.eyes[data-x="focused"] .eye{width:6px;height:9px;border-radius:3px;transform:none;animation:scan 2.4s var(--ease-in-out) infinite alternate}
+@keyframes scan{from{translate:-2px 0}to{translate:2px 0}}
 .eyes[data-x="glance"] .eye{transform:translate(3px,1px) rotate(-12deg)}
-.eyes[data-x="pleased"] .eye{height:4px;width:9px;border-radius:9px 9px 2px 2px;transform:translate(0,-1px)}
+.eyes[data-x="front"] .eye{transform:translate(var(--ex),calc(var(--ey) - 1.5px)) rotate(-12deg)}
+.eyes[data-x="concerned"] .eye:first-child{transform:translateY(1.5px) rotate(16deg)}
+.eyes[data-x="concerned"] .eye:last-child{transform:translateY(1.5px) rotate(-16deg)}
+.eyes[data-x="sleepy"] .eye{width:9px;height:2.6px;background:var(--notch-eye-dim);transform:translateY(3px)}
+.eyes[data-x="pleased"] .eye{width:9px;height:5px;border-radius:9px 9px 3px 3px;transform:translateY(-1px)}
+.eyes[data-x="closed"] .eye{width:8px;height:2.4px;background:var(--notch-eye-closed);transform:translateY(2px)}
 
 /* working: the composer's voice glow, gathered into a beam that sweeps under the eyes (2026-10-25 design §3.1) */
 .beam{position:absolute;left:12px;right:12px;bottom:3px;height:2px;overflow:hidden;border-radius:2px;opacity:0;transition:opacity var(--dur-move) ease}
@@ -102,7 +106,6 @@ html[data-theme="light"] .tray-btn:hover{background:rgb(0 0 0 / .06)}
 .notch .label{display:none;font:600 12px/16px var(--font-text);color:var(--notch-danger);white-space:nowrap}
 .notch[data-guard="off"]{width:auto;padding:0 18px 0 16px;box-shadow:inset 0 0 0 1px var(--notch-danger-ring),var(--notch-shadow)}
 .notch[data-guard="off"] .label{display:block}
-.notch[data-doze="1"] .eyes{opacity:.8}
 .notch[data-doze="1"]{width:108px}
 
 /* arrival: one small nudge, then still. Never opens by itself. */
@@ -353,8 +356,7 @@ html[data-theme="light"] .toast button{color:#a9bfff}
 .stage .hn.ph{color:var(--text-3);font-weight:400}
 .mini-notch{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-top:18px}
 .mini-notch .n{height:22px;width:84px;background:var(--notch-bg);border-radius:0 0 11px 11px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--notch-ring)}
-.mini-notch .eyes .eye{width:3.6px;height:9px}
-.mini-notch .eyes{gap:6px}
+.mini-notch .eyes{scale:.7} /* every face, at the mini notch's scale */
 .field-l{font-size:13px;font-weight:600;color:var(--text-2);margin:0 0 6px}
 .field{height:40px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1px var(--line-control);background:var(--bg-ground);padding:0 12px;font-size:15px;width:100%;outline:none}
 .field:focus{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
@@ -489,13 +491,7 @@ html.rm .eyes .eye{--ex:0px!important;--ey:0px!important}
 .sev-p.ok{background:var(--ok-tint);color:var(--ok-ink)}
 .rules-s .col{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);padding-bottom:14px}
 
-/* ===== New since approval: eye grammar, receipts, learning, digest, worst moments ===== */
-.eyes[data-x="focused"] .eye{height:9px;width:6px;border-radius:3px;animation:scan 2.4s var(--ease-in-out) infinite alternate}
-@keyframes scan{from{transform:translateX(-2px)}to{transform:translateX(2px)}}
-.eyes[data-x="front"] .eye{transform:translate(var(--ex),calc(var(--ey) - 1.5px)) rotate(-12deg)}
-.eyes[data-x="concerned"] .eye:first-child{transform:translate(0,1.5px) rotate(16deg)}
-.eyes[data-x="concerned"] .eye:last-child{transform:translate(0,1.5px) rotate(-16deg)}
-.eyes[data-x="pleased"] .eye{height:5px;width:9px;border-radius:9px 9px 3px 3px;transform:translate(0,-1px)}
+/* ===== New since approval: receipts, learning, digest, worst moments ===== */
 html.freeze .eyes[data-x="focused"] .eye{animation:none!important}
 html.rm .eyes[data-x="focused"] .eye{animation:none!important}
 @media (prefers-reduced-motion: reduce){.eyes[data-x="focused"] .eye{animation:none!important}}
@@ -530,9 +526,7 @@ html[data-theme="light"] .caught{background:var(--bg-ground)}
 .caught b{display:block;font-weight:600;color:var(--text-1)}
 .caught span{color:var(--text-2)}
 .cg-eyes{width:44px;height:28px;border-radius:0 0 12px 12px;background:var(--notch-bg);display:grid;place-items:center;flex:none}
-.cg-eyes .eyes{gap:6px}
-.cg-eyes .eye{width:4px;height:10px}
-.cg-eyes .eyes[data-x="pleased"] .eye{width:7px;height:4px}
+.cg-eyes .eyes{scale:.77}
 .banner{display:grid;grid-template-columns:16px 1fr;gap:10px;padding:10px 12px;border-radius:14px;background:var(--bg-sunken);font-size:13px;line-height:18px;color:var(--text-2);margin-bottom:12px}
 .banner svg{width:16px;height:16px;margin-top:1px;color:var(--text-2)}
 .banner b{color:var(--text-1);font-weight:600}
@@ -555,14 +549,14 @@ html.freeze .toast .tt{animation:none!important;transform:scaleX(.6)}
 .auth .werr,.auth .banner{margin:10px 0 0}
 .field.bad{box-shadow:inset 0 0 0 1px var(--danger-fill)}
 .lede b,.lead b.em{color:var(--text-1);font-weight:600}
-:is(.swin,.p-body) .code{display:grid;grid-template-columns:repeat(6,48px);gap:8px;margin:2px 0 14px;cursor:text;width:max-content}
-:is(.swin,.p-body) .code i{height:56px;border-radius:12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-control);display:grid;place-items:center;font-style:normal;font-size:20px;line-height:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1)}
-:is(.swin,.p-body) .code i.cur{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
-:is(.swin,.p-body) .code i.cur::after{content:"";width:2px;height:22px;border-radius:1px;background:var(--text-1)}
-:is(.swin,.p-body) .code.bad i{box-shadow:inset 0 0 0 1px var(--danger-fill)}
-.p-body .code{grid-template-columns:repeat(6,44px);gap:6px}
-.p-body .code i{height:48px;background:var(--bg-surface)}
-html[data-theme="light"] .p-body .code i{background:var(--bg-ground)}
+.codefield{display:grid;grid-template-columns:repeat(6,48px);gap:8px;margin:2px 0 14px;cursor:text;width:max-content}
+.codefield i{height:56px;border-radius:12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-control);display:grid;place-items:center;font-style:normal;font-size:20px;line-height:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1)}
+.codefield i.cur{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
+.codefield i.cur::after{content:"";width:2px;height:22px;border-radius:1px;background:var(--text-1)}
+.codefield.bad i{box-shadow:inset 0 0 0 1px var(--danger-fill)}
+.p-body .codefield{grid-template-columns:repeat(6,44px);gap:6px}
+.p-body .codefield i{height:48px;background:var(--bg-surface)}
+html[data-theme="light"] .p-body .codefield i{background:var(--bg-ground)}
 .resend{font-size:13px;line-height:18px;color:var(--text-2);margin:0}
 .notice{border-radius:12px;padding:10px 12px;background:var(--attn-tint);color:var(--attn-ink);font-size:13px;line-height:18px;margin:10px 0 0}
 .notice b{font-weight:600}

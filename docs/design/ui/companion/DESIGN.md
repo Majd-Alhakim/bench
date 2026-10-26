@@ -60,7 +60,7 @@
 |---|---|
 | Body | 124 × 32 at rest · 164 with a marker · auto width for "Not protected" (label + eyes) and a tripwire stop (eyes + red marker) · bottom radius 16 · `--notch-bg` · ring `inset 0 -1px 0` + `0 0 0 1px` at 9 % white · shadow `0 6px 20px` 35 % |
 | Eyes | Two pills 5 × 13, rotated −12°, 9 px apart, `--notch-eye`. Follow: ≤ 2.5 px x, ≤ 1.5 px y, eased over 260 px of pointer distance. Blink: scaleY 0.08 for 150 ms every 3.8–7.2 s |
-| Expressions | calm (default) · glance (3 px toward the marker on arrival, 900 ms) · **concerned** (pills rotated ±16°, for not protected and tripwire) · **sleepy** (9 × 2.6 arcs, grey, for dozing) · closed (grey, before setup) |
+| Faces | Only the eight of the eye grammar (§2.3), nothing else |
 | Beam | 2 px, inset 12 px, a 46 % wide gradient `transparent → --euca-light → --euca-base → transparent` sweeping 1.7 s each way, `ease-in-out`, alternate |
 | Glow | 12 px tall ellipse below the notch, blur 8, the Euca's base colour at 55 %, swaying with the beam. Hidden while the peek is open |
 | Marker (amber) | 18 px pill, `--marker-attn`, Ink text 11/600 tabular: the count |
@@ -81,12 +81,44 @@ The notch's own body grows down into a 372 px card, so the eyes never move: **sp
 | Part | Spec |
 |---|---|
 | Frame | 400 × up to 640 (fits a 1366 × 768 laptop's 728 px work area), 8 px under the notch, centred on it · radius 18 · `--elev-4` · grows from the notch: scale 0.97 → 1, y −10 → 0, fade, `--spring-smooth` 320 ms |
-| Header | 40 px soft avatar (eyes follow) · name 15/600 with the lock chip right-aligned on the same row · status line 13 under it, full width, with a 7 px dot (green = a real check, red = not protected) |
+| Header | 40 px soft avatar showing the notch's face (§2.3; it follows the pointer only in Calm and Toward you) · name 15/600 with the lock chip right-aligned on the same row · status line 13 under it, full width, with a 7 px dot (green = a real check, red = not protected) |
 | Needs you | section title "Needs you · 3" · items: 14 px radius, surface tone, `--elev-1`; red items add a 1 px red inner ring · time top-right · actions 32 px (primary Cobalt on the first item only) + "Not now" ghost |
 | Tabs | segmented, full width, 34 px, `--seg-on` thumb · WAI-ARIA tabs (arrow keys) |
 | Content | scrolls; the bottom 20 px fades out so a cut row reads as "more below" |
 | Sub-pages | replace the content in place; a 32 px back button + title 15/600 |
 | Toast | inverse pill at the bottom of the panel with Undo (10 s) |
+
+### 2.3 The eye grammar: the only faces
+
+*Founder, 2026-10-26: "make sure everyone is using this faces everywhere".* Pip (your Euca) has **eight faces and no others**, on every surface: the notch, the avatar, the setup screens, the website, marketing and video. The rendered sheet is [eyes-sheet-d.png](screens/eyes-sheet-d.png); the reference code is the prototype (`prototype/src/notch.css`, the `.eyes[data-x]` rules; `faceOf()` in `prototype/src/app.js`). **The eyes carry the feeling; the marker, the words and the panel carry the meaning.**
+
+**Which face, when.** One face at a time; the first row that matches wins.
+
+| # | State | Face | For how long |
+|---|---|---|---|
+| 1 | Before you make your Euca (setup) | **Closed** | until it's born; the eyes open from a line (Homecoming) |
+| 2 | Not protected, or Pip stopped a session (tripwire, budget stop) | **Concerned** | while it lasts |
+| 3 | Something needs you: it just arrived | **Glance** | 900 ms, once per arrival |
+| 4 | Something needs you: it waits | **Toward you** | until nothing waits |
+| 5 | The last item was dealt with | **Pleased** | 1.6 s, then the face of the state below it |
+| 6 | Sessions are working (a tool ran in the last 20 s) | **Focused** | while they work |
+| 7 | You're away 5 min **and** nothing runs | **Sleepy** | until you're back or a session starts; it wakes with a blink |
+| 8 | Protected, nothing running | **Calm** | the default |
+
+**What each face is.** At 100 %; two eyes, `--notch-eye-gap` (9 px) apart, always white except the two dimmed faces. Avatars draw the same faces at their own scale (Calm 7 × 16 in the 100-unit avatar, so × 1.3); minis scale the whole pair (`scale`), never a single eye.
+
+| Face | Shape | Position and motion | Follows / blinks |
+|---|---|---|---|
+| **Calm** | pills 5 × 13, fully round, rotated −12° | follow ≤ 2.5 px x, ≤ 1.5 px y over 260 px of pointer distance | yes / every 3.8–7.2 s (scaleY 0.08, 150 ms) |
+| **Focused** | 6 × 9, radius 3, upright | reads left to right: ±2 px, 2.4 s ease-in-out, alternate. **The only loop**, and it always comes with the beam | no / no |
+| **Glance** | Calm's pills | 3 px toward the marker, 1 px down | no / no |
+| **Toward you** | Calm's pills | 1.5 px up; follows the pointer; no bobbing | yes / yes |
+| **Concerned** | Calm's pills, left +16°, right −16° (softened) | 1.5 px down; still. Never alarmed: no shake, no red eyes | no / no |
+| **Sleepy** | flat dash 9 × 2.6, `--notch-eye-dim` | 3 px down; still | no / no |
+| **Pleased** | arc 9 × 5, radius 9 9 3 3 (∩) | 1 px up; still | no / no |
+| **Closed** | flat dash 8 × 2.4, `--notch-eye-closed` | 2 px down; still | no / no |
+
+**Rules.** The shape changes, never the count or the colour (BRAND §8). A blink squashes with `scale`, so it never undoes a face's own position. Reduced motion keeps every shape and drops the movement (no follow, no blink, no reading loop; Glance and Pleased still hold for their time). No other face exists: no wide, sad, angry, surprised, winking or heart eyes, no colour in the eyes, and no "happy closed" ∪ arcs.
 
 ---
 
@@ -127,7 +159,7 @@ The notch's own body grows down into a 372 px card, so the eyes never move: **sp
 
 | Group | Tokens |
 |---|---|
-| The object | `--notch-bg` `--notch-ring` `--notch-shadow` `--notch-text(-2,-3)` `--notch-line` `--notch-hover` `--notch-btn(-hover)` `--notch-eye(-dim)` `--notch-danger(-ring)` `--notch-ok` |
+| The object | `--notch-bg` `--notch-ring` `--notch-shadow` `--notch-text(-2,-3)` `--notch-line` `--notch-hover` `--notch-btn(-hover)` `--notch-eye(-dim,-closed)` `--notch-danger(-ring)` `--notch-ok` |
 | Markers | `--marker-attn(-text)` `--marker-danger(-text)` |
 | Geometry | `--notch-h 32` `--notch-w-rest 124` `--notch-w-marker 164` `--notch-r 16` `--notch-shoulder 8` eye sizes and travel · `--notch-thin-w 96` `--notch-thin-h 4` · `--peek-w 372` `--peek-r 22` · `--panel-w 400` `--panel-max-h 640` `--panel-gap 8` |
 | Motion | `--notch-hover-intent 280ms` `--notch-leave-grace 360ms` `--notch-morph 320ms` `--notch-arrive 640ms` `--notch-sweep 1.7s` blink min/max · `--notch-doze-after 5min` |
@@ -143,10 +175,10 @@ Physics from `tokens.css`; only the character overshoots.
 
 | Moment | Motion | Reduced motion |
 |---|---|---|
-| Eyes follow | 140 ms ease-out per frame, ≤ 2.5 px | still, centred |
-| Blink | 150 ms, every 3.8–7.2 s | none |
+| Eyes follow | 140 ms ease-out per frame, ≤ 2.5 px, Calm and Toward you only | still, centred |
+| Blink | 150 ms, every 3.8–7.2 s, Calm and Toward you only (§2.3) | none |
 | Working beam | sweep 1.7 s alternate + glow sway | a still segment under the eyes |
-| **Needs you arrives** | notch drops 3 px and settles + marker pops (`--spring-gentle`, 640 ms) + glance | marker fades in |
+| **Needs you arrives** | notch drops 3 px and settles + marker pops (`--spring-gentle`, 640 ms) + Glance (900 ms), then Toward you | marker fades in |
 | Peek | **gooey** (§5.1): the card shape grows out of the notch from 30 % × 20 % with `--spring-gentle` (600 ms) and the two shapes melt into one; the words fade in 160 ms later. Folding: the words go first (140 ms), then the card melts back into the notch (300 ms). *Was: clip-path morph (revised 2026-10-26, founder)* | instant, no melt |
 | Panel | scale 0.97 → 1, rise 10 px, fade (320 ms) | fade |
 | **Birth** (setup 2) | squash 1.06/0.94 and settle (`--spring-gentle`), one blink | blink only |
@@ -240,7 +272,7 @@ The founder approved §1–§10 with the 8 recommendations and asked for the ful
 | `InlineError` | Danger-tint row inside the form that failed: "**Didn't save:** …" and the primary becomes **Try again** |
 | `UndoToast` | The inverse pill with **Undo** and a 2 px timer line that runs out over 10 s; non-reversible toasts have no Undo and say so when it matters |
 
-**Eye grammar** ([the sheet](screens/eyes-sheet-d.png)): Calm (5 × 13 pills) · **Focused** (6 × 9, reads ±2 px over 2.4 s, the only loop) · Glance · **Toward you** (1.5 px up, follows the pointer) · **Concerned** (±16°, 1.5 px down) · Sleepy · **Pleased** (9 × 5 arcs, 1.6 s) · Closed. Reduced motion keeps every shape and drops the movement. Eye-follow runs only for Calm and Toward you.
+**Eye grammar** ([the sheet](screens/eyes-sheet-d.png)): Calm · **Focused** · Glance · **Toward you** · **Concerned** · Sleepy · **Pleased** · Closed. The spec, with the state → face table, is now §2.3.
 
 **Colour:** the new parts add no colour. Blue appears only on decisions (R1); the learned line, chips, receipts, digest and banners are neutral; green is the merge result's check (a real result); red stays for danger.
 
@@ -332,8 +364,8 @@ The landing page in `apps/landing/` is built on this design (PR #81). The founde
 
 ### 13.1 The notch on a web page
 - **No shoulders, no ring, no glow.** The concave shoulders and the 1 px ring join the notch to a black screen bezel; a web page has none, so on the page they read as hooks and a grey outline. The page draws only the black body: flat top, 16 px bottom radius. Captures hide them too (`apps/landing/scripts/capture-screens.mjs`).
-- **Only the eye grammar (§11).** Calm, Focused, Glance, Toward you, Concerned, Sleepy, Pleased, drawn to the spec in the sheet. **No red "Stopped" marker and no "Not protected" label** on the page; a stop shows Concerned eyes. The amber needs-you count stays.
-- **A live notch** sits on the page's top edge: the eyes follow the pointer and blink, its state follows the section in view (Focused → Glance with the count → Concerned → Calm → Pleased), and hover or tap opens the peek, which melts out of the notch and back into it (the goo effect, §5.1). The rule switches use it too.
+- **Only the eye grammar (§2.3).** The page's faces are the app's, drawn to the same spec. **No red "Stopped" marker and no "Not protected" label** on the page; a stop shows Concerned eyes. The amber needs-you count stays.
+- **A live notch** sits on the page's top edge: the eyes follow the pointer and blink, its state follows the section in view and picks the face by §2.3: working → Focused (with the beam), the count → Glance then Toward you, a stop → Concerned, resting → Calm, the waitlist → Pleased for 1.6 s, then Calm, and hover or tap opens the peek, which melts out of the notch and back into it (the goo effect, §5.1). The rule switches use it too.
 
 ### 13.2 Words
 - **Why before what.** The page opens with the visitor's day ("You started three Claude Code sessions to go faster. Now you spend the day checking on them.") and names four pains before any feature: a session waiting for a yes, a delete you didn't read, the limit hit mid-task, two agents writing in the same file.

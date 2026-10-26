@@ -365,7 +365,8 @@
   --notch-btn: #232323;                     /* secondary buttons inside the peek */
   --notch-btn-hover: #2e2e2e;
   --notch-eye: #f2f2f2;                     /* the Look: always white on an agent (BRAND §5) */
-  --notch-eye-dim: #9a9a9a;                 /* dozing */
+  --notch-eye-dim: #9a9a9a;                 /* Sleepy */
+  --notch-eye-closed: #6a6a6a;              /* Closed: before you make your Euca */
   --notch-danger: #ff8a85;                  /* = --red-d-ink, fixed because the notch is always dark */
   --notch-danger-ring: rgb(255 138 133 / 0.5);
   --notch-ok: #6fd09a;                      /* = --green-d-ink: only for a check that really happened */
@@ -476,16 +477,20 @@ html[data-theme="light"] .tray-btn:hover{background:rgb(0 0 0 / .06)}
 
 .eyes{position:relative;display:flex;gap:var(--notch-eye-gap);align-items:center;justify-content:center;flex:none;--ex:0px;--ey:0px}
 .eyes .eye{width:var(--notch-eye-w);height:var(--notch-eye-h);background:var(--notch-eye);border-radius:99px;transform:translate(var(--ex),var(--ey)) rotate(-12deg);transition:transform 140ms ease-out,height var(--dur-short) var(--spring-smooth),background-color var(--dur-short) ease,border-radius var(--dur-short) ease}
+/* blink squashes with `scale`, not `transform`, so it never undoes a face's own transform */
 .eyes.blink .eye{animation:blink 150ms ease-in-out}
-@keyframes blink{50%{transform:translate(var(--ex),var(--ey)) rotate(-12deg) scaleY(.08)}}
-/* expressions: the shape changes, never the count or colour (BRAND §8) */
-.eyes[data-x="focused"] .eye{height:9px;width:7px;border-radius:4px;transform:translate(var(--ex),var(--ey))}
-.eyes[data-x="concerned"] .eye:first-child{transform:translate(var(--ex),var(--ey)) rotate(16deg)}
-.eyes[data-x="concerned"] .eye:last-child{transform:translate(var(--ex),var(--ey)) rotate(-16deg)}
-.eyes[data-x="sleepy"] .eye{height:2.6px;width:9px;background:var(--notch-eye-dim);transform:translate(0,3px)}
-.eyes[data-x="closed"] .eye{height:2.4px;width:8px;background:#6a6a6a;transform:translate(0,2px)}
+@keyframes blink{50%{scale:1 .08}}
+/* The eye grammar (DESIGN §2.3): eight faces and no others. The shape changes, never the count or the colour (BRAND §8).
+   Calm is the base rule above; only Calm and Toward you follow the pointer and blink; only Focused loops. */
+.eyes[data-x="focused"] .eye{width:6px;height:9px;border-radius:3px;transform:none;animation:scan 2.4s var(--ease-in-out) infinite alternate}
+@keyframes scan{from{translate:-2px 0}to{translate:2px 0}}
 .eyes[data-x="glance"] .eye{transform:translate(3px,1px) rotate(-12deg)}
-.eyes[data-x="pleased"] .eye{height:4px;width:9px;border-radius:9px 9px 2px 2px;transform:translate(0,-1px)}
+.eyes[data-x="front"] .eye{transform:translate(var(--ex),calc(var(--ey) - 1.5px)) rotate(-12deg)}
+.eyes[data-x="concerned"] .eye:first-child{transform:translateY(1.5px) rotate(16deg)}
+.eyes[data-x="concerned"] .eye:last-child{transform:translateY(1.5px) rotate(-16deg)}
+.eyes[data-x="sleepy"] .eye{width:9px;height:2.6px;background:var(--notch-eye-dim);transform:translateY(3px)}
+.eyes[data-x="pleased"] .eye{width:9px;height:5px;border-radius:9px 9px 3px 3px;transform:translateY(-1px)}
+.eyes[data-x="closed"] .eye{width:8px;height:2.4px;background:var(--notch-eye-closed);transform:translateY(2px)}
 
 /* working: the composer's voice glow, gathered into a beam that sweeps under the eyes (2026-10-25 design §3.1) */
 .beam{position:absolute;left:12px;right:12px;bottom:3px;height:2px;overflow:hidden;border-radius:2px;opacity:0;transition:opacity var(--dur-move) ease}
@@ -511,7 +516,6 @@ html[data-theme="light"] .tray-btn:hover{background:rgb(0 0 0 / .06)}
 .notch .label{display:none;font:600 12px/16px var(--font-text);color:var(--notch-danger);white-space:nowrap}
 .notch[data-guard="off"]{width:auto;padding:0 18px 0 16px;box-shadow:inset 0 0 0 1px var(--notch-danger-ring),var(--notch-shadow)}
 .notch[data-guard="off"] .label{display:block}
-.notch[data-doze="1"] .eyes{opacity:.8}
 .notch[data-doze="1"]{width:108px}
 
 /* arrival: one small nudge, then still. Never opens by itself. */
@@ -762,8 +766,7 @@ html[data-theme="light"] .toast button{color:#a9bfff}
 .stage .hn.ph{color:var(--text-3);font-weight:400}
 .mini-notch{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-top:18px}
 .mini-notch .n{height:22px;width:84px;background:var(--notch-bg);border-radius:0 0 11px 11px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--notch-ring)}
-.mini-notch .eyes .eye{width:3.6px;height:9px}
-.mini-notch .eyes{gap:6px}
+.mini-notch .eyes{scale:.7} /* every face, at the mini notch's scale */
 .field-l{font-size:13px;font-weight:600;color:var(--text-2);margin:0 0 6px}
 .field{height:40px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1px var(--line-control);background:var(--bg-ground);padding:0 12px;font-size:15px;width:100%;outline:none}
 .field:focus{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
@@ -898,13 +901,7 @@ html.rm .eyes .eye{--ex:0px!important;--ey:0px!important}
 .sev-p.ok{background:var(--ok-tint);color:var(--ok-ink)}
 .rules-s .col{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);padding-bottom:14px}
 
-/* ===== New since approval: eye grammar, receipts, learning, digest, worst moments ===== */
-.eyes[data-x="focused"] .eye{height:9px;width:6px;border-radius:3px;animation:scan 2.4s var(--ease-in-out) infinite alternate}
-@keyframes scan{from{transform:translateX(-2px)}to{transform:translateX(2px)}}
-.eyes[data-x="front"] .eye{transform:translate(var(--ex),calc(var(--ey) - 1.5px)) rotate(-12deg)}
-.eyes[data-x="concerned"] .eye:first-child{transform:translate(0,1.5px) rotate(16deg)}
-.eyes[data-x="concerned"] .eye:last-child{transform:translate(0,1.5px) rotate(-16deg)}
-.eyes[data-x="pleased"] .eye{height:5px;width:9px;border-radius:9px 9px 3px 3px;transform:translate(0,-1px)}
+/* ===== New since approval: receipts, learning, digest, worst moments ===== */
 html.freeze .eyes[data-x="focused"] .eye{animation:none!important}
 html.rm .eyes[data-x="focused"] .eye{animation:none!important}
 @media (prefers-reduced-motion: reduce){.eyes[data-x="focused"] .eye{animation:none!important}}
@@ -939,9 +936,7 @@ html[data-theme="light"] .caught{background:var(--bg-ground)}
 .caught b{display:block;font-weight:600;color:var(--text-1)}
 .caught span{color:var(--text-2)}
 .cg-eyes{width:44px;height:28px;border-radius:0 0 12px 12px;background:var(--notch-bg);display:grid;place-items:center;flex:none}
-.cg-eyes .eyes{gap:6px}
-.cg-eyes .eye{width:4px;height:10px}
-.cg-eyes .eyes[data-x="pleased"] .eye{width:7px;height:4px}
+.cg-eyes .eyes{scale:.77}
 .banner{display:grid;grid-template-columns:16px 1fr;gap:10px;padding:10px 12px;border-radius:14px;background:var(--bg-sunken);font-size:13px;line-height:18px;color:var(--text-2);margin-bottom:12px}
 .banner svg{width:16px;height:16px;margin-top:1px;color:var(--text-2)}
 .banner b{color:var(--text-1);font-weight:600}
@@ -964,14 +959,14 @@ html.freeze .toast .tt{animation:none!important;transform:scaleX(.6)}
 .auth .werr,.auth .banner{margin:10px 0 0}
 .field.bad{box-shadow:inset 0 0 0 1px var(--danger-fill)}
 .lede b,.lead b.em{color:var(--text-1);font-weight:600}
-:is(.swin,.p-body) .code{display:grid;grid-template-columns:repeat(6,48px);gap:8px;margin:2px 0 14px;cursor:text;width:max-content}
-:is(.swin,.p-body) .code i{height:56px;border-radius:12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-control);display:grid;place-items:center;font-style:normal;font-size:20px;line-height:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1)}
-:is(.swin,.p-body) .code i.cur{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
-:is(.swin,.p-body) .code i.cur::after{content:"";width:2px;height:22px;border-radius:1px;background:var(--text-1)}
-:is(.swin,.p-body) .code.bad i{box-shadow:inset 0 0 0 1px var(--danger-fill)}
-.p-body .code{grid-template-columns:repeat(6,44px);gap:6px}
-.p-body .code i{height:48px;background:var(--bg-surface)}
-html[data-theme="light"] .p-body .code i{background:var(--bg-ground)}
+.codefield{display:grid;grid-template-columns:repeat(6,48px);gap:8px;margin:2px 0 14px;cursor:text;width:max-content}
+.codefield i{height:56px;border-radius:12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-control);display:grid;place-items:center;font-style:normal;font-size:20px;line-height:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1)}
+.codefield i.cur{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
+.codefield i.cur::after{content:"";width:2px;height:22px;border-radius:1px;background:var(--text-1)}
+.codefield.bad i{box-shadow:inset 0 0 0 1px var(--danger-fill)}
+.p-body .codefield{grid-template-columns:repeat(6,44px);gap:6px}
+.p-body .codefield i{height:48px;background:var(--bg-surface)}
+html[data-theme="light"] .p-body .codefield i{background:var(--bg-ground)}
 .resend{font-size:13px;line-height:18px;color:var(--text-2);margin:0}
 .notice{border-radius:12px;padding:10px 12px;background:var(--attn-tint);color:var(--attn-ink);font-size:13px;line-height:18px;margin:10px 0 0}
 .notice b{font-weight:600}
@@ -1033,21 +1028,35 @@ const SHAPES = {
   triangle:{n:"Triangle",d:'<polygon points="50,16 88,82 12,82"/>',round:14,eye:[50,64,10],hl:[42,44],bottom:89},
   square:{n:"Rounded square",d:'<rect x="12" y="13" width="76" height="76" rx="22"/>',eye:[50,50,13],hl:[30,30],bottom:89}
 };
+/* The eye grammar (DESIGN §2.3) on an avatar: the notch's eight faces at the avatar's scale (Calm 7 × 16, so ×1.3).
+   Static: Focused's reading loop lives only in the notch. */
+const FACE = {
+  "":        {w:7, h:16, rot:-12},
+  focused:   {w:8, h:12, rot:0},
+  glance:    {w:7, h:16, rot:-12, dx:4, dy:1.3},
+  front:     {w:7, h:16, rot:-12, dy:-2},
+  concerned: {w:7, h:16, rot:16, mirror:true, dy:2},
+  sleepy:    {w:12, h:3.4, rot:0, dy:4, op:.62},
+  pleased:   {w:12, h:6.5, rot:0, dy:-1.3, arc:true},
+  closed:    {w:10.4, h:3.1, rot:0, dy:2.6, op:.45}
+};
 function eyesFor(expr, gap){
-  const L = -gap, R = gap;
-  if (expr === "closed" || expr === "sleepy") return [L, R].map(x => `<path d="M${x - 5} -1 Q${x} 4 ${x + 5} -1" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>`).join("");
-  if (expr === "concerned") return `<rect x="${L - 3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(16 ${L} 0)"/><rect x="${R - 3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(-16 ${R} 0)"/>`;
-  return [L, R].map(x => `<rect x="${x - 3.5}" y="-8" width="7" height="16" rx="3.5" transform="rotate(-12 ${x} 0)"/>`).join("");
+  const f = FACE[expr] || FACE[""], dx = f.dx || 0, dy = f.dy || 0;
+  return [-gap, gap].map((x, i) => {
+    const cx = x + dx, rot = f.mirror && i ? -f.rot : f.rot, op = f.op ? ` opacity="${f.op}"` : "";
+    if (f.arc) return `<path d="M${cx - f.w / 2} ${dy + f.h / 2} V${dy} A${f.w / 2} ${f.h} 0 0 1 ${cx + f.w / 2} ${dy} V${dy + f.h / 2} Z"${op}/>`;
+    return `<rect x="${cx - f.w / 2}" y="${dy - f.h / 2}" width="${f.w}" height="${f.h}" rx="${Math.min(f.w, f.h) / 2}" transform="rotate(${rot} ${cx} ${dy})"${op}/>`;
+  }).join("");
 }
 let UID = 0;
 /* One renderer: flat (lists) or soft-dimensional (hero, panel header). Eyes only, always white. */
 function avatarSVG(a, o = {}){
   const P = HUE[a.hue] || HUE.none, S = SHAPES[a.shape] || SHAPES.sphere, id = "a" + (++UID);
-  const [ex, ey, gap] = S.eye, expr = o.expr || (a.hue === "none" ? "closed" : "calm");
+  const [ex, ey, gap] = S.eye, expr = o.expr ?? (a.hue === "none" ? "closed" : "");
   const paint = o.soft ? `url(#${id}f)` : P.base;
   const stroke = S.round ? ` stroke="${paint}" stroke-width="${S.round}" stroke-linejoin="round"` : "";
   const body = `<g fill="${paint}"${stroke}>${S.d}</g>`;
-  const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"${o.follow ? ' data-follow="1"' : ""}><g class="blinker" fill="#fff">${eyesFor(expr, gap)}</g></g></g>`;
+  const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"${o.follow ? ' data-follow="1"' : ""}><g class="blinker" fill="#fff" data-x="${expr}">${eyesFor(expr, gap)}</g></g></g>`;
   if (!o.soft) return `<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
   const [hx, hy] = S.hl, gy = Math.min(S.bottom + 5, 101);
   return `<svg viewBox="0 0 100 106" width="100%" height="100%" aria-hidden="true" focusable="false"><defs>
@@ -1358,15 +1367,33 @@ function renderDesk(){
 }
 
 /* ---------- the notch ---------- */
+/* State → face, the eye grammar (DESIGN §2.3), first match wins: Closed before setup · Concerned for not protected or a stop ·
+   Glance when something arrives, then Toward you while it waits · Pleased for 1.6 s when you're caught up · Focused while
+   sessions work · Sleepy when you're away and nothing runs · Calm ("") otherwise. */
+function faceOf(s = S){
+  const danger = s.needs.find(k => NEEDS[k].sev === "danger");
+  if (s.unborn) return "closed";
+  if (s.guard === "off" || danger === "trip") return "concerned";
+  if (loud(s.needs).length) return s.arrive ? "glance" : "front";
+  if (s.pleased) return "pleased";
+  if (s.working && !s.doze) return "focused";
+  return s.doze ? "sleepy" : "";
+}
+const FOLLOWS = x => x === "" || x === "front";
+/* Changes a live face in place (no re-render), keeping follow and blink to Calm and Toward you. */
+function setFace(el, x){
+  if (!el) return;
+  el.dataset.x = x;
+  el.toggleAttribute("data-follow", FOLLOWS(x));
+  if (!FOLLOWS(x)) { el.style.removeProperty("--ex"); el.style.removeProperty("--ey"); }
+}
 function notchHTML(o = {}){
   const s = Object.assign({}, S, o);
   const danger = s.needs.find(k => NEEDS[k].sev === "danger");
   const count = loud(s.needs).length;
   const markerKind = s.guard === "off" ? null : danger === "trip" ? "danger" : count ? "attn" : null;
   const working = s.working && s.guard !== "off" && !s.doze && !danger ? 1 : 0;
-  /* Eye grammar (moments-and-motion §3, for the notch): calm · focused while sessions work · glance, then toward you, when
-     something needs you · concerned for a stop or not protected · sleepy when dozing · pleased for 1.6 s when you're caught up. */
-  const expr = s.guard === "off" || danger === "trip" ? "concerned" : s.doze ? "sleepy" : s.unborn ? "closed" : s.arrive ? "glance" : s.pleased ? "pleased" : count ? "front" : working ? "focused" : "";
+  const expr = faceOf(s);
   const marker = markerKind === "danger" ? `<span class="marker danger">${I.stop} Stopped: notes</span>` : `<span class="marker attn num">${count}</span>`;
   const label = s.guard === "off"
     ? `${N()}: not protected. ${s.needs.length} need you. Open the panel.`
@@ -1374,7 +1401,7 @@ function notchHTML(o = {}){
   return `<button class="notch${s.arrive ? " arrive" : ""}${s.born ? " born" : ""}${s.peek ? " peeking" : ""}" data-act="notch" aria-label="${esc(label)}" aria-expanded="${s.panel ? "true" : "false"}"
     data-guard="${s.guard}" data-working="${working}" data-mode="${s.mode}" data-doze="${s.doze ? 1 : 0}"${markerKind ? ` data-marker="${markerKind}"` : ""}>
     <span class="label">Not protected</span><span class="m-spacer"></span>
-    <span class="eyes" data-x="${expr}"${o.static || !["", "front"].includes(expr) ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
+    <span class="eyes" data-x="${expr}"${o.static || !FOLLOWS(expr) ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
     ${marker}<span class="beam"><i></i></span><span class="glow"></span><span class="thin-dot${markerKind === "danger" ? " danger" : ""}"></span>
   </button>`;
 }
@@ -1407,7 +1434,7 @@ function panelHTML(){
   const st = statusLine();
   const lock = S.locked ? `<button class="chip" data-act="tab" data-tab="rules" title="Your rules are locked with Windows admin">${I.lock}Locked</button>`
                         : `<button class="chip attn" data-act="tab" data-tab="rules">${I.unlock}Not locked</button>`;
-  const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:true, expr:S.guard === "off" ? "concerned" : undefined})}</span>
+  const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:FOLLOWS(faceOf()), expr:faceOf()})}</span>
     <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span>${lock}</div><div class="st${st.off ? " off" : ""}">${st.off ? '<span class="offd"></span>' : '<span class="okd"></span>'}${esc(st.t)}</div></div></div>`;
   if (!S.signedIn && !S.noacct) return signedOutPanel();
   if (S.sub) return `<div class="panel" role="dialog" aria-label="${esc(N())}">${subHTML()}${S.toast ? toastHTML() : ""}</div>`;
@@ -1561,7 +1588,7 @@ function sentHTML(sample){
 }
 /* The code field: one input in the build (inputmode numeric, autocomplete one-time-code, paste fills all six), drawn as six cells. */
 function codeCells(v, o = {}){
-  return `<div class="code${o.bad ? " bad" : ""}" role="group" aria-label="6-digit code" data-act="fillcode" title="Prototype: click to enter the code">${Array.from({length:6}, (_, i) => `<i class="${i === v.length && !o.bad ? "cur" : ""}">${v[i] || ""}</i>`).join("")}</div>`;
+  return `<div class="codefield${o.bad ? " bad" : ""}" role="group" aria-label="6-digit code" data-act="fillcode" title="Prototype: click to enter the code">${Array.from({length:6}, (_, i) => `<i class="${i === v.length && !o.bad ? "cur" : ""}">${v[i] || ""}</i>`).join("")}</div>`;
 }
 const ACCOUNT_LINE = "Your account holds only your email, your plan and how much supervisor help you've used.";
 function authPanelHTML(){
@@ -1702,7 +1729,7 @@ function retroHTML(compact){
 const STEPS = 9; /* Founder, 2026-10-26: the four limits are locked (step 4) and tested (step 5) before sign-in (step 6), so a PC is protected even if setup waits there */
 function createFields(inPanel){
   const e = S.euca;
-  const shapes = Object.keys(SHAPES).map(k => `<button aria-pressed="${e.shape === k}" aria-label="${SHAPES[k].n}" data-act="shape" data-v="${k}">${avatarSVG({shape:k, hue:e.hue === "none" ? "none" : e.hue}, {expr:e.hue === "none" ? "closed" : "calm"})}</button>`).join("");
+  const shapes = Object.keys(SHAPES).map(k => `<button aria-pressed="${e.shape === k}" aria-label="${SHAPES[k].n}" data-act="shape" data-v="${k}">${avatarSVG({shape:k, hue:e.hue === "none" ? "none" : e.hue}, {expr:e.hue === "none" ? "closed" : ""})}</button>`).join("");
   const hues = HUE_ORDER.map(k => `<button aria-pressed="${e.hue === k}" aria-label="${HUE[k].n}" style="background:${HUE[k].base}" data-act="hue" data-v="${k}"></button>`).join("");
   const note = ["coral","honey","tangerine"].includes(e.hue) ? `Fine to keep: ${esc(N())}'s warnings always come with words, never colour alone.` : "";
   const preview = inPanel ? `<div style="display:flex;align-items:center;gap:12px;margin:2px 2px 14px"><span style="width:56px;height:58px" class="hero">${avatarSVG(e, {soft:true, follow:true})}</span><span class="m-line">The notch, the panel and the tray all use this look.</span></div>` : "";
@@ -1866,6 +1893,7 @@ function demoHTML(){
 }
 
 /* ---------- render ---------- */
+let LASTFACE;
 function render(){
   ROOT.dataset.theme = S.theme; ROOT.classList.toggle("rm", S.rm);
   eucaVars(); renderDesk();
@@ -1884,7 +1912,14 @@ function render(){
   if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped the notes session</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
   html += demoHTML();
   $("#app").innerHTML = html;
-  if (S.arrive && !FREEZE) setTimeout(() => { const n = $(".notch"); n && n.classList.remove("arrive"); $(".eyes[data-x='glance']")?.setAttribute("data-x", ""); S.arrive = false; }, 1100);
+  /* Sleepy wakes with a blink, whatever face it wakes into */
+  const eyes = $(".notch .eyes");
+  if (eyes) {
+    if (LASTFACE === "sleepy" && eyes.dataset.x !== "sleepy" && !S.rm && !FREEZE) { eyes.classList.add("blink"); setTimeout(() => eyes.classList.remove("blink"), 160); }
+    LASTFACE = eyes.dataset.x;
+  }
+  /* Glance is one look at the marker (900 ms), then Toward you while it waits */
+  if (S.arrive && !FREEZE) setTimeout(() => { $(".notch")?.classList.remove("arrive"); S.arrive = false; setFace($(".notch .eyes"), LASTFACE = faceOf()); }, 900);
   if (S.draft) $(".panel .draft, .swin .draft")?.scrollIntoView({block:"nearest"});
   if (S.scroll) { $(".panel " + S.scroll)?.scrollIntoView({block:"center"}); S.scroll = null; } /* routes that show a section further down */
   follow();
@@ -1909,8 +1944,8 @@ function blinkLoop(){
   if (FREEZE) return;
   setTimeout(() => {
     if (!S.rm) {
-      document.querySelectorAll(".eyes").forEach(e => { if (!e.dataset.x) { e.classList.add("blink"); setTimeout(() => e.classList.remove("blink"), 160); } });
-      document.querySelectorAll(".blinker").forEach(b => { b.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:150, easing:"ease-in-out"}); });
+      document.querySelectorAll(".eyes").forEach(e => { if (FOLLOWS(e.dataset.x || "")) { e.classList.add("blink"); setTimeout(() => e.classList.remove("blink"), 160); } });
+      document.querySelectorAll(".blinker").forEach(b => { if (!FOLLOWS(b.dataset.x || "")) return; b.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:150, easing:"ease-in-out"}); });
     }
     blinkLoop();
   }, 3800 + Math.random() * 3400);
@@ -2044,7 +2079,7 @@ function act(a, el, ev){
 /* Resolving the last item ends on "all caught up" (peak-end): pleased eyes for 1.6 s and the done sound. */
 function resolve(k){
   const before = loud().length; S.needs = S.needs.filter(x => x !== k);
-  if (before && !loud().length) { S.caught = true; S.pleased = true; sfx("done", 200); setTimeout(() => { S.pleased = false; if (!S.panel) render(); else { const e = $(".notch .eyes"); e && e.setAttribute("data-x", ""); } }, 1600); }
+  if (before && !loud().length) { S.caught = true; S.pleased = true; sfx("done", 200); setTimeout(() => { S.pleased = false; if (!S.panel) render(); else setFace($(".notch .eyes"), LASTFACE = faceOf()); }, 1600); }
 }
 function bornBoop(){ setTimeout(() => { const h = $("#hero"); if (h) { h.classList.remove("boop"); void h.offsetWidth; h.classList.add("boop"); } $(".blinker")?.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:180}); }, 0); }
 function fly(){

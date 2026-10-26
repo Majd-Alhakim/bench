@@ -1,7 +1,7 @@
-// Renders the running site (pnpm dev) in headless Edge: full-page screenshots in both themes at desktop and phone
+// Renders the running site (npm run dev) in headless Edge: full-page screenshots in both themes at desktop and phone
 // width, then fills and submits the waitlist form. Fails on console errors (CSP included) or a broken flow.
 //   PUPPETEER_CORE=<path to puppeteer-core> node apps/landing/scripts/check.mjs [base url] [--no-flow]
-// The flow needs the site key in index.html to match TURNSTILE_SECRET in .dev.vars (both test keys, or both unset).
+// The flow needs the test site key in index.html and the test TURNSTILE_SECRET from .dev.vars.example (no secret = sign-ups refused).
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_CORE || "puppeteer-core");
 const EDGE = process.env.BROWSER ?? process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
 const args = process.argv.slice(2);
-const BASE = args.find(a => !a.startsWith("--")) ?? "http://127.0.0.1:8788";
+const BASE = args.find(a => !a.startsWith("--")) ?? "http://127.0.0.1:8787";
 const OUT = process.env.OUT ?? path.resolve(here, "../review");
 fs.mkdirSync(OUT, { recursive: true });
 
