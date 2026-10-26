@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { cleanRef, isToken, newToken, normaliseEmail, verifyTurnstile, type Env } from "../lib/waitlist.ts";
+import { readFileSync } from "node:fs";
+import { CONSENT, cleanRef, isToken, newToken, normaliseEmail, verifyTurnstile, type Env } from "../lib/waitlist.ts";
+
+test("the consent stored with each row is the line the form shows, and it covers build updates", () => {
+  const html = readFileSync(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.ok(html.includes(`<p class="consent" id="consent">${CONSENT} `), "form consent line differs from CONSENT");
+  assert.match(CONSENT, /build updates/);
+  assert.match(CONSENT, /one-click unsubscribe/);
+});
 
 test("normaliseEmail trims, lowercases and rejects what isn't an address", () => {
   assert.equal(normaliseEmail("  Founder@Example.COM "), "founder@example.com");

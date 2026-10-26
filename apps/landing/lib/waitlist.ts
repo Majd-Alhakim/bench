@@ -29,7 +29,7 @@ export interface RateLimit { limit(options: { key: string }): Promise<{ success:
 export interface Ctx { request: Request; env: Env }
 
 export const CONSENT =
-  "We'll email you about Eucas only: a link to confirm, the first build, and Pro when it opens. Every email has a one-click unsubscribe.";
+  "We'll email you about Eucas only: a link to confirm, the first build, Pro when it opens, and occasional build updates (a couple a month at most). Every email has a one-click unsubscribe.";
 
 export const AGENTS = new Set(["claude-code", "cursor", "codex", "other"]);
 export const SESSIONS = new Set(["", "1", "2-3", "4-6", "7+"]);
@@ -109,7 +109,7 @@ export async function sendConfirm(env: Env, email: string, token: string): Promi
   const confirm = `${env.SITE_URL}/api/confirm?t=${token}`;
   const leave = `${env.SITE_URL}/api/unsubscribe?t=${token}`;
   const text = [
-    "Confirm you want the first Eucas build:",
+    "Confirm you want the first Eucas build, plus occasional build updates (a couple a month at most):",
     "",
     confirm,
     "",

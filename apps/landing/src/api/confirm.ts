@@ -8,5 +8,5 @@ export const onRequestGet = async ({ request, env }: Ctx): Promise<Response> => 
     "UPDATE waitlist SET status = 'confirmed', confirmed_at = COALESCE(confirmed_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) WHERE token = ?",
   ).bind(t).run();
   if (!r.meta.changes) return page("We couldn't find you", "<p>You may have left the list already. You can <a href=\"/#join\">join again</a>.</p>", 404);
-  return page("You're confirmed", `<p>You'll get the first Windows build of Eucas when it's ready. Nothing else in between.</p><p><a href="/api/unsubscribe?t=${t}">Leave the list</a></p>`);
+  return page("You're confirmed", `<p>You'll get the first Windows build of Eucas when it's ready, and occasional build updates until then (a couple a month at most). Every email has a one-click unsubscribe.</p><p><a href="/api/unsubscribe?t=${t}">Leave the list</a></p>`);
 };

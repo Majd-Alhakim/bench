@@ -115,7 +115,7 @@ Resend's free plan sends **100 emails a day** (3,000 a month). The code already 
 2. Send **one email per person** (never one email with many recipients) through Resend's batch API, each with that person's link `https://eucas.app/api/unsubscribe?t=<token>` in the text and the headers `List-Unsubscribe: <that link>` and `List-Unsubscribe-Post: List-Unsubscribe=One-Click`. The Worker already serves both (RFC 8058). Gmail and Yahoo require one-click unsubscribe from bulk senders.
 3. Send from `hello@eucas.app`, so replies reach you through Email Routing.
 
-This needs a small script that isn't built yet (a follow-up). **Before the first update, check the consent.** Today the form and `/privacy` promise "three emails at most: a link to confirm, the first build, and Pro when it opens". Either keep updates inside that promise, or change the consent line (`CONSENT` in `lib/waitlist.ts`) and the privacy page **before launch**; each row stores the exact consent text its person agreed to.
+This needs a small script that isn't built yet (a follow-up). **Updates are allowed** (founder, 2026-10-26): the consent on the form, `/privacy` and the confirm email cover "occasional build updates (a couple a month at most)", with a one-click unsubscribe in every email. Keep to that pace. Each row stores the exact consent line its person agreed to (`consent_text`), so before a send, check that the rows you mail agreed to updates: `SELECT consent_text, count(*) FROM waitlist GROUP BY consent_text`. Rows with the older line (none exist yet, since nothing is deployed) get only the confirm, first-build and Pro emails.
 
 ## G. Counting visits
 
