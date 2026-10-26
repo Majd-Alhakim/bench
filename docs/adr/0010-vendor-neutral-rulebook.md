@@ -18,6 +18,9 @@ SP-SUP1 also showed that contradictory user rules caused the supervisor's remain
 - **Compiled output per vendor:** the app compiles the rulebook into `rulebook.bin` for the guard (a bincode snapshot with a SHA-256) and, for Claude Code, mirrors the limits as `permissions.deny` patterns in managed settings (for the limits you locked) or in the user's `~/.claude/settings.json` (for the limits left "not locked", D-4, CR-010). Auto-approve rules are **not** written as Claude Code `allow` rules (the user's `ask`/`deny` must still win, and the guard is where the counters live).
 - **Conflicts are computed, not guessed:** the compiler reads the user's Claude Code permission rules (`~/.claude/settings.json`, project and local settings in the scoped folders) and marks a rule "would do nothing" when an `ask` or `deny` there covers it (UI §4.9).
 
+## Amendment 2026-10-26 (CR-010 D-4 as drawn in the approved CR-011 design)
+The approved design has **block** rules ("block Edit, Write · in api-docs/migrations/") in the library, in Your rules and as drafts, and lets you lock them. So `rules[].kind` is `"auto_approve" | "block"`. A block rule uses the same exact match (exact program and arguments for shell; a folder scope for file tools; an MCP tool name); it can never loosen anything, so it is also allowed to match inside a limit's area. **Only block rules can be locked** (ADR-0007): locked ones are compiled into managed `permissions.deny` patterns by the helper; unlocked ones are enforced by the plugin guard and mirrored as user `permissions.deny`. Drafts (`/v1/draft-rule`) may be either kind and pass this compiler like any rule.
+
 ## Consequences
 - The Cursor adapter is a new crate plus a hook-input mapping, not a rulebook migration.
 - Every rule carries a live counter, kept by the app from guard events (not in the rulebook file), so editing rules never rewrites history.

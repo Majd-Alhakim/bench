@@ -15,8 +15,10 @@ Sent at most once a day to `POST /v1/telemetry`, schema-allowlisted on both ends
 | `guardP95Ms`, `checkEventsLostPer10k` | `21`, `0` | Budgets in the field |
 | `canary` | `{ ran: 2, blocked: 2, couldNotRun: 0 }` | Edge J/K rates |
 | `counts` | `{ blocks: { delete: 3, push_default: 1, send: 0, pay: 0 }, tripwireStops: 0, needsYou: 41, rulesSaved: 2 }` | Value and noise |
-| `firstRun` | `{ stepReached: 6, secondsToProtected: 262, uac: "accepted" }` | The 4:30 target and the D-4 split |
+| `firstRun` | `{ stepReached: 6, secondsToProtected: 262, uac: "accepted" }` | The ~5:00 setup target (CR-012) and the D-4 split; plus ~~`signIn` (now or later)~~ whether setup waited at sign-in (no "Sign in later"; the limits are locked before it, 2026-10-26) |
 | `errors` | `{ GUARD_INTERNAL: 0, PIPE_TIMEOUT: 3 }` | Error codes only |
+
+**Added 2026-10-26 (always-on supervisor, CR-012):** `supervisor: { moments, settledByRules, modelCalls, notSentMostlyCode, budgetEmpty, unreachable }` (counts only) and `account: { signedIn: bool }`. Telemetry **never carries the account token or id**, so counts stay unlinkable to an email (ADR-0015).
 
 `installHash` (salted per release, not linkable across releases) dedupes daily counts. No IP is stored (Workers Analytics Engine row without it). **Never:** commands, paths, project or repo names, rule text, prompt or file text, usernames, emails.
 
@@ -44,6 +46,8 @@ Settings › Diagnostic, the tray menu and every error's secondary action (DESIG
 | Status line | Wrapped? Saved command's program name; last tick age; `rate_limits` present? |
 | Events | Last 20 guard events: time, session (folder display name), tool kind, **program name only**, decision, rule or limit id |
 | Store | DB size, spool size and dropped count, retention last run |
+| Account and supervisor *(2026-10-26)* | Signed in? plan, token expiry, meter period and percent, the kill switch state, the last 5 supervisor outcomes (sent / settled by rules / not sent / budget empty / unreachable) with payload **sizes**. Never the email, the tokens or a payload's text (Settings › What is sent shows those to you) |
+| Platform *(2026-10-26)* | Smart App Control state (SP-H1), Git Bash at `C:\Program Files\Git\bin\bash.exe`, the plugin version folders and which live sessions loaded each, per-host Claude Code versions (desktop app bundle vs terminal) |
 | Errors | Last 20 error codes with times |
 | Repairs | The specific repair available, if any ("Restart bench's guard", "Re-install the plugin") |
 
@@ -78,8 +82,11 @@ flowchart LR
 | Update rollout | Telemetry `appVersion` mix (if on); GitHub release download counts | Manual check 48 h after a stable release, before widening from 10 % |
 | Signing certificate | **When Authenticode is bought** (none in v0.1, CR-010): expiry date in `docs/support/calendar.md` | Calendar reminder 60 and 14 days before |
 | Domains, Cloudflare and Lemon Squeezy billing | Their own emails | — |
+| Sign-in email *(CR-012)* | Sends, bounces and rejects per day (Email Service analytics); `auth/start` → `verify` conversion | Email if bounces > 5 % or conversion < 70 % for a day (codes not arriving) |
+| Accounts and budgets *(CR-011, CR-012)* | D1 size and write rate; `402 budget_empty` and `413 prompt_too_large` rates; `spend_day` vs the breaker; `trial_claim` hits (alias or deleted-account re-sign-ups refused a second trial; a daily count, no email) ~~accounts with `device_count` > 10~~ (no device count is stored since 2026-10-26) | Email at 50 % and 90 % of the daily breaker |
+| Disposable-domain list | The weekly blocklist PR | Review it like any PR |
 
-No pager, no on-call. The safety layer doesn't depend on anything the founder runs, so an outage of the Worker degrades Pro to "ask you" and stops updates, and nothing else.
+No pager, no on-call. The safety layer doesn't depend on anything the founder runs, so an outage of the Worker degrades ~~Pro~~ the supervisor (every user since 2026-10-26) to rules only and "ask you", stops sign-ins, drafting and updates, and nothing else.
 
 ## 6. Runbooks (short)
 
@@ -91,6 +98,9 @@ No pager, no on-call. The safety layer doesn't depend on anything the founder ru
 | **Provider outage or price change** | Swap the model order in signed config (Gemma first) → no app release |
 | **Worker incident** | `wrangler rollback` to the previous version → check the smoke |
 | **Lost updater key** | Follow ADR-0013's rotation release with the sealed backup |
+| **Sign-in codes not arriving** *(CR-012)* | Check Email Service status and bounces → if the provider is down, set `email.provider = "resend"` in signed config (ADR-0017) → confirm with a test sign-in → switch back later |
+| **A user reports a payload that leaked a secret, path or name** *(always-on supervisor)* | Treat as S1 (SECURITY-PRIVACY §9, T16): flip `killSwitches.supervisor` (everyone on rules only within minutes) → add the message shape to the redaction corpus as a failing test → fix → release → unflip after the eval passes. The provider kept nothing (ZDR); say so only after confirming the provider block was on the call |
+| **"Delete my account" from someone who can't sign in** | Ask them to request a code to that address; delete only after they read the code back (proves the inbox), with one D1 statement; reply when done |
 | **Anthropic policy change** (subscription use, hooks, plugins) | Kill-criteria review with the PRD; config can hide Pro and cloud lines within minutes |
 
 ## 7. Maintenance load for a solo founder
@@ -102,7 +112,8 @@ No pager, no on-call. The safety layer doesn't depend on anything the founder ru
 | Triage issues and Discussions | Weekly slot | 60 min | Diagnostic report in every bug; templates; known-setups table |
 | Dependabot PRs | Weekly | 20 min | Grouped minor/patch; CI decides |
 | Release (beta → stable) | Every 1–2 weeks | 45 min incl. the 15-minute manual checklist | Changesets, updater-signed builds with published SHA-256s, staged rollout |
-| Supervisor eval and config (Pro) | Monthly | 30 min | `xtask` scripts |
+| Supervisor eval and config (every user since 2026-10-26) | Monthly | 30 min | `xtask` scripts |
+| Disposable-domain list PR *(2026-10-26)* | Weekly | 5 min | The workflow writes the diff |
 | **Total** | | **~3–4 h/week steady state**, more in a CLI-breaking week | |
 
 **Load shedding, in order, if it grows past 5 h/week:** stop the Ubuntu e2e (keep unit and contract), widen the beta cadence to monthly, drop arm64, freeze Pro scope. Never shed: the nightly canary, the bypass suite, fail-closed tests, update signing and the published hashes.

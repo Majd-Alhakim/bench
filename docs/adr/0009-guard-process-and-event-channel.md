@@ -42,3 +42,12 @@ The limits guard in Program Files (ADR-0007) runs steps 1, 3 (tripped flag and l
 - The spool bounds itself: segments over 7 days or 50 MB total are dropped oldest-first, and the drop is logged as a guard event the user can see.
 - The ask pipe is checked for spoofing: the guard verifies the pipe server is our signed `Eucas.exe` (SECURITY-PRIVACY T4).
 - Windows-only code (pipes, the append-only spool, parent PID) lives in `crates/eucas-platform/src/windows/`; Unix gets a Unix-socket equivalent when macOS lands.
+
+## Amendment 2026-10-26 (SP-H1, SP-SUP2 recorder)
+- **Measured:** PreToolUse **p50 25 / p95 33 / p99 44 / max 48 ms** as Claude Code times its own hooks (300 calls, Defender on); inside the guard p95 0.55 ms. The short-lived exe stays; the warm-helper fallback isn't needed.
+- **Cold start after every new binary: 130–196 ms** (Defender scans a newly written exe once). After writing a guard (install, update, Repair), the core runs `eucas-guard --version` once so the scan happens before a real hook. The p99 gate excludes that first run.
+- **Exec form only** (ADR-0007 SP-H1 finding 1). The subcommand list and `onFailure` placement above are unchanged.
+- **Stdout is hook JSON or nothing.** Claude Code treats exit 0 with non-JSON stdout as **no opinion** (the call runs), so a stray print is a silent allow. The guard writes all diagnostics to the spool or stderr only, and a fuzz test asserts stdout is always valid hook JSON or empty.
+- **PermissionRequest crash or hang → explicit deny** ("blocking because onFailure is block"), as designed.
+- **Observational hooks run with `async: true`** (`post-tool-use`, `notification`, `session-end`, `config-change`, `user-prompt-submit`): Claude Code doesn't wait for them, so they add no wall time (shown by the SP-SUP2 recorder). `pre-tool-use`, `permission-request` and `stop` (the supervisor's decision) stay synchronous. CPU cost per start is unchanged.
+- **Parent identity by image path:** every Claude Code host on Windows names its process `claude.exe` (terminal CLI, the desktop app and its bundled CLI); the recorded parent includes the image path.
