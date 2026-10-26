@@ -4,11 +4,13 @@
 |---|---|---|---|
 | 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **Needs founder design approval — do not build or reuse before it** (CR-011 §6) | [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
 
-**In this folder:** this file · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (57 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
+**In this folder:** this file · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (60 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
 
-**Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 54 states, light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
+**Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 57 states, light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
 
 ---
+
+> **Founder decisions applied (26 Oct, later the same day):** the four limits are **always on**, locked or not locked per limit; **guided merge** stays in Free as a needs-you item; **budgets** stop the agent before its next step; drafting a described rule **uses the supervisor and counts on the meter**; the app says **"your default branch"**, never "main"; v0.1 is **unsigned** and shows no "signed" badge.
 
 ## 1. Visual direction: a character that belongs to the screen
 
@@ -103,6 +105,9 @@ The notch's own body grows down into a 372 px card (clip-path morph from the not
 | `SupervisorMeter` | Usage, meter sheet | % left + reset date + value line; **no dollars, no counts of budget**; empty state copy fixed (CR-011) |
 | `PromiseText` | Rules | the one honest-promise string |
 | `LockRow` | Rules | locked (neutral) / not locked (amber, with Lock) |
+| `LimitRow` | Rules, setup 4 and 5 | the four limits: title, detail, **Locked** chip or amber **Not locked** (press to lock); never a switch |
+| `GuidedMergeItem` | needs-you | the offer ("Update, test, open PR") becomes its result in place (green check, "Open the PR") |
+| `BudgetItem` (Pro) | needs-you | "Budget reached for this task. Continue?" · Continue · Open session |
 | `RuleRow` | Rules, setup 4 | title, detail, lock glyph, switch; locked switches explain on press |
 | `RuleComposer` + `DraftCard` | Rules, setup 4 | described → exact rule in mono → effect last week → Add · Reword · Lock it too |
 | `SettingsRow`, `Radio` (privacy), `Seg` (notch look, theme) | Settings | — |
@@ -163,6 +168,10 @@ Second person; your Euca speaks of itself by name ("Pip will check with you more
 - **Diagnostic (approved):** "No paths to your projects or files."
 - **Meter empty (CR-011, with the name):** "Pip will check with you more often until 1 Dec."
 - **Never approves:** "It never approves a tool call."
+- **Budget (founder, 26 Oct):** "Budget reached for this task. Continue?" + "Pip stopped bench before its next step." Always "stops before the next step", never "pauses".
+- **Guided merge:** "search is ready · Update it from your default branch, run the tests and open the PR?"
+- **Branch wording:** "your default branch" in prose; `main` only inside a literal command.
+- **Unsigned v0.1:** setup warns that UAC will say "Unknown publisher"; no "signed" or "verified publisher" badge anywhere.
 
 ### 7.2 What the removal test cut
 - "Welcome to Eucas!" and any feature tour (setup step 1 starts with your sessions).
@@ -172,7 +181,7 @@ Second person; your Euca speaks of itself by name ("Pip will check with you more
 - Labels on the notch other than "Not protected" and the tripwire marker.
 
 ### 7.3 Words we don't use
-Seamless, effortless, supercharge, unleash, magic, AI-powered, smart (as an adjective for us), "Oops", "Something went wrong", "Are you sure?".
+Seamless, effortless, supercharge, unleash, magic, AI-powered, smart (as an adjective for us), "Oops", "Something went wrong", "Are you sure?". "Pause" for a budget stop. "main" in prose. "Signed".
 
 ---
 

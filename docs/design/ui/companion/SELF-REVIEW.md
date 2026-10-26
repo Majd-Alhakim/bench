@@ -4,11 +4,21 @@
 |---|---|---|
 | 2026-10-26 | PM + UX/UI (Claude) | [DESIGN.md](DESIGN.md), [prototype/notch.html](prototype/notch.html), [screens/](screens/), UX [notch-and-panel.md](../../ux/companion/notch-and-panel.md) and [setup-flow.md](../../ux/companion/setup-flow.md) |
 
-**How it was checked.** Every state rendered with headless Edge at 1440 × 900 (dense panel also at 1280 × 800), zoomed crops of each notch state at 2×, light and dark; contact sheets reviewed and fixed (below). An interaction smoke test in headless Edge: no peek before 280 ms, peek opens on rest and folds on leave, click opens the panel, tabs work by mouse and arrow keys, Esc closes, setup runs end to end including the admin prompt, the flight lands in the notch with the coach mark, Continue stays disabled until the Euca has a name and a look, the jump menu lists all 54 states, **no console errors**.
+**How it was checked.** Every state rendered with headless Edge at 1440 × 900 (dense panel also at 1280 × 800), zoomed crops of each notch state at 2×, light and dark; contact sheets reviewed and fixed (below). An interaction smoke test in headless Edge: no peek before 280 ms, peek opens on rest and folds on leave, click opens the panel, tabs work by mouse and arrow keys, Esc closes, setup runs end to end including the admin prompt, the flight lands in the notch with the coach mark, Continue stays disabled until the Euca has a name and a look, the jump menu lists all 57 states, **no console errors**.
 
 **Skills.** `premium-craft` and `ui-ux-guide` were loaded and followed (gates, rubric, checklist below). `better-frontend`, `design-taste-frontend` (app screens), `anthropic-skills:accessibility` and `anthropic-skills:ui-animations` were **not loaded in this session**; their standing rules (tabular figures, focus rings, hit areas, reduced motion, no decorative motion, contrast, one accent) were applied from the existing system and the earlier companion review. A pass with those skills loaded is a fair ask before Gate 5-style approval.
 
 ---
+
+## 0. Founder decisions applied (26 Oct, later)
+| Decision | Where it landed |
+|---|---|
+| Guided merge stays in Free | New needs-you item and its result (`p-needs`, `p-merge-done`, `n-peek-merge`); notch-and-panel §4.7 |
+| Choose your rules and prompted rules stay; drafting uses the supervisor and counts on the meter | Draft card line; guided exact-rule form when the meter is empty, at Level 1 or offline (§4.5) |
+| The four limits are always on; lock per limit | `LimitRow` in Rules and setup 4–5; no switch; Locked / Not locked chips |
+| "Your default branch", not "main" | All prose; `main` only in literal commands |
+| Budgets stop before the next step | `p-budget`, notch-and-panel §4.8 |
+| v0.1 unsigned, no "signed" badge | UAC copy says Unknown publisher; nothing claims signing |
 
 ## 1. Fixed after looking at the renders
 1. The Euca's name overlapped the mini notch on the setup stage → the mini notch moved into the flow.

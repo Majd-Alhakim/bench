@@ -8,6 +8,8 @@
 
 **Goal.** In about five minutes, without an account, you **make your Euca**, see your own week, choose and lock your rules, watch your Euca block a test with your own eyes, choose what it may read, and send it to its place at the top of your screen.
 
+> **Founder decisions applied (26 Oct, later the same day):** the four limits are **always on**, locked or not locked per limit; **guided merge** stays in Free as a needs-you item; **budgets** stop the agent before its next step; drafting a described rule **uses the supervisor and counts on the meter**; the app says **"your default branch"**, never "main"; v0.1 is **unsigned** and shows no "signed" badge.
+
 **What changed from the old first run, and why.**
 - **"Create your Euca" is step 2** (CR-011 §1). The character is made before it does anything, so every later step can speak as it ("Pip turns them into exact rules", "Watch Pip block a test").
 - **"Choose your rules" comes before the admin prompt** (CR-010 D-4): tested library on/off, suggestions from your week, and your own described rules.
@@ -29,7 +31,7 @@ One window, **760 × 600**, centred, dark by default, a slim progress line ("Ste
 | 3 | **Your week** | 1:50 → 2:40 | Skim 4 cards | Built from local history while you were on step 2 |
 | 4 | **Choose your rules** | 2:40 → 3:30 | Keep the tested rules, tick suggestions, maybe describe one | Drafts described rules as exact rules |
 | 5 | **Lock your rules** | 3:30 → 4:00 | Tick which to lock, approve **one** Windows prompt | Writes the locked set to managed settings; the rest at user scope |
-| 6 | **Watch it block a test** | 4:00 → 4:20 | Watch | Throwaway session tries `git push origin main`; blocked, logged |
+| 6 | **Watch it block a test** | 4:00 → 4:20 | Watch | Throwaway session tries to push to its default branch (`git push origin main`); blocked, logged |
 | 7 | **What it may read** | 4:20 → 4:45 | Level 1 (default) or Level 2 (+ optional trial email) | Nothing leaves the PC at Level 1 |
 | 8 | **Pip is watching** | 4:45 → 5:00 | Press **Send Pip to the top** | The window fades; the Euca flies into the notch; coach mark once |
 
@@ -78,26 +80,26 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 - **States:** building (cards stream in, first ≤ 5 s; it started on step 1) · thin history (edge F: "Not much to look back on yet" + 5 starter rules) · tokens only (edge G).
 
 ### Step 4 · Choose your rules (D-4)
-- **Intent:** Do. **Primary:** **Continue · 8 rules** (the count is the consequence).
-- **Headline:** "Choose your rules" · **Lede:** "Tested rules are on. Add your own in plain words: Pip turns them into exact rules you confirm."
-- **Left: Safety rules** (tested library, switches, on by default except "Ask before installing packages"). **Right: Your own** (the composer and the draft card) above **From your week** (suggestions as checkboxes; read-only ones pre-ticked; anything that runs project code shown unticked with "Runs code from the project").
-- **The draft card:** *You wrote: "don't let agents touch the migrations in api-docs"* → `block Edit, Write · in api-docs/migrations/ and everything in it` → "Last week it would have blocked 3 calls, all from api-docs. It can't loosen a locked rule." → **Add rule** · Reword · ☑ Lock it too.
+- **Intent:** Do. **Primary:** **Continue · 7 rules** (the count is the consequence).
+- **Headline:** "Choose your rules" · **Lede:** "The four limits are always on, and so are the tested rules. Add your own in plain words: Pip turns them into exact rules you confirm."
+- **Left: Limits** (the four, "Always on", no switch) above **Safety rules** (tested library, switches, on by default except "Ask before installing packages"). **Right: Your own** (the composer and the draft card) above **From your week** (suggestions as checkboxes; read-only ones pre-ticked; anything that runs project code shown unticked with "Runs code from the project").
+- **The draft card:** *You wrote: "don't let agents touch the migrations in api-docs"* → `block Edit, Write · in api-docs/migrations/ and everything in it` → "Last week it would have blocked 3 calls, all from api-docs. It can't loosen a locked rule." → **Add rule** · Reword · ☑ Lock it too. A quiet line: "Drafted with supervisor help · counts on the meter" (the trial covers it in setup).
 - **Rules for rules** (unchanged from PM-T5): exact commands, never globs; scope is a folder; runners never pre-ticked or "everywhere"; nothing can allow a delete, a push to the default branch, a send or a payment; a conflict with your own Claude Code `ask`/`deny` rule disables the row with why.
 - **States:** default · drafting · draft shown · draft rejected ("That would loosen a locked rule, so Pip can't add it. Try describing what to block instead.") · thin history (5 starters).
 
-### Step 5 · Lock your rules (the one admin prompt)
-- **Intent:** Do. **Primary:** **Lock 5 rules** (count = ticked rows). **Secondary:** Skip the lock.
-- **Headline:** "Lock your rules" · **Lede:** "Locked rules live where no agent or repo can switch them off. Changing them later asks for admin again."
-- **List:** the rules you kept, safety rules ticked to lock by default, each with a lock glyph.
-- **Consequence preview:** "Windows asks for permission once. It will say **Unknown publisher**: this first version isn't signed yet." · "Without the lock, your rules still run, labelled Not locked." (CR-010: v0.1 ships unsigned; the UAC dialog is yellow and says Unknown. Saying it first makes the dialog expected.)
+### Step 5 · Lock your limits and rules (the one admin prompt)
+- **Intent:** Do. **Primary:** **Lock 4 limits + 4 rules** (count = ticked rows). **Secondary:** Skip the lock.
+- **Headline:** "Lock your limits and rules" · **Lede:** "Locked ones live where no agent or repo can change them. The limits stay on either way. Changing a lock later asks for admin again."
+- **Two lists:** the four **Limits** (ticked to lock by default; you may untick one, it stays on but Not locked) and **Your rules** (safety rules ticked by default), each with a lock glyph.
+- **Consequence preview:** "Windows asks for permission once. It will say **Unknown publisher**: this first version isn't signed yet." · "Without the lock, the limits and your rules still run, labelled Not locked." (CR-010: v0.1 ships unsigned; the UAC dialog is yellow and says Unknown. Saying it first makes the dialog expected.)
 - **Waiting:** the button reads "Waiting for Windows…" while the UAC dialog is up.
-- **Declined or skipped (edge H, new copy):** "**Your rules are on, but not locked.** Windows didn't give permission, so the rules sit in your user settings. An agent or a repo could switch them off. Pip watches for that and tells you the moment it happens. You can lock them any time from Rules." → Continue · Try again. Everywhere after: the **Not locked** chip in the panel header and an amber row in Rules.
+- **Declined or skipped (edge H, new copy):** "**Your limits and rules are on, but not locked.** Windows didn't give permission, so they sit in your user settings. An agent or a repo could change them. Pip watches for that and tells you the moment it happens. You can lock them any time from Rules." → Continue · Try again. Everywhere after: the **Not locked** chip in the panel header and an amber row in Rules.
 - **Write failed (edge I):** unchanged.
 - **Emotional moment: none on purpose.** Elevation is sober.
 
 ### Step 6 · Watch it block a test (D-5, the proof moment)
 - **Intent:** Know. **Primary:** **Continue** (appears when the test finishes).
-- **Headline:** "Watch Pip block a test" · **Lede:** "A throwaway session in a temporary folder tries to push to main. Nothing touches your projects or the network."
+- **Headline:** "Watch Pip block a test" · **Lede:** "A throwaway session in a temporary folder tries to push to your default branch. Nothing touches your projects or the network."
 - **Live log** (mono): "› Starting a test session in a temporary folder" · "› It tried: git push origin main" · "✓ **Blocked by Pip · 0.3 s · logged**" + the **done** sound once. Then "That's what happens in your real sessions. Every block shows up in the panel with why." (Uses the mock-API path from S-1: zero tokens.)
 - **Not blocked (edge J, worst moment of setup):** "✕ Not blocked" + "**The test wasn't blocked.** Pip is not protecting your sessions on this PC yet. Nothing outside the test folder was touched." → **Run the diagnostic** · Show what happened. The flow doesn't continue to "watching"; the notch, when it appears, shows **Not protected**.
 - **Couldn't start (edge K):** unchanged; status "Protected · not yet tested" (amber in the panel) until a real block or a later test.
@@ -138,7 +140,7 @@ Each card: intent · one primary · evidence (what happened / how to take it bac
 | 1 Find | Checklist | Spinner glyph per line | N/A (always has lines) | "Still checking…" after 3 s | A, B, C | N/A: local | N/A | D | All ticked |
 | 2 Make | Born *(proto)* | — | Before: grey, closed eyes *(proto)* | Name or look only (hint) *(proto)* | Name too long: capped at 16 | N/A | N/A | N/A | Birth blink |
 | 3 Week | 4 cards *(proto)* | Streaming | F | G (tokens only) | Parse errors counted | N/A | Plan share shown, no warning tone | Folder unreadable → Diagnostic | — |
-| 4 Rules | Lists *(proto)* | Drafting | Thin history → starters | — | Draft rejected (loosens a lock) | Drafting is local | N/A | Conflicts with your own `ask` rule | Draft shown *(proto)* |
+| 4 Rules | Lists *(proto)* | Drafting | Thin history → starters | — | Draft rejected (loosens a lock) | Offline: the guided exact-rule form | N/A | Conflicts with your own `ask` rule | Draft shown *(proto)* |
 | 5 Lock | List + consequences *(proto)* | Waiting for Windows *(proto)* | N/A | Some unticked | I (write failed) | N/A | N/A | H: declined *(proto)* | → 6 |
 | 6 Test | Live log | Running | N/A | K (not yet tested) | J *(proto)* | Mock path needs no network | Mock path uses no tokens | N/A | Blocked *(proto)* |
 | 7 Privacy | Level 1 *(proto)* | Code sending | N/A | Level 2 without email (trial later) | Wrong code | Can't send a code | N/A | N/A | Level 2 + email *(proto)* |

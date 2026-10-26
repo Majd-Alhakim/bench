@@ -6,6 +6,8 @@
 
 **Replaces** the surfaces, map and flows in [ia-and-flows.md](ia-and-flows.md) (tray popover as home, six-section main window). **Keeps** from it: the honest promise, the notification budget idea, the needs-you rules, the same-file rules, the heartbeat as evidence, the tripwire's content, the diagnostic, the Pro rules that never nag, and the edge paths. Where this file is silent, those still apply.
 
+> **Founder decisions applied (26 Oct, later the same day):** the four limits are **always on**, locked or not locked per limit; **guided merge** stays in Free as a needs-you item; **budgets** stop the agent before its next step; drafting a described rule **uses the supervisor and counts on the meter**; the app says **"your default branch"**, never "main"; v0.1 is **unsigned** and shows no "signed" badge.
+
 **The product in one line (founder, 26 Oct):** *one agent the user creates at setup, with rules and settings; then it is very simple: settings, rules and usage, and it sits as a notch. It never codes; it is just an agentsitter.*
 
 **What the Euca can and can't do** (unchanged, shapes every flow): it watches, warns, blocks and explains. It can't answer a terminal prompt from outside, inject a message or pause an idle session. So every action in the notch and the panel either **takes you to the session**, **opens the evidence**, or **changes Eucas's own rules and settings**.
@@ -65,7 +67,7 @@ flowchart TB
 | Tab | Holds | Primary action | Empty / first state |
 |---|---|---|---|
 | **Usage** | 5-hour and weekly meters with a one-sentence forecast; where it went (today / 7 days, by project); the **supervisor meter**; Your week | none (read view) | "Usage appears after your first session." |
-| **Rules** | the honest promise; the lock row; Safety rules (tested library, switches, lock glyphs); Your rules (from approvals and described); **Describe a rule** → drafted exact rule → Add | **Add rule** (only while a draft is open) | Your rules empty: "Rules you add show up here with how often they were used." |
+| **Rules** | the honest promise; the lock row; **Limits** (the four, always on, no switch: each shows Locked or Not locked); Safety rules (tested library, switches, lock glyphs); Your rules (from approvals and described); **Describe a rule** → drafted exact rule → Add | **Add rule** (only while a draft is open) | Your rules empty: "Rules you add show up here with how often they were used." |
 | **Settings** | Name and look; Protection (admin lock, safety test); Privacy (Level 1/2); The notch (Pill / Thin line, sounds, theme); Help (diagnostic); Plan (trial, taste, Pro); Quit | per row | — |
 
 ---
@@ -112,6 +114,9 @@ Only one state shows at a time. **Priority:** Not protected › Tripwire stop �
 | Two sessions edit one file | amber | "Two sessions are editing one file · bench and api-docs · `src/router.ts`" | Show both | One commits or stops |
 | **Tripwire stop** | red | "Pip stopped notes · deleted 1,240 files in 20 s" | See what happened | You open it (the record stays in the log) |
 | **Not protected** | red | "bench isn't protected · no check for 40 s while it ran tools" | Fix it | A real check passes |
+| **Guided merge** offer: a session finished on a branch | calm | "search is ready · It finished on its branch. Update it from your default branch, run the tests and open the PR?" | Update, test, open PR | You run it (the item becomes its result) or snooze it |
+| Guided merge result | green (a real result) | "search: PR #71 is open · Updated from your default branch, 128 tests passed, PR #71 opened. Nothing was merged." · or "Tests failed: 2 of 128. Nothing was pushed." | Open the PR · or Open session | You open it |
+| **Budget reached** (Pro) | amber | "Budget reached for this task. Continue? · Pip stopped bench before its next step. The task used the 4% of your week you gave it." | Continue · Open session | You choose |
 | Not verified after an update | amber | "Claude Code 2.1.315 isn't verified yet" | Run the test | The safety test passes |
 | (Pro / trial) the supervisor wasn't sure | amber | the session-waiting line plus "Pip didn't answer: not sure" | Open session | as the first row |
 
@@ -154,12 +159,21 @@ Eucas stops the process tree, **verifies it stopped**, then: red notch marker "S
 Trigger: tool activity with no check, within one tool call. → The notch widens with "Not protected", red ring, concerned eyes; overrides thin line. → Item "bench isn't protected" [Fix it]. → Sub-page: a checklist (what's fine, what isn't, why), the specific repair ("Restart bench to protect it. Nothing it did was lost."), Run the diagnostic. Never green until a real check passes. **Fail-closed brick** (our guard crashes and blocks every call) keeps the old design: the only place a 15-minute off switch is offered, with an automatic return.
 
 ### 4.5 Describe a rule (prompted rules, D-4)
+Drafting uses the supervisor model and **counts on the meter** (founder, 26 Oct); the draft card says so ("Drafted with supervisor help · counts on the meter"). When the meter is empty, at Level 1 or offline, the composer turns into a guided form ("Write it as an exact rule: block / allow · tools · folder") so you can still add rules without the model.
+
 In Rules (or setup step 4): "Describe a rule in your own words" → **Draft it** → a draft card: *You wrote: "…"*, the exact rule in mono (`block Edit, Write · in api-docs/migrations/ and everything in it`), what it would have done last week ("would have blocked 3 calls, all from api-docs"), "It can't loosen a locked rule." → **Add rule** · Reword · ☑ Lock it too (asks for admin). Drafts are checked against the bypass suite; anything that would relax a hard limit can't be added.
 
-### 4.6 Change a locked rule
+### 4.6 The four limits, and changing a locked rule
+**The four limits are always on** (founder, 26 Oct): never auto-approve a delete, a push to your default branch, a send or a payment. They have **no switch**. Each shows **Locked** (with admin) or **Not locked** (amber, press to lock); in setup step 5 you choose which to lock.
 A locked rule's switch shows a lock. Pressing it says "Locked rules change with admin. Windows will ask." → UAC → the change. Declined: nothing changes.
 
-### 4.7 The supervisor meter runs out
+### 4.7 Guided merge (Free)
+When a session finishes on a branch, a needs-you item offers the plain-code housekeeping: **update from your default branch, run the tests, open the PR**. One button runs those three steps as fixed commands (no model, no code written); the item becomes its result: "search: PR #71 is open · 128 tests passed" with **Open the PR**, or "Tests failed: 2 of 128. Nothing was pushed." with **Open session**. A conflict stops at once: "The update hit a conflict in `src/router.ts`. Nothing was pushed. Open session to resolve it." It never merges into your default branch.
+
+### 4.8 Budget reached (Pro)
+When a task's budget runs out, the Euca **stops the agent before its next step** and adds "Budget reached for this task. Continue?" with **Continue** (gives it more of your week) and Open session. The copy says "stops before the next step", never "pauses": Eucas can't pause an idle session, it can only refuse the next tool call.
+
+### 4.9 The supervisor meter runs out
 Usage › Supervisor shows "Help left this month · 0% · Resets 1 Dec" and, in bold, **"Pip will check with you more often until 1 Dec."** + "Your rules and protection don't change." One Pro line only here (where the free answer runs out): "Pro keeps it going all month: $20/month, $15 for the first 200. See Pro". Never a needs-you item, never in the notch, never a Windows notification.
 
 ---
@@ -185,7 +199,7 @@ Every cell is designed or marked N/A with why. *(proto)* = drawn in the prototyp
 | **Needs you** | List *(proto)* | — | "Nothing needs you." *(proto)* | Show n more *(spec)* | Stale: "bench ended before you answered. Nothing ran." *(spec)* | — | — | — | Opened/snoozed toast *(proto)* |
 | **Usage** | Meters + where + supervisor *(proto)* | — | "Usage appears after your first session." *(spec)* | Tokens only, no plan data: "Claude Code hasn't reported plan limits yet" *(spec)* | Status line not reporting → Diagnostic *(spec)* | Supervisor unreachable line *(spec)* | "5-hour limit reached. Claude Code pauses new requests until 15:40. Your sessions keep their work." No upsell *(spec)* | API key mode: cost in $ (it's your bill, not ours) *(spec)* | — |
 | **Supervisor meter** | Trial *(proto)* | — | Empty *(proto)* | Low *(proto)* | Unreachable *(spec)* | Unreachable *(spec)* | Empty *(proto)* | Level 1 *(spec)* | Trial ended → taste *(proto)* |
-| **Rules** | Promise + lock + lists *(proto)* | Drafting ("Drafting…" on the button, ≤ 3 s) *(spec)* | Your rules empty line *(spec)* | Not locked *(proto)* | Couldn't save: "Your settings file is locked by another program. Nothing changed. Retry" *(spec)* | Drafting needs no network (local templates + exact grammar); if a model is used it falls back to "Write it as an exact rule" *(spec)* | N/A | Locked rule toast *(proto)*; org policy: read-only with why *(spec)* | Added toast + Undo *(proto)* |
+| **Rules** | Promise + lock + lists *(proto)* | Drafting ("Drafting…" on the button, ≤ 3 s) *(spec)* | Your rules empty line *(spec)* | Not locked *(proto)* | Couldn't save: "Your settings file is locked by another program. Nothing changed. Retry" *(spec)* | Drafting needs the supervisor: offline, Level 1 or an empty meter → the guided "Write it as an exact rule" form *(spec)* | N/A | Locked rule toast *(proto)*; org policy: read-only with why *(spec)* | Added toast + Undo *(proto)* |
 | **Settings** | Groups *(proto)* | Safety test running *(spec)* | — | — | Diagnostic red lines *(spec)* | Plan row: "Can't check your plan offline. Pro keeps working for 7 days." *(spec)* | — | — | — |
 | **Setup** | see [setup-flow.md §4](setup-flow.md) |
 
@@ -193,7 +207,7 @@ Every cell is designed or marked N/A with why. *(proto)* = drawn in the prototyp
 
 ## 7. Worst moments, coherence, intelligence
 
-**Worst moments** (each names the cause, what is safe, one next step): tripwire stop (§4.3), not protected (§4.4), the safety test not blocked in setup (setup J), admin declined (setup H: "Not locked" everywhere it matters), the meter empty (§4.7), the 5-hour limit (Usage, no upsell), the session ended before you answered ("Nothing ran"), a long project name (middle ellipsis: `claude-…-afc419`), a 3-line command (mono, wraps, "show all").
+**Worst moments** (each names the cause, what is safe, one next step): tripwire stop (§4.3), not protected (§4.4), the safety test not blocked in setup (setup J), admin declined (setup H: "Not locked" everywhere it matters), the meter empty (§4.9), a guided merge that fails its tests or hits a conflict (§4.7), the 5-hour limit (Usage, no upsell), the session ended before you answered ("Nothing ran"), a long project name (middle ellipsis: `claude-…-afc419`), a 3-line command (mono, wraps, "show all").
 
 **Coherence: one pattern per situation.**
 - One **needs-you item** in the peek (compact) and the panel (full), same words, same order, same action.

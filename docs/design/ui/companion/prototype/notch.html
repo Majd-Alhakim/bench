@@ -908,6 +908,9 @@ html.rm .eyes .eye{--ex:0px!important;--ey:0px!important}
 
 .notch.peeking .glow{opacity:0!important}
 .scell .stype{font-size:12px;font-weight:600;color:var(--text-3);margin:0 2px 8px}
+.sev.ok{background:rgb(111 208 154 / .14);color:#6fd09a}
+.sev-p.ok{background:var(--ok-tint);color:var(--ok-ink)}
+.rules-s .col{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);padding-bottom:14px}
 
 </style>
 </head>
@@ -1011,10 +1014,19 @@ const NEEDS = {
   done:{sev:"calm", t:"api-docs finished and is waiting", e:"Ran for 14 minutes and changed 3 files.", pe:"ran 14 min · changed 3 files", a:"Open session", time:"6 min", snooze:true},
   trip:{sev:"danger", t:"$N stopped notes", e:"It deleted 1,240 files in 20 seconds. $N stopped it at 14:02:31 and checked it isn't running.", pe:"deleted 1,240 files in 20 s", a:"See what happened", sub:"trip", time:"now"},
   off:{sev:"danger", t:"bench isn't protected", e:"$N hasn't seen a check from bench for 40 seconds while it ran tools.", pe:"no check for 40 s while it ran tools", a:"Fix it", sub:"fix", time:"now"},
+  merge:{sev:"calm", t:"search is ready", e:"It finished on its branch. Update it from your default branch, run the tests and open the PR?", pe:"finished on its branch", a:"Update, test, open PR", time:"1 min", snooze:true, then:"mergedone"},
+  mergedone:{sev:"ok", t:"search: PR #71 is open", e:"Updated from your default branch, 128 tests passed, PR #71 opened. Nothing was merged.", pe:"128 tests passed · PR #71 opened", a:"Open the PR", time:"now"},
+  budget:{sev:"attn", t:"Budget reached for this task. Continue?", e:"$N stopped bench before its next step. The task used the 4% of your week you gave it.", pe:"$N stopped bench before its next step", a:"Continue", a2:"Open session", time:"now"},
   unver:{sev:"attn", t:"Claude Code 2.1.315 isn't verified yet", e:"It updated at 13:58. The safety test reruns now; until it passes, $N says so.", pe:"updated 13:58 · the safety test is rerunning", a:"Run the test", time:"8 min"}
 };
+/* The four limits are always on (founder, 26 Oct). Per limit you choose locked with admin or not; there is no off switch. */
+const LIMITS = [
+  {t:"Never auto-approve a delete", d:"rm, del, Remove-Item, git clean", lock:true},
+  {t:"Never auto-approve a push to your default branch", d:"git push to the branch your repo builds from", lock:true},
+  {t:"Never auto-approve a send", d:"mail, messages, posts", lock:true},
+  {t:"Never auto-approve a payment", d:"payment and checkout tools", lock:true}
+];
 const LIB = [
-  {id:"push", t:"Block pushes to your default branch", d:"git push to main or master", on:true, lock:true},
   {id:"force", t:"Block force-pushes", d:"git push --force, on any branch", on:true, lock:true},
   {id:"trip", t:"Stop a session that deletes 200+ files", d:"the mass-delete tripwire", on:true, lock:true},
   {id:"out", t:"Block deletes outside the project folder", d:"rm, del, Remove-Item above the project", on:true, lock:true},
@@ -1064,6 +1076,7 @@ const ROUTES = [
     ["n-arrive","Something needs you: it arrives", {needs:["wait","same"], arrive:true}],
     ["n-marker","The marker stays", {needs:["wait","same"]}],
     ["n-peek","Hover: the peek", {needs:["wait","same"], peek:true}],
+    ["n-peek-merge","Hover: a guided merge offer", {needs:["merge"], peek:true, working:false}],
     ["n-peek-calm","Hover with nothing waiting", {peek:true}],
     ["n-off","Not protected", {guard:"off", working:true, needs:["off"]}],
     ["n-off-peek","Not protected: hover", {guard:"off", needs:["off"], peek:true}],
@@ -1077,7 +1090,9 @@ const ROUTES = [
     ["sheet-notch","Sheet: every notch state", {sheet:"notch"}]
   ]],
   ["The panel", [
-    ["p-needs","Needs you + Usage", {panel:true, needs:["wait","same","done"]}],
+    ["p-needs","Needs you + Usage", {panel:true, needs:["wait","same","merge"]}],
+    ["p-merge-done","Needs you › guided merge done", {panel:true, needs:["mergedone","wait"]}],
+    ["p-budget","Needs you › budget reached (Pro)", {panel:true, needs:["budget"], meter:"pro"}],
     ["p-usage","Usage (nothing needs you)", {panel:true}],
     ["p-rules","Rules", {panel:true, tab:"rules"}],
     ["p-rules-draft","Rules: describe one, Pip drafts it", {panel:true, tab:"rules", draft:true}],
@@ -1200,7 +1215,7 @@ function peekHTML(){
   if (!S.needs.length) return `<div class="p-status"><span><span class="okdot"></span>${esc(st.t)}</span><span class="s2 num">5-hour 46% · week 62% · supervisor 78% left</span></div>`;
   const items = S.needs.slice(0, 3).map((k, i) => {
     const n = NEEDS[k];
-    return `<div class="p-item"><span class="sev ${n.sev}">${n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "calm" ? I.done : I.alert}</span>
+    return `<div class="p-item"><span class="sev ${n.sev}">${n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "ok" ? I.check : n.sev === "calm" ? I.done : I.alert}</span>
       <span style="min-width:0"><div class="t">${esc(nm(n.t))}</div><div class="e">${nm(n.pe)}</div></span>
       <button class="pbtn${i === 0 && n.sev === "danger" ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button></div>`;
   }).join("");
@@ -1210,11 +1225,11 @@ function peekHTML(){
 /* ---------- the panel ---------- */
 function needItem(k, pri){
   const n = NEEDS[k];
-  const g = n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "calm" ? I.done : I.alert;
+  const g = n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "ok" ? I.check : n.sev === "calm" ? I.done : I.alert;
   return `<div class="need ${n.sev}"><span class="sev-p ${n.sev}">${g}</span><div>
     <div class="t"><span>${esc(nm(n.t))}</span><span class="time">${n.time}</span></div>
     <div class="e">${nm(n.e)}</div>
-    <div class="acts"><button class="btn${pri ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button>${n.snooze ? `<button class="btn ghost" data-act="snooze" data-k="${k}">Not now</button>` : ""}</div></div></div>`;
+    <div class="acts"><button class="btn${pri ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button>${n.a2 ? `<button class="btn" data-act="open" data-v="bench">${n.a2}</button>` : ""}${n.snooze ? `<button class="btn ghost" data-act="snooze" data-k="${k}">Not now</button>` : ""}</div></div></div>`;
 }
 function panelHTML(){
   const st = statusLine();
@@ -1272,18 +1287,26 @@ function ruleRow(r, i, kind){
     ${r.lock ? `<span class="lockg" title="Locked: changing it asks for admin">${I.lock}</span>` : ""}
     <button class="sw" role="switch" aria-checked="${r.on}" aria-label="${esc(r.t.replace(/<[^>]+>/g, ""))}" ${r.lock && S.locked ? "data-locked" : ""} data-act="sw" data-kind="${kind}" data-i="${i}"></button></div>`;
 }
+function limitRow(r){
+  const locked = r.lock && S.locked;
+  return `<div class="row"><span class="rl"><div class="rt">${r.t}</div><div class="rd">${r.d}</div></span>
+    ${locked ? `<span class="chip">${I.lock}Locked</span>` : `<button class="chip attn" data-act="relock" title="Lock it with Windows admin">${I.unlock}Not locked</button>`}</div>`;
+}
 function draftHTML(){
   return `<div class="draft" aria-live="polite"><div class="q">You wrote: “don't let agents touch the migrations in api-docs”</div>
     <div class="rule"><span class="k">block</span> Edit, Write · <span class="k">in</span> api-docs/migrations/ <span class="k">and everything in it</span></div>
-    <div class="fx">Last week it would have blocked 3 calls, all from api-docs. It can't loosen a locked rule.</div>
+    <div class="fx">Last week it would have blocked 3 calls, all from api-docs. It can't loosen a limit or a locked rule.</div>
+    <div class="q" style="margin:-4px 0 10px">Drafted with supervisor help · counts on the meter</div>
     <div class="acts"><button class="btn pri" data-act="adddraft">Add rule</button><button class="btn ghost" data-act="nodraft">Reword</button>
     <label><span class="cb-box on">${I.check}</span>Lock it too</label></div></div>`;
 }
 function rulesHTML(){
   const lockrow = S.locked
-    ? `<div class="lockrow">${I.lock}<span class="grow">6 rules locked with Windows admin</span><button class="link" data-act="lockchange">Change</button></div>`
-    : `<div class="lockrow attn">${I.unlock}<span class="grow">Not locked: an agent could switch these off. ${esc(N())} watches for that.</span><button class="btn" data-act="relock">Lock</button></div>`;
+    ? `<div class="lockrow">${I.lock}<span class="grow">4 limits and 5 rules locked with Windows admin</span><button class="link" data-act="lockchange">Change</button></div>`
+    : `<div class="lockrow attn">${I.unlock}<span class="grow">Not locked: an agent could change these. ${esc(N())} watches for that.</span><button class="btn" data-act="relock">Lock</button></div>`;
   return `<div class="promise">${COPY.promise}</div>${lockrow}
+  <div class="sec-t"><span>Limits</span><span class="meta">always on</span></div>
+  <div class="group">${LIMITS.map(limitRow).join("")}</div>
   <div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div>
   <div class="group">${LIB.map((r, i) => ruleRow(r, i, "lib")).join("")}</div>
   <div class="sec-t"><span>Your rules</span></div>
@@ -1302,7 +1325,7 @@ function settingsHTML(){
   return `<div class="group"><button class="row" data-act="sub" data-sub="edit"><span style="width:28px;height:28px;flex:none">${avatarSVG(S.euca)}</span><span class="rl"><div class="rt">${esc(N())}</div><div class="rd">${HUE[S.euca.hue].n} ${SHAPES[S.euca.shape].n.toLowerCase()} · name and look</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>
   <div class="sec-t"><span>Protection</span></div>
   <div class="group">
-    <div class="row"><span class="rl"><div class="rt">Admin lock</div><div class="rd">${S.locked ? "On · 6 rules no agent can switch off" : "Off · your rules run, not locked"}</div></span><button class="btn" data-act="tab" data-tab="rules">${S.locked ? "Rules" : "Lock"}</button></div>
+    <div class="row"><span class="rl"><div class="rt">Admin lock</div><div class="rd">${S.locked ? "On · 4 limits and 5 rules no agent can change" : "Off · the limits and your rules run, not locked"}</div></span><button class="btn" data-act="tab" data-tab="rules">${S.locked ? "Rules" : "Lock"}</button></div>
     <div class="row"><span class="rl"><div class="rt">Safety test</div><div class="rd">Blocked a test push · 26 Oct, 14:03</div></span><button class="btn">Run again</button></div>
   </div>
   <div class="sec-t"><span>Privacy</span></div>
@@ -1398,27 +1421,30 @@ function setupHTML(){
     foot = `${backB}<span class="sp"></span>${next("Choose your rules")}`;
   } else if (st === 4) {
     const sugg = [['Allow <span class="mono">pnpm test</span> in bench',"You approved it 212 times",true],['Allow <span class="mono">git status</span> everywhere',"Read-only · 540 times",true],['Allow <span class="mono">pnpm lint</span> in bench',"Runs code from the project · 96 times",false]];
-    body = `<h1 style="font-size:28px">Choose your rules</h1><p class="lede" style="margin-bottom:14px">Tested rules are on. Add your own in plain words: ${esc(N())} turns them into exact rules you confirm.</p>
-    <div class="rules-s"><div class="col"><div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div><div class="group">${LIB.map((r, i) => ruleRow({...r, lock:false}, i, "lib")).join("")}</div></div>
+    body = `<h1 style="font-size:28px">Choose your rules</h1><p class="lede" style="margin-bottom:14px">The four limits are always on, and so are the tested rules. Add your own in plain words: ${esc(N())} turns them into exact rules you confirm.</p>
+    <div class="rules-s"><div class="col"><div class="sec-t"><span>Limits</span><span class="meta">always on</span></div><div class="group">${LIMITS.map(r => `<div class="row" style="min-height:38px"><span class="rl"><div class="rt">${r.t}</div></span><span class="rv" style="font-size:12px">Always on</span></div>`).join("")}</div>
+    <div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div><div class="group">${LIB.map((r, i) => ruleRow({...r, lock:false}, i, "lib")).join("")}</div></div>
     <div class="col"><div class="sec-t"><span>Your own</span></div>
     <form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>${S.draft ? draftHTML() : ""}
     <div class="sec-t"><span>From your week</span></div><div class="group">${sugg.map(([t, d, on]) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${t}</div><div class="rd">${d}</div></span></div>`).join("")}</div></div></div>`;
-    foot = `${backB}<span class="sp"></span>${next(`Continue · ${S.draft ? 9 : 8} rules`)}`;
+    foot = `${backB}<span class="sp"></span>${next(`Continue · ${S.draft ? 8 : 7} rules`)}`;
   } else if (st === 5) {
     if (S.declined) {
-      body = `<h1>Your rules are on, but not locked</h1><p class="lede">Windows didn't give permission, so the rules sit in your user settings.</p>
-      <div class="notlocked"><b style="font-weight:600">Not locked</b><p>An agent or a repo could switch them off. ${esc(N())} watches for that and tells you the moment it happens. You can lock them any time from Rules.</p></div>`;
+      body = `<h1>Your limits and rules are on, but not locked</h1><p class="lede">Windows didn't give permission, so they sit in your user settings.</p>
+      <div class="notlocked"><b style="font-weight:600">Not locked</b><p>An agent or a repo could change them. ${esc(N())} watches for that and tells you the moment it happens. You can lock them any time from Rules.</p></div>`;
       foot = `<button class="btn ghost lg" data-act="relock">Try again</button><span class="sp"></span>${next("Continue")}`;
     } else {
-      const items = LIB.filter(r => r.on).map(r => r.t).concat(S.draft ? ["Block edits in api-docs/migrations/"] : []);
-      body = `<h1>Lock your rules</h1><p class="lede" style="margin-bottom:14px">Locked rules live where no agent or repo can switch them off. Changing them later asks for admin again.</p>
-      <div class="group lock-list" style="max-width:560px">${items.map((t, i) => `<div class="row"><span class="cb-box${i < 5 ? " on" : ""}">${i < 5 ? I.check : ""}</span><span class="rl"><div class="rt">${esc(t)}</div></span>${i < 5 ? `<span class="lockg">${I.lock}</span>` : ""}</div>`).join("")}</div>
-      <ul class="conseq"><li>${I.alert}<span>Windows asks for permission once. It will say <b style="font-weight:600;color:var(--text-1)">Unknown publisher</b>: this first version isn't signed yet.</span></li><li>${I.alert}<span>Without the lock, your rules still run, labelled Not locked.</span></li></ul>`;
-      foot = `${backB}<span class="sp"></span><button class="btn ghost lg" data-act="skiplock">Skip the lock</button><button class="btn pri lg" data-act="uac"${S.uac ? " disabled" : ""}>${S.uac ? "Waiting for Windows…" : "Lock 5 rules"}</button>`;
+      const rules = LIB.filter(r => r.on).map(r => r.t).concat(S.draft ? ["Block edits in api-docs/migrations/"] : []);
+      const row = (t, on) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${esc(t)}</div></span>${on ? `<span class="lockg">${I.lock}</span>` : ""}</div>`;
+      body = `<h1>Lock your limits and rules</h1><p class="lede" style="margin-bottom:12px">Locked ones live where no agent or repo can change them. The limits stay on either way. Changing a lock later asks for admin again.</p>
+      <div class="rules-s"><div class="col"><div class="sec-t"><span>Limits</span><span class="meta">always on</span></div><div class="group lock-list">${LIMITS.map(r => row(r.t, true)).join("")}</div></div>
+      <div class="col"><div class="sec-t"><span>Your rules</span></div><div class="group lock-list">${rules.map((t, i) => row(t, i < 4)).join("")}</div></div></div>
+      <ul class="conseq"><li>${I.alert}<span>Windows asks for permission once. It will say <b style="font-weight:600;color:var(--text-1)">Unknown publisher</b>: this first version isn't signed yet.</span></li><li>${I.alert}<span>Without the lock, the limits and your rules still run, labelled Not locked.</span></li></ul>`;
+      foot = `${backB}<span class="sp"></span><button class="btn ghost lg" data-act="skiplock">Skip the lock</button><button class="btn pri lg" data-act="uac"${S.uac ? " disabled" : ""}>${S.uac ? "Waiting for Windows…" : "Lock 4 limits + 4 rules"}</button>`;
     }
   } else if (st === 6) {
     const L = [["Starting a test session in a temporary folder", true],['It tried: <b style="font-weight:500">git push origin main</b>', true]];
-    body = `<h1>Watch ${esc(N())} block a test</h1><p class="lede">A throwaway session in a temporary folder tries to push to main. Nothing touches your projects or the network.</p>
+    body = `<h1>Watch ${esc(N())} block a test</h1><p class="lede">A throwaway session in a temporary folder tries to push to your default branch. Nothing touches your projects or the network.</p>
     <div class="log">${L.map(([t]) => `<div class="on"><span style="color:var(--text-3)">›</span>${t}</div>`).join("")}
       ${S.testFail ? `<div class="on res bad">${I.x} Not blocked · 0.4 s</div>` : `<div class="on res">${I.check} Blocked by ${esc(N())} · 0.3 s · logged</div>`}</div>
     ${S.testFail ? `<div class="notlocked" style="margin-top:14px;background:var(--danger-tint);color:var(--danger-ink)"><b style="font-weight:600">The test wasn't blocked.</b><p>${esc(N())} is not protecting your sessions on this PC yet. Nothing outside the test folder was touched.</p></div>` : `<p class="approved">That's what happens in your real sessions. Every block shows up in the panel with why.</p>`}`;
@@ -1502,6 +1528,7 @@ function render(){
   html += demoHTML();
   $("#app").innerHTML = html;
   if (S.arrive && !FREEZE) setTimeout(() => { const n = $(".notch"); n && n.classList.remove("arrive"); $(".eyes[data-x='glance']")?.setAttribute("data-x", ""); S.arrive = false; }, 1100);
+  if (S.draft) $(".panel .draft, .swin .draft")?.scrollIntoView({block:"nearest"});
   follow();
 }
 
@@ -1588,7 +1615,10 @@ function act(a, el, ev){
     case "back": S.sub = null; break;
     case "need": {
       const n = NEEDS[d.k];
-      if (n.sub) { S.panel = true; S.peek = false; S.sub = n.sub; }
+      if (n.then) { S.needs = S.needs.map(k => (k === d.k ? n.then : k)); S.peek = false; }
+      else if (d.k === "mergedone") { S.needs = S.needs.filter(k => k !== d.k); S.toast = "Opened PR #71 in your browser"; setTimeout(() => { S.toast = null; render(); }, 4000); }
+      else if (d.k === "budget") { S.needs = S.needs.filter(k => k !== d.k); S.toast = "bench continues with 2% more of your week"; setTimeout(() => { S.toast = null; render(); }, 4000); }
+      else if (n.sub) { S.panel = true; S.peek = false; S.sub = n.sub; }
       else if (d.k === "unver") { say("Running the safety test"); }
       else { S.needs = S.needs.filter(k => k !== d.k); S.toast = `Opened ${d.k === "done" ? "api-docs" : "bench"} in Windows Terminal`; S.peek = false; setTimeout(() => { S.toast = null; render(); }, 4000); }
       break;
