@@ -1,6 +1,6 @@
 # ADR-0009: The guard is a short-lived native process; events reach the app over a named pipe with a spool fallback
 
-- **Status:** Proposed (2026-10-26)
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26
 - **Date:** 2026-10-26
 
 ## Context
