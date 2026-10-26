@@ -23,7 +23,6 @@ const SHOTS = [
   ["tripwire", "p-trip", { sel: ".panel" }],
   ["same-file", "p-same", { sel: ".panel" }],
   ["sent", "s-sent", { sel: "figure.sent" }],
-  ["founders", "p-account-founders", { sel: ".plan" }],
 ];
 const HIDE = ".wall, .win, .setup-scrim, .taskbar, .tb { visibility: hidden !important; } .swin { visibility: visible !important; } html, body { background: transparent !important; }"
   // The shoulders and the ring join the notch to a black screen bezel; on the page there is none, so they read as hooks.
@@ -41,6 +40,11 @@ for (const [name, route, what, themes = ["dark", "light"]] of SHOTS) {
     await page.goto(`${FILE}?${q}`, { waitUntil: "load" });
     await page.evaluate(() => document.fonts.ready);
     await page.addStyleTag({ content: HIDE });
+    // The prototype's sample project is "bench", our old codename; on the page it reads as jargon, so call it web-app.
+    await page.evaluate(() => {
+      const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let n; (n = w.nextNode());) n.nodeValue = n.nodeValue.replace(/\bbench\b/g, "web-app");
+    });
     await new Promise(r => setTimeout(r, 500));
     let clip;
     if (what.top) clip = { x: (1440 - what.top[0]) / 2, y: 0, width: what.top[0], height: what.top[1] };

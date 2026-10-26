@@ -40,8 +40,8 @@
     <span class="beam" aria-hidden="true"><i></i></span>
   </button>
   <div class="peek" id="live-peek" data-peek hidden>
-    <p class="pk-item"><span class="pk-glyph" aria-hidden="true">!</span><span><b>bench is waiting for you</b><span class="pk-sub">wants to run <code>pnpm build</code></span></span></p>
-    <p class="pk-item"><span class="pk-glyph" aria-hidden="true">!</span><span><b>Two sessions are editing one file</b><span class="pk-sub">bench and api-docs · <code>src/router.ts</code></span></span></p>
+    <p class="pk-item"><span class="pk-glyph" aria-hidden="true">!</span><span><b>web-app is waiting for you</b><span class="pk-sub">wants to run <code>pnpm build</code></span></span></p>
+    <p class="pk-item"><span class="pk-glyph" aria-hidden="true">!</span><span><b>Two sessions are editing one file</b><span class="pk-sub">web-app and api-docs · <code>src/router.ts</code></span></span></p>
     <p class="pk-foot"><span><i class="ok-dot" aria-hidden="true"></i>Protected · 3 sessions</span><a href="#join">Join the waitlist ›</a></p>
   </div>
 </div>
@@ -82,7 +82,7 @@
   <div class="hero-stage" data-shutter>
     <div class="screen-edge" aria-hidden="true"><span class="mini-notch"><i></i><i></i><b>3</b></span></div>
     <picture class="hero-panel">
-      <img src="screens/needs-dark.webp" data-dark="screens/needs-dark.webp" data-light="screens/needs-light.webp" width="800" height="1280" fetchpriority="high" decoding="async" alt="The Eucas panel under the notch. Pip: protected, 3 sessions, checked 2 seconds ago. Needs you, 3: bench is waiting for you and wants to run pnpm build; two sessions are editing one file, src/router.ts; search is ready, open a PR for search with the tests first.">
+      <img src="screens/needs-dark.webp" data-dark="screens/needs-dark.webp" data-light="screens/needs-light.webp" width="800" height="1280" fetchpriority="high" decoding="async" alt="The Eucas panel under the notch. Pip: protected, 3 sessions, checked 2 seconds ago. Needs you, 3: web-app is waiting for you and wants to run pnpm build; two sessions are editing one file, src/router.ts; search is ready, open a PR for search with the tests first.">
     </picture>
   </div>
 </section>
@@ -94,7 +94,7 @@
     <li data-rise><p class="pain">Waiting for your yes since minute two.</p><p class="fix">You see it the second a session stops.</p></li>
     <li data-rise><p class="pain">One delete you didn't read.</p><p class="fix">It can't happen without you.</p></li>
     <li data-rise><p class="pain">Your limit, hit with the task half done.</p><p class="fix">You see when you'll run out, with time to spare.</p></li>
-    <li data-rise><p class="pain">Two sessions, one file.</p><p class="fix">You're warned before one overwrites the other.</p></li>
+    <li data-rise><p class="pain">Two agents writing in the same file.</p><p class="fix">You're warned before one overwrites the other.</p></li>
   </ul>
 </section>
 
@@ -160,8 +160,8 @@
     </li>
     <li class="band" data-band="honey">
       <div class="wrap band-in">
-        <div><p class="band-say">Let pnpm test run in bench</p><p class="band-then">It runs code from the repo, so the rule stays in bench and nowhere else.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let pnpm test run in bench"><i></i></button>
+        <div><p class="band-say">Let the tests run in web-app</p><p class="band-then">They run code from the repo, so the rule stays in that one project.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let the tests run in web-app"><i></i></button>
       </div>
     </li>
     <li class="band" data-band="aqua">
@@ -172,8 +172,8 @@
     </li>
     <li class="band band-locked" data-band="ink">
       <div class="wrap band-in">
-        <div><p class="band-say">The four limits</p><p class="band-then" data-locked-text>Locked. No rule can switch them off.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="The four limits. Locked." data-locked><i><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></i></button>
+        <div><p class="band-say">Deletes, pushes, sends and payments</p><p class="band-then" data-locked-text>Always ask you. No rule can switch this off.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="Deletes, pushes, sends and payments always ask you. Locked." data-locked><i><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></i></button>
       </div>
     </li>
   </ul>
@@ -183,18 +183,17 @@
 <section class="sent wrap" id="sent" data-state="focused" aria-labelledby="sent-title">
   <div class="sent-copy">
     <h2 id="sent-title" data-rise>What leaves your PC, word for word.</h2>
-    <p class="statement" data-rise>Your Euca is called Pip here; you name yours.</p>
-    <p class="statement" data-rise>When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used.</p>
+    <p class="statement" data-rise>Eucas has a supervisor: an AI model that keeps stopped sessions going within your rules, so fewer of them wait for you.</p>
+    <p class="statement" data-rise>When Eucas isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used.</p>
   </div>
   <div class="sent-side">
     <figure class="sent-shot" data-rise>
       <div class="screen-edge" aria-hidden="true"><span class="mini-notch mini-focused"><i></i><i></i></span></div>
-      <img src="screens/sent-dark.webp" data-dark="screens/sent-dark.webp" data-light="screens/sent-light.webp" width="1240" height="358" loading="lazy" decoding="async" alt="From your last session, bench, today 13:52, marked Yours, redacted: I need the API key to run the payment test. Should I read [path removed] to get it, or hard-code [secret removed] in [path removed] for now? I changed the client too: [6 lines of code removed]. Which do you… Removed 6 lines of code, 2 paths, 1 secret; trimmed from 1,830 to 240 characters. Goes to the supervisor: an open model hosted with zero data retention.">
+      <img src="screens/sent-dark.webp" data-dark="screens/sent-dark.webp" data-light="screens/sent-light.webp" width="1240" height="358" loading="lazy" decoding="async" alt="From your last session, web-app, today 13:52, marked Yours, redacted: I need the API key to run the payment test. Should I read [path removed] to get it, or hard-code [secret removed] in [path removed] for now? I changed the client too: [6 lines of code removed]. Which do you… Removed 6 lines of code, 2 paths, 1 secret; trimmed from 1,830 to 240 characters. Goes to the supervisor: an open model hosted with zero data retention.">
       <figcaption>Setup shows you this with a message from your own sessions. Settings always shows it too.</figcaption>
     </figure>
     <ul class="facts" data-rise>
       <li><b>The supervisor is always on and can't be switched off.</b></li>
-      <li><b>It never approves a tool call.</b> It can nudge a stopped session on, answer from your rules, or ask you.</li>
     </ul>
   </div>
 </section>
@@ -205,7 +204,7 @@
     <h2 id="pricing-title" data-rise>Free, or Pro.</h2>
     <p data-rise><b>Free</b>, with no card:</p>
     <ul class="lines" data-rise>
-      <li>The four limits, locked</li>
+      <li>Deletes, pushes, sends and payments always ask you first</li>
       <li>A stop when a session deletes files in bulk</li>
       <li>Your rules, and where your usage went</li>
       <li>The supervisor in full for 14 days, then a little every month</li>
@@ -214,9 +213,6 @@
   </div>
   <div class="pro">
     <p class="price" data-rise><span class="cur">$</span>20<span class="per">/month</span></p>
-    <figure class="founders" data-rise>
-      <img src="screens/founders-dark.webp" data-dark="screens/founders-dark.webp" data-light="screens/founders-light.webp" width="736" height="250" loading="lazy" decoding="async" alt="The plan card in Settings: Pro, Founders' price, $15/month for life. Renews 26 Nov. The price stays yours for as long as you keep Pro.">
-    </figure>
     <ul class="lines" data-rise>
       <li>Everything in Free</li>
       <li>Much more supervisor help every month</li>
@@ -234,7 +230,6 @@
     <div><dt>Windows and Claude Code, for now</dt><dd>Sessions in a terminal, the desktop app or VS Code. What comes next depends on the waitlist's answers.</dd></div>
     <div><dt>Your Claude login stays yours</dt><dd>Eucas never sees or stores it.</dd></div>
     <div><dt>A Eucas account, by email</dt><dd>You sign in with your email and a 6-digit code, no password.</dd></div>
-    <div><dt>The first build is unsigned</dt><dd>Windows will say "Unknown publisher". Each installer's SHA-256 is published so you can check it.</dd></div>
   </dl>
 </section>
 

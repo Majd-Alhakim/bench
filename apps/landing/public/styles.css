@@ -219,14 +219,16 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 .mini-notch b { display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--marker-attn); color: #161616; font-size: 11px; font-weight: 600; }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; min-height: max(780px, 100svh); padding-bottom: 0; overflow: hidden; }
-.hero-copy { padding-top: clamp(96px, 12vh, 150px); position: relative; z-index: 2; }
-.hero h1 { max-width: 16ch; }
+.hero { position: relative; min-height: 700px; padding-bottom: 64px; overflow: hidden; }
+/* the copy keeps the left half; the screen with the real panel sits beside it, from the top */
+.hero-copy { padding-top: clamp(72px, 10vh, 120px); position: relative; z-index: 2; }
+.hero-copy > * { max-width: min(600px, 44vw); }
+.hero h1 { font-size: clamp(48px, 5vw, 80px); }
 .lede { max-width: 31ch; margin-top: 36px; font-size: var(--t-m); line-height: 1.4; letter-spacing: -0.01em; }
 .hero-actions { margin-top: 40px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 .hero-note { color: var(--muted); font-size: var(--t-s); }
 .hero-stage {
-  position: absolute; left: max(46%, calc(50% - 40px)); right: 0; top: 43%; bottom: 0;
+  position: absolute; left: 52%; right: 0; top: 40px; height: 640px;
   background: var(--stage); border-radius: 0 0 0 0;
   display: flex; justify-content: center; overflow: hidden;
 }
@@ -332,16 +334,12 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 .price { font-size: clamp(132px, 17vw, 248px); font-weight: 600; letter-spacing: -0.06em; line-height: 0.85; font-variant-numeric: tabular-nums; }
 .price .cur { font-size: 0.5em; vertical-align: 0.62em; margin-right: 0.04em; }
 .price .per { font-size: 20px; letter-spacing: 0; margin-left: 12px; font-weight: 400; color: var(--muted); }
-.founders { position: absolute; top: -10%; right: 0; width: min(368px, 52%); border-radius: 14px; overflow: hidden; }
-.founders img { border-radius: 12px; }
-/* the card is white in light mode; a tone step lets it stand off the light ground */
-:root[data-theme="light"] .founders { padding: 8px; background: var(--sunken); border-radius: 18px; }
 .pro .lines { margin-top: 44px; }
 
 /* ---------- Before you install ---------- */
 .know { margin-top: var(--gap-section); display: grid; grid-template-columns: 4fr 8fr; gap: clamp(32px, 5vw, 80px); }
 .know h2 { max-width: 8ch; }
-.know-list { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 48px; }
+.know-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px 40px; }
 .know-list dt { font-size: var(--t-b); font-weight: 600; letter-spacing: -0.01em; }
 .know-list dt::before { content: ""; display: block; width: 30px; height: 12px; margin-bottom: 14px; background: var(--ink); border-radius: 0 0 6px 6px; }
 .know-list dd { margin-top: 6px; color: var(--muted); font-size: 17px; }
@@ -449,6 +447,8 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   .hero h1 { font-size: clamp(36px, 10vw, 64px); }
   .lede { font-size: 19px; margin-top: 24px; }
   .hero-actions { margin-top: 28px; }
+  .hero-copy > * { max-width: none; }
+  .hero { padding-bottom: 0; }
   .hero-stage { position: relative; left: auto; top: auto; margin-top: 48px; height: 520px; }
   .hero-panel { width: min(400px, calc(100vw - 32px)); }
   .hero-panel img { width: 100%; }
@@ -470,7 +470,6 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   .sent-shot { padding: 52px 12px 20px; }
   .pricing { grid-template-columns: 1fr; min-height: 0; gap: 152px; }
   .price { font-size: 34vw; }
-  .founders { position: static; width: 100%; max-width: 368px; margin-top: 24px; transform: none; }
   .btn { width: 100%; }
   .nav .btn { width: auto; }
   .know { grid-template-columns: 1fr; gap: 32px; }

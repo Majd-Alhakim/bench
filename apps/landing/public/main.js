@@ -115,13 +115,13 @@
   // The panel's own tabs pick the screen on the plate.
   const SHOW = {
     needs: ["Know which session needs you.", "One glance at the top of your screen. Hover for a peek, click for the panel. Nothing pops up and nothing steals your focus.", "needs",
-      "The panel. Needs you, 3: bench is waiting for you and wants to run pnpm build; two sessions are editing one file; search is ready, open a PR for search with the tests first."],
+      "The panel. Needs you, 3: web-app is waiting for you and wants to run pnpm build; two sessions are editing one file; search is ready, open a PR for search with the tests first."],
     usage: ["See your limit coming.", "Your 5-hour and weekly usage, the time you'll hit the limit at today's pace, and which projects used it.", "usage",
       "The Usage tab: the 5-hour window at 46 percent, resetting at 15:40, with a forecast of when you reach it; the week at 62 percent; where it went by project."],
-    same: ["Two sessions, one file.", "When a second session edits a file another one just changed, both show up side by side, one click apart.", "same-file",
-      "Two sessions are editing one file: bench and api-docs both changed src/router.ts since 14:02. Show both."],
-    rules: ["Stop approving the same thing.", "Rules say once what your sessions may do. The four limits stay locked.", "rules",
-      "The Rules tab: the four limits locked, and your rules with switches, such as allow pnpm test in bench."],
+    same: ["Two agents, one file.", "When a second agent edits a file another one just changed, you see both before one overwrites the other's work.", "same-file",
+      "Two sessions are editing one file: web-app and api-docs both changed src/router.ts since 14:02. Show both."],
+    rules: ["Stop approving the same thing.", "Say once what your sessions may do. Deletes, pushes, sends and payments still ask you.", "rules",
+      "The Rules tab: the four limits locked, and your rules with switches, such as allow pnpm test in web-app."],
   };
   const tabs = $$("[data-show]");
   const showImg = $("[data-show-img]");
