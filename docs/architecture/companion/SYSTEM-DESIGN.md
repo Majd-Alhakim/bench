@@ -4,7 +4,7 @@
 |---|---|---|---|
 | 2026-10-26 | Lead systems engineer (Claude), `tech-lead` role, `engineering-craft` method | Draft for Gate 6; design only, no product code | UX [PR #55](https://github.com/eucas-app/eucas/pull/55), UI [PR #57](https://github.com/eucas-app/eucas/pull/57), [SP-SUP1](https://github.com/eucas-app/eucas/pull/56), [SP-CR1](https://github.com/eucas-app/eucas/pull/54), the 26 Oct pre-mortem |
 
-**Updated 2026-10-26** with the spike results ([SP-H1](../../spikes/SP-H1.md), [S-1](../../spikes/S-1.md), [SP-ST1](../../spikes/SP-ST1.md), [S-4](../../spikes/S-4.md), [S-6](../../spikes/S-6.md), [SP-TW1](../../spikes/SP-TW1.md), [SP-SUP2 recorder](../../spikes/SP-SUP2-recording.md)), [CR-011](../../requirements/change-requests/CR-011.md) (your Euca in the notch; meter; trial and taste), [CR-012](../../requirements/change-requests/CR-012.md) (accounts) and the [founder's answers of 26 Oct](../../requirements/interviews/2026-10-26-v1.4-open-items.md). Changed text is marked with its source.
+**Updated 2026-10-26** with the spike results ([SP-H1](../../spikes/SP-H1.md), [S-1](../../spikes/S-1.md), [SP-ST1](../../spikes/SP-ST1.md), [S-4](../../spikes/S-4.md), [S-6](../../spikes/S-6.md), [SP-TW1](../../spikes/SP-TW1.md), [SP-SUP2 recorder](../../spikes/SP-SUP2-recording.md)), [CR-011](../../requirements/change-requests/CR-011.md) (your Euca in the notch; meter; trial and taste), [CR-012](../../requirements/change-requests/CR-012.md) (accounts) and the [founder's answers of 26 Oct](../../requirements/interviews/2026-10-26-v1.4-open-items.md), then the setup reorder (the four limits locked before sign-in, one UAC prompt; founder, 2026-10-26, §5.6). Changed text is marked with its source.
 
 **This folder:** this file (context, containers, flows, failure and scale checks) · [CODE-STRUCTURE](CODE-STRUCTURE.md) · [CI-CD](CI-CD.md) · [SUPERVISOR](SUPERVISOR.md) · [SECURITY-PRIVACY](SECURITY-PRIVACY.md) · [TESTING](TESTING.md) · [OPERATIONS](OPERATIONS.md) · [BUILD-PLAN](BUILD-PLAN.md). Decisions: [ADR-0007 … ADR-0018](../../adr/).
 
@@ -35,14 +35,14 @@
 
 **The core** (remove it and it isn't Eucas): a guard on every local Claude Code tool call that **proves it's running** and **holds the four limits** even when the app is closed.
 
-**In v0.1** (pre-mortem cut, D-1 (b), D-2 (b)): the guard with `onFailure: "block"`, the heartbeat and canary, the mass-delete tripwire, the four limits always on, each locked in managed settings (UAC) or left at user scope and labelled "not locked", rules from suggestions + 5 templates, **"Choose your rules"** in first run (the four limits with a lock choice each, other library rules on or off), **prompted rules** (you describe a rule; `/v1/draft-rule` drafts it; it must validate, compile and pass the limit and bypass checks before you confirm it), the ledger and forecast through status-line chaining, the same-file warning with the plain-code **guided merge** (rebase, run the tests, open the PR; no AI, never writes code), ~~the tray, popover and Windows toasts~~ the notch and panel, with the tray and Windows toasts as fallbacks (CR-011), the 7-day retro first run, the diagnostic, **unsigned binaries with Ed25519-signed updates and published installer SHA-256s** (ADR-0013), auto-update, clean uninstall, every session guarded, session details capped at 3, Pro as a waitlist line. Guided merge, prompted rules, "Choose your rules" and unsigned v0.1: CR-010, founder 2026-10-26.
+**In v0.1** (pre-mortem cut, D-1 (b), D-2 (b)): the guard with `onFailure: "block"`, the heartbeat and canary, the mass-delete tripwire, the four limits always on, each locked in managed settings (UAC) or left at user scope and labelled "not locked", rules from suggestions + 5 templates, **"Choose your rules"** in first run (~~the four limits with a lock choice each,~~ library rules on or off; since 2026-10-26 the four limits are locked earlier, before sign-in, §5.6), **prompted rules** (you describe a rule; `/v1/draft-rule` drafts it; it must validate, compile and pass the limit and bypass checks before you confirm it), the ledger and forecast through status-line chaining, the same-file warning with the plain-code **guided merge** (rebase, run the tests, open the PR; no AI, never writes code), ~~the tray, popover and Windows toasts~~ the notch and panel, with the tray and Windows toasts as fallbacks (CR-011), the 7-day retro first run, the diagnostic, **unsigned binaries with Ed25519-signed updates and published installer SHA-256s** (ADR-0013), auto-update, clean uninstall, every session guarded, session details capped at 3, Pro as a waitlist line. Guided merge, prompted rules, "Choose your rules" and unsigned v0.1: CR-010, founder 2026-10-26.
 
 **Added to v0.1 (CR-011, CR-012, founder 2026-10-26):**
 - **Your Euca** made in setup (name, look), living in **the notch** (eyes, glow, needs-you markers that stay, a peek on hover, never opening by itself) with **one panel**: needs-you on top, then Usage · Rules · Settings. The tray and toasts are fallbacks. **No main window.**
 - **The supervisor ships in v0.1 and is always on for every user, Free included** (founder, 2026-10-26, relayed by the PM: *"The supervisor is the main thing for this tool so keep it on and tell the user what is being sent."*). **Level 1 / Level 2 are retired;** what is sent equals the old Level 2 (signals + the trimmed, redacted last message) and is shown exactly in setup and in Settings. **Tiers differ only in budget:** a 14-day trial that **starts when setup finishes** (one per account), then a monthly taste on Free; Pro gets more. **When the budget is empty, the supervisor falls back to rules only and asks you more.** It launches behind its kill switch, which stays on until **SP-SUP2 passes** (the gate). The meter shows percent and reset date, never dollars.
-- **A Eucas account for everyone** (email + one-time code) after the retro in setup, **Settings › Account** with sign out and **Delete account**. **Sign-in is mandatory** (founder, 2026-10-26: *"don't allow to access without sign in"*). After the first sign-in, the guard, limits, tripwire and rules work offline: they never read the account.
+- **A Eucas account for everyone** (email + one-time code) in setup ~~after the retro~~ (since 2026-10-26: step 6, after the four limits are locked, §5.6), **Settings › Account** with sign out and **Delete account**. **Sign-in is mandatory** (founder, 2026-10-26: *"don't allow to access without sign in"*). ~~After the first sign-in, the guard, limits, tripwire and rules work offline~~ The guard and the four limits work **from the lock at setup step 4, before any sign-in**, with no account token at all; the tripwire and rules work offline too: none of them read the account.
 - **No voice and no global keyboard hook** (founder): nothing in the product calls `SetWindowsHookEx`. **An optional panel shortcut, off by default** (founder, 2026-10-26, BRD #61), uses `RegisterHotKey`: Windows delivers only that one combination; Eucas never sees other keys.
-- ~~**Sign-in finishes setup** when online; offline, "Sign in later" leaves the guard and rules working while drafting and the supervisor wait (founder, 2026-10-26, BRD #57).~~ **Revised 2026-10-26 (BRD #57):** there is **no "Sign in later"**. Offline (or the server or email provider down) at the sign-in step, setup **waits**: "You need to be online to sign in. Pip will start once you're connected." with Retry and Back; nothing past the step is written. **Once signed in, the guard works offline.** Signed out (Sign out or Delete account), the panel shows **only sign-in**; the guard, the four limits and everything locked in managed settings keep protecting, because the locks live in the PC's managed settings and turning safety off on sign-out would be unsafe (founder, 2026-10-26, *"yes"*); the supervisor, drafting, Usage and Rules editing need sign-in.
+- ~~**Sign-in finishes setup** when online; offline, "Sign in later" leaves the guard and rules working while drafting and the supervisor wait (founder, 2026-10-26, BRD #57).~~ **Revised 2026-10-26 (BRD #57):** there is **no "Sign in later"**. Offline (or the server or email provider down) at the sign-in step, setup **waits**: "You need to be online to sign in. Pip will start once you're connected." with Retry and Back; nothing past the step is written. ~~**Once signed in, the guard works offline.**~~ **Revised again 2026-10-26 (founder, *"okay do that"*):** the four limits and their lock come **before** sign-in (setup steps 4–5), so a PC waiting at sign-in is **already protected**; everything else still needs sign-in (§5.6). Signed out (Sign out or Delete account), the panel shows **only sign-in**; the guard, the four limits and everything locked in managed settings keep protecting, because the locks live in the PC's managed settings and turning safety off on sign-out would be unsafe (founder, 2026-10-26, *"yes"*); the supervisor, drafting, Usage and Rules editing need sign-in.
 - **All four limits start ticked to lock** in setup; you can untick any (founder).
 - **Pressing Draft is the opt-in** for that one sentence, and only that sentence is sent (founder).
 - **Pro stays a waitlist button** in v0.1 (CR-011 design D-7); payments, when Pro opens, go through **Lemon Squeezy** (founder).
@@ -302,9 +302,16 @@ sequenceDiagram
 - SP-TW1 ran at 1,000 deletes in 10 s to stress overflow; the product threshold stays **200 in 20 s** above (the kill latency is measured from the threshold delete, so it doesn't depend on the number). Two sessions in one folder weren't tested; the rule stands: stop every session in that folder with a tool call in flight.
 - Honest limit, stated in the gap list: the tripwire needs the app running; path attribution can't see deletes outside watched roots; ETW-based per-process attribution needs admin and is a v0.2 candidate.
 
-### 5.6 Setup (CR-011 setup flow; account step from CR-012)
+### 5.6 Setup (CR-011 setup flow; account step from CR-012; order revised 2026-10-26)
 
-**Updated 2026-10-26:** the step order follows the approved setup flow (make your Euca, your week, choose rules, lock, watch it block a test, what it may read, the notch), with the **account step after the retro, before choosing rules** (CR-012 as approved: drafting is the first step that needs the server). Smart App Control is checked at detection (SP-H1); the four limits start ticked to lock (founder).
+~~**Updated 2026-10-26:** the step order follows the approved setup flow (make your Euca, your week, choose rules, lock, watch it block a test, what it may read, the notch), with the **account step after the retro, before choosing rules** (CR-012 as approved: drafting is the first step that needs the server).~~ **Revised 2026-10-26 (founder, *"okay do that"*):** the four limits and their lock come **before** sign-in, so a PC is protected even if setup has to wait at sign-in (offline, or the server or email provider down). Final order:
+
+1 Find your sessions · 2 Make your Euca · 3 Your week · 4 Lock the four limits (the one UAC prompt) · 5 Watch it block a test · 6 Sign in · 7 Choose your rules · 8 What is sent · 9 Pip is watching.
+
+- **Only the four always-on limits and their lock moved.** Everything else still needs sign-in: there is no "Sign in later" and no use of the app without an account; library rules, your own rules, drafting, the supervisor, Usage and Rules editing all wait for step 6.
+- **Exactly one admin prompt in setup** (step 4, the four limits only; all four start ticked, founder). Rules chosen at step 7 are written at **user scope and labelled "Not locked"**; locking one later from Rules uses `update-locked-set` (admin again, below). No second UAC prompt in setup.
+- **Architectural consequence:** the guard, the four limits and the step-5 test must work with **no account and no token at all** (first run, never signed in), not only after a first sign-in. They already never read the account (the guard doesn't link `eucas-account`, §4); step 4 installs the plugin with an **empty rulebook** (limits only, no auto-approvals), so nothing in it depends on a profile. What is made before sign-in (the Euca from step 2, the lock choices) is adopted by the first account that signs in (ADR-0017).
+- Smart App Control is checked at step 1 (SP-H1).
 
 ```mermaid
 sequenceDiagram
@@ -315,35 +322,45 @@ sequenceDiagram
   participant E as eucas-elevate.exe
   participant CC as claude CLI
   I->>C: first launch (installer registered the AUMID shortcut)
+  Note over C,R: 1 Find your sessions
   C->>CC: claude --version; find installs by image path (native, npm, desktop app bundle)
   C->>C: read settings (statusLine, hooks, managed flags), Smart App Control state, list 7 days of transcripts
   C-->>R: detection checklist (≤ 3 s); SAC on or evaluation → can't protect in unsigned v0.1 (edge, no guard installed)
-  R->>C: Make your Euca: name + look (setting row)
+  Note over C,R: 2 Make your Euca
+  R->>C: name + look (setting row)
+  Note over C,R: 3 Your week
   C-->>R: retro cards streamed (first ≤ 5 s)
-  R->>C: account: email + "Send me product news" (unticked by default)
+  Note over C,E: 4 Lock the four limits (no account, no network needed)
+  R->>C: Lock: the four limits (always on, all ticked; an unticked one stays on at user scope, "not locked")
+  C->>CC: claude plugin marketplace add + install eucas@eucas --scope user
+  C->>C: write the plugin version folder, run the guard once (Defender warm-up), write an empty rulebook → rulebook.bin (limits only); deny patterns for any limit left not locked → user settings
+  C->>C: SHA-256 of eucas-elevate.exe == hash pinned in the app build? (no → stop, nothing elevated)
+  C->>E: ShellExecute runas "install --source auto --lock <limits>" (the only UAC prompt in setup; v0.1 names no verified publisher)
+  E->>E: install itself to Program Files; merge its embedded managed entries (JSON patch recorded) into the existing source (both, if both exist); install the embedded limits guard, set ACLs
+  E-->>C: result
+  Note over C,CC: 5 Watch it block a test
+  C->>C: canary: a push to the default branch, one of the four limits (S-1 path, 0 tokens, works offline)
+  C-->>R: "Blocked by <your Euca's name> · logged"
+  Note over C,W: 6 Sign in
+  R->>C: email + "Send me product news" (unticked by default)
   C->>W: POST /v1/auth/start
   R->>C: 6-digit code
   C->>W: POST /v1/auth/verify {newsOptIn} → tokens (DPAPI) + plan + meter (trial starts at setup_finish)
-  Note over C,W: sign-in is mandatory; offline or server down → setup waits at this step (Retry, Back); nothing is installed until signed in (BRD #57, revised 2026-10-26)
-  R->>C: Choose your rules: the four limits (always on, ticked to lock), library rules on or off, Draft your own (sends only that sentence)
-  R->>C: Lock (count = ticked rows)
-  C->>CC: claude plugin marketplace add + install eucas@eucas --scope user
-  C->>C: write the plugin version folder, run the guard once (Defender warm-up), wrap status line in user settings (backup), write rulebook, compile rulebook.bin; deny patterns for anything left not locked → user settings
-  C->>C: SHA-256 of eucas-elevate.exe == hash pinned in the app build? (no → stop, nothing elevated)
-  C->>E: ShellExecute runas "install --source auto --lock <limits> --lock-rules <block rules>" (UAC; v0.1 names no verified publisher)
-  E->>E: install itself to Program Files; merge its embedded managed entries + the validated deny rules (JSON patch recorded) into the existing source (both, if both exist); install the embedded limits guard, set ACLs
-  E-->>C: result
-  C->>C: canary (S-1 path, 0 tokens)
-  C-->>R: "Blocked by <your Euca's name> · logged"
-  C-->>R: What is sent: your own last moment, redacted, exactly as the supervisor would receive it (no choice; always on, founder 2026-10-26)
+  Note over C,W: sign-in is mandatory; offline or server or email down → setup waits here (Retry, Back), the PC already protected since step 4; nothing past this step is written
+  Note over C,R: 7 Choose your rules
+  R->>C: library rules on or off, Draft your own (sends only that sentence)
+  C->>C: wrap status line in user settings (backup); write rulebook.json in the account's profile, compile rulebook.bin; every rule at user scope, labelled "Not locked"
+  Note over C,R: 8 What is sent
+  C-->>R: your own last moment, redacted, exactly as the supervisor would receive it (no choice; always on, founder 2026-10-26)
+  Note over C,R: 9 Pip is watching
   C-->>R: sessions already running → "not protected until restarted"
-  C->>C: setup finished → POST /v1/trial/start (the 14-day trial starts now, once per account)
+  C->>W: setup finished → POST /v1/trial/start (the 14-day trial starts now, once per account)
   C->>C: show the notch; destroy the setup window
 ```
 
-Every write is **atomic per file** (write temp, flush, rename) and recorded as a JSON patch of the keys Eucas added or changed; any failure rolls back the steps already done in reverse order (UX edge I). Quitting before step 4 leaves nothing written. **Unsigned v0.1 (CR-010, founder 2026-10-26):** Windows shows the prompt in yellow with "Unknown publisher", so the UacFrame copy can't use the publisher name as the check and must not tell you to press No on "Unknown publisher"; the check is the core's pinned-hash comparison just before the prompt, and every later UAC step runs the admin-only Program Files copy. If you lock none of the four, no UAC prompt is shown and all four stay on at user scope, labelled "not locked".
+Every write is **atomic per file** (write temp, flush, rename) and recorded as a JSON patch of the keys Eucas added or changed; any failure rolls back the steps already done in reverse order (UX edge I). Quitting before step 4 leaves nothing written. **Quitting or waiting at step 6 leaves the four limits installed and enforcing** (that is the point of the order); the next launch resumes at step 6, and the panel shows only sign-in until it completes. **Unsigned v0.1 (CR-010, founder 2026-10-26):** Windows shows the prompt in yellow with "Unknown publisher", so the UacFrame copy can't use the publisher name as the check and must not tell you to press No on "Unknown publisher"; the check is the core's pinned-hash comparison just before the prompt, and every later UAC step runs the admin-only Program Files copy. If you lock none of the four, no UAC prompt is shown and all four stay on at user scope, labelled "not locked".
 
-**Changing the locked set later** (D-4, CR-010, founder 2026-10-26): the four limits stay on whatever you choose; locking or unlocking one runs the Program Files helper's fixed `update-locked-set` operation with the new set, which asks Windows for admin again. Moving a limit from locked to not locked puts its deny patterns in your user settings in the same step, so it is never off in between. No rule, user-written or drafted, can make Eucas auto-approve one of the four (ADR-0010).
+**Changing the locked set later** (D-4, CR-010, founder 2026-10-26): the four limits stay on whatever you choose; locking or unlocking one runs the Program Files helper's fixed `update-locked-set` operation with the new set, which asks Windows for admin again. Moving a limit from locked to not locked puts its deny patterns in your user settings in the same step, so it is never off in between. The same operation locks your own **block** rules, which setup always leaves "Not locked" (step 7; one admin prompt in setup, 2026-10-26). No rule, user-written or drafted, can make Eucas auto-approve one of the four (ADR-0010).
 
 ### 5.7 Supervisor at a Stop moment (trial, taste and Pro since CR-011)
 
@@ -416,7 +433,7 @@ Files (single sources of truth): `rulebook.json` (rules), `statusline.saved.json
 | Managed settings removed by an admin | Any | ConfigChange or canary → `user_level` or `not_guarded`; never green | ✅ loud |
 | Worker down | Supervisor moment / Draft | Rules only, ask the user; Draft shows the guided exact-rule form; the meter says "unreachable"; the guard is unaffected | ✅ |
 | Worker dies between budget reserve and settle | Model call | At most one call's worst-case cost stays reserved until the period rolls over (ADR-0018) | ✅ bounded |
-| D1 or the email provider down | Sign-in | No code sent; setup **waits at sign-in** with Retry and Back (no "Sign in later", 2026-10-26), so a new PC isn't protected until it signs in; signed-in users keep working until their token can't refresh, then rules only | ✅ |
+| D1 or the email provider down | Sign-in | No code sent; setup **waits at sign-in** with Retry and Back (no "Sign in later", 2026-10-26); ~~so a new PC isn't protected until it signs in~~ the four limits were locked at step 4, so a new PC is already protected while it waits (founder, 2026-10-26); signed-in users keep working until their token can't refresh, then rules only | ✅ |
 | Signed out, token expired, account deleted | Any | The panel shows only sign-in; supervisor and drafting are off (rules only); the guard, limits, tripwire and locked rules never read the account and keep protecting | ✅ |
 | The notch window or its drawing panics | Any | Caught at the window procedure: the notch hides and the tray fallback shows its state; the core keeps running | ✅ |
 | Update interrupted | Install | The app update and the plugin update are separate steps: the app updates first; then the core writes the new plugin version to the local marketplace and runs `claude plugin update eucas@eucas`, ~~which replaces the cache copy (atomicity to confirm in SP-H1)~~. **SP-H1:** the plugin runs in place, so each version goes in its own folder and the marketplace manifest is repointed atomically (write temp, rename); running sessions keep the version they loaded (no hot load) and pick up the new one when restarted; old folders go when no live session reports them. A failed plugin update leaves the old, working guard in place | ✅ |

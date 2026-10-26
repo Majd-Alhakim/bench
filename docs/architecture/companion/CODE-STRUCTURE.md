@@ -169,7 +169,7 @@ Tauri **commands** (renderer → core). Args are Rust structs with `#[serde(deny
 | `pause_notifications` | `until` | — | yes |
 | `tripwire_expected` | `session_id, folder` | Adds folder to that project's tripwire allow list | yes |
 | `export_log` | `format: md \| csv, filter` | Save dialog | yes |
-| `setup_*` (was `firstrun_*`) | per step | Detection (incl. Smart App Control), make your Euca, sign in, plan, apply, canary, what is sent, finish | yes (step id) |
+| `setup_*` (was `firstrun_*`) | per step | In order (setup reorder, founder 2026-10-26): detection (incl. Smart App Control), make your Euca, your week, lock the four limits (the one UAC prompt), canary, sign in, choose rules (user scope, "Not locked"), what is sent, finish | yes (step id) |
 | `use_admin` | — | Retry the UAC step | yes |
 | `waitlist_join` / `waitlist_dismiss` | `moment` | D-2 (b); the Pro button joins the waitlist (CR-011 D-7) and sets `waitlist_at` on the account when signed in | yes |
 | `account_start` / `account_verify` | `email` / `email, code` | Sign in (CR-012); `verify` switches to (or creates) that account's profile | yes (start: rate-limited) |

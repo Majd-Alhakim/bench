@@ -1,6 +1,6 @@
 # ADR-0013: Code signing (D-3) and auto-update channels
 
-- **Status:** Proposed (2026-10-26), with **D-3 decided: v0.1 ships unsigned (option E), with signed updates and published hashes** (CR-010, founder 2026-10-26). Authenticode (route A, or B if a company exists) comes once revenue covers it; the options table below is that later plan.
+- **Status:** Proposed (2026-10-26), with **D-3 decided: v0.1 ships unsigned (option E), with signed updates and published hashes** (CR-010, founder 2026-10-26). Authenticode (route A, or B if a company exists) comes once revenue covers it, **or before the public launch if the waitlist is large** (founder, 2026-10-26; amendment at the end); the options table below is that later plan.
 - **Date:** 2026-10-26
 
 ## Context
@@ -43,3 +43,7 @@ Prices are list prices seen in 2026 and **must be re-checked at purchase**. Rout
 - **The cold-start cost (130–196 ms) recurs after every guard update** (Defender scans the new file); the core's warm-up run absorbs it (ADR-0009 amendment).
 - **The installer creates a Start-menu shortcut carrying Eucas's AUMID** (toast buttons route back only with it; SP-ST1).
 - The download page and README keep the SmartScreen "More info → Run anyway" steps.
+
+## Amendment 2026-10-26 (founder: signing before launch)
+- Founder, on code signing and Smart App Control: *"we will see regarding signing, if we had a lot of people in the waitlist then I might do the signing before launch to avoid this"*.
+- **Recorded as:** whether Authenticode signing (route A, or B with a company) is bought **before the public launch is decided on the waitlist size**. The **fallback trigger stays**: sign before launch, or as soon as possible after it, if more than ~10 % of early installs hit Smart App Control (BUILD-PLAN §6 question 3). v0.1 is still planned unsigned (route E) until one of the two fires; turning signing on stays a secret and one line (`signCommand`, CI-CD §6).

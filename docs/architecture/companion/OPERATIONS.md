@@ -15,7 +15,7 @@ Sent at most once a day to `POST /v1/telemetry`, schema-allowlisted on both ends
 | `guardP95Ms`, `checkEventsLostPer10k` | `21`, `0` | Budgets in the field |
 | `canary` | `{ ran: 2, blocked: 2, couldNotRun: 0 }` | Edge J/K rates |
 | `counts` | `{ blocks: { delete: 3, push_default: 1, send: 0, pay: 0 }, tripwireStops: 0, needsYou: 41, rulesSaved: 2 }` | Value and noise |
-| `firstRun` | `{ stepReached: 6, secondsToProtected: 262, uac: "accepted" }` | The ~5:00 setup target (CR-012) and the D-4 split; plus `signIn` (now or later) |
+| `firstRun` | `{ stepReached: 6, secondsToProtected: 262, uac: "accepted" }` | The ~5:00 setup target (CR-012) and the D-4 split; plus ~~`signIn` (now or later)~~ whether setup waited at sign-in (no "Sign in later"; the limits are locked before it, 2026-10-26) |
 | `errors` | `{ GUARD_INTERNAL: 0, PIPE_TIMEOUT: 3 }` | Error codes only |
 
 **Added 2026-10-26 (always-on supervisor, CR-012):** `supervisor: { moments, settledByRules, modelCalls, notSentMostlyCode, budgetEmpty, unreachable }` (counts only) and `account: { signedIn: bool }`. Telemetry **never carries the account token or id**, so counts stay unlinkable to an email (ADR-0015).
