@@ -1,50 +1,27 @@
 <!doctype html>
-<html lang="en" data-theme="dark" data-theme-pref="dark">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#000000">
-<title>Eucas companion · UI v0.1 · dark first</title>
+<title>Eucas notch</title>
+<!-- Hi-fi prototype of the Eucas companion as one Euca in the notch (CR-011). Needs founder design approval.
+     Built by ../build.mjs from this folder; open ../notch.html. Fonts load from Google Fonts for review only;
+     the app bundles them (tokens.css §3). -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
-<!-- Built by ../build.mjs: tokens.css + tokens-companion.css + app.css are inlined here, so the file stands alone. -->
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /*@include ../../../system/tokens.css*/
-/*@include ../../tokens-companion.css*/
-/*@include app.css*/
+/*@include ../../tokens-notch.css*/
+/*@include notch.css*/
 </style>
 </head>
 <body>
-<header class="demo" aria-label="Prototype controls (not part of the UI)">
-  <b>Eucas companion · UI v0.1</b>
-  <label><span class="sr">Jump to a state</span><select id="jump"></select></label>
-  <button class="dbtn" id="dPlay" type="button">Play: first run</button>
-  <span class="sp"></span>
-  <span class="dgrp">App <button class="dbtn" id="dTheme" type="button" aria-pressed="false">Dark</button></span>
-  <button class="dbtn" id="dOs" type="button">Windows: dark</button>
-  <button class="dbtn" id="dRm" type="button" aria-pressed="false">Reduce motion</button>
-  <button class="dbtn" id="dSound" type="button" aria-pressed="true">Sound</button>
-  <details><summary>Client decisions</summary>
-    <div class="dpanel">
-      <label>D-1 · Free plan and session cap<select id="d1"><option value="b">(b) Cap details at 3, guard every session (recommended)</option><option value="c">(c) No session cap</option></select></label>
-      <label>D-2 · Pro before Pro exists<select id="d2"><option value="waitlist">(b) Waitlist line (recommended)</option><option value="hidden">(a) Hide Pro moments</option></select></label>
-      <label>D-4 · Admin prompt in first run<select id="d4"><option value="admin">(a) Ask for UAC, stronger (recommended)</option><option value="user">(b) User level only</option></select></label>
-      <label>D-5 · What the canary costs<select id="d5"><option value="hook">Hook-only, free (recommended if S-1 passes)</option><option value="turn">Real model turn, about 400 tokens</option></select></label>
-      <label>S-2 · “Allow once” outside the terminal<select id="s2"><option value="false">Not proven: Open session only</option><option value="true">Proven: show Allow once</option></select></label>
-      <span style="font-size:12px;color:#8a8a8a">D-3 (code signing) changes no screen: the UAC prompt shows a verified publisher only once signed.</span>
-    </div>
-  </details>
-</header>
-<div id="stage" data-os-theme="dark">
-  <div id="desk"></div>
-  <div class="toasts" id="toasts" aria-live="polite"></div>
-  <div class="taskbar" id="taskbar"></div>
-</div>
+<div id="desk" class="desk" aria-label="Windows desktop (mock)"></div>
+<div id="app"></div>
+<div id="live" class="sr-only" aria-live="polite"></div>
 <script>
-/*@include components.js*/
-/*@include screens.js*/
+/*@include app.js*/
 </script>
 </body>
 </html>

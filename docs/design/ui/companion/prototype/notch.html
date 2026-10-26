@@ -1,0 +1,1684 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eucas notch</title>
+<!-- Hi-fi prototype of the Eucas companion as one Euca in the notch (CR-011). Needs founder design approval.
+     Built by ../build.mjs from this folder; open ../notch.html. Fonts load from Google Fonts for review only;
+     the app bundles them (tokens.css §3). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ---- ../../system/tokens.css ---- */
+/*
+ * Bench design tokens · v2.1 (2026-10-23: dark first; v2.1 = dark neutrals are true charcoal grey, no blue cast)
+ * Source of truth for the design system. Spec: ./DESIGN-SYSTEM.md
+ *
+ * Dark is the default theme (client, 2026-10-23: "make the app dark first and option to switch to white").
+ * Light is the option. The app sets data-theme on <html> to the resolved theme: "dark" (default) or "light";
+ * "Match system" is resolved in main (Electron nativeTheme) and written as one of the two.
+ *   :root                     → dark (default, also [data-theme="dark"])
+ *   :root[data-theme="light"] → light (Porcelain, the v1.1 values, unchanged)
+ *
+ * Naming: primitives (--porcelain-*, --graphite-*, --cobalt-*, --hue-*-base/light/deep) are the palette and never
+ * change. Roles (--bg-*, --text-*, --line-*, --action-*, --ok-*, --attn-*, --danger-*, --hue-*-ink/tint/wash,
+ * --agent-*) are theme-aware; components use only roles. A raw hex in a component is a second palette starting: don't.
+ * Hairlines, hover and press are a low alpha of --ink-rgb, so one rule draws dark on Porcelain and light on Graphite.
+ *
+ * Contrast results quoted below are WCAG 2.x ratios computed from these exact values (the prototype's System
+ * sheet recomputes them live for whichever theme is on).
+ */
+
+:root {
+  /* ------------------------------------------------------------------ */
+  /* 1. Colour primitives (fixed)                                        */
+  /* ------------------------------------------------------------------ */
+
+  /* Porcelain: the light neutral. A faint blue undertone shared with Ink and Cobalt. (P-1) */
+  --porcelain-0: #ffffff;
+  --porcelain-25: #f9fafb;
+  --porcelain-50: #f3f4f7;   /* light ground */
+  --porcelain-100: #eceef2;  /* light sunken */
+  --porcelain-150: #e4e6ec;
+  --porcelain-200: #d8dbe2;
+  --porcelain-300: #c4c8d1;  /* decorative only */
+  --porcelain-500: #868b97;  /* light control edge: 3.41:1 on white */
+  --porcelain-600: #646976;  /* light text-3: 5.49 on white */
+  --porcelain-700: #474b57;  /* light text-2: 8.71 on white */
+  --porcelain-900: #15171d;  /* Ink: 17.9 on white */
+
+  /* Graphite (now charcoal, v2.1): the dark neutral. Pure grey, R = G = B, no blue or purple cast, never #000
+     (client, 2026-10-23: "make it actually dark charcoal color and grey"). The names stay for import stability.
+     Depth is a lighter step: ground → surface → raised → fill. */
+  --graphite-0: #161616;     /* dark ground (charcoal) */
+  --graphite-1: #1f1f1f;     /* surface: cards, bubbles, panels, sidebar sheets */
+  --graphite-2: #282828;     /* raised: menus, dialogs, popovers, @-mention list */
+  --graphite-3: #2f2f2f;     /* fill: tags, counts, disabled, segmented track */
+  --graphite-4: #333333;     /* inverse on dark: toasts, ink banners */
+  --graphite-5: #3d3d3d;     /* segmented thumb */
+  --graphite-6: #737373;     /* dark control edge: 3.82 ground · 3.37 surface · 3.11 raised */
+  --graphite-7: #989898;     /* dark text-3: 6.27 ground · 5.54 surface · 5.11 raised · 4.62 fill */
+  --graphite-8: #b8b8b8;     /* dark text-2: 9.12 ground · 8.05 surface · 6.71 fill */
+  --graphite-9: #ebebeb;     /* dark Ink: a soft light grey, not white. 15.2 ground · 13.4 surface · 11.2 fill */
+
+  /* Cobalt: the one action colour (P-2). On dark the fill lifts one step so white text still passes. */
+  --cobalt-50: #ebf0ff;
+  --cobalt-300: #8fa8ff;     /* links and focus on dark: 7.94 on graphite-0, 7.01 on graphite-1, 5.84 on graphite-3 */
+  --cobalt-400: #3a64ff;     /* dark action fill: white on it 4.72 · edge 3.83 on graphite-0 (non-text 3:1) */
+  --cobalt-500: #2e5bff;     /* light action: white on it 5.17 · on white 5.17 */
+  --cobalt-600: #2550eb;
+  --cobalt-700: #1f45d1;
+
+  /* Feedback. Always with a word or a glyph, never colour alone. Dark values are desaturated light inks on dark tints. */
+  --green-50: #e3f5ea;  --green-500: #22a35a;  --green-700: #1b7a45;
+  --amber-50: #fff1d9;  --amber-500: #f5a20a;  --amber-700: #8a5300;
+  --red-50:   #fdeaea;  --red-500:   #e5383b;  --red-700:   #c0262d;
+  --green-d-ink: #6fd09a; --green-d-tint: #13261b; --green-d-fill: #3c9e66;   /* ink on tint 8.5 · on surface 8.8 */
+  --amber-d-ink: #f0b45a; --amber-d-tint: #2c2213; --amber-d-fill: #e8a33a;   /* ink on tint 8.49 · Ink #15171d on fill 8.3 */
+  --red-d-ink:   #ff8a85; --red-d-tint:   #2e1517; --red-d-fill:   #d9474a;   /* ink on tint 7.47 · white glyph on fill 4.24 */
+
+  /* Agent hues: ten identities. Identity = hue × shape (D-UI8). Never on a button, never for status.
+     base/light/deep are fixed (the avatar body and its hero gradient look the same in both themes). */
+  --hue-coral-base: #ff5f73;     --hue-coral-light: #ffb8c1;     --hue-coral-deep: #e0364f;
+  --hue-tangerine-base: #ff8a3d; --hue-tangerine-light: #ffc9a3; --hue-tangerine-deep: #e0601a;
+  --hue-honey-base: #f2ab1d;     --hue-honey-light: #ffe2a0;     --hue-honey-deep: #cf8600;
+  --hue-pear-base: #96bf2c;      --hue-pear-light: #d6ec9a;      --hue-pear-deep: #6c9410;
+  --hue-mint-base: #3cc47c;      --hue-mint-light: #aeedc9;      --hue-mint-deep: #1f9658;
+  --hue-teal-base: #1fb5a3;      --hue-teal-light: #9ee8dc;      --hue-teal-deep: #0c8a7c;
+  --hue-aqua-base: #2db4dc;      --hue-aqua-light: #a6e6f7;      --hue-aqua-deep: #0e86b0;
+  --hue-lavender-base: #8e6cf0;  --hue-lavender-light: #cbbcff;  --hue-lavender-deep: #5f3fd0;
+  --hue-orchid-base: #e05cb4;    --hue-orchid-light: #f6b6e1;    --hue-orchid-deep: #b8358d;
+  --hue-cocoa-base: #a66e4e;     --hue-cocoa-light: #dcb59d;     --hue-cocoa-deep: #7d4c31;
+  --hue-none-base: #b4b7bf;      --hue-none-light: #dfe1e6;      --hue-none-deep: #8b8f99;
+}
+
+/* ==================================================================== */
+/* 2. Colour roles · DARK (the default)                                  */
+/* ==================================================================== */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-rgb: 235 235 235;
+
+  --bg-ground: var(--graphite-0);       /* 60 %: canvas, sidebar */
+  --bg-surface: var(--graphite-1);      /* 30 %: cards, bubbles, panels */
+  --bg-raised: var(--graphite-2);       /* what floats: menus, dialogs, popovers */
+  --bg-sunken: var(--graphite-3);       /* fills: tags, counts, disabled (lighter than the surface on dark) */
+  --bg-inverse: var(--graphite-4);      /* toasts, ink banners */
+  --seg-on: var(--graphite-5);          /* the selected segment */
+
+  --state-hover: rgb(var(--ink-rgb) / 0.045);
+  --state-press: rgb(var(--ink-rgb) / 0.085);
+  --state-selected: rgb(var(--ink-rgb) / 0.07);
+
+  --text-1: var(--graphite-9);
+  --text-2: var(--graphite-8);
+  --text-3: var(--graphite-7);
+  --text-inverse: #ededed;              /* 10.8 on graphite-4 */
+  --text-inverse-2: #adadad;            /* 5.63 on graphite-4 */
+  --text-on-action: #ffffff;            /* 4.72 on cobalt-400 */
+  --text-on-ink: var(--graphite-0);     /* text on an Ink fill (Send, counts, Blocked tag): 15.2 */
+  --ink-hover: #f5f5f5;  --ink-press: #d9d9d9;
+  --mark: var(--graphite-9);            /* the Quartet mark in the interface */
+
+  --line-subtle: rgb(var(--ink-rgb) / 0.07);
+  --line: rgb(var(--ink-rgb) / 0.11);
+  --line-control: var(--graphite-6);
+
+  --action: var(--cobalt-400);
+  --action-hover: var(--cobalt-500);
+  --action-press: var(--cobalt-600);
+  --action-tint: rgb(58 100 255 / 0.18);  /* cobalt-300 text on it (over the surface) 6.09 */
+  --action-text: var(--cobalt-300);       /* links on hover/focus only (Von Restorff) */
+  --focus: var(--cobalt-300);
+
+  --ok-ink: var(--green-d-ink);    --ok-tint: var(--green-d-tint);    --ok-fill: var(--green-d-fill);   --ok-solid: var(--green-700);
+  --attn-ink: var(--amber-d-ink);  --attn-tint: var(--amber-d-tint);  --attn-fill: var(--amber-d-fill); --on-attn: #161616;
+  --danger-ink: var(--red-d-ink);  --danger-tint: var(--red-d-tint);  --danger-fill: var(--red-d-fill); --danger-solid: var(--red-700); --danger-solid-hover: #a81f26;
+
+  --sw-track: #404040;  --sw-track-hover: #4d4d4d;  --sw-knob: #cccccc;  --sw-knob-on: var(--graphite-0);
+  --diff-add: rgb(63 185 110 / 0.14);  --diff-del: rgb(255 100 100 / 0.13);
+
+  /* Agent hues on dark: ink = the hue's light step (≥ 7:1 on its tint); tint = the body colour at 12 % over the
+     surface, 14 % for the two dim hues (the client's bubble, mention chips). No canvas wash on dark (v2.1): the
+     wash resolves to the charcoal ground, so the agent's colour lives on its avatar, name and bubble only. */
+  --hue-coral-ink: var(--hue-coral-light);         --hue-coral-tint: color-mix(in srgb, var(--hue-coral-base) 12%, #1f1f1f);         --hue-coral-wash: var(--graphite-0);
+  --hue-tangerine-ink: var(--hue-tangerine-light); --hue-tangerine-tint: color-mix(in srgb, var(--hue-tangerine-base) 12%, #1f1f1f); --hue-tangerine-wash: var(--graphite-0);
+  --hue-honey-ink: var(--hue-honey-light);         --hue-honey-tint: color-mix(in srgb, var(--hue-honey-base) 12%, #1f1f1f);         --hue-honey-wash: var(--graphite-0);
+  --hue-pear-ink: var(--hue-pear-light);           --hue-pear-tint: color-mix(in srgb, var(--hue-pear-base) 12%, #1f1f1f);           --hue-pear-wash: var(--graphite-0);
+  --hue-mint-ink: var(--hue-mint-light);           --hue-mint-tint: color-mix(in srgb, var(--hue-mint-base) 12%, #1f1f1f);           --hue-mint-wash: var(--graphite-0);
+  --hue-teal-ink: var(--hue-teal-light);           --hue-teal-tint: color-mix(in srgb, var(--hue-teal-base) 12%, #1f1f1f);           --hue-teal-wash: var(--graphite-0);
+  --hue-aqua-ink: var(--hue-aqua-light);           --hue-aqua-tint: color-mix(in srgb, var(--hue-aqua-base) 12%, #1f1f1f);           --hue-aqua-wash: var(--graphite-0);
+  --hue-lavender-ink: var(--hue-lavender-light);   --hue-lavender-tint: color-mix(in srgb, var(--hue-lavender-base) 14%, #1f1f1f);   --hue-lavender-wash: var(--graphite-0);
+  --hue-orchid-ink: var(--hue-orchid-light);       --hue-orchid-tint: color-mix(in srgb, var(--hue-orchid-base) 12%, #1f1f1f);       --hue-orchid-wash: var(--graphite-0);
+  --hue-cocoa-ink: var(--hue-cocoa-light);         --hue-cocoa-tint: color-mix(in srgb, var(--hue-cocoa-base) 14%, #1f1f1f);         --hue-cocoa-wash: var(--graphite-0);
+  --hue-none-ink: var(--hue-none-light);           --hue-none-tint: var(--graphite-3);                                              --hue-none-wash: var(--graphite-0);
+
+  /* Elevation on dark: a lighter surface and a 1px light ring; only what floats adds a soft black shadow. No glows. */
+  --shadow-color: 0 0% 0%;
+  --elev-0: none;
+  --elev-1: 0 0 0 1px rgb(var(--ink-rgb) / 0.055);
+  --elev-2: 0 0 0 1px rgb(var(--ink-rgb) / 0.08);
+  --elev-3: 0 0 0 1px rgb(var(--ink-rgb) / 0.09), 0 16px 40px rgb(0 0 0 / 0.45);
+  --elev-4: 0 0 0 1px rgb(var(--ink-rgb) / 0.1), 0 24px 64px rgb(0 0 0 / 0.55);
+  --scrim: rgb(0 0 0 / 0.55);
+  --scrim-soft: rgb(0 0 0 / 0.35);      /* What needs you over the current screen */
+}
+
+/* ==================================================================== */
+/* 2b. Colour roles · LIGHT (the option; the v1.1 values, unchanged)     */
+/* ==================================================================== */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ink-rgb: 21 23 29;
+
+  --bg-ground: var(--porcelain-50);
+  --bg-surface: var(--porcelain-0);
+  --bg-raised: var(--porcelain-0);
+  --bg-sunken: var(--porcelain-100);
+  --bg-inverse: var(--porcelain-900);
+  --seg-on: var(--porcelain-0);
+
+  --text-1: var(--porcelain-900);
+  --text-2: var(--porcelain-700);
+  --text-3: var(--porcelain-600);       /* also placeholders: 4.73 on sunken */
+  --text-inverse: #eceef3;
+  --text-inverse-2: #a9adb8;            /* 7.98 on Ink */
+  --text-on-action: #ffffff;
+  --text-on-ink: #ffffff;
+  --ink-hover: #2b2e37;  --ink-press: #000000;
+  --mark: var(--porcelain-900);
+
+  --line-control: var(--porcelain-500);
+
+  --action: var(--cobalt-500);
+  --action-hover: var(--cobalt-600);
+  --action-press: var(--cobalt-700);
+  --action-tint: var(--cobalt-50);      /* cobalt text on it 4.54 */
+  --action-text: var(--cobalt-500);
+  --focus: var(--cobalt-500);
+
+  --ok-ink: var(--green-700);   --ok-tint: var(--green-50);   --ok-fill: var(--green-500);
+  --attn-ink: var(--amber-700); --attn-tint: var(--amber-50); --attn-fill: var(--amber-500);
+  --danger-ink: var(--red-700); --danger-tint: var(--red-50); --danger-fill: var(--red-500);
+
+  --sw-track: var(--porcelain-300);  --sw-track-hover: #b3b8c3;  --sw-knob: #ffffff;  --sw-knob-on: #ffffff;
+  --diff-add: #e9f6ee;  --diff-del: #fdeeee;
+
+  /* Agent hues on light: ink is AA on white and on its tint */
+  --hue-coral-ink: #c4283f;     --hue-coral-tint: #ffe6e9;     --hue-coral-wash: #fff8f9;
+  --hue-tangerine-ink: #b04a00; --hue-tangerine-tint: #ffeee2; --hue-tangerine-wash: #fffaf6;
+  --hue-honey-ink: #8a5a00;     --hue-honey-tint: #fff4dc;     --hue-honey-wash: #fffcf4;
+  --hue-pear-ink: #4d6a00;      --hue-pear-tint: #f0f7dc;      --hue-pear-wash: #fbfdf4;
+  --hue-mint-ink: #1d7a43;      --hue-mint-tint: #e5f7ec;      --hue-mint-wash: #f6fcf8;
+  --hue-teal-ink: #00756a;      --hue-teal-tint: #e1f6f2;      --hue-teal-wash: #f5fcfb;
+  --hue-aqua-ink: #006b85;      --hue-aqua-tint: #e3f6fb;      --hue-aqua-wash: #f6fcfe;
+  --hue-lavender-ink: #5a3dc8;  --hue-lavender-tint: #efeaff;  --hue-lavender-wash: #faf8ff;
+  --hue-orchid-ink: #b0287f;    --hue-orchid-tint: #fbe7f4;    --hue-orchid-wash: #fef8fc;
+  --hue-cocoa-ink: #7a4a2e;     --hue-cocoa-tint: #f5ebe4;     --hue-cocoa-wash: #fcf8f5;
+  --hue-none-ink: #474b57;      --hue-none-tint: #eceef2;      --hue-none-wash: #f9fafb;
+
+  /* Elevation on light: tone first, shadow only for what floats */
+  --shadow-color: 228 16% 10%;
+  --elev-1: 0 0 0 1px var(--line-subtle);
+  --elev-2: 0 0 0 1px var(--line-subtle), 0 1px 2px hsl(var(--shadow-color) / 0.05), 0 4px 12px hsl(var(--shadow-color) / 0.05);
+  --elev-3: 0 0 0 1px hsl(var(--shadow-color) / 0.07), 0 4px 10px hsl(var(--shadow-color) / 0.08), 0 16px 40px hsl(var(--shadow-color) / 0.10);
+  --elev-4: 0 0 0 1px hsl(var(--shadow-color) / 0.06), 0 12px 32px hsl(var(--shadow-color) / 0.14), 0 40px 96px hsl(var(--shadow-color) / 0.18);
+  --scrim: rgb(21 23 29 / 0.32);
+  --scrim-soft: rgb(21 23 29 / 0.16);
+}
+
+:root {
+  /* The current agent. Set data-hue on any container; everything inside inherits its identity. */
+  --agent-base: var(--hue-none-base);
+  --agent-light: var(--hue-none-light);
+  --agent-deep: var(--hue-none-deep);
+  --agent-ink: var(--hue-none-ink);
+  --agent-tint: var(--hue-none-tint);
+  --agent-wash: var(--hue-none-wash);
+
+  /* ------------------------------------------------------------------ */
+  /* 3. Type                                                             */
+  /* ------------------------------------------------------------------ */
+  /* P-3 (decided 2026-10-23): Instrument Sans 400/600 for everything, JetBrains Mono for code, commands, diffs and the trace.
+     Both SIL OFL 1.1 and bundled with the app, so every OS renders the same face. The fallbacks only cover a missing file.
+     The app declares the bundled files once (paths are the build's, not these docs'):
+       @font-face { font-family: "Instrument Sans"; src: url("fonts/InstrumentSans[wdth,wght].woff2") format("woff2"); font-weight: 400 700; font-display: block; }
+       @font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono[wght].woff2") format("woff2"); font-weight: 400 600; font-display: block; }
+     Review pages (brand board, components, prototype) load the same faces from Google Fonts instead. */
+  --font-text: "Instrument Sans", "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: var(--font-text);
+  --font-mono: "JetBrains Mono", "Cascadia Mono", "SF Mono", ui-monospace, Consolas, monospace;
+
+  --weight-regular: 400;
+  --weight-strong: 600;   /* the only other weight */
+
+  /* Six steps, far apart. Any one view uses four at most. */
+  --fs-meta: 12px;      --lh-meta: 16px;     --ls-meta: 0.005em;
+  --fs-sub: 13px;       --lh-sub: 18px;      --ls-sub: 0;
+  --fs-body: 15px;      --lh-body: 22px;     --ls-body: -0.006em;
+  --fs-title: 20px;     --lh-title: 26px;    --ls-title: -0.014em;
+  --fs-headline: 28px;  --lh-headline: 34px; --ls-headline: -0.022em;
+  --fs-display: 44px;   --lh-display: 48px;  --ls-display: -0.032em;
+
+  --measure-chat: 34em;
+  --measure-prose: 62ch;
+
+  /* ------------------------------------------------------------------ */
+  /* 4. Space (4-pt; spacing by relationship)                            */
+  /* ------------------------------------------------------------------ */
+  --sp-0: 0;
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;  --sp-4: 16px;  --sp-5: 20px;  --sp-6: 24px;
+  --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px;
+
+  /* ------------------------------------------------------------------ */
+  /* 5. Shape: one continuous-corner family (R3)                         */
+  /* ------------------------------------------------------------------ */
+  --corner: round;
+  --r-xs: 10px;  --r-sm: 10px;   /* things inside objects: inputs, options, wells, menu items */
+  --r-md: 18px;  --r-lg: 18px;  --r-xl: 18px;   /* objects: tickets, cards, bubbles, dialogs, menus */
+  --r-full: 999px;               /* controls */
+
+  /* ------------------------------------------------------------------ */
+  /* 7. Motion: physics, not timelines                                   */
+  /* ------------------------------------------------------------------ */
+  --dur-micro: 140ms;  --dur-short: 200ms;  --dur-move: 320ms;  --dur-scene: 420ms;  --dur-character: 640ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-exit: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-color: ease;
+  --spring-smooth: linear(0, 0.078 5%, 0.235 10%, 0.401 15%, 0.549 20%, 0.669 25%, 0.762 30%, 0.831 35%, 0.882 40%, 0.944 50%, 0.974 60%, 0.988 70%, 0.995 80%, 1);
+  --spring-snappy: linear(0, 0.061 5%, 0.198 10%, 0.36 15%, 0.518 20%, 0.656 25%, 0.768 30%, 0.854 35%, 0.917 40%, 0.987 50%, 1.012 60%, 1.015 70%, 1.011 80%, 1.006 90%, 1);
+  --spring-gentle: linear(0, 0.074 5%, 0.249 10%, 0.463 15%, 0.673 20%, 0.85 25%, 0.983 30%, 1.069 35%, 1.114 40%, 1.127 45%, 1.117 50%, 1.068 60%, 1.019 70%, 0.991 80%, 0.984 90%, 1);
+  --press-scale: 0.97;
+  --rise: 8px;
+
+  /* ------------------------------------------------------------------ */
+  /* 8. Layers                                                           */
+  /* ------------------------------------------------------------------ */
+  --z-base: 0;  --z-sticky: 10;  --z-sidebar: 20;  --z-pane: 30;  --z-dropdown: 100;  --z-popover: 200;
+  --z-toast: 300;  --z-scrim: 400;  --z-dialog: 410;  --z-tooltip: 500;  --z-drag: 600;
+
+  /* ------------------------------------------------------------------ */
+  /* 9. Sizes                                                            */
+  /* ------------------------------------------------------------------ */
+  --control-sm: 28px;   /* visual only: its hit area is grown to 32 (Fitts, fix 15) */
+  --control-md: 32px;   /* desktop click-target floor */
+  --control-lg: 40px;   /* primary actions and Send (fix 13) */
+  --row-1: 40px;  --row-2: 56px;
+  --icon-sm: 14px;  --icon-md: 16px;  --icon-lg: 20px;  --stroke-icon: 1.5px;
+  --av-xs: 16px;  --av-sm: 24px;  --av-md: 32px;  --av-lg: 40px;  --av-xl: 64px;  --av-hero: 96px;
+  --focus-ring: 0 0 0 2px var(--bg-surface), 0 0 0 4px var(--focus);
+
+  /* ------------------------------------------------------------------ */
+  /* 10. Sound (P-7). Not CSS: the values the renderer's sound module reads. */
+  /* ------------------------------------------------------------------ */
+  /* needs-you A4 → D5 · 320 ms · done F#5 · 380 ms · handoff breath + E5 → A5 · 290 ms. Spec: DESIGN-SYSTEM.md §8.5. */
+  --sound-volume: 0.7;
+}
+
+/* Continuous corners where the engine draws them. Same visual size, smoother curvature. */
+@supports (corner-shape: squircle) {
+  :root { --corner: squircle; --r-xs: 16px; --r-sm: 16px; --r-md: 28px; --r-lg: 28px; --r-xl: 28px; }
+}
+
+/* Agent identity scopes */
+[data-hue="coral"]     { --agent-base: var(--hue-coral-base);     --agent-light: var(--hue-coral-light);     --agent-deep: var(--hue-coral-deep);     --agent-ink: var(--hue-coral-ink);     --agent-tint: var(--hue-coral-tint);     --agent-wash: var(--hue-coral-wash); }
+[data-hue="tangerine"] { --agent-base: var(--hue-tangerine-base); --agent-light: var(--hue-tangerine-light); --agent-deep: var(--hue-tangerine-deep); --agent-ink: var(--hue-tangerine-ink); --agent-tint: var(--hue-tangerine-tint); --agent-wash: var(--hue-tangerine-wash); }
+[data-hue="honey"]     { --agent-base: var(--hue-honey-base);     --agent-light: var(--hue-honey-light);     --agent-deep: var(--hue-honey-deep);     --agent-ink: var(--hue-honey-ink);     --agent-tint: var(--hue-honey-tint);     --agent-wash: var(--hue-honey-wash); }
+[data-hue="pear"]      { --agent-base: var(--hue-pear-base);      --agent-light: var(--hue-pear-light);      --agent-deep: var(--hue-pear-deep);      --agent-ink: var(--hue-pear-ink);      --agent-tint: var(--hue-pear-tint);      --agent-wash: var(--hue-pear-wash); }
+[data-hue="mint"]      { --agent-base: var(--hue-mint-base);      --agent-light: var(--hue-mint-light);      --agent-deep: var(--hue-mint-deep);      --agent-ink: var(--hue-mint-ink);      --agent-tint: var(--hue-mint-tint);      --agent-wash: var(--hue-mint-wash); }
+[data-hue="teal"]      { --agent-base: var(--hue-teal-base);      --agent-light: var(--hue-teal-light);      --agent-deep: var(--hue-teal-deep);      --agent-ink: var(--hue-teal-ink);      --agent-tint: var(--hue-teal-tint);      --agent-wash: var(--hue-teal-wash); }
+[data-hue="aqua"]      { --agent-base: var(--hue-aqua-base);      --agent-light: var(--hue-aqua-light);      --agent-deep: var(--hue-aqua-deep);      --agent-ink: var(--hue-aqua-ink);      --agent-tint: var(--hue-aqua-tint);      --agent-wash: var(--hue-aqua-wash); }
+[data-hue="lavender"]  { --agent-base: var(--hue-lavender-base);  --agent-light: var(--hue-lavender-light);  --agent-deep: var(--hue-lavender-deep);  --agent-ink: var(--hue-lavender-ink);  --agent-tint: var(--hue-lavender-tint);  --agent-wash: var(--hue-lavender-wash); }
+[data-hue="orchid"]    { --agent-base: var(--hue-orchid-base);    --agent-light: var(--hue-orchid-light);    --agent-deep: var(--hue-orchid-deep);    --agent-ink: var(--hue-orchid-ink);    --agent-tint: var(--hue-orchid-tint);    --agent-wash: var(--hue-orchid-wash); }
+[data-hue="cocoa"]     { --agent-base: var(--hue-cocoa-base);     --agent-light: var(--hue-cocoa-light);     --agent-deep: var(--hue-cocoa-deep);     --agent-ink: var(--hue-cocoa-ink);     --agent-tint: var(--hue-cocoa-tint);     --agent-wash: var(--hue-cocoa-wash); }
+
+/* Reduced motion: the same information, without travel. Opacity and colour changes stay. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-move: 1ms; --dur-scene: 1ms; --dur-character: 1ms; --press-scale: 1; --rise: 0px; }
+}
+
+/* ---- ../tokens-notch.css ---- */
+/*
+ * Eucas notch tokens · v1 (2026-10-26, CR-011). Load after ../../system/tokens.css.
+ * Only what the base system can't express. Components use roles; never a raw hex in a component.
+ *
+ * The notch is a hardware-like object: it stays black in both app themes (like a real notch, it belongs to the
+ * screen, not to the app). The panel under it follows the Eucas theme (dark default, light option).
+ * Contrast (WCAG 2.x, computed from these values): notch text #ebebeb on #0b0b0b 16.6 · text-2 #a8a8a8 on #0b0b0b 8.4
+ * · danger ink #ff8a85 on #0b0b0b 8.6 · Ink #161616 on the attn marker #e8a33a 8.3 · white on the danger marker
+ * #d9474a 4.24 (glyph and 11px/600 label; the label also has the word, never colour alone).
+ */
+:root {
+  /* The object */
+  --notch-bg: #0b0b0b;                      /* the notch and the hover peek; never pure #000 so the ring reads */
+  --notch-ring: rgb(255 255 255 / 0.09);    /* 1px ring so it separates from dark wallpapers and full-black apps */
+  --notch-shadow: 0 6px 20px rgb(0 0 0 / 0.35);
+  --notch-text: #ebebeb;
+  --notch-text-2: #a8a8a8;
+  --notch-text-3: #8a8a8a;                  /* 5.6 on --notch-bg: meta only */
+  --notch-line: rgb(255 255 255 / 0.08);
+  --notch-hover: rgb(255 255 255 / 0.06);
+  --notch-btn: #232323;                     /* secondary buttons inside the peek */
+  --notch-btn-hover: #2e2e2e;
+  --notch-eye: #f2f2f2;                     /* the Look: always white on an agent (BRAND §5) */
+  --notch-eye-dim: #9a9a9a;                 /* dozing */
+  --notch-danger: #ff8a85;                  /* = --red-d-ink, fixed because the notch is always dark */
+  --notch-danger-ring: rgb(255 138 133 / 0.5);
+  --notch-ok: #6fd09a;                      /* = --green-d-ink: only for a check that really happened */
+
+  /* Markers (what stays in the notch until it's dealt with) */
+  --marker-attn: #e8a33a;                   /* = --amber-d-fill */
+  --marker-attn-text: #161616;
+  --marker-danger: #d9474a;                 /* = --red-d-fill */
+  --marker-danger-text: #ffffff;
+
+  /* Geometry (CSS px at 100 % scale; Windows scales with the display) */
+  --notch-h: 32px;
+  --notch-w-rest: 124px;
+  --notch-w-marker: 164px;
+  --notch-r: 16px;                          /* bottom corners; the top is flush with the screen edge */
+  --notch-shoulder: 8px;                    /* the concave flare where it meets the edge, so it reads as hardware */
+  --notch-eye-w: 5px;
+  --notch-eye-h: 13px;
+  --notch-eye-gap: 9px;
+  --notch-eye-travel-x: 2.5px;              /* eye-follow: small on purpose; a notch that stares is creepy */
+  --notch-eye-travel-y: 1.5px;
+  --notch-thin-w: 96px;                     /* thin-line mode for thick bezels */
+  --notch-thin-h: 4px;
+  --peek-w: 372px;
+  --peek-r: 22px;
+  --panel-w: 400px;
+  --panel-max-h: 640px;                     /* fits a 1366×768 laptop's work area (728 px) under the notch */
+  --panel-gap: 8px;                         /* between the notch and the panel */
+
+  /* Motion */
+  --notch-hover-intent: 280ms;              /* the pointer must rest this long before the peek opens */
+  --notch-leave-grace: 360ms;               /* and may wander this long before it folds back */
+  --notch-morph: 320ms;                     /* rest ⇄ peek, with --spring-smooth */
+  --notch-arrive: 640ms;                    /* the needs-you nudge, with --spring-gentle (the only overshoot) */
+  --notch-sweep: 1.7s;                      /* the working beam, one way */
+  --notch-blink-min: 3800ms;
+  --notch-blink-max: 7200ms;
+  --notch-doze-after: 5min;                 /* no input and nothing running */
+}
+
+/* ---- src/notch.css ---- */
+/* Eucas notch prototype. Roles from tokens.css; notch tokens from tokens-notch.css. */
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:var(--font-text);font-size:var(--fs-body);line-height:var(--lh-body);color:var(--text-1);background:#101010;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01"}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:var(--font-mono);font-size:12px;letter-spacing:-0.01em}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ============ The desktop (mock Windows 11) ============ */
+.desk{position:fixed;inset:0;overflow:hidden;font-family:"Segoe UI Variable Text","Segoe UI",system-ui,sans-serif}
+.wall{position:absolute;inset:0;background:
+  radial-gradient(60% 70% at 18% 88%, #26314d 0%, transparent 60%),
+  radial-gradient(50% 60% at 86% 10%, #2b2440 0%, transparent 62%),
+  radial-gradient(70% 80% at 60% 60%, #1a1d26 0%, transparent 70%), #121318}
+html[data-theme="light"] .wall{background:
+  radial-gradient(60% 70% at 18% 88%, #c9d6f3 0%, transparent 60%),
+  radial-gradient(50% 60% at 86% 10%, #e3d9f5 0%, transparent 62%),
+  radial-gradient(70% 80% at 60% 60%, #eef0f5 0%, transparent 70%), #e6e9f0}
+.win{position:absolute;border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px rgb(255 255 255 / .07),0 18px 50px rgb(0 0 0 / .45);background:#1c1c1c;color:#d6d6d6}
+html[data-theme="light"] .win{background:#fbfbfb;color:#2b2b2b;box-shadow:0 0 0 1px rgb(0 0 0 / .08),0 18px 50px rgb(0 0 0 / .16)}
+.win .cap{height:32px;display:flex;align-items:center;gap:10px;padding:0 0 0 12px;font-size:12px;color:#bdbdbd;background:rgb(255 255 255 / .02)}
+html[data-theme="light"] .win .cap{color:#444}
+.win .cap .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.win .cap .cb{width:46px;height:32px;display:grid;place-items:center;opacity:.7}
+.win .cap .cb svg{width:10px;height:10px}
+.term{left:7%;top:16%;width:47%;height:56%}
+.term .body{padding:14px 16px;font:13px/20px "Cascadia Mono",var(--font-mono);color:#cfcfcf;white-space:pre}
+html[data-theme="light"] .term .body{color:#2a2a2a}
+.term .p{color:#7fb4ff}.term .g{color:#7ccf9a}.term .d{opacity:.55}
+html[data-theme="light"] .term .p{color:#1f5fd1}html[data-theme="light"] .term .g{color:#16793f}
+.editor{left:50%;top:26%;width:43%;height:58%}
+.editor .body{display:grid;grid-template-columns:44px 1fr;font:12.5px/20px "Cascadia Mono",var(--font-mono);padding-top:10px}
+.editor .ln{color:#6b6b6b;text-align:right;padding-right:12px;white-space:pre}
+.editor .code{white-space:pre;color:#c8c8c8;opacity:.75}
+html[data-theme="light"] .editor .code{color:#333}
+.editor .k{color:#c79bff}.editor .s{color:#e6b673}.editor .c{color:#6f8a6f}
+.taskbar{position:absolute;left:0;right:0;bottom:0;height:48px;background:rgb(28 28 28 / .92);border-top:1px solid rgb(255 255 255 / .06);display:flex;align-items:center;justify-content:center;color:#e8e8e8;font-size:12px}
+html[data-theme="light"] .taskbar{background:rgb(238 238 238 / .94);border-top-color:rgb(0 0 0 / .07);color:#1b1b1b}
+.tb-apps{display:flex;gap:4px}
+.tb-app{width:40px;height:40px;border-radius:4px;display:grid;place-items:center}
+.tb-app i{width:22px;height:22px;border-radius:5px;display:block}
+.tb-app.on{background:rgb(255 255 255 / .06)}
+html[data-theme="light"] .tb-app.on{background:rgb(0 0 0 / .05)}
+.tb-tray{position:absolute;right:8px;top:0;bottom:0;display:flex;align-items:center;gap:2px}
+.tray-btn{height:40px;min-width:32px;padding:0 6px;border:0;background:none;border-radius:4px;display:grid;place-items:center;position:relative;color:inherit}
+.tray-btn:hover{background:rgb(255 255 255 / .07)}
+html[data-theme="light"] .tray-btn:hover{background:rgb(0 0 0 / .06)}
+.tray-btn svg{width:16px;height:16px}
+.tray-btn .tb-badge{position:absolute;right:2px;top:6px;min-width:14px;height:14px;border-radius:7px;background:var(--marker-attn);color:var(--marker-attn-text);font:600 9px/14px var(--font-text);padding:0 3px}
+.tb-clock{display:flex;flex-direction:column;align-items:flex-end;line-height:16px;padding:0 8px;font-size:12px}
+
+/* ============ The notch ============ */
+.notch-wrap{position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:50;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.notch{pointer-events:auto;position:relative;height:var(--notch-h);width:var(--notch-w-rest);background:var(--notch-bg);border-radius:0 0 var(--notch-r) var(--notch-r);
+  box-shadow:inset 0 -1px 0 var(--notch-ring),0 0 0 1px var(--notch-ring),var(--notch-shadow);
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:0 14px;color:var(--notch-text);border:0;
+  transition:width var(--notch-morph) var(--spring-smooth),height var(--notch-morph) var(--spring-smooth),border-radius var(--notch-morph) var(--spring-smooth),box-shadow var(--dur-short) ease}
+/* concave shoulders where it meets the top edge, so it reads as part of the screen */
+.notch::before,.notch::after{content:"";position:absolute;top:0;width:var(--notch-shoulder);height:var(--notch-shoulder);pointer-events:none;
+  background:radial-gradient(circle at 0 100%, transparent calc(var(--notch-shoulder) - .5px), var(--notch-bg) var(--notch-shoulder))}
+.notch::before{left:calc(-1 * var(--notch-shoulder));transform:scaleX(-1)}
+.notch::after{right:calc(-1 * var(--notch-shoulder))}
+.notch:focus-visible{outline:2px solid var(--cobalt-300);outline-offset:3px}
+
+.eyes{position:relative;display:flex;gap:var(--notch-eye-gap);align-items:center;justify-content:center;flex:none;--ex:0px;--ey:0px}
+.eyes .eye{width:var(--notch-eye-w);height:var(--notch-eye-h);background:var(--notch-eye);border-radius:99px;transform:translate(var(--ex),var(--ey)) rotate(-12deg);transition:transform 140ms ease-out,height var(--dur-short) var(--spring-smooth),background-color var(--dur-short) ease,border-radius var(--dur-short) ease}
+.eyes.blink .eye{animation:blink 150ms ease-in-out}
+@keyframes blink{50%{transform:translate(var(--ex),var(--ey)) rotate(-12deg) scaleY(.08)}}
+/* expressions: the shape changes, never the count or colour (BRAND §8) */
+.eyes[data-x="focused"] .eye{height:9px;width:7px;border-radius:4px;transform:translate(var(--ex),var(--ey))}
+.eyes[data-x="concerned"] .eye:first-child{transform:translate(var(--ex),var(--ey)) rotate(16deg)}
+.eyes[data-x="concerned"] .eye:last-child{transform:translate(var(--ex),var(--ey)) rotate(-16deg)}
+.eyes[data-x="sleepy"] .eye{height:2.6px;width:9px;background:var(--notch-eye-dim);transform:translate(0,3px)}
+.eyes[data-x="closed"] .eye{height:2.4px;width:8px;background:#6a6a6a;transform:translate(0,2px)}
+.eyes[data-x="glance"] .eye{transform:translate(3px,1px) rotate(-12deg)}
+.eyes[data-x="pleased"] .eye{height:4px;width:9px;border-radius:9px 9px 2px 2px;transform:translate(0,-1px)}
+
+/* working: the composer's voice glow, gathered into a beam that sweeps under the eyes (2026-10-25 design §3.1) */
+.beam{position:absolute;left:12px;right:12px;bottom:3px;height:2px;overflow:hidden;border-radius:2px;opacity:0;transition:opacity var(--dur-move) ease}
+.beam i{position:absolute;top:0;bottom:0;width:46%;left:0;border-radius:2px;background:linear-gradient(90deg,transparent,var(--euca-light) 30%,var(--euca-base) 55%,transparent);animation:sweep var(--notch-sweep) var(--ease-in-out) infinite alternate}
+.glow{position:absolute;left:18%;right:18%;bottom:-9px;height:12px;border-radius:50%;filter:blur(8px);opacity:0;pointer-events:none;
+  background:radial-gradient(closest-side,var(--euca-base),transparent);transition:opacity var(--dur-move) ease;animation:glowsway var(--notch-sweep) var(--ease-in-out) infinite alternate}
+@keyframes sweep{from{transform:translateX(-10%)}to{transform:translateX(125%)}}
+@keyframes glowsway{from{transform:translateX(-22%)}to{transform:translateX(22%)}}
+.notch[data-working="1"] .beam{opacity:1}
+.notch[data-working="1"] .glow{opacity:.55}
+
+/* the marker that stays */
+.marker{display:none;align-items:center;gap:4px;height:18px;padding:0 6px 0 5px;border-radius:9px;font:600 11px/18px var(--font-text);font-variant-numeric:tabular-nums;white-space:nowrap;flex:none}
+.marker svg{width:10px;height:10px}
+.marker.attn{background:var(--marker-attn);color:var(--marker-attn-text)}
+.marker.danger{background:var(--marker-danger);color:var(--marker-danger-text);padding:0 8px 0 6px}
+.notch[data-marker] .marker{display:inline-flex}
+.notch[data-marker]{width:var(--notch-w-marker);justify-content:center}
+.notch[data-marker] .m-spacer{display:block}
+.m-spacer{display:none;width:28px;flex:none}
+.notch[data-marker="danger"]{width:auto;padding:0 10px 0 16px}
+.notch[data-marker="danger"] .m-spacer{display:none}
+.notch .label{display:none;font:600 12px/16px var(--font-text);color:var(--notch-danger);white-space:nowrap}
+.notch[data-guard="off"]{width:auto;padding:0 18px 0 16px;box-shadow:inset 0 0 0 1px var(--notch-danger-ring),var(--notch-shadow)}
+.notch[data-guard="off"] .label{display:block}
+.notch[data-doze="1"] .eyes{opacity:.8}
+.notch[data-doze="1"]{width:108px}
+
+/* arrival: one small nudge, then still. Never opens by itself. */
+.notch.arrive{animation:nudge var(--notch-arrive) var(--spring-gentle)}
+@keyframes nudge{0%{transform:translateY(0)}30%{transform:translateY(3px)}100%{transform:translateY(0)}}
+.notch.arrive .marker{animation:pop var(--notch-arrive) var(--spring-gentle)}
+@keyframes pop{0%{transform:scale(.4);opacity:0}60%{opacity:1}100%{transform:scale(1)}}
+.notch.born .eyes .eye{animation:born 900ms var(--spring-gentle)}
+@keyframes born{0%{height:2px;opacity:.3}55%{height:2px}100%{height:var(--notch-eye-h);opacity:1}}
+
+/* thin-line mode (thick bezels, or you just want less) */
+.notch[data-mode="thin"]:not([data-guard="off"]):not(.peeking){width:var(--notch-thin-w);height:var(--notch-thin-h);padding:0;border-radius:0 0 4px 4px}
+.notch[data-mode="thin"]:not([data-guard="off"]):not(.peeking)>*:not(.beam):not(.glow):not(.thin-dot){opacity:0;pointer-events:none}
+.notch[data-mode="thin"]:not([data-guard="off"]):not(.peeking)::before,.notch[data-mode="thin"]:not([data-guard="off"]):not(.peeking)::after{display:none}
+.notch[data-mode="thin"] .beam{left:0;right:0;bottom:1px}
+.thin-dot{display:none;position:absolute;right:-5px;top:-2px;width:8px;height:8px;border-radius:50%;background:var(--marker-attn);box-shadow:0 0 0 2px var(--notch-bg)}
+.thin-dot.danger{background:var(--marker-danger)}
+.notch[data-mode="thin"][data-marker]:not(.peeking) .thin-dot{display:block}
+.notch>*{transition:opacity var(--dur-short) ease}
+
+/* ============ The hover peek (part of the notch object) ============ */
+.peek{pointer-events:auto;position:absolute;top:0;left:50%;width:var(--peek-w);transform:translateX(-50%);background:var(--notch-bg);border-radius:0 0 var(--peek-r) var(--peek-r);
+  box-shadow:0 0 0 1px var(--notch-ring),0 18px 44px rgb(0 0 0 / .5);color:var(--notch-text);padding:var(--notch-h) 8px 8px;
+  clip-path:inset(0 calc(50% - 62px) calc(100% - var(--notch-h)) calc(50% - 62px) round 0 0 16px 16px);opacity:0;visibility:hidden;
+  transition:clip-path var(--notch-morph) var(--spring-smooth),opacity var(--dur-micro) ease,visibility 0s linear var(--notch-morph)}
+.peek.open{clip-path:inset(0 0 0 0 round 0 0 var(--peek-r) var(--peek-r));opacity:1;visibility:visible;transition:clip-path var(--notch-morph) var(--spring-smooth),opacity var(--dur-micro) ease,visibility 0s}
+.peek::before,.peek::after{content:"";position:absolute;top:0;width:var(--notch-shoulder);height:var(--notch-shoulder);background:radial-gradient(circle at 0 100%, transparent calc(var(--notch-shoulder) - .5px), var(--notch-bg) var(--notch-shoulder))}
+.peek::before{left:calc(-1 * var(--notch-shoulder));transform:scaleX(-1)}.peek::after{right:calc(-1 * var(--notch-shoulder))}
+.peek .p-head{display:flex;align-items:baseline;justify-content:space-between;padding:6px 10px 6px;font-size:12px;line-height:16px;color:var(--notch-text-2)}
+.peek .p-head b{font-weight:600;color:var(--notch-text)}
+.peek .p-item{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:center;padding:10px;border-radius:14px}
+.peek .p-item+.p-item{border-top:1px solid var(--notch-line);border-radius:0 0 14px 14px}
+.peek .p-item .t{font-size:13px;line-height:18px;font-weight:600;color:var(--notch-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.peek .p-item .e{font-size:12px;line-height:16px;color:var(--notch-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.peek .p-item .e .mono{color:var(--notch-text)}
+.pbtn{height:28px;padding:0 12px;border-radius:99px;border:0;background:var(--notch-btn);color:var(--notch-text);font-size:12px;font-weight:600;white-space:nowrap;position:relative}
+.pbtn::after{content:"";position:absolute;inset:-2px}
+.pbtn:hover{background:var(--notch-btn-hover)}
+.pbtn.pri{background:#ebebeb;color:#111}
+.pbtn.pri:hover{background:#fff}
+.peek .p-foot{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 2px;font-size:12px;color:var(--notch-text-3)}
+.peek .p-foot button{border:0;background:none;color:var(--notch-text-2);font-size:12px;font-weight:600;padding:4px 6px;border-radius:6px}
+.peek .p-foot button:hover{color:var(--notch-text);background:var(--notch-hover)}
+.peek .p-status{display:flex;flex-direction:column;gap:2px;padding:6px 10px 6px;font-size:13px;line-height:18px}
+.peek .p-status .s2{font-size:12px;color:var(--notch-text-2)}
+.sev{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none}
+.sev svg{width:12px;height:12px}
+.sev.attn{background:rgb(232 163 58 / .16);color:#f0b45a}
+.sev.danger{background:rgb(217 71 74 / .2);color:#ff8a85}
+.sev.calm{background:rgb(255 255 255 / .07);color:#bdbdbd}
+.okdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--notch-ok);margin-right:6px;vertical-align:1px}
+.offdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--notch-danger);margin-right:6px;vertical-align:1px}
+
+/* coach mark: shown once, after setup */
+.coach{pointer-events:auto;margin-top:14px;background:var(--bg-raised);color:var(--text-1);border-radius:14px;box-shadow:var(--elev-3);padding:12px 14px;width:300px;font-size:13px;line-height:18px;position:relative;animation:rise var(--dur-move) var(--spring-smooth)}
+.coach::before{content:"";position:absolute;top:-6px;left:50%;width:12px;height:12px;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:2px}
+.coach p{margin:0 0 10px;color:var(--text-2)}
+.coach b{color:var(--text-1);font-weight:600}
+@keyframes rise{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* ============ The panel (follows the Eucas theme) ============ */
+.panel{pointer-events:auto;position:absolute;top:calc(var(--notch-h) + var(--panel-gap));left:50%;width:var(--panel-w);max-height:min(var(--panel-max-h),calc(100vh - 100px));transform:translateX(-50%);
+  background:var(--bg-surface);color:var(--text-1);border-radius:var(--r-md);box-shadow:var(--elev-4);display:flex;flex-direction:column;overflow:hidden;transform-origin:50% -20px;
+  animation:panelIn var(--dur-move) var(--spring-smooth)}
+html[data-theme="dark"] .panel{background:var(--bg-raised)}
+@keyframes panelIn{from{opacity:0;transform:translateX(-50%) translateY(-10px) scale(.97)}to{opacity:1;transform:translateX(-50%)}}
+.ph{display:flex;align-items:center;gap:12px;padding:16px 16px 12px}
+.ph .av{width:40px;height:40px;flex:none}
+.ph .who{flex:1;min-width:0}
+.ph .nmrow{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px}
+.ph .nm{font-size:15px;line-height:20px;font-weight:600}
+.ph .st{font-size:13px;line-height:18px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph .st.off{color:var(--danger-ink)}
+.ph .st .okd{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok-fill);margin-right:6px;vertical-align:1px}
+.ph .st .offd{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--danger-fill);margin-right:6px;vertical-align:1px}
+.chip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 7px;border-radius:99px;font-size:12px;font-weight:600;line-height:16px;white-space:nowrap;background:var(--bg-sunken);color:var(--text-2);border:0}
+.chip svg{width:12px;height:12px}
+.chip.attn{background:var(--attn-tint);color:var(--attn-ink)}
+.chip.ok{background:var(--ok-tint);color:var(--ok-ink)}
+button.chip:hover{filter:brightness(1.12)}
+.p-body{overflow:auto;flex:1;padding:0 16px 20px;scrollbar-width:thin;-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 20px),transparent)}
+.sec-t{display:flex;align-items:baseline;justify-content:space-between;font-size:13px;line-height:18px;font-weight:600;color:var(--text-2);margin:4px 2px 8px}
+.sec-t .meta{font-weight:400;color:var(--text-3);font-size:12px}
+.quiet{font-size:13px;color:var(--text-3);margin:0 2px 4px}
+.need{display:grid;grid-template-columns:20px 1fr;gap:10px;padding:12px;border-radius:14px;background:var(--bg-surface);box-shadow:var(--elev-1)}
+html[data-theme="light"] .need{background:var(--bg-ground)}
+.need+.need{margin-top:6px}
+.need .t{font-size:13px;line-height:18px;font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.need .t .time{font-weight:400;color:var(--text-3);font-size:12px;white-space:nowrap}
+.need .e{font-size:13px;line-height:18px;color:var(--text-2);margin-top:1px}
+.need .e .mono{color:var(--text-1);background:var(--bg-sunken);padding:1px 5px;border-radius:5px}
+.need .acts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.need.danger{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--danger-fill) 45%,transparent)}
+.sev-p{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;margin-top:-1px}
+.sev-p svg{width:12px;height:12px}
+.sev-p.attn{background:var(--attn-tint);color:var(--attn-ink)}
+.sev-p.danger{background:var(--danger-tint);color:var(--danger-ink)}
+.sev-p.calm{background:var(--bg-sunken);color:var(--text-2)}
+.btn{height:32px;padding:0 14px;border-radius:99px;border:0;background:var(--bg-sunken);color:var(--text-1);font-size:13px;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:background-color var(--dur-micro) ease,transform var(--dur-micro) ease}
+.btn:hover{background:color-mix(in srgb,var(--bg-sunken) 80%,var(--text-1) 8%)}
+.btn:active{transform:scale(var(--press-scale))}
+.btn.pri{background:var(--action);color:var(--text-on-action)}
+.btn.pri:hover{background:var(--action-hover)}
+.btn.lg{height:40px;padding:0 20px;font-size:15px}
+.btn.ghost{background:none;color:var(--text-2)}
+.btn.ghost:hover{background:var(--state-hover);color:var(--text-1)}
+.btn[disabled]{background:var(--bg-sunken);color:var(--text-3);cursor:not-allowed}
+.link{border:0;background:none;padding:0;color:var(--text-2);font-weight:600;text-decoration:underline;text-decoration-color:var(--line-control);text-underline-offset:3px;font-size:inherit}
+.link:hover{color:var(--action-text);text-decoration-color:currentColor}
+.more{display:block;margin:8px 2px 0;border:0;background:none;color:var(--text-2);font-size:13px;font-weight:600;padding:0}
+.more:hover{color:var(--text-1)}
+
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--bg-sunken);padding:3px;border-radius:99px;margin:16px 0 14px}
+.tabs button{height:28px;border:0;border-radius:99px;background:none;color:var(--text-2);font-size:13px;font-weight:600}
+.tabs button[aria-selected="true"]{background:var(--seg-on);color:var(--text-1);box-shadow:0 1px 2px rgb(0 0 0 / .18)}
+.tabs button:hover:not([aria-selected="true"]){color:var(--text-1)}
+.group{background:var(--bg-surface);border-radius:14px;box-shadow:var(--elev-1);padding:4px 0;margin-bottom:12px}
+html[data-theme="light"] .group{background:var(--bg-ground)}
+.row{display:flex;align-items:center;gap:12px;padding:10px 14px;min-height:48px}
+.row+.row{border-top:1px solid var(--line-subtle)}
+.row .rl{flex:1;min-width:0}
+.row .rt{font-size:13px;line-height:18px;font-weight:600}
+.row .rd{font-size:12px;line-height:16px;color:var(--text-3);margin-top:1px}
+.row .rd .mono{color:var(--text-2)}
+.row .rv{font-size:13px;color:var(--text-2);white-space:nowrap}
+.row svg.chev{width:14px;height:14px;color:var(--text-3)}
+button.row{width:100%;border:0;background:none;text-align:left;border-radius:0}
+button.row:hover{background:var(--state-hover)}
+.group>button.row:first-child{border-radius:14px 14px 0 0}.group>button.row:last-child{border-radius:0 0 14px 14px}
+.lockg{width:14px;height:14px;color:var(--text-3);flex:none}
+
+/* switch */
+.sw{width:36px;height:20px;border-radius:99px;background:var(--sw-track);border:0;position:relative;flex:none;padding:0;transition:background-color var(--dur-micro) ease}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--sw-knob);transition:transform var(--dur-short) var(--spring-snappy)}
+.sw[aria-checked="true"]{background:var(--text-1)}
+.sw[aria-checked="true"]::after{transform:translateX(16px);background:var(--sw-knob-on)}
+.sw[data-locked]{opacity:.7}
+
+/* meter */
+.meter{padding:12px 14px}
+.meter+.meter{border-top:1px solid var(--line-subtle)}
+.m-top{display:flex;align-items:baseline;gap:8px}
+.m-top .ml{font-size:13px;color:var(--text-2);font-weight:600}
+.m-top .mv{font-size:20px;line-height:26px;font-weight:600;letter-spacing:-.014em;font-variant-numeric:tabular-nums;margin-left:auto}
+.m-top .mr{font-size:12px;color:var(--text-3);white-space:nowrap}
+.bar{position:relative;height:6px;border-radius:3px;background:var(--bg-sunken);margin:8px 0 8px;overflow:visible}
+.bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--text-1);opacity:.85}
+.bar>b{position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:1px;background:var(--text-3)}
+.bar.close>i{background:var(--attn-fill);opacity:1}
+.bar.sup>i{background:var(--euca-base);opacity:1}
+.m-line{font-size:13px;line-height:18px;color:var(--text-2)}
+.m-line b{color:var(--text-1);font-weight:600}
+.m-meta{font-size:12px;color:var(--text-3);margin-top:4px}
+.where{padding:6px 14px 10px}
+.where .wr{display:grid;grid-template-columns:76px 1fr 36px;gap:10px;align-items:center;font-size:13px;height:28px}
+.where .wb{height:6px;border-radius:3px;background:var(--bg-sunken);position:relative}
+.where .wb i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--text-2);opacity:.7}
+.where .wp{text-align:right;color:var(--text-2);font-variant-numeric:tabular-nums}
+.seg{display:inline-grid;grid-auto-flow:column;gap:2px;background:var(--bg-sunken);border-radius:99px;padding:2px}
+.seg button{height:24px;padding:0 10px;border:0;border-radius:99px;background:none;color:var(--text-2);font-size:12px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--seg-on);color:var(--text-1)}
+
+.promise{font-size:13px;line-height:18px;color:var(--text-2);background:var(--bg-sunken);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.promise b{color:var(--text-1);font-weight:600}
+.lockrow{display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:12px;border-radius:14px;background:var(--bg-surface);box-shadow:var(--elev-1);font-size:13px;line-height:18px}
+html[data-theme="light"] .lockrow{background:var(--bg-ground)}
+.lockrow.attn{background:var(--attn-tint);box-shadow:none;color:var(--attn-ink)}
+.lockrow .grow{flex:1}
+.lockrow svg{width:16px;height:16px;flex:none}
+.compose{display:flex;gap:6px;align-items:center;background:var(--bg-surface);box-shadow:var(--elev-1),inset 0 0 0 1px var(--line);border-radius:99px;padding:4px 4px 4px 14px;margin-bottom:12px}
+html[data-theme="light"] .compose{background:var(--porcelain-0)}
+.compose input{flex:1;border:0;background:none;outline:none;font-size:13px;min-width:0}
+.compose input::placeholder{color:var(--text-3)}
+.compose:focus-within{box-shadow:var(--focus-ring)}
+.draft{border-radius:14px;padding:12px 14px;background:var(--bg-surface);box-shadow:inset 0 0 0 1px var(--line-control);margin-bottom:12px}
+html[data-theme="light"] .draft{background:var(--porcelain-0)}
+.draft .q{font-size:12px;color:var(--text-3);margin-bottom:8px}
+.draft .rule{font-family:var(--font-mono);font-size:12px;line-height:18px;background:var(--bg-sunken);border-radius:10px;padding:8px 10px;color:var(--text-1)}
+.draft .rule .k{color:var(--text-3)}
+.draft .fx{font-size:13px;line-height:18px;color:var(--text-2);margin:8px 0 10px}
+.draft .acts{display:flex;gap:6px;align-items:center}
+.draft label{white-space:nowrap;display:flex;gap:6px;align-items:center;font-size:12px;color:var(--text-2);margin-left:auto}
+
+.sub-h{display:flex;align-items:center;gap:8px;padding:14px 12px 10px}
+.sub-h button{width:32px;height:32px;border:0;border-radius:99px;background:none;display:grid;place-items:center;color:var(--text-2)}
+.sub-h button:hover{background:var(--state-hover);color:var(--text-1)}
+.sub-h h2{margin:0;font-size:15px;line-height:20px;font-weight:600}
+.sub-h svg{width:16px;height:16px}
+.big{font-size:20px;line-height:26px;font-weight:600;letter-spacing:-.014em;margin:2px 2px 6px}
+.lead{font-size:13px;line-height:18px;color:var(--text-2);margin:0 2px 12px}
+.lead .mono{color:var(--text-1)}
+.steps{margin:0;padding:0 0 0 18px;font-size:13px;line-height:20px;color:var(--text-2)}
+.steps li+li{margin-top:4px}
+.steps .mono{color:var(--text-1);background:var(--bg-sunken);padding:1px 5px;border-radius:5px}
+.files{font-family:var(--font-mono);font-size:12px;line-height:22px;padding:6px 14px}
+.files div{display:flex;justify-content:space-between;color:var(--text-2)}
+.files div span:last-child{color:var(--text-3);font-variant-numeric:tabular-nums}
+.check{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:13px;line-height:18px;padding:8px 14px}
+.check+.check{border-top:1px solid var(--line-subtle)}
+.check svg{width:14px;height:14px;margin-top:2px}
+.check .ok{color:var(--ok-ink)}.check .bad{color:var(--danger-ink)}.check .wait{color:var(--text-3)}
+.check small{display:block;font-size:12px;color:var(--text-3)}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.rc{border-radius:14px;padding:12px;background:var(--bg-surface);box-shadow:var(--elev-1)}
+html[data-theme="light"] .rc{background:var(--bg-ground)}
+.rc .rh{font-size:13px;line-height:18px;font-weight:600}
+.rc .rb{font-size:12px;line-height:16px;color:var(--text-3);margin-top:4px}
+.rc .rb .mono{color:var(--text-2)}
+.days{display:flex;gap:4px;align-items:flex-end;height:34px;margin-top:8px}
+.days i{flex:1;background:var(--text-2);opacity:.55;border-radius:2px}
+.days i.hi{opacity:1;background:var(--text-1)}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:var(--bg-inverse);color:var(--text-inverse);border-radius:99px;padding:8px 8px 8px 14px;font-size:13px;display:flex;gap:10px;align-items:center;box-shadow:var(--elev-3);white-space:nowrap;animation:rise var(--dur-move) var(--spring-smooth)}
+.toast button{border:0;background:none;color:var(--cobalt-300);font-weight:600;font-size:13px;padding:4px 8px;border-radius:99px}
+html[data-theme="light"] .toast button{color:#a9bfff}
+.pro-line{font-size:13px;line-height:18px;color:var(--text-2);margin-top:8px}
+.plan{padding:12px 14px}
+.plan .pt{display:flex;align-items:baseline;justify-content:space-between;font-size:13px;font-weight:600}
+.plan .pd{font-size:12px;line-height:16px;color:var(--text-3);margin:4px 0 10px}
+.radio{display:grid;gap:6px;padding:8px 10px 10px}
+.radio label{display:grid;grid-template-columns:18px 1fr;gap:8px;padding:10px;border-radius:12px;cursor:pointer;font-size:13px;line-height:18px}
+.radio label:hover{background:var(--state-hover)}
+.radio label.on{background:var(--state-selected);box-shadow:inset 0 0 0 1px var(--line-control)}
+.radio input{margin:2px 0 0;accent-color:var(--action)}
+.radio .rt{font-weight:600}
+.radio .rd{color:var(--text-3);font-size:12px;line-height:16px;margin-top:2px}
+
+/* ============ Setup window ============ */
+.setup-scrim{position:fixed;inset:0 0 48px 0;display:grid;place-items:center;z-index:40}
+.swin{width:760px;height:600px;border-radius:8px;background:var(--bg-surface);color:var(--text-1);box-shadow:0 0 0 1px rgb(var(--ink-rgb) / .1),0 30px 80px rgb(0 0 0 / .5);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.swin .cap{height:32px;display:flex;align-items:center;padding-left:14px;font:12px "Segoe UI Variable Text","Segoe UI",sans-serif;color:var(--text-3);flex:none}
+.swin .cap .t{flex:1}
+.swin .cap .cb{width:46px;height:32px;display:grid;place-items:center;color:var(--text-3)}
+.swin .cap .cb svg{width:10px;height:10px}
+.s-prog{display:flex;align-items:center;gap:10px;padding:0 40px;font-size:12px;color:var(--text-3);flex:none}
+.s-prog .dots{display:flex;gap:4px}
+.s-prog .dots i{width:18px;height:3px;border-radius:2px;background:var(--bg-sunken)}
+.s-prog .dots i.on{background:var(--text-2)}
+.s-prog .dots i.cur{background:var(--text-1)}
+.s-body{flex:1;padding:22px 40px 0;overflow:hidden;display:flex;flex-direction:column}
+.s-body h1{font-size:28px;line-height:34px;letter-spacing:-.022em;font-weight:600;margin:0 0 8px;max-width:28ch}
+.s-body .lede{font-size:15px;line-height:22px;color:var(--text-2);margin:0 0 20px;max-width:56ch}
+.s-foot{display:flex;align-items:center;gap:10px;padding:16px 40px 24px;flex:none}
+.s-foot .sp{flex:1}
+.s-foot .hint{font-size:12px;color:var(--text-3)}
+.checklist{display:grid;gap:2px;max-width:460px}
+.checklist .ci{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:15px;line-height:22px;padding:6px 0}
+.checklist .ci svg{width:16px;height:16px;margin-top:3px;color:var(--ok-ink)}
+.checklist .ci small{display:block;font-size:13px;color:var(--text-3)}
+.create{display:grid;grid-template-columns:260px 1fr;gap:36px;flex:1;min-height:0}
+.stage{border-radius:18px;background:radial-gradient(circle at 50% 42%, color-mix(in srgb,var(--euca-base) 18%, var(--bg-surface)) 0%, var(--bg-ground) 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative}
+.stage .hero{width:150px;height:158px}
+.stage .hero.boop{animation:boop 640ms var(--spring-gentle)}
+@keyframes boop{0%{transform:scale(1)}25%{transform:scale(1.06,.94)}100%{transform:scale(1)}}
+.stage .hn{font-size:20px;line-height:26px;font-weight:600;letter-spacing:-.014em;min-height:26px}
+.stage .hn.ph{color:var(--text-3);font-weight:400}
+.mini-notch{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-top:18px}
+.mini-notch .n{height:22px;width:84px;background:var(--notch-bg);border-radius:0 0 11px 11px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--notch-ring)}
+.mini-notch .eyes .eye{width:3.6px;height:9px}
+.mini-notch .eyes{gap:6px}
+.field-l{font-size:13px;font-weight:600;color:var(--text-2);margin:0 0 6px}
+.field{height:40px;border-radius:12px;border:0;box-shadow:inset 0 0 0 1px var(--line-control);background:var(--bg-ground);padding:0 12px;font-size:15px;width:100%;outline:none}
+.field:focus{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
+.sugg{display:flex;gap:6px;margin:8px 0 18px;align-items:center;font-size:12px;color:var(--text-3)}
+.sugg button{height:26px;padding:0 10px;border-radius:99px;border:0;background:var(--bg-sunken);color:var(--text-2);font-size:12px;font-weight:600}
+.sugg button:hover{color:var(--text-1)}
+.shapes{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:18px}
+.shapes button{aspect-ratio:1;border:0;border-radius:12px;background:var(--bg-ground);padding:6px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px transparent}
+.shapes button:hover{background:var(--state-hover)}
+.shapes button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--text-1)}
+.hues{display:flex;gap:8px;flex-wrap:wrap}
+.hues button{width:28px;height:28px;border-radius:50%;border:0;padding:0;position:relative}
+.hues button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg-surface),0 0 0 4px var(--text-1)}
+.hue-note{font-size:12px;color:var(--text-3);margin-top:8px;min-height:16px}
+.retro-h{font-size:20px;line-height:26px;font-weight:600;letter-spacing:-.014em;margin:0 0 14px;max-width:40ch}
+.cards4{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cards4 .rc{padding:14px}
+.cards4 .rc .rh{font-size:15px;line-height:22px}
+.cards4 .rc .rb{font-size:13px;line-height:18px}
+.rules-s{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0}
+.rules-s .col{min-height:0;overflow:auto}
+.rules-s .group{margin-bottom:10px}
+.rules-s .row{padding:8px 12px;min-height:44px}
+.cb-box{width:16px;height:16px;border-radius:5px;flex:none;box-shadow:inset 0 0 0 1.5px var(--line-control);display:grid;place-items:center}
+.cb-box.on{background:var(--text-1);box-shadow:none;color:var(--bg-surface)}
+.cb-box svg{width:11px;height:11px}
+.lock-list .row{min-height:42px}
+.conseq{font-size:13px;line-height:20px;color:var(--text-2);margin:14px 0 0;padding:0;list-style:none}
+.conseq li{display:grid;grid-template-columns:16px 1fr;gap:8px}
+.conseq li+li{margin-top:4px}
+.conseq svg{width:14px;height:14px;margin-top:3px;color:var(--text-3)}
+.notlocked{border-radius:14px;padding:14px 16px;background:var(--attn-tint);color:var(--attn-ink);font-size:15px;line-height:22px;max-width:560px}
+.notlocked p{margin:6px 0 0;font-size:13px;line-height:18px}
+.log{font-family:var(--font-mono);font-size:13px;line-height:28px;background:var(--bg-ground);border-radius:14px;padding:14px 18px;max-width:560px}
+.log div{display:flex;gap:10px;align-items:center;opacity:.55}
+.log div.on{opacity:1}
+.log .res{color:var(--ok-ink);font-weight:500}
+.log .res.bad{color:var(--danger-ink)}
+.log svg{width:14px;height:14px}
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:680px}
+.lvl{border-radius:14px;padding:14px 16px;background:var(--bg-ground);border:0;text-align:left;box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column;gap:6px}
+.lvl[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--text-1)}
+.lvl .lt{font-size:15px;line-height:22px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.lvl .ld{font-size:13px;line-height:18px;color:var(--text-2)}
+.lvl .lx{font-size:12px;line-height:16px;color:var(--text-3)}
+.trial-f{margin-top:14px;max-width:680px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.approved{font-size:13px;color:var(--text-2);margin-top:14px}
+.done-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:6px}
+.done-wrap .hero{width:120px;height:126px;margin-bottom:8px}
+.done-wrap h1{margin:0 auto 4px}
+.done-wrap .lede{margin:0 auto 6px}
+.hb{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);background:var(--bg-ground);border-radius:99px;padding:6px 12px}
+.hb i{width:8px;height:8px;border-radius:50%;background:var(--ok-fill);box-shadow:0 0 0 0 color-mix(in srgb,var(--ok-fill) 50%,transparent);animation:hb 2.4s ease-out infinite}
+@keyframes hb{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok-fill) 50%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.flyer{position:fixed;z-index:60;pointer-events:none;transition:transform 900ms var(--spring-smooth),opacity 300ms ease 700ms}
+
+/* UAC (Windows draws this; Segoe UI, not ours) */
+.uac-scrim{position:fixed;inset:0;background:rgb(0 0 0 / .62);z-index:80;display:grid;place-items:center;font-family:"Segoe UI Variable Text","Segoe UI",sans-serif}
+.uac{width:456px;background:#2b2b2b;color:#fff;border-radius:8px;overflow:hidden;box-shadow:0 30px 80px rgb(0 0 0 / .6)}
+.uac .bar{height:auto;background:#8a6d00;margin:0;padding:10px 16px;font-size:12px;border-radius:0}
+.uac .in{padding:18px 20px}
+.uac h3{margin:0 0 16px;font-size:18px;font-weight:600;line-height:24px}
+.uac .app{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.uac .app i{width:32px;height:32px;border-radius:6px;background:#15171d;display:grid;place-items:center}
+.uac .app b{font-size:15px}
+.uac .kv{font-size:13px;color:#cfcfcf;line-height:20px}
+.uac .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px 20px;background:#202020}
+.uac .btns button{height:32px;border:0;border-radius:4px;background:#3a3a3a;color:#fff;font-size:13px}
+.uac .btns button.y{background:#4cc2ff;color:#000}
+
+/* Windows context menu + toast (Windows draws these) */
+.ctx{position:fixed;right:96px;bottom:56px;width:220px;background:#2c2c2c;color:#fff;border-radius:8px;padding:4px;box-shadow:0 8px 24px rgb(0 0 0 / .5),0 0 0 1px rgb(255 255 255 / .08);font:13px "Segoe UI Variable Text","Segoe UI",sans-serif;z-index:70}
+html[data-os="light"] .ctx{background:#f9f9f9;color:#1b1b1b}
+.ctx button{display:block;width:100%;text-align:left;height:32px;border:0;background:none;border-radius:4px;padding:0 12px;font:inherit;color:inherit}
+.ctx button:hover{background:rgb(255 255 255 / .07)}
+.ctx hr{border:0;border-top:1px solid rgb(255 255 255 / .1);margin:4px 0}
+.wtoast{position:fixed;right:12px;bottom:60px;width:364px;background:#2c2c2c;color:#fff;border-radius:8px;padding:14px 16px;box-shadow:0 8px 28px rgb(0 0 0 / .55),0 0 0 1px rgb(255 255 255 / .08);font:13px/18px "Segoe UI Variable Text","Segoe UI",sans-serif;z-index:70}
+.wtoast .wa{display:flex;gap:8px;align-items:center;font-size:12px;color:#cfcfcf;margin-bottom:8px}
+.wtoast b{display:block;font-size:14px;margin-bottom:2px}
+.wtoast .wb{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.wtoast .wb button{height:32px;border:0;border-radius:4px;background:#3d3d3d;color:#fff;font:inherit}
+.fullscreen{position:fixed;inset:0;background:#050505;z-index:45;display:grid;place-items:center;color:#777;font:14px "Segoe UI",sans-serif}
+.fullscreen .vid{width:72%;aspect-ratio:16/9;background:radial-gradient(circle at 40% 40%, #2a3348, #0b0d12 70%);border-radius:4px;display:grid;place-items:end start;padding:18px;color:#aab}
+
+/* ============ Demo controls (not the UI) ============ */
+.demo{position:fixed;left:12px;bottom:58px;z-index:90;font-family:var(--font-text)}
+.demo>button{height:32px;padding:0 12px;border-radius:99px;border:0;background:#f2f2f2;color:#111;font-size:12px;font-weight:600;box-shadow:0 4px 14px rgb(0 0 0 / .35)}
+.jump{position:absolute;left:0;bottom:40px;width:320px;max-height:calc(100vh - 140px);overflow:auto;background:#1b1b1b;color:#e6e6e6;border-radius:14px;padding:10px;box-shadow:0 20px 50px rgb(0 0 0 / .6),0 0 0 1px rgb(255 255 255 / .08);font-size:12px}
+.jump h4{margin:10px 6px 4px;font-size:11px;font-weight:600;color:#8a8a8a;letter-spacing:.02em}
+.jump a{display:block;padding:5px 8px;border-radius:6px;color:#e6e6e6;text-decoration:none}
+.jump a:hover,.jump a.cur{background:#2c2c2c}
+.jump .tg{display:flex;flex-wrap:wrap;gap:4px;padding:4px 4px 8px;border-bottom:1px solid #2c2c2c}
+.jump .tg button{height:26px;padding:0 9px;border-radius:99px;border:0;background:#2c2c2c;color:#e6e6e6;font-size:11px;font-weight:600}
+.jump .tg button[aria-pressed="true"]{background:#e6e6e6;color:#111}
+
+/* ============ Sheets (review boards) ============ */
+.sheet{position:fixed;inset:0;z-index:85;background:var(--bg-ground);color:var(--text-1);overflow:auto;padding:36px 48px}
+.sheet h1{font-size:20px;line-height:26px;margin:0 0 4px;font-weight:600}
+.sheet .sl{font-size:13px;color:var(--text-2);margin:0 0 24px;max-width:90ch}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.scell{background:var(--bg-surface);border-radius:14px;padding:0 0 14px;overflow:hidden;box-shadow:var(--elev-1)}
+.scell .stop{height:96px;background:linear-gradient(180deg,#2a3042,#161821);display:flex;justify-content:center;position:relative}
+html[data-theme="light"] .scell .stop{background:linear-gradient(180deg,#cfd7ea,#e9ecf3)}
+.scell .stop .notch-wrap{position:absolute;transform:translateX(-50%) scale(1.6);transform-origin:50% 0}
+.scell .cap2{padding:12px 14px 0;font-size:13px;line-height:18px}
+.scell .cap2 b{font-weight:600;display:block}
+.scell .cap2 span{color:var(--text-2);font-size:12px;line-height:16px}
+
+/* Freeze for screenshots: no motion, deterministic positions */
+html.freeze *,html.freeze *::before,html.freeze *::after{animation-play-state:paused!important}
+html.freeze .beam i{animation-delay:-1.1s!important}
+html.freeze .glow{animation-delay:-1.1s!important}
+html.freeze .hb i{animation:none!important}
+html.freeze .notch,html.freeze .panel,html.freeze .coach,html.freeze .toast,html.freeze .peek{animation:none!important;transition:none!important}
+html.freeze .notch.arrive .marker,html.freeze .notch.born .eye{animation:none!important}
+
+/* Reduced motion: the same information, no travel */
+html.rm .beam i,html.rm .glow{animation:none!important}
+html.rm .beam i{left:27%}
+html.rm .notch,html.rm .peek,html.rm .panel{transition-duration:1ms!important;animation:none!important}
+html.rm .notch.arrive,html.rm .notch.arrive .marker,html.rm .notch.born .eye,html.rm .stage .hero.boop{animation:none!important}
+html.rm .eyes .eye{--ex:0px!important;--ey:0px!important}
+@media (prefers-reduced-motion: reduce){
+  .beam i,.glow,.notch.arrive,.notch.arrive .marker,.notch.born .eye,.hb i{animation:none!important}
+  .beam i{left:27%}
+}
+@media (forced-colors: active){
+  .notch,.peek{border:1px solid CanvasText}
+  .eyes .eye{background:CanvasText}
+  .marker{border:1px solid CanvasText}
+}
+.notch{z-index:2}
+.peek{z-index:1}
+.notch.peeking{box-shadow:none}
+
+.notch.peeking .glow{opacity:0!important}
+.scell .stype{font-size:12px;font-weight:600;color:var(--text-3);margin:0 2px 8px}
+
+</style>
+</head>
+<body>
+<div id="desk" class="desk" aria-label="Windows desktop (mock)"></div>
+<div id="app"></div>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<script>
+/* ---- src/app.js ---- */
+/* Eucas notch prototype (CR-011). One Euca, created at setup, lives in the notch; a click opens the panel.
+   Routes: ?r=<route> (see ROUTES). ?bar=0 hides the demo controls, ?freeze=1 stops motion for screenshots,
+   ?theme=light, ?rm=1 (reduced motion). Copy follows BRAND §4: second person, the Euca speaks of itself by name. */
+"use strict";
+const Q = new URLSearchParams(location.search);
+const FREEZE = Q.get("freeze") === "1";
+const BAR = Q.get("bar") !== "0";
+const ROOT = document.documentElement;
+if (FREEZE) ROOT.classList.add("freeze");
+
+/* ---------- identity: hues and shapes (BRAND §8, same geometry as the direction prototype) ---------- */
+const HUE = {
+  coral:{n:"Coral",base:"#ff5f73",light:"#ffb8c1",deep:"#e0364f"}, tangerine:{n:"Tangerine",base:"#ff8a3d",light:"#ffc9a3",deep:"#e0601a"},
+  honey:{n:"Honey",base:"#f2ab1d",light:"#ffe2a0",deep:"#cf8600"}, pear:{n:"Pear",base:"#96bf2c",light:"#d6ec9a",deep:"#6c9410"},
+  mint:{n:"Mint",base:"#3cc47c",light:"#aeedc9",deep:"#1f9658"}, teal:{n:"Teal",base:"#1fb5a3",light:"#9ee8dc",deep:"#0c8a7c"},
+  aqua:{n:"Aqua",base:"#2db4dc",light:"#a6e6f7",deep:"#0e86b0"}, lavender:{n:"Lavender",base:"#8e6cf0",light:"#cbbcff",deep:"#5f3fd0"},
+  orchid:{n:"Orchid",base:"#e05cb4",light:"#f6b6e1",deep:"#b8358d"}, cocoa:{n:"Cocoa",base:"#a66e4e",light:"#dcb59d",deep:"#7d4c31"},
+  none:{n:"Unassigned",base:"#b4b7bf",light:"#dfe1e6",deep:"#8b8f99"}
+};
+const HUE_ORDER = ["coral","tangerine","honey","pear","mint","teal","aqua","lavender","orchid","cocoa"];
+const SHAPES = {
+  sphere:{n:"Sphere",d:'<circle cx="50" cy="52" r="40"/>',eye:[50,50,13],hl:[34,30],bottom:92},
+  droplet:{n:"Droplet",d:'<path d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z"/>',eye:[50,66,12],hl:[38,50],bottom:95},
+  cloud:{n:"Cloud",d:'<path d="M26 84 C12 84 6 72 10 62 C4 54 8 40 22 40 C22 26 36 18 48 24 C56 12 76 14 80 30 C92 32 98 46 92 56 C98 66 92 84 76 84 Z"/>',eye:[52,60,13],hl:[34,38],bottom:84},
+  hexagon:{n:"Hexagon",d:'<polygon points="50,12 84,31 84,71 50,90 16,71 16,31"/>',round:10,eye:[50,52,13],hl:[34,32],bottom:95},
+  blob:{n:"Blob",d:'<path d="M54 10 C76 12 92 30 88 52 C85 70 92 84 72 90 C54 95 34 92 20 80 C8 68 8 48 16 34 C24 18 36 9 54 10 Z"/>',eye:[50,50,13],hl:[34,28],bottom:93},
+  egg:{n:"Egg",d:'<path d="M50 8 C71 8 86 38 86 60 C86 80 70 94 50 94 C30 94 14 80 14 60 C14 38 29 8 50 8 Z"/>',eye:[50,60,12],hl:[36,32],bottom:94},
+  pill:{n:"Pill",d:'<rect x="6" y="27" width="88" height="48" rx="24"/>',eye:[60,51,11],hl:[26,38],bottom:75},
+  triangle:{n:"Triangle",d:'<polygon points="50,16 88,82 12,82"/>',round:14,eye:[50,64,10],hl:[42,44],bottom:89},
+  square:{n:"Rounded square",d:'<rect x="12" y="13" width="76" height="76" rx="22"/>',eye:[50,50,13],hl:[30,30],bottom:89}
+};
+function eyesFor(expr, gap){
+  const L = -gap, R = gap;
+  if (expr === "closed" || expr === "sleepy") return [L, R].map(x => `<path d="M${x - 5} -1 Q${x} 4 ${x + 5} -1" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>`).join("");
+  if (expr === "concerned") return `<rect x="${L - 3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(16 ${L} 0)"/><rect x="${R - 3.5}" y="-6.5" width="7" height="13" rx="3.5" transform="rotate(-16 ${R} 0)"/>`;
+  return [L, R].map(x => `<rect x="${x - 3.5}" y="-8" width="7" height="16" rx="3.5" transform="rotate(-12 ${x} 0)"/>`).join("");
+}
+let UID = 0;
+/* One renderer: flat (lists) or soft-dimensional (hero, panel header). Eyes only, always white. */
+function avatarSVG(a, o = {}){
+  const P = HUE[a.hue] || HUE.none, S = SHAPES[a.shape] || SHAPES.sphere, id = "a" + (++UID);
+  const [ex, ey, gap] = S.eye, expr = o.expr || (a.hue === "none" ? "closed" : "calm");
+  const paint = o.soft ? `url(#${id}f)` : P.base;
+  const stroke = S.round ? ` stroke="${paint}" stroke-width="${S.round}" stroke-linejoin="round"` : "";
+  const body = `<g fill="${paint}"${stroke}>${S.d}</g>`;
+  const eyes = `<g transform="translate(${ex} ${ey})"><g class="look"${o.follow ? ' data-follow="1"' : ""}><g class="blinker" fill="#fff">${eyesFor(expr, gap)}</g></g></g>`;
+  if (!o.soft) return `<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true" focusable="false">${body}${eyes}</svg>`;
+  const [hx, hy] = S.hl, gy = Math.min(S.bottom + 5, 101);
+  return `<svg viewBox="0 0 100 106" width="100%" height="100%" aria-hidden="true" focusable="false"><defs>
+    <radialGradient id="${id}f" cx="40%" cy="30%" r="80%" fx="32%" fy="20%"><stop offset="0" stop-color="${P.light}"/><stop offset=".5" stop-color="${P.base}"/><stop offset="1" stop-color="${P.deep}"/></radialGradient>
+    <clipPath id="${id}c">${S.d}</clipPath>
+    <filter id="${id}b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+    <filter id="${id}s" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="1.8"/></filter></defs>
+    <ellipse cx="50" cy="${gy}" rx="26" ry="3" fill="#000" opacity=".22" filter="url(#${id}s)"/>
+    ${body}<g clip-path="url(#${id}c)">
+      <ellipse cx="70" cy="90" rx="34" ry="18" fill="${P.deep}" opacity=".3" filter="url(#${id}b)"/>
+      <ellipse cx="${hx}" cy="${hy}" rx="15" ry="8" transform="rotate(-30 ${hx} ${hy})" fill="#fff" opacity=".45" filter="url(#${id}b)"/>
+      <ellipse cx="${hx - 3}" cy="${hy - 2}" rx="4.5" ry="2.4" transform="rotate(-30 ${hx - 3} ${hy - 2})" fill="#fff" opacity=".8"/>
+    </g>${eyes}</svg>`;
+}
+
+/* ---------- icons (16 px grid, 1.6 stroke) ---------- */
+const ic = (d, fill) => `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false" fill="${fill ? "currentColor" : "none"}" stroke="${fill ? "none" : "currentColor"}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const I = {
+  check: ic('<path d="M3.5 8.5l3 3 6-7"/>'),
+  x: ic('<path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/>'),
+  lock: ic('<rect x="3.5" y="7" width="9" height="6.5" rx="1.6"/><path d="M5.5 7V5.4a2.5 2.5 0 0 1 5 0V7"/>'),
+  unlock: ic('<rect x="3.5" y="7" width="9" height="6.5" rx="1.6"/><path d="M5.5 7V5.4a2.5 2.5 0 0 1 4.7-1.2"/>'),
+  chev: ic('<path d="M6 3.5L10.5 8 6 12.5"/>'),
+  back: ic('<path d="M10 3.5L5.5 8l4.5 4.5"/>'),
+  alert: ic('<path d="M8 3.8v5"/><circle cx="8" cy="11.8" r=".4" fill="currentColor"/>'),
+  stop: ic('<rect x="4.5" y="4.5" width="7" height="7" rx="1.4" fill="currentColor" stroke="none"/>', false),
+  wait: ic('<path d="M8 2.5a5.5 5.5 0 1 1-5.2 3.7"/>'),
+  files: ic('<rect x="3" y="4.5" width="7" height="9" rx="1.4"/><path d="M6 4.5V3.6c0-.6.5-1.1 1.1-1.1h4.8c.6 0 1.1.5 1.1 1.1v7.8c0 .6-.5 1.1-1.1 1.1H10"/>'),
+  done: ic('<circle cx="8" cy="8" r="5.5"/><path d="M5.6 8.2l1.7 1.7 3.2-3.6"/>'),
+  close: '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1"/></svg>',
+  min: '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 5h8" stroke="currentColor" stroke-width="1"/></svg>',
+  max: '<svg viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1"/></svg>',
+  quartet: '<svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><circle cx="4.2" cy="4.2" r="3.3"/><path d="M12 .6l3.4 6.3H8.6z"/><rect x="1" y="9.1" width="6.2" height="6.2" rx="1.9"/><path d="M12 8.4c1.4 1.8 2.8 3.4 2.8 4.8a2.8 2.8 0 0 1-5.6 0c0-1.4 1.4-3 2.8-4.8z"/></svg>',
+  win: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="6.6" height="6.6" fill="#4cc2ff"/><rect x="8.4" y="1" width="6.6" height="6.6" fill="#4cc2ff"/><rect x="1" y="8.4" width="6.6" height="6.6" fill="#4cc2ff"/><rect x="8.4" y="8.4" width="6.6" height="6.6" fill="#4cc2ff"/></svg>'
+};
+
+/* ---------- the content: one place for every string that repeats ---------- */
+const COPY = {
+  promise: "Eucas never auto-approves a delete, a push to your default branch, a send or a payment, and no rule can change that.",
+  privacy: "Nothing about your work leaves this PC unless you turn it on.",
+  diag: "No paths to your projects or files."
+};
+const NEEDS = {
+  wait:{sev:"attn", t:"bench is waiting for you", e:'Wants to run <span class="mono">pnpm build</span>', pe:'wants to run <span class="mono">pnpm build</span>', a:"Open session", time:"2 min", snooze:true},
+  same:{sev:"attn", t:"Two sessions are editing one file", e:'bench and api-docs both changed <span class="mono">src/router.ts</span> in the last 4 minutes.', pe:'bench and api-docs · <span class="mono">src/router.ts</span>', a:"Show both", sub:"same", time:"4 min", snooze:true},
+  done:{sev:"calm", t:"api-docs finished and is waiting", e:"Ran for 14 minutes and changed 3 files.", pe:"ran 14 min · changed 3 files", a:"Open session", time:"6 min", snooze:true},
+  trip:{sev:"danger", t:"$N stopped notes", e:"It deleted 1,240 files in 20 seconds. $N stopped it at 14:02:31 and checked it isn't running.", pe:"deleted 1,240 files in 20 s", a:"See what happened", sub:"trip", time:"now"},
+  off:{sev:"danger", t:"bench isn't protected", e:"$N hasn't seen a check from bench for 40 seconds while it ran tools.", pe:"no check for 40 s while it ran tools", a:"Fix it", sub:"fix", time:"now"},
+  unver:{sev:"attn", t:"Claude Code 2.1.315 isn't verified yet", e:"It updated at 13:58. The safety test reruns now; until it passes, $N says so.", pe:"updated 13:58 · the safety test is rerunning", a:"Run the test", time:"8 min"}
+};
+const LIB = [
+  {id:"push", t:"Block pushes to your default branch", d:"git push to main or master", on:true, lock:true},
+  {id:"force", t:"Block force-pushes", d:"git push --force, on any branch", on:true, lock:true},
+  {id:"trip", t:"Stop a session that deletes 200+ files", d:"the mass-delete tripwire", on:true, lock:true},
+  {id:"out", t:"Block deletes outside the project folder", d:"rm, del, Remove-Item above the project", on:true, lock:true},
+  {id:"env", t:"Block reading secrets", d:".env files and private keys", on:true, lock:true},
+  {id:"reset", t:"Block git reset --hard", d:"and git clean -fd", on:true, lock:false},
+  {id:"pkg", t:"Ask before installing packages", d:"npm, pnpm, pip, cargo", on:false, lock:false}
+];
+const MINE = [
+  {t:'Allow <span class="mono">pnpm test</span> in bench', d:"From your approvals · used 212 times", on:true, lock:false},
+  {t:'Block edits in <span class="mono">api-docs/migrations/</span>', d:"You described it · blocked 3 times", on:true, lock:true}
+];
+
+/* ---------- state ---------- */
+const BASE = () => ({
+  theme: Q.get("theme") === "light" ? "light" : "dark", rm: Q.get("rm") === "1",
+  scene:"desk", step:1, euca:{name:"Pip", shape:"sphere", hue:"lavender"},
+  guard:"ok", working:true, doze:false, mode:"pill", needs:[], peek:false, arrive:false, born:false,
+  panel:false, tab:"usage", sub:null, meter:"trial", locked:true, level:1, draft:false, coach:false,
+  menu:false, fullscreen:false, wtoast:null, toast:null, uac:false, declined:false, testFail:false, sheet:null,
+  where:"today", sessions:3
+});
+let S = BASE();
+
+/* ---------- routes: every state is reachable from the jump menu ---------- */
+const BLANK = {name:"", shape:"sphere", hue:"none"};
+const ROUTES = [
+  ["Setup", [
+    ["s-welcome","1 · Find your sessions", {scene:"setup", step:1}],
+    ["s-create","2 · Make your Euca (before)", {scene:"setup", step:2, euca:{...BLANK}}],
+    ["s-create-born","2 · Make your Euca (born)", {scene:"setup", step:2}],
+    ["s-retro","3 · Your week", {scene:"setup", step:3}],
+    ["s-rules","4 · Choose your rules", {scene:"setup", step:4}],
+    ["s-rules-draft","4 · A described rule, drafted", {scene:"setup", step:4, draft:true}],
+    ["s-lock","5 · Lock your rules", {scene:"setup", step:5}],
+    ["s-uac","5 · The one admin prompt", {scene:"setup", step:5, uac:true}],
+    ["s-declined","5 · Admin declined: not locked", {scene:"setup", step:5, declined:true, locked:false}],
+    ["s-test","6 · Watch it block a test", {scene:"setup", step:6}],
+    ["s-test-fail","6 · The test wasn't blocked", {scene:"setup", step:6, testFail:true}],
+    ["s-privacy","7 · Privacy (Level 1)", {scene:"setup", step:7}],
+    ["s-privacy-2","7 · Privacy (Level 2 + trial)", {scene:"setup", step:7, level:2}],
+    ["s-done","8 · Pip is watching", {scene:"setup", step:8}],
+    ["s-coach","After setup: the notch, once", {coach:true, born:true, working:false}]
+  ]],
+  ["The notch", [
+    ["n-rest","Resting: protected, nothing running", {working:false}],
+    ["n-working","Working: sessions are running", {}],
+    ["n-arrive","Something needs you: it arrives", {needs:["wait","same"], arrive:true}],
+    ["n-marker","The marker stays", {needs:["wait","same"]}],
+    ["n-peek","Hover: the peek", {needs:["wait","same"], peek:true}],
+    ["n-peek-calm","Hover with nothing waiting", {peek:true}],
+    ["n-off","Not protected", {guard:"off", working:true, needs:["off"]}],
+    ["n-off-peek","Not protected: hover", {guard:"off", needs:["off"], peek:true}],
+    ["n-doze","Dozing: you're away, nothing running", {working:false, doze:true}],
+    ["n-trip","Tripwire stop", {needs:["trip","wait"], working:false}],
+    ["n-trip-peek","Tripwire stop: hover", {needs:["trip","wait"], working:false, peek:true}],
+    ["n-thin","Thin line: working", {mode:"thin"}],
+    ["n-thin-needs","Thin line: something needs you", {mode:"thin", needs:["wait"]}],
+    ["n-thin-off","Thin line: not protected overrides it", {mode:"thin", guard:"off", needs:["off"]}],
+    ["n-fullscreen","Full-screen app: steps aside", {fullscreen:true, needs:["trip"], wtoast:"trip"}],
+    ["sheet-notch","Sheet: every notch state", {sheet:"notch"}]
+  ]],
+  ["The panel", [
+    ["p-needs","Needs you + Usage", {panel:true, needs:["wait","same","done"]}],
+    ["p-usage","Usage (nothing needs you)", {panel:true}],
+    ["p-rules","Rules", {panel:true, tab:"rules"}],
+    ["p-rules-draft","Rules: describe one, Pip drafts it", {panel:true, tab:"rules", draft:true}],
+    ["p-rules-unlocked","Rules: not locked", {panel:true, tab:"rules", locked:false}],
+    ["p-settings","Settings", {panel:true, tab:"settings"}],
+    ["p-edit","Settings › your Euca's name and look", {panel:true, tab:"settings", sub:"edit"}],
+    ["p-retro","Usage › your week", {panel:true, sub:"retro"}],
+    ["p-same","Needs you › same file", {panel:true, needs:["same"], sub:"same"}],
+    ["p-trip","Needs you › tripwire stop", {panel:true, needs:["trip"], sub:"trip", working:false}],
+    ["p-off","Not protected", {panel:true, guard:"off", needs:["off"]}],
+    ["p-fix","Not protected › fix it", {panel:true, guard:"off", needs:["off"], sub:"fix"}],
+    ["p-idle","No sessions running", {panel:true, working:false, sessions:0}]
+  ]],
+  ["Supervisor meter and plans", [
+    ["m-trial","Trial: 12 days left", {panel:true, meter:"trial"}],
+    ["m-trial-end","Trial ended: the monthly taste starts", {panel:true, meter:"trialend"}],
+    ["m-taste","Free: the monthly taste", {panel:true, meter:"taste"}],
+    ["m-low","Free: running low", {panel:true, meter:"low"}],
+    ["m-empty","Free: empty until 1 Dec", {panel:true, meter:"empty"}],
+    ["m-pro","Pro", {panel:true, meter:"pro"}],
+    ["m-plan-trial","Settings › plan in the trial", {panel:true, tab:"settings", meter:"trial", scroll:"plan"}],
+    ["m-plan-taste","Settings › plan on the taste", {panel:true, tab:"settings", meter:"taste", scroll:"plan"}],
+    ["sheet-meter","Sheet: every meter state", {sheet:"meter"}]
+  ]],
+  ["Fallback", [
+    ["t-menu","Tray icon menu (fallback)", {menu:true}]
+  ]]
+];
+const ROUTE = Object.fromEntries(ROUTES.flatMap(([, list]) => list.map(([id, label, s]) => [id, {label, s}])));
+let cur = Q.get("r") || "n-working";
+function go(id, keep){
+  const r = ROUTE[id]; if (!r) return;
+  cur = id;
+  const keepTheme = S.theme, keepRm = S.rm, keepMode = keep ? S.mode : null;
+  S = Object.assign(BASE(), structuredClone(r.s));
+  S.theme = keepTheme; S.rm = keepRm;
+  if (keepMode && !("mode" in r.s)) S.mode = keepMode;
+  const u = new URL(location.href); u.searchParams.set("r", id); history.replaceState(null, "", u);
+  render();
+  if (S.arrive) sfx("needs", 120);
+  if (r.s.scroll === "plan") requestAnimationFrame(() => document.getElementById("plan")?.scrollIntoView({block:"start"}));
+}
+
+/* ---------- small helpers ---------- */
+const N = () => S.euca.name || "Your Euca";
+const nm = s => s.replaceAll("$N", N());
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = (sel, el = document) => el.querySelector(sel);
+function say(t){ const l = $("#live"); l.textContent = ""; setTimeout(() => (l.textContent = t), 30); }
+function eucaVars(){
+  const P = HUE[S.euca.hue] || HUE.none;
+  ROOT.style.setProperty("--euca-base", P.base); ROOT.style.setProperty("--euca-light", P.light); ROOT.style.setProperty("--euca-deep", P.deep);
+}
+function hasDanger(){ return S.needs.some(k => NEEDS[k].sev === "danger"); }
+function statusLine(){
+  if (S.guard === "off") return {off:true, t:"Not protected · bench: no check for 40 s"};
+  if (!S.sessions) return {t:"Protected · no sessions running"};
+  return {t:`Protected · ${S.sessions} sessions · checked 2 s ago`};
+}
+
+/* ---------- the desktop ---------- */
+function renderDesk(){
+  const term = `<span class="p">PS C:\\dev\\bench&gt;</span> claude
+<span class="d">╭ bench · main</span>
+&gt; move the router to the new matcher and keep the old routes working
+
+  <span class="g">●</span> Read src/router.ts
+  <span class="g">●</span> Edited src/router.ts <span class="d">(+42 −18)</span>
+  <span class="g">●</span> Edited src/routes/legacy.ts <span class="d">(+6 −2)</span>
+  <span class="g">●</span> Ran pnpm test <span class="d">· 128 passed</span>
+  ◐ Updating the docs comment in src/router.ts…`;
+  const code = [
+    ['<span class="c">// Routes resolve through the new matcher; legacy paths map onto it.</span>'],
+    ['<span class="k">import</span> { createMatcher } <span class="k">from</span> <span class="s">"./matcher"</span>;'],
+    ['<span class="k">import</span> { legacy } <span class="k">from</span> <span class="s">"./routes/legacy"</span>;'], [""],
+    ['<span class="k">export const</span> router = createMatcher({'], ['  routes: [...core, ...legacy],'], ['  fallback: <span class="s">"/not-found"</span>,'], ['});'], [""],
+    ['<span class="k">export function</span> resolve(path: string) {'], ['  <span class="k">const</span> hit = router.match(path);'], ['  <span class="k">return</span> hit ?? router.fallback;'], ['}'], [""],
+    ['<span class="c">// TODO: drop the legacy table after the 2.0 cut</span>']
+  ];
+  const editor = `<div class="ln">${code.map((_, i) => i + 1).join("\n")}</div><div class="code">${code.map(c => c[0]).join("\n")}</div>`;
+  const badge = S.needs.length ? `<span class="tb-badge num">${S.needs.length}</span>` : "";
+  $("#desk").innerHTML = `<div class="wall"></div>
+  <div class="win term" aria-hidden="true"><div class="cap"><span class="t">bench — PowerShell</span><span class="cb">${I.min}</span><span class="cb">${I.max}</span><span class="cb">${I.close}</span></div><div class="body">${term}</div></div>
+  <div class="win editor" aria-hidden="true"><div class="cap"><span class="t">router.ts — api-docs</span><span class="cb">${I.min}</span><span class="cb">${I.max}</span><span class="cb">${I.close}</span></div><div class="body">${editor}</div></div>
+  <div class="taskbar"><div class="tb-apps">
+    <span class="tb-app">${I.win.replace("<svg", '<svg width="20" height="20"')}</span>
+    <span class="tb-app on"><i style="background:#2b2b2b;box-shadow:inset 0 0 0 1px #555"></i></span>
+    <span class="tb-app on"><i style="background:linear-gradient(135deg,#2f80ed,#1b5fc1)"></i></span>
+    <span class="tb-app"><i style="background:linear-gradient(135deg,#f2c94c,#e0a500)"></i></span>
+    <span class="tb-app"><i style="background:linear-gradient(135deg,#3cc47c,#1f9658)"></i></span></div>
+    <div class="tb-tray">
+      <button class="tray-btn" data-act="traymenu" aria-label="Eucas (tray fallback): ${S.needs.length} need you">${I.quartet}${badge}</button>
+      <span class="tray-btn" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 6.5a9 9 0 0 1 12 0M4.3 9a5.6 5.6 0 0 1 7.4 0M6.6 11.4a2.2 2.2 0 0 1 2.8 0"/></svg></span>
+      <span class="tray-btn" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 6h2.5L9 3v10L5.5 10H3z"/><path d="M11.5 5.5a3.5 3.5 0 0 1 0 5"/></svg></span>
+      <span class="tb-clock num" aria-hidden="true"><span>14:06</span><span>26/10/2026</span></span>
+    </div></div>`;
+}
+
+/* ---------- the notch ---------- */
+function notchHTML(o = {}){
+  const s = Object.assign({}, S, o);
+  const danger = s.needs.find(k => NEEDS[k].sev === "danger");
+  const markerKind = s.guard === "off" ? null : danger === "trip" ? "danger" : s.needs.length ? "attn" : null;
+  const expr = s.guard === "off" || danger === "trip" ? "concerned" : s.doze ? "sleepy" : s.arrive ? "glance" : s.unborn ? "closed" : "";
+  const marker = markerKind === "danger" ? `<span class="marker danger">${I.stop} Stopped notes</span>` : `<span class="marker attn num">${s.needs.length}</span>`;
+  const working = s.working && s.guard !== "off" && !s.doze && !danger ? 1 : 0;
+  const label = s.guard === "off"
+    ? `${N()}: not protected. ${s.needs.length} need you. Open the panel.`
+    : `${N()}: protected${working ? ", sessions working" : ""}${s.needs.length ? `, ${s.needs.length} need you` : ""}. Open the panel.`;
+  return `<button class="notch${s.arrive ? " arrive" : ""}${s.born ? " born" : ""}${s.peek ? " peeking" : ""}" data-act="notch" aria-label="${esc(label)}" aria-expanded="${s.panel ? "true" : "false"}"
+    data-guard="${s.guard}" data-working="${working}" data-mode="${s.mode}" data-doze="${s.doze ? 1 : 0}"${markerKind ? ` data-marker="${markerKind}"` : ""}>
+    <span class="label">Not protected</span><span class="m-spacer"></span>
+    <span class="eyes" data-x="${expr}"${o.static ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
+    ${marker}<span class="beam"><i></i></span><span class="glow"></span><span class="thin-dot${markerKind === "danger" ? " danger" : ""}"></span>
+  </button>`;
+}
+function peekHTML(){
+  const st = statusLine();
+  const foot = `<div class="p-foot"><span>${st.off ? '<span class="offdot"></span>' : '<span class="okdot"></span>'}${esc(st.t.split(" · ").slice(0, st.off ? 1 : 2).join(" · "))}</span><button data-act="notch">Open panel ›</button></div>`;
+  if (!S.needs.length) return `<div class="p-status"><span><span class="okdot"></span>${esc(st.t)}</span><span class="s2 num">5-hour 46% · week 62% · supervisor 78% left</span></div>`;
+  const items = S.needs.slice(0, 3).map((k, i) => {
+    const n = NEEDS[k];
+    return `<div class="p-item"><span class="sev ${n.sev}">${n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "calm" ? I.done : I.alert}</span>
+      <span style="min-width:0"><div class="t">${esc(nm(n.t))}</div><div class="e">${nm(n.pe)}</div></span>
+      <button class="pbtn${i === 0 && n.sev === "danger" ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button></div>`;
+  }).join("");
+  return items + foot;
+}
+
+/* ---------- the panel ---------- */
+function needItem(k, pri){
+  const n = NEEDS[k];
+  const g = n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "calm" ? I.done : I.alert;
+  return `<div class="need ${n.sev}"><span class="sev-p ${n.sev}">${g}</span><div>
+    <div class="t"><span>${esc(nm(n.t))}</span><span class="time">${n.time}</span></div>
+    <div class="e">${nm(n.e)}</div>
+    <div class="acts"><button class="btn${pri ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button>${n.snooze ? `<button class="btn ghost" data-act="snooze" data-k="${k}">Not now</button>` : ""}</div></div></div>`;
+}
+function panelHTML(){
+  const st = statusLine();
+  const lock = S.locked ? `<button class="chip" data-act="tab" data-tab="rules" title="Your rules are locked with Windows admin">${I.lock}Locked</button>`
+                        : `<button class="chip attn" data-act="tab" data-tab="rules">${I.unlock}Not locked</button>`;
+  const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:true, expr:S.guard === "off" ? "concerned" : undefined})}</span>
+    <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span>${lock}</div><div class="st${st.off ? " off" : ""}">${st.off ? '<span class="offd"></span>' : '<span class="okd"></span>'}${esc(st.t)}</div></div></div>`;
+  if (S.sub) return `<div class="panel" role="dialog" aria-label="${esc(N())}">${subHTML()}${S.toast ? toastHTML() : ""}</div>`;
+  const danger = hasDanger();
+  const needs = S.needs.length
+    ? `<div class="sec-t"><span>Needs you · ${S.needs.length}</span></div>${S.needs.slice(0, 3).map((k, i) => needItem(k, i === 0)).join("")}${S.needs.length > 3 ? `<button class="more">Show ${S.needs.length - 3} more</button>` : ""}`
+    : `<p class="quiet">Nothing needs you.</p>`;
+  const tabs = [["usage","Usage"],["rules","Rules"],["settings","Settings"]];
+  return `<div class="panel" role="dialog" aria-label="${esc(N())}">${head}<div class="p-body">${needs}
+    <div class="tabs" role="tablist" aria-label="Panel sections">${tabs.map(([id, l]) => `<button role="tab" aria-selected="${S.tab === id}" data-act="tab" data-tab="${id}">${l}</button>`).join("")}</div>
+    <div role="tabpanel">${S.tab === "usage" ? usageHTML(danger || S.needs.length) : S.tab === "rules" ? rulesHTML() : settingsHTML()}</div>
+  </div>${S.toast ? toastHTML() : ""}</div>`;
+}
+function toastHTML(){ return `<div class="toast" role="status">${esc(S.toast)}<button data-act="undo">Undo</button></div>`; }
+
+function supervisorHTML(){
+  const M = {
+    trial:{chip:'<span class="chip">Trial · 12 days left</span>', v:"78%", w:78, l:"Trial ends 9 Nov", line:"Answered your agents 41 times so far, so they didn't wait for you. It never approves a tool call."},
+    trialend:{chip:'<span class="chip">Free</span>', v:"100%", w:100, l:"Resets 1 Dec", line:`Your trial ended on 9 Nov. From now on ${N()} gets a small amount of supervisor help each month.`},
+    taste:{chip:'<span class="chip">Free</span>', v:"55%", w:55, l:"Resets 1 Dec", line:"Answered your agents 34 times this month, so they didn't wait for you. It never approves a tool call."},
+    low:{chip:'<span class="chip">Free</span>', v:"9%", w:9, l:"Resets 1 Dec", line:`Running low. When it's empty, ${N()} asks you instead until 1 Dec.`},
+    empty:{chip:'<span class="chip">Free</span>', v:"0%", w:0, l:"Resets 1 Dec", line:`<b>${esc(N())} will check with you more often until 1 Dec.</b> Your rules and protection don't change.`, pro:true},
+    pro:{chip:'<span class="chip">Pro</span>', v:"64%", w:64, l:"Resets 26 Nov", line:"Answered your agents 212 times this month, so they didn't wait for you. It never approves a tool call."}
+  }[S.meter];
+  return `<div class="sec-t"><span>Supervisor</span>${M.chip}</div>
+  <div class="group"><div class="meter"><div class="m-top"><span class="ml">Help left this month</span><span class="mr">${M.l}</span><span class="mv">${M.v}</span></div>
+    <div class="bar sup" role="meter" aria-label="Supervisor help left" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${M.w}"><i style="width:${M.w}%"></i></div>
+    <div class="m-line">${M.line}</div>
+    ${M.pro ? `<div class="pro-line">Pro keeps it going all month: $20/month, $15 for the first 200. <button class="link" data-act="tab" data-tab="settings" data-scroll="plan">See Pro</button></div>` : ""}
+  </div></div>`;
+}
+function usageHTML(){
+  const W = S.where === "today" ? [["bench",58],["api-docs",30],["notes",12]] : [["bench",51],["api-docs",22],["notes",14],["site",9],["infra",4]];
+  return `<div class="sec-t"><span>Your Claude usage</span><span class="meta">updated 20 s ago</span></div>
+  <div class="group">
+    <div class="meter"><div class="m-top"><span class="ml">5-hour</span><span class="mr">resets 15:40</span><span class="mv">46%</span></div>
+      <div class="bar" role="meter" aria-label="5-hour limit used" aria-valuenow="46" aria-valuemin="0" aria-valuemax="100"><i style="width:46%"></i><b style="left:85%" title="Your warning line: 85%"></b></div>
+      <div class="m-line">At this pace you reach it around <b>15:10</b>, 30 minutes before it resets.</div></div>
+    <div class="meter"><div class="m-top"><span class="ml">Week</span><span class="mr">resets Mon 09:00</span><span class="mv">62%</span></div>
+      <div class="bar" role="meter" aria-label="Weekly limit used" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><i style="width:62%"></i><b style="left:85%"></b></div>
+      <div class="m-line">On pace for about <b>81%</b> by Monday.</div></div>
+  </div>
+  <div class="sec-t"><span>Where it went</span><span class="seg" role="group" aria-label="Period"><button aria-pressed="${S.where === "today"}" data-act="where" data-v="today">Today</button><button aria-pressed="${S.where === "week"}" data-act="where" data-v="week">7 days</button></span></div>
+  <div class="group where">${W.map(([p, v]) => `<div class="wr"><span>${p}</span><span class="wb"><i style="width:${v}%"></i></span><span class="wp">${v}%</span></div>`).join("")}</div>
+  ${supervisorHTML()}
+  <div class="group"><button class="row" data-act="sub" data-sub="retro"><span class="rl"><div class="rt">Your week</div><div class="rd">41 sessions · 3 risky commands · 4 same-file clashes</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>`;
+}
+function ruleRow(r, i, kind){
+  return `<div class="row"><span class="rl"><div class="rt">${r.t}</div><div class="rd">${r.d}</div></span>
+    ${r.lock ? `<span class="lockg" title="Locked: changing it asks for admin">${I.lock}</span>` : ""}
+    <button class="sw" role="switch" aria-checked="${r.on}" aria-label="${esc(r.t.replace(/<[^>]+>/g, ""))}" ${r.lock && S.locked ? "data-locked" : ""} data-act="sw" data-kind="${kind}" data-i="${i}"></button></div>`;
+}
+function draftHTML(){
+  return `<div class="draft" aria-live="polite"><div class="q">You wrote: “don't let agents touch the migrations in api-docs”</div>
+    <div class="rule"><span class="k">block</span> Edit, Write · <span class="k">in</span> api-docs/migrations/ <span class="k">and everything in it</span></div>
+    <div class="fx">Last week it would have blocked 3 calls, all from api-docs. It can't loosen a locked rule.</div>
+    <div class="acts"><button class="btn pri" data-act="adddraft">Add rule</button><button class="btn ghost" data-act="nodraft">Reword</button>
+    <label><span class="cb-box on">${I.check}</span>Lock it too</label></div></div>`;
+}
+function rulesHTML(){
+  const lockrow = S.locked
+    ? `<div class="lockrow">${I.lock}<span class="grow">6 rules locked with Windows admin</span><button class="link" data-act="lockchange">Change</button></div>`
+    : `<div class="lockrow attn">${I.unlock}<span class="grow">Not locked: an agent could switch these off. ${esc(N())} watches for that.</span><button class="btn" data-act="relock">Lock</button></div>`;
+  return `<div class="promise">${COPY.promise}</div>${lockrow}
+  <div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div>
+  <div class="group">${LIB.map((r, i) => ruleRow(r, i, "lib")).join("")}</div>
+  <div class="sec-t"><span>Your rules</span></div>
+  <div class="group">${MINE.map((r, i) => ruleRow(r, i, "mine")).join("")}</div>
+  <form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>
+  ${S.draft ? draftHTML() : ""}`;
+}
+function planHTML(){
+  if (S.meter === "pro") return `<div class="plan"><div class="pt"><span>Pro</span><span class="num">$20/month</span></div><div class="pd">Renews 26 Nov. Supervisor help all month, every session's details, history and export.</div><button class="btn">Manage</button></div>`;
+  const trial = S.meter === "trial";
+  return `<div class="plan"><div class="pt"><span>${trial ? "Free · supervisor trial" : "Free"}</span><span class="${trial ? "" : "num"}">${trial ? "12 days left" : "monthly taste"}</span></div>
+    <div class="pd">${trial ? "The full supervisor until 9 Nov. Then a small amount each month, free." : "A small amount of supervisor help each month. Protection, rules and usage are free for every session."}</div>
+    <button class="btn">Get Pro · $20/month</button><div class="pd" style="margin:8px 0 0">The first 200 people keep $15/month for life.</div></div>`;
+}
+function settingsHTML(){
+  return `<div class="group"><button class="row" data-act="sub" data-sub="edit"><span style="width:28px;height:28px;flex:none">${avatarSVG(S.euca)}</span><span class="rl"><div class="rt">${esc(N())}</div><div class="rd">${HUE[S.euca.hue].n} ${SHAPES[S.euca.shape].n.toLowerCase()} · name and look</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>
+  <div class="sec-t"><span>Protection</span></div>
+  <div class="group">
+    <div class="row"><span class="rl"><div class="rt">Admin lock</div><div class="rd">${S.locked ? "On · 6 rules no agent can switch off" : "Off · your rules run, not locked"}</div></span><button class="btn" data-act="tab" data-tab="rules">${S.locked ? "Rules" : "Lock"}</button></div>
+    <div class="row"><span class="rl"><div class="rt">Safety test</div><div class="rd">Blocked a test push · 26 Oct, 14:03</div></span><button class="btn">Run again</button></div>
+  </div>
+  <div class="sec-t"><span>Privacy</span></div>
+  <div class="group"><div class="radio" role="radiogroup" aria-label="Privacy level">
+    <label class="${S.level === 1 ? "on" : ""}"><input type="radio" name="lvl" ${S.level === 1 ? "checked" : ""} data-act="level" data-v="1"><span><div class="rt">Level 1 · signals only</div><div class="rd">Which tool ran, where and when, and whether a rule matched. ${COPY.privacy}</div></span></label>
+    <label class="${S.level === 2 ? "on" : ""}"><input type="radio" name="lvl" ${S.level === 2 ? "checked" : ""} data-act="level" data-v="2"><span><div class="rt">Level 2 · signals and the last message</div><div class="rd">When ${esc(N())} isn't sure, the waiting session's last message, trimmed, goes to the supervisor. Hosted with zero data retention.</div></span></label>
+  </div></div>
+  <div class="sec-t"><span>The notch</span></div>
+  <div class="group">
+    <div class="row"><span class="rl"><div class="rt">Look</div><div class="rd">Thin line suits screens with a thick top bezel</div></span><span class="seg" role="group" aria-label="Notch look"><button aria-pressed="${S.mode === "pill"}" data-act="mode" data-v="pill">Pill</button><button aria-pressed="${S.mode === "thin"}" data-act="mode" data-v="thin">Thin line</button></span></div>
+    <div class="row"><span class="rl"><div class="rt">Sounds</div><div class="rd">Needs you and done, quiet in full-screen apps</div></span><button class="sw" role="switch" aria-checked="true" aria-label="Sounds" data-act="toggle"></button></div>
+    <div class="row"><span class="rl"><div class="rt">Theme</div></span><span class="seg" role="group" aria-label="Theme"><button aria-pressed="${S.theme === "dark"}" data-act="theme" data-v="dark">Dark</button><button aria-pressed="${S.theme === "light"}" data-act="theme" data-v="light">Light</button><button aria-pressed="false">Windows</button></span></div>
+  </div>
+  <div class="sec-t"><span>Help</span></div>
+  <div class="group"><div class="row"><span class="rl"><div class="rt">Diagnostic</div><div class="rd">A report you read before you share it. ${COPY.diag}</div></span><button class="btn">Run</button></div></div>
+  <div class="sec-t" id="plan"><span>Plan</span></div>
+  <div class="group">${planHTML()}</div>
+  <div class="quiet" style="display:flex;justify-content:space-between;margin-top:4px"><span>Eucas 0.1.0</span><button class="link" data-act="quit">Quit Eucas</button></div>`;
+}
+function subHTML(){
+  const back = t => `<div class="sub-h"><button data-act="back" aria-label="Back">${I.back}</button><h2>${t}</h2></div>`;
+  switch (S.sub) {
+    case "retro": return back("Your week") + `<div class="p-body">${retroHTML(true)}</div>`;
+    case "same": return back("Two sessions, one file") + `<div class="p-body">
+      <p class="lead">bench and api-docs both changed <span class="mono">src/router.ts</span> in the last 4 minutes. If both keep going, one may overwrite the other's work. ${esc(N())} doesn't block either.</p>
+      <div class="cards2"><div class="rc"><div class="rh">bench</div><div class="rb">Last edit 14:02 · +42 −18<br><span class="mono">createMatcher(…)</span></div></div>
+      <div class="rc"><div class="rh">api-docs</div><div class="rb">Last edit 14:06 · +3 −1<br><span class="mono">/** Routes resolve… */</span></div></div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn pri" data-act="open" data-v="bench">Open bench</button><button class="btn" data-act="open" data-v="api-docs">Open api-docs</button></div>
+      <p class="quiet" style="margin-top:12px"><button class="link" data-act="back">Don't warn for this file today</button></p></div>`;
+    case "trip": return back("Tripwire stop") + `<div class="p-body">
+      <div class="big">${esc(N())} stopped notes at 14:02:31</div>
+      <p class="lead">It deleted 1,240 files in 20 seconds, starting with <span class="mono">notes/drafts/</span>. ${esc(N())} stopped the session and checked it isn't running.</p>
+      <div class="sec-t"><span>What was deleted</span><button class="link" style="font-size:12px">Export the list</button></div>
+      <div class="group files"><div><span>notes/drafts/</span><span>912 files</span></div><div><span>notes/archive/2025/</span><span>301 files</span></div><div><span>notes/.obsidian/</span><span>27 files</span></div></div>
+      <div class="sec-t"><span>How to get them back</span></div>
+      <ol class="steps"><li>notes is a git repo: run <span class="mono">git restore .</span> in it to bring back what was committed.</li><li>File History is on: open the folder, then Home › History.</li></ol>
+      <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap"><button class="btn pri">Open the folder</button><button class="btn ghost">This was expected</button></div></div>`;
+    case "fix": return back("bench isn't protected") + `<div class="p-body">
+      <p class="lead">bench ran tools for 40 seconds and ${esc(N())} saw no check. Until a real check comes through, ${esc(N())} says so here and in the notch.</p>
+      <div class="group">
+        <div class="check"><span class="ok">${I.check}</span><span>Guard installed<small>Plugin found in your Claude Code setup</small></span></div>
+        <div class="check"><span class="ok">${I.check}</span><span>api-docs and notes are protected<small>Checked 2 s ago</small></span></div>
+        <div class="check"><span class="bad">${I.x}</span><span>bench started before the guard was added<small>Sessions pick up the guard when they start</small></span></div></div>
+      <p class="lead">Restart bench to protect it. Nothing it did was lost.</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn pri" data-act="open" data-v="bench">Open bench</button><button class="btn">Run the diagnostic</button></div></div>`;
+    case "edit": return back("Name and look") + `<div class="p-body">${createFields(true)}</div>`;
+  }
+  return "";
+}
+function retroHTML(compact){
+  const days = [32, 48, 41, 88, 60, 22, 30];
+  return `${compact ? "" : ""}<div class="${compact ? "cards2" : "cards4"}">
+    <div class="rc"><div class="rh">1.9 M tokens · busiest Thursday</div><div class="days" aria-hidden="true">${days.map((v, i) => `<i class="${i === 3 ? "hi" : ""}" style="height:${v}%"></i>`).join("")}</div><div class="rb">bench used 58% of it.</div></div>
+    <div class="rc"><div class="rh">3 commands would have been stopped</div><div class="rb"><span class="mono">git push origin main</span> · bench · Thu 14:02<br><span class="mono">git push --force</span> · site · Tue 10:41</div></div>
+    <div class="rc"><div class="rh">2 sessions edited one file 4 minutes apart</div><div class="rb"><span class="mono">src/router.ts</span>. It happened 4 times this week.</div></div>
+    <div class="rc"><div class="rh">You approved <span class="mono">pnpm test</span> 212 times</div><div class="rb">${compact ? "It's a rule now: used 212 times since." : "It can become a rule in the next step."}</div></div>
+  </div>`;
+}
+
+/* ---------- setup ---------- */
+const STEPS = 8;
+function createFields(inPanel){
+  const e = S.euca;
+  const shapes = Object.keys(SHAPES).map(k => `<button aria-pressed="${e.shape === k}" aria-label="${SHAPES[k].n}" data-act="shape" data-v="${k}">${avatarSVG({shape:k, hue:e.hue === "none" ? "none" : e.hue}, {expr:e.hue === "none" ? "closed" : "calm"})}</button>`).join("");
+  const hues = HUE_ORDER.map(k => `<button aria-pressed="${e.hue === k}" aria-label="${HUE[k].n}" style="background:${HUE[k].base}" data-act="hue" data-v="${k}"></button>`).join("");
+  const note = ["coral","honey","tangerine"].includes(e.hue) ? `Fine to keep: ${esc(N())}'s warnings always come with words, never colour alone.` : "";
+  const preview = inPanel ? `<div style="display:flex;align-items:center;gap:12px;margin:2px 2px 14px"><span style="width:56px;height:58px" class="hero">${avatarSVG(e, {soft:true, follow:true})}</span><span class="m-line">The notch, the panel and the tray all use this look.</span></div>` : "";
+  return `${preview}<div class="field-l">Name</div>
+    <input class="field" data-act="name" value="${esc(e.name)}" placeholder="Name your Euca" maxlength="16" aria-label="Name">
+    <div class="sugg"><span>Or</span>${["Pip","Moss","Juno","Kit"].map(n => `<button data-act="suggest" data-v="${n}">${n}</button>`).join("")}</div>
+    <div class="field-l">Shape</div><div class="shapes" role="group" aria-label="Shape">${shapes}</div>
+    <div class="field-l">Colour</div><div class="hues" role="group" aria-label="Colour">${hues}</div><div class="hue-note">${note}</div>`;
+}
+function setupHTML(){
+  const st = S.step;
+  const dots = Array.from({length:STEPS}, (_, i) => `<i class="${i + 1 < st ? "on" : i + 1 === st ? "cur" : ""}"></i>`).join("");
+  let body = "", foot = "";
+  const next = (label, dis) => `<button class="btn pri lg" data-act="next"${dis ? " disabled" : ""}>${label}</button>`;
+  const backB = st > 1 && st < 6 ? `<button class="btn ghost lg" data-act="prev">Back</button>` : "";
+  if (st === 1) {
+    body = `<h1>First, let's find your sessions</h1><p class="lede">Eucas watches the Claude Code sessions you already run. It never writes code. It guards them, tells you what needs you, and shows where your usage goes.</p>
+    <div class="checklist">${[["Claude Code 2.1.312 found","In the desktop app and in your terminal"],["41 sessions in the last 7 days","Eucas keeps counts, never the text of your prompts or files"],["Your status line stays as it is","ccstatusline keeps showing exactly as before"],["2 hooks of your own keep working","Eucas's checks run alongside them"]].map(([a, b]) => `<div class="ci">${I.check}<span>${a}<small>${b}</small></span></div>`).join("")}</div>`;
+    foot = `<span class="hint">About 5 minutes. Nothing is changed until step 5.</span><span class="sp"></span>${next("Make your Euca")}`;
+  } else if (st === 2) {
+    const e = S.euca, unborn = e.hue === "none";
+    body = `<h1>Make your Euca</h1><p class="lede">It sits at the top of your screen and minds your sessions. Pick a name and a look. You can change both later.</p>
+    <div class="create"><div class="stage"><span class="hero" id="hero">${avatarSVG(e, {soft:true, follow:!unborn})}</span><span class="hn${e.name ? "" : " ph"}">${e.name ? esc(e.name) : "No name yet"}</span>
+      <div class="mini-notch"><span class="n"><span class="eyes" data-x="${unborn ? "closed" : ""}"${unborn ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span></span><span>${unborn ? "Its place at the top of your screen" : `Where ${esc(e.name || "it")} will sit`}</span></div></div>
+      <div>${createFields(false)}</div></div>`;
+    foot = `${backB}<span class="sp"></span>${!e.name || unborn ? `<span class="hint">${!e.name ? "Give it a name" : "Pick a shape or a colour"} to continue</span>` : ""}${next("Continue", !e.name || unborn)}`;
+  } else if (st === 3) {
+    body = `<div class="retro-h">Your week: 41 sessions in 6 projects, about 62% of your weekly limit.</div>${retroHTML(false)}`;
+    foot = `${backB}<span class="sp"></span>${next("Choose your rules")}`;
+  } else if (st === 4) {
+    const sugg = [['Allow <span class="mono">pnpm test</span> in bench',"You approved it 212 times",true],['Allow <span class="mono">git status</span> everywhere',"Read-only · 540 times",true],['Allow <span class="mono">pnpm lint</span> in bench',"Runs code from the project · 96 times",false]];
+    body = `<h1 style="font-size:28px">Choose your rules</h1><p class="lede" style="margin-bottom:14px">Tested rules are on. Add your own in plain words: ${esc(N())} turns them into exact rules you confirm.</p>
+    <div class="rules-s"><div class="col"><div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div><div class="group">${LIB.map((r, i) => ruleRow({...r, lock:false}, i, "lib")).join("")}</div></div>
+    <div class="col"><div class="sec-t"><span>Your own</span></div>
+    <form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>${S.draft ? draftHTML() : ""}
+    <div class="sec-t"><span>From your week</span></div><div class="group">${sugg.map(([t, d, on]) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${t}</div><div class="rd">${d}</div></span></div>`).join("")}</div></div></div>`;
+    foot = `${backB}<span class="sp"></span>${next(`Continue · ${S.draft ? 9 : 8} rules`)}`;
+  } else if (st === 5) {
+    if (S.declined) {
+      body = `<h1>Your rules are on, but not locked</h1><p class="lede">Windows didn't give permission, so the rules sit in your user settings.</p>
+      <div class="notlocked"><b style="font-weight:600">Not locked</b><p>An agent or a repo could switch them off. ${esc(N())} watches for that and tells you the moment it happens. You can lock them any time from Rules.</p></div>`;
+      foot = `<button class="btn ghost lg" data-act="relock">Try again</button><span class="sp"></span>${next("Continue")}`;
+    } else {
+      const items = LIB.filter(r => r.on).map(r => r.t).concat(S.draft ? ["Block edits in api-docs/migrations/"] : []);
+      body = `<h1>Lock your rules</h1><p class="lede" style="margin-bottom:14px">Locked rules live where no agent or repo can switch them off. Changing them later asks for admin again.</p>
+      <div class="group lock-list" style="max-width:560px">${items.map((t, i) => `<div class="row"><span class="cb-box${i < 5 ? " on" : ""}">${i < 5 ? I.check : ""}</span><span class="rl"><div class="rt">${esc(t)}</div></span>${i < 5 ? `<span class="lockg">${I.lock}</span>` : ""}</div>`).join("")}</div>
+      <ul class="conseq"><li>${I.alert}<span>Windows asks for permission once. It will say <b style="font-weight:600;color:var(--text-1)">Unknown publisher</b>: this first version isn't signed yet.</span></li><li>${I.alert}<span>Without the lock, your rules still run, labelled Not locked.</span></li></ul>`;
+      foot = `${backB}<span class="sp"></span><button class="btn ghost lg" data-act="skiplock">Skip the lock</button><button class="btn pri lg" data-act="uac"${S.uac ? " disabled" : ""}>${S.uac ? "Waiting for Windows…" : "Lock 5 rules"}</button>`;
+    }
+  } else if (st === 6) {
+    const L = [["Starting a test session in a temporary folder", true],['It tried: <b style="font-weight:500">git push origin main</b>', true]];
+    body = `<h1>Watch ${esc(N())} block a test</h1><p class="lede">A throwaway session in a temporary folder tries to push to main. Nothing touches your projects or the network.</p>
+    <div class="log">${L.map(([t]) => `<div class="on"><span style="color:var(--text-3)">›</span>${t}</div>`).join("")}
+      ${S.testFail ? `<div class="on res bad">${I.x} Not blocked · 0.4 s</div>` : `<div class="on res">${I.check} Blocked by ${esc(N())} · 0.3 s · logged</div>`}</div>
+    ${S.testFail ? `<div class="notlocked" style="margin-top:14px;background:var(--danger-tint);color:var(--danger-ink)"><b style="font-weight:600">The test wasn't blocked.</b><p>${esc(N())} is not protecting your sessions on this PC yet. Nothing outside the test folder was touched.</p></div>` : `<p class="approved">That's what happens in your real sessions. Every block shows up in the panel with why.</p>`}`;
+    foot = S.testFail ? `<button class="btn ghost lg">Show what happened</button><span class="sp"></span><button class="btn pri lg">Run the diagnostic</button>` : `<span class="sp"></span>${next("Continue")}`;
+  } else if (st === 7) {
+    body = `<h1>What ${esc(N())} may read</h1><p class="lede">${COPY.privacy}</p>
+    <div class="levels">
+      <button class="lvl" aria-pressed="${S.level === 1}" data-act="level" data-v="1"><span class="lt">Level 1 · signals only <span class="chip">Default</span></span><span class="ld">Which tool ran, where and when, and whether a rule matched. Nothing leaves this PC.</span><span class="lx">The supervisor can't help at this level, so ${esc(N())} asks you instead.</span></button>
+      <button class="lvl" aria-pressed="${S.level === 2}" data-act="level" data-v="2"><span class="lt">Level 2 · and the last message</span><span class="ld">When ${esc(N())} isn't sure, the waiting session's last message, trimmed, goes to the supervisor: an open model hosted with zero data retention.</span><span class="lx">No files, no paths to your projects. Needed for the 14-day supervisor trial.</span></button>
+    </div>
+    ${S.level === 2 ? `<div class="trial-f"><div><div class="field-l">Email for your free trial</div><input class="field" type="email" placeholder="you@example.com" aria-label="Email for your free trial"></div><button class="btn lg">Send a code</button></div><div class="hint" style="font-size:12px;color:var(--text-3);margin-top:6px">One trial per email. No card. You can skip this and start the trial later from Usage.</div>` : ""}`;
+    foot = `<span class="sp"></span>${next("Start watching")}`;
+  } else if (st === 8) {
+    body = `<div class="done-wrap"><span class="hero" id="hero">${avatarSVG(S.euca, {soft:true, follow:true})}</span><h1>${esc(N())} is watching</h1>
+      <p class="lede">2 sessions running, both protected. ${esc(N())} lives at the top of your screen and never opens by itself.</p>
+      <span class="hb"><i></i>Checked 2 s ago</span></div>`;
+    foot = `<span class="sp"></span><button class="btn pri lg" data-act="fly">Send ${esc(N())} to the top</button>`;
+  }
+  const uac = S.uac ? `<div class="uac-scrim"><div class="uac" role="dialog" aria-label="User Account Control"><div class="bar">User Account Control</div><div class="in"><h3>Do you want to allow this app from an unknown publisher to make changes to your device?</h3>
+    <div class="app"><i style="color:#eceef3">${I.quartet.replace("<svg", '<svg width="18" height="18"')}</i><b>Eucas</b></div><div class="kv">Publisher: Unknown<br>File origin: Hard drive on this computer</div></div>
+    <div class="btns"><button class="y" data-act="uacyes">Yes</button><button data-act="uacno">No</button></div></div></div>` : "";
+  return `<div class="setup-scrim"><div class="swin" role="dialog" aria-label="Set up Eucas"><div class="cap"><span class="t">Eucas</span><span class="cb">${I.min}</span><span class="cb">${I.close}</span></div>
+    <div class="s-prog"><span class="dots" aria-hidden="true">${dots}</span><span>Step ${st} of ${STEPS}</span></div>
+    <div class="s-body">${body}</div><div class="s-foot">${foot}</div></div></div>${uac}`;
+}
+
+/* ---------- sheets ---------- */
+function sheetHTML(){
+  if (S.sheet === "notch") {
+    const cells = [
+      ["Resting", "Protected, nothing running. The eyes follow your pointer and blink.", {working:false}],
+      ["Working", `Sessions are running: the glow gathers into a beam in ${N()}'s colour.`, {working:true}],
+      ["Needs you", "One nudge and a marker that stays. Never opens by itself.", {needs:["wait","same"], working:true}],
+      ["Not protected", "The heartbeat failed: concerned eyes, the words, a red ring. No glow.", {guard:"off", needs:["off"]}],
+      ["Tripwire stop", `${N()} stopped a session. The marker says what, in words.`, {needs:["trip"], working:false}],
+      ["Dozing", "You're away and nothing is running. A session starting wakes it.", {doze:true, working:false}],
+      ["Thin line", "For thick bezels. Hover grows it into the pill.", {mode:"thin", working:true}],
+      ["Thin line · needs you", "A dot that stays at the end of the line.", {mode:"thin", needs:["wait"], working:false}],
+      ["Before setup ends", "Closed eyes in grey until you make your Euca.", {unborn:true, working:false, euca:{name:"", shape:"sphere", hue:"none"}}]
+    ];
+    return `<div class="sheet"><h1>Every notch state</h1><p class="sl">Shown at 160 %. The notch is always black: it belongs to the screen, not to the app. Colour never carries a state alone: each state has an eye shape, and the serious ones have words.</p>
+      <div class="sgrid">${cells.map(([t, d, o]) => `<div class="scell"><div class="stop"><div class="notch-wrap" style="left:50%">${notchHTML(Object.assign({needs:[], guard:"ok", doze:false, mode:"pill", arrive:false, peek:false, born:false, static:true}, o))}</div></div><div class="cap2"><b>${t}</b><span>${d}</span></div></div>`).join("")}</div></div>`;
+  }
+  const keep = S.meter;
+  const T = {trial:"In the 14-day trial", trialend:"The day the trial ends", taste:"Free: the monthly taste", low:"Free: running low", empty:"Free: empty", pro:"Pro"};
+  const cells = Object.keys(T).map(m => { S.meter = m; return `<div class="scell" style="padding:14px 14px 4px"><div class="stype">${T[m]}</div>${supervisorHTML()}</div>`; }).join("");
+  S.meter = keep;
+  return `<div class="sheet"><h1>The supervisor meter</h1><p class="sl">Help left this month and the reset date. Never dollars: the limit behind it is a hidden cost budget, and each question is capped. When it runs out, ${esc(N())} goes back to asking you; protection and rules never depend on it.</p><div class="sgrid">${cells}</div></div>`;
+}
+
+/* ---------- demo controls ---------- */
+let jumpOpen = false;
+function demoHTML(){
+  if (!BAR) return "";
+  const groups = ROUTES.map(([g, list]) => `<h4>${g}</h4>${list.map(([id, l]) => `<a href="?r=${id}" data-route="${id}" class="${id === cur ? "cur" : ""}">${l}</a>`).join("")}`).join("");
+  return `<div class="demo">${jumpOpen ? `<div class="jump" role="navigation" aria-label="Jump to a state"><div class="tg">
+      <button aria-pressed="${S.theme === "light"}" data-act="theme" data-v="${S.theme === "light" ? "dark" : "light"}">Light</button>
+      <button aria-pressed="${S.rm}" data-act="rm">Reduced motion</button>
+      <button aria-pressed="${S.mode === "thin"}" data-act="mode" data-v="${S.mode === "thin" ? "pill" : "thin"}">Thin line</button>
+      <button data-act="sim-arrive">Simulate: needs you</button>
+      <button data-act="sim-work">Toggle working</button>
+      <button data-act="sim-doze">Toggle away</button></div>${groups}</div>` : ""}
+    <button data-act="jump" aria-expanded="${jumpOpen}">States · ${esc(ROUTE[cur]?.label || "")}</button></div>`;
+}
+
+/* ---------- render ---------- */
+function render(){
+  ROOT.dataset.theme = S.theme; ROOT.classList.toggle("rm", S.rm);
+  eucaVars(); renderDesk();
+  let html = "";
+  if (S.sheet) html += sheetHTML();
+  else if (S.fullscreen) html += `<div class="fullscreen"><div class="vid">Full-screen video · the notch steps aside</div></div>`;
+  if (S.scene === "setup") html += setupHTML();
+  else if (!S.fullscreen) {
+    html += `<div class="notch-wrap" id="nw"><div class="peek${S.peek ? " open" : ""}" id="peek" aria-hidden="${!S.peek}">${peekHTML()}</div>${notchHTML()}
+      ${S.panel ? panelHTML() : ""}
+      ${S.coach ? `<div class="coach" role="status"><p><b>${esc(N())} lives here.</b> Hover to peek at what needs you. Click to open the panel. Nothing here opens by itself.</p><button class="btn" data-act="coach">Got it</button></div>` : ""}</div>`;
+  }
+  if (S.menu) html += `<div class="ctx" role="menu"><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="m-mode">${S.mode === "thin" ? "Show the notch as a pill" : "Show the notch as a thin line"}</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped notes</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
+  html += demoHTML();
+  $("#app").innerHTML = html;
+  if (S.arrive && !FREEZE) setTimeout(() => { const n = $(".notch"); n && n.classList.remove("arrive"); $(".eyes[data-x='glance']")?.setAttribute("data-x", ""); S.arrive = false; }, 1100);
+  follow();
+}
+
+/* ---------- eyes: follow the pointer, blink, never in screenshots ---------- */
+let px = innerWidth / 2, py = 200, raf = 0;
+addEventListener("pointermove", e => { px = e.clientX; py = e.clientY; if (!raf) raf = requestAnimationFrame(() => { raf = 0; follow(); }); });
+function follow(){
+  if (FREEZE || S.rm) return;
+  document.querySelectorAll(".eyes[data-follow]").forEach(el => {
+    if (el.dataset.x === "sleepy" || el.dataset.x === "closed") return;
+    const r = el.getBoundingClientRect(), dx = px - (r.left + r.width / 2), dy = py - (r.top + r.height / 2), d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 260);
+    el.style.setProperty("--ex", (dx / d * 2.5 * k).toFixed(2) + "px"); el.style.setProperty("--ey", (dy / d * 1.5 * k).toFixed(2) + "px");
+  });
+  document.querySelectorAll(".look[data-follow]").forEach(g => {
+    const r = g.closest("svg").getBoundingClientRect(), dx = px - (r.left + r.width / 2), dy = py - (r.top + r.height / 2), d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 300);
+    g.setAttribute("transform", `translate(${(dx / d * 4 * k).toFixed(2)} ${(dy / d * 3 * k).toFixed(2)})`);
+  });
+}
+function blinkLoop(){
+  if (FREEZE) return;
+  setTimeout(() => {
+    if (!S.rm) {
+      document.querySelectorAll(".eyes").forEach(e => { if (!e.dataset.x) { e.classList.add("blink"); setTimeout(() => e.classList.remove("blink"), 160); } });
+      document.querySelectorAll(".blinker").forEach(b => { b.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:150, easing:"ease-in-out"}); });
+    }
+    blinkLoop();
+  }, 3800 + Math.random() * 3400);
+}
+document.head.insertAdjacentHTML("beforeend", "<style>.blinker{transform-box:fill-box;transform-origin:center}</style>");
+
+/* ---------- sound (BRAND §11: needs you, done; same synthesis as the direction prototype) ---------- */
+const SND = {on:true, armed:false, ac:null, master:null, last:{}};
+addEventListener("pointerdown", () => (SND.armed = true), true);
+addEventListener("keydown", () => (SND.armed = true), true);
+function sndCtx(){
+  if (!SND.ac) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; const ac = SND.ac = new C(); SND.master = ac.createGain(); SND.master.gain.value = 0.7; SND.master.connect(ac.destination); }
+  if (SND.ac.state === "suspended") SND.ac.resume();
+  return SND.ac;
+}
+function tone(t0, f, dur, o = {}){
+  const ac = SND.ac, osc = ac.createOscillator(), g = ac.createGain(); osc.type = "sine"; osc.frequency.setValueAtTime(f, t0);
+  if (o.glide) osc.frequency.exponentialRampToValueAtTime(f * o.glide, t0 + dur * .8);
+  g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(o.gain ?? .16, t0 + .008); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  osc.connect(g); g.connect(SND.master); osc.start(t0); osc.stop(t0 + dur + .03);
+}
+const SFX = {
+  needs(t){ tone(t, 440, .17, {gain:.17}); tone(t + .11, 587.33, .21, {gain:.18}); },
+  done(t){ tone(t, 739.99 * 1.012, .38, {gain:.19, glide:1 / 1.012}); tone(t, 1479.98, .16, {gain:.04}); }
+};
+function sfx(k, delay = 0){
+  if (!SND.on || !SND.armed || FREEZE) return;
+  const now = performance.now(); if (now - (SND.last[k] || 0) < 600) return; SND.last[k] = now;
+  try { const ac = sndCtx(); if (ac) SFX[k](ac.currentTime + .02 + delay / 1000); } catch (e) { /* no audio: carry on */ }
+}
+
+/* ---------- hover peek: intent delay, leave grace, never opens by itself ---------- */
+let hT = 0, lT = 0;
+function setPeek(open){
+  if (S.panel || S.scene !== "desk") open = false;
+  S.peek = open;
+  const p = $("#peek"), n = $(".notch");
+  if (!p || !n) return;
+  p.classList.toggle("open", open); p.setAttribute("aria-hidden", String(!open)); n.classList.toggle("peeking", open);
+  if (open) p.innerHTML = peekHTML();
+}
+document.addEventListener("pointerover", e => {
+  const inN = e.target.closest?.(".notch"), inP = e.target.closest?.("#peek.open");
+  if (inN || inP) { clearTimeout(lT); if (!S.peek && inN) { clearTimeout(hT); hT = setTimeout(() => setPeek(true), 280); } }
+});
+document.addEventListener("pointerout", e => {
+  const from = e.target.closest?.(".notch, #peek"), to = e.relatedTarget?.closest?.(".notch, #peek");
+  if (from && !to) { clearTimeout(hT); clearTimeout(lT); lT = setTimeout(() => setPeek(false), 360); }
+});
+document.addEventListener("focusin", e => { if (e.target.closest?.(".notch") && !S.panel) setPeek(true); });
+
+/* ---------- actions ---------- */
+function act(a, el, ev){
+  const d = el.dataset;
+  switch (a) {
+    case "jump": jumpOpen = !jumpOpen; break;
+    case "notch": S.panel = !S.panel; S.peek = false; S.coach = false; S.sub = null; break;
+    case "tab": S.tab = d.tab; S.sub = null; if (!S.panel) S.panel = true; if (d.scroll) setTimeout(() => document.getElementById(d.scroll)?.scrollIntoView({block:"start"}), 30); break;
+    case "sub": S.sub = d.sub; break;
+    case "back": S.sub = null; break;
+    case "need": {
+      const n = NEEDS[d.k];
+      if (n.sub) { S.panel = true; S.peek = false; S.sub = n.sub; }
+      else if (d.k === "unver") { say("Running the safety test"); }
+      else { S.needs = S.needs.filter(k => k !== d.k); S.toast = `Opened ${d.k === "done" ? "api-docs" : "bench"} in Windows Terminal`; S.peek = false; setTimeout(() => { S.toast = null; render(); }, 4000); }
+      break;
+    }
+    case "snooze": S.needs = S.needs.filter(k => k !== d.k); S.toast = "Back at 14:21"; setTimeout(() => { S.toast = null; render(); }, 4000); break;
+    case "undo": S.toast = null; break;
+    case "open": S.toast = `Opened ${d.v} in Windows Terminal`; S.sub = null; setTimeout(() => { S.toast = null; render(); }, 4000); break;
+    case "where": S.where = d.v; break;
+    case "sw": {
+      const list = d.kind === "lib" ? LIB : MINE, r = list[+d.i];
+      if (r.lock && S.locked && S.scene === "desk") { S.toast = "Locked rules change with admin. Windows will ask."; setTimeout(() => { S.toast = null; render(); }, 4000); }
+      else r.on = !r.on;
+      break;
+    }
+    case "draftform": ev.preventDefault(); S.draft = true; break;
+    case "adddraft": S.draft = false; if (S.scene === "desk") { S.toast = "Rule added and locked"; setTimeout(() => { S.toast = null; render(); }, 4000); } break;
+    case "nodraft": S.draft = false; break;
+    case "relock": if (S.scene === "setup") { S.declined = false; S.uac = true; } else { S.locked = true; S.toast = "Locked with Windows admin"; setTimeout(() => { S.toast = null; render(); }, 4000); } break;
+    case "lockchange": S.toast = "Changing the lock asks for admin. Windows will ask."; setTimeout(() => { S.toast = null; render(); }, 4000); break;
+    case "level": S.level = +d.v; break;
+    case "mode": S.mode = d.v; S.menu = false; break;
+    case "theme": S.theme = d.v; break;
+    case "rm": S.rm = !S.rm; break;
+    case "toggle": el.setAttribute("aria-checked", el.getAttribute("aria-checked") !== "true"); SND.on = el.getAttribute("aria-checked") === "true"; return;
+    case "coach": S.coach = false; break;
+    case "traymenu": S.menu = !S.menu; break;
+    case "m-panel": S.menu = false; S.panel = true; break;
+    case "m-mode": S.mode = S.mode === "thin" ? "pill" : "thin"; S.menu = false; break;
+    case "quit": S.menu = false; S.toast = "Protection stays on while Eucas is closed. The notch and the heartbeat stop."; setTimeout(() => { S.toast = null; render(); }, 5000); break;
+    case "sim-arrive": S.needs = S.needs.includes("wait") ? S.needs : ["wait", ...S.needs]; S.arrive = true; S.panel = false; jumpOpen = false; render(); sfx("needs", 60); say(`${NEEDS.wait.t}. ${S.needs.length} need you.`); return;
+    case "sim-work": S.working = !S.working; S.doze = false; break;
+    case "sim-doze": S.doze = !S.doze; if (S.doze) S.working = false; break;
+    /* setup */
+    case "next": S.step = Math.min(STEPS, S.step + 1); S.draft = false; S.declined = false; if (S.step === 6) setTimeout(() => sfx("done"), 500); break;
+    case "prev": S.step = Math.max(1, S.step - 1); break;
+    case "skiplock": S.declined = true; S.locked = false; break;
+    case "uac": S.uac = true; break;
+    case "uacyes": S.uac = false; S.locked = true; S.step = 6; setTimeout(() => sfx("done"), 500); break;
+    case "uacno": S.uac = false; S.declined = true; S.locked = false; break;
+    case "suggest": S.euca.name = d.v; if (S.euca.hue === "none") S.euca.hue = "lavender"; bornBoop(); break;
+    case "shape": S.euca.shape = d.v; if (S.euca.hue === "none") S.euca.hue = "lavender"; bornBoop(); break;
+    case "hue": S.euca.hue = d.v; bornBoop(); break;
+    case "fly": return fly();
+    default: return;
+  }
+  render();
+}
+function bornBoop(){ setTimeout(() => { const h = $("#hero"); if (h) { h.classList.remove("boop"); void h.offsetWidth; h.classList.add("boop"); } $(".blinker")?.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:180}); }, 0); }
+function fly(){
+  const h = $("#hero");
+  if (!h || FREEZE || S.rm) { Object.assign(S, {scene:"desk", coach:true, born:true, working:false}); render(); return; }
+  const r = h.getBoundingClientRect(), f = h.cloneNode(true);
+  f.className = "flyer"; f.style.cssText += `left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;
+  document.body.appendChild(f);
+  $(".swin").style.transition = "opacity 300ms ease, transform 300ms ease"; $(".swin").style.opacity = "0"; $(".swin").style.transform = "scale(.98)";
+  requestAnimationFrame(() => { const tx = innerWidth / 2 - (r.left + r.width / 2), ty = 16 - (r.top + r.height / 2); f.style.transform = `translate(${tx}px, ${ty}px) scale(.12)`; f.style.opacity = "0"; });
+  setTimeout(() => { f.remove(); Object.assign(S, {scene:"desk", coach:true, born:true, working:false}); render(); sfx("done"); }, 820);
+}
+document.addEventListener("click", e => {
+  const r = e.target.closest("[data-route]");
+  if (r) { e.preventDefault(); jumpOpen = false; go(r.dataset.route, true); return; }
+  const a = e.target.closest("[data-act]");
+  if (a && a.tagName !== "FORM" && a.tagName !== "INPUT") { const wasTab = a.getAttribute("role") === "tab"; act(a.dataset.act, a, e); if (wasTab) setTimeout(() => $('[role="tab"][aria-selected="true"]')?.focus(), 0); return; }
+  if (S.panel && !e.target.closest(".panel, .notch, .demo, .ctx")) { S.panel = false; render(); }
+  else if (S.menu && !e.target.closest(".ctx, .tray-btn")) { S.menu = false; render(); }
+  else if (jumpOpen && !e.target.closest(".demo")) { jumpOpen = false; render(); }
+});
+document.addEventListener("change", e => { const a = e.target.closest("[data-act='level']"); if (a) act("level", a, e); });
+document.addEventListener("submit", e => { const f = e.target.closest("[data-act='draftform']"); if (f) act("draftform", f, e); });
+document.addEventListener("input", e => {
+  if (e.target.dataset.act !== "name") return;
+  S.euca.name = e.target.value.trim();
+  const hn = $(".stage .hn"); if (hn) { hn.textContent = S.euca.name || "No name yet"; hn.classList.toggle("ph", !S.euca.name); }
+  const nx = $(".s-foot [data-act='next']"); if (nx) { const ok = S.euca.name && S.euca.hue !== "none"; nx.disabled = !ok; const hint = $(".s-foot .hint"); if (hint) hint.textContent = ok ? "" : (!S.euca.name ? "Give it a name to continue" : "Pick a shape or a colour to continue"); }
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (S.sub) S.sub = null; else if (S.panel) { S.panel = false; setTimeout(() => $(".notch")?.focus(), 0); } else if (S.peek) { setPeek(false); return; } else if (jumpOpen) jumpOpen = false; else return;
+  render();
+});
+/* arrow keys move between tabs (WAI-ARIA tabs pattern) */
+document.addEventListener("keydown", e => {
+  const t = e.target.closest?.('[role="tab"]'); if (!t || !["ArrowLeft","ArrowRight"].includes(e.key)) return;
+  const order = ["usage","rules","settings"], i = order.indexOf(S.tab);
+  S.tab = order[(i + (e.key === "ArrowRight" ? 1 : 2)) % 3]; render(); $('[role="tab"][aria-selected="true"]')?.focus();
+});
+
+go(ROUTE[cur] ? cur : "n-working");
+blinkLoop();
+
+</script>
+</body>
+</html>
