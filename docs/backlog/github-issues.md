@@ -1,12 +1,42 @@
-# GitHub Issues: approved for creation
+# GitHub Issues
 
-> **Approved at Gate 6 (decision 7a, 2026-10-26).** The labels and the milestones `Sprint 0` … `Sprint 11` are on GitHub; the 50 issues below (3 spikes, 34 stories, 13 Sprint 1 tasks) are next. Generated from the task files, NA-1 added by hand; if a task file changes, update this file before creating.
+> **Created on GitHub on 2026-10-26** (Gate 6, decision 7a): 50 issues, [#100](https://github.com/eucas-app/eucas/issues/100)–[#150](https://github.com/eucas-app/eucas/issues/150) except #131 (a PR), all labelled `companion` ([the list](https://github.com/eucas-app/eucas/issues?q=is%3Aissue+label%3Acompanion)). The Sprint 1 task issues are sub-issues of their story. This file is now the record of what was created; GitHub is the live copy.
 
 **Labels to create first:** `companion`, `type:story`, `type:task`, `type:spike`, `lane:A`, `lane:B`, `priority:must`, `epic:E17` … `epic:E28`, `blocked:SP-ST2`, `blocked:SP-AC1`, `gate:SP-SUP2`.
 
 **Milestones:** `Sprint 0` … `Sprint 11` (from the [sprint plan](README.md#4-sprint-plan)). GitHub allows one milestone per issue, so each issue takes its first sprint as its milestone (SP-SUP2 takes Sprint 0), and `v0.1` is a **label** on every issue. Sprint 1 task issues are listed in full; later sprints get their task issues at each `/plan-sprint`, from the task files.
 
 Format per issue: **title** · labels · milestone, then the body.
+
+## Issue numbers
+
+| Id | Issue | Id | Issue |
+|---|---|---|---|
+| SP-ST2 | #100 | R-2 | #125 |
+| SP-AC1 | #101 | P-1 | #126 |
+| SP-SUP2 | #102 | O-1 | #127 |
+| S1-1 | #103 | W-1 | #128 |
+| G-1 | #104 | AC-1 | #129 |
+| G-2 | #105 | AC-2 | #130 |
+| G-3 | #106 | BU-1 | #132 |
+| G-4 | #107 | ME-1 | #133 |
+| G-5 | #108 | SUP-2 | #134 |
+| A-1 | #109 | R1 | #135 |
+| A-2 | #110 | LY-1 | #136 |
+| H-1 | #111 | NA-1 | #137 |
+| C-1 | #112 | S1-1.1 | #138 |
+| D-1 | #113 | S1-1.2 | #139 |
+| F-1 | #114 | S1-1.3 | #140 |
+| T-1 | #115 | S1-1.4 | #141 |
+| M-1 | #116 | G-1.1 | #142 |
+| SUP-3 | #117 | G-1.2 | #143 |
+| SUP-1 | #118 | G-1.3 | #144 |
+| Q-1 | #119 | G-1.4 | #145 |
+| U-1 | #120 | G-1.5 | #146 |
+| N-0 | #121 | U-1.1 | #147 |
+| N-1 | #122 | U-1.2 | #148 |
+| L-1 | #123 | U-1.3 | #149 |
+| R-1 | #124 | U-1.5 | #150 |
 
 ## 1. Spikes (Sprint 0, before G6 or alongside)
 

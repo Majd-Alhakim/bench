@@ -9,7 +9,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 - [Sprint 1](../sprints/sprint-01/README.md);
 - [the decisions and your answers](../backlog/G6-DECISIONS.md).
 
-**G6 conditions:** SP-ST2 must be GO before Sprint 2 (5a). SP-AC1 and P9 must be done before Sprint 4 (5a). The build starts on day 8 after the page goes live, and only if the waitlist has ≥ 100 sign-ups (3a). The launch waits for SP-SUP2 to pass (6a; recorder installed, 50 of ≥ 300 moments). The GitHub Issues are approved for creation (7a): the labels and the Sprint 0–11 milestones exist; the 50 issues are still to be created. BRD §10 #56–#65 are all answered (2026-10-26).
+**G6 conditions:** SP-ST2 must be GO before Sprint 2 (5a). SP-AC1 and P9 must be done before Sprint 4 (5a). The build starts on day 8 after the page goes live, and only if the waitlist has ≥ 100 sign-ups (3a). The launch waits for SP-SUP2 to pass (6a; recorder installed, 50 of ≥ 300 moments). The GitHub Issues are created (7a): [50 issues](https://github.com/eucas-app/eucas/issues?q=is%3Aissue+label%3Acompanion), #100–#150, in the [Sprint 0–11 milestones](https://github.com/eucas-app/eucas/milestones). BRD §10 #56–#65 are all answered (2026-10-26).
 
 *Earlier:* CR-011 and CR-012 are applied in **BRD v1.5 / PRD v0.6** (your Euca in the notch and one panel; the supervisor meter, never dollars; the trial and taste; the supervisor always on for everyone; a Eucas account for everyone); companion SRS v1.0 approved at G3 (2026-10-26).
 
@@ -23,7 +23,7 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 | 3 | SRS / specs | ✅ Companion v0.1 SRS **v1.0** baselined (189 FRs, 118 NFRs, interfaces, data model, traceability; 7 G3 answers applied: supervisor on from launch, no export in What Pip knows, learns-you from structured events, $10/day spend cap, Windows 10 22H2 (tested in a VM) + 11, proposed numbers, 10 library rules) | [SRS](../requirements/SRS.md) | G3 ✅ 2026-10-26 |
 | 4 | UX design | ✅ Premium spec, Laws of UX audit; flows proven in prototype v0.8.2 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ✅ 2026-10-24 |
 | 5 | UI design & brand | ✅ Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.8.2** (review rounds 5–7 applied); **name: Eucas** (one agent is a Euca) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ✅ 2026-10-24 |
-| 6 | Backlog & Sprint 1 | ✅ Companion v0.1 backlog approved (34 stories, 156 tasks, 63.0 d, 11 sprints), Sprint 1 planned, issue labels and milestones created (issues next); ADR-0007–0018 accepted | [backlog](../backlog/README.md), [Sprint 1](../sprints/sprint-01/README.md), [G6 decisions](../backlog/G6-DECISIONS.md) | G6 ✅ 2026-10-26 (with conditions) |
+| 6 | Backlog & Sprint 1 | ✅ Companion v0.1 backlog approved (34 stories, 156 tasks, 63.0 d, 11 sprints), Sprint 1 planned, GitHub Issues created (#100–#150); ADR-0007–0018 accepted | [backlog](../backlog/README.md), [Sprint 1](../sprints/sprint-01/README.md), [G6 decisions](../backlog/G6-DECISIONS.md) | G6 ✅ 2026-10-26 (with conditions) |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
 
 ## Already decided (input to the phases above)
