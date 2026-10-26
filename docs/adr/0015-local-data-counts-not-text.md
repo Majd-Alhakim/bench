@@ -23,5 +23,21 @@ The design also makes network calls that carry **no data about your work** but d
 
 ## Consequences
 - With the reworded line, the privacy promise is literally true; the diagnostic and telemetry can't leak content because the store has none.
-- The supervisor's Level 2 text is built in memory from the transcript tail at the moment of need and discarded after the call (SUPERVISOR.md §4).
+- The supervisor's message text (sent by default since 2026-10-26, when the supervisor became always on) is built in memory from the transcript tail at the moment of need and discarded after the call (SUPERVISOR.md §4).
 - Size: a heavy day is ~35,000 checks at ~220 bytes a row with its index, about 7.7 MB of raw rows, rolled up after 24 hours to a few hundred KB, so the 50 MB budget for 90 days holds.
+
+## Amendment 2026-10-26 (CR-011, CR-012)
+- **The Euca** (name, look, colour) is a setting row; the notch keeps no data of its own.
+- **The account on the PC:** the email (shown in Settings › Account) and the last known plan and meter go in `setting`; the access and refresh tokens are `CryptProtectData` blobs in `%LOCALAPPDATA%\Eucas\account\`, never in the DB, logs, diagnostic or renderer. Sign out and Delete account remove them. Local history stays until you clear it or uninstall (CR-012).
+- **The account never meets telemetry:** `/v1/telemetry` and `/v1/waitlist`-style counts carry no token and no account id, so anonymous counts stay unlinkable to an email.
+- **What the server keeps** is in ADR-0017. With accounts, the approved privacy line became: "Nothing about your work leaves this PC unless you turn it on. Your account holds only your email and your plan." (CR-012).
+
+## Amendment 2026-10-26 (founder: the supervisor is always on)
+- **The privacy line is no longer true.** With no levels and no off switch, the trimmed, redacted last message of each moment the rules can't settle leaves the PC by default. Neither "unless you turn it on" (ADR-0015's own line, approved) nor "only your email and your plan" (CR-012) survives. **New line, approved by the founder 2026-10-26 (BRD §10 #63, "Approve all"):** *"When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email and your plan."* ("Pip" is replaced by the user's Euca name.) The design keeps it true: the redactor strips code, paths and secrets (and also URLs, emails and names, SUPERVISOR §4), and nothing else about your work leaves. One wording gap remains: the account also holds the budget used and a device count (ADR-0017), which "only your email and your plan" leaves out (flagged to the PM).
+- **A local "sent" log** backs "tell the user what is being sent": the last 20 supervisor payloads, **verbatim as sent**, kept on the PC for 7 days (`CryptProtectData`), shown in Settings › What is sent. It's the only place message text is stored, and it holds only what already left the PC. "Clear history" and Remove Eucas delete it.
+- Everything else here is unchanged: counts and metadata only; transcripts are read, never copied.
+
+## Amendment 2026-10-26 (founder: "a new account starts from zero")
+- The database and the rulebook move from one per user to **one per signed-in account**: `%LOCALAPPDATA%\Eucas\profiles\<sha256(account id)>\{eucas.db, rulebook.json, sent-log}`. Learned items, rules, history, receipts, the ledger, suggestions and the Euca's name and look are per profile. A different account on the same PC starts empty; nothing is synced to the server (ADR-0017).
+- Shared across profiles (machine-level, not personal): the guard, the plugin, `rulebook.bin` (recompiled from the active profile on every switch), the spool, the install manifest, managed-settings entries and the parent-link registry.
+- Size budget: 50 MB per profile after 90 days, as before. Remove Eucas and "Clear history" delete every profile.

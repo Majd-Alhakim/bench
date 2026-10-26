@@ -14,7 +14,9 @@ The product is a safety claim, so the tests are the product's evidence. Rules fr
 | Integration | Rust tests with a real SQLite, real pipes, a temp `%LOCALAPPDATA%` | Every PR (Windows + Ubuntu) | Ingest, spool, heartbeat verdicts, tripwire stop, install/uninstall restore |
 | E2E | Playwright against the built app | Every PR (Windows full, Ubuntu smoke) | First run, needs-you, block receipt, guard-off, tripwire card, rules, uninstall (§4) |
 | Performance | `tests/perf` | Every PR (budget gate) + nightly (trend) | §6 budgets |
-| Supervisor eval | `evals/supervisor` | On change + monthly (Pro) | SUPERVISOR §10 bars |
+| Supervisor eval | `evals/supervisor` | On change + monthly (every user since 2026-10-26) | SUPERVISOR §10 bars, incl. 0 redaction leaks |
+| Notch *(ADR-0016)* | Rust tests with Win32 probes + golden images | Every PR (Windows) | No focus at rest, click-through outside the shape, placement per monitor and scale, full-screen step-aside, the drawing of every `NotchState` vs the approved screenshots at 100/125/150 %, UIA name and notifications |
+| Worker *(CR-011, CR-012)* | Vitest with the Workers pool + local D1 | Every PR touching `apps/api` | §8 |
 
 ## 2. Unit tests that matter most
 
@@ -24,13 +26,17 @@ The product is a safety claim, so the tests are the product's evidence. Rules fr
 - **Badge logic (ADR-0014):** a table over `{ cli in verified list?, local canary result, cli below floor?, known-bad? }` → expected `GuardState` and sentence.
 - **Trimmer/redactor:** the SP-SUP1 messages plus a secrets corpus (gitleaks test vectors); property: output never contains a substring that matches a secret rule or a path pattern.
 - **Forecast:** fixed sample series → expected time and range; empty and single-sample inputs → "not enough data", never a guess.
+- **Guard stdout (SP-H1, 2026-10-26):** fuzzed inputs and injected faults → stdout is always valid hook JSON or empty (Claude Code treats other output with exit 0 as "no opinion").
+- **Tripwire registry (SP-TW1):** `(pid, creation time)` keys survive PID reuse; an orphan whose parent exited is still in the remembered tree; entries expire 10 minutes after both ends exit.
+- **Redactor as safety code (always-on supervisor, 2026-10-26):** the corpus adds the SP-SUP2 recorder's cases (Windows paths that lost their backslashes, `NAME=secret`, JWTs, the user's own name) and is a release gate.
+- **Smart App Control:** the registry value 0 / 1 / 2 / missing → install allowed / refused / refused / allowed with a note.
 
 ## 3. Contract tests (against Claude Code's interfaces)
 
 ### 3.1 Fixture contracts (every PR)
 Fixtures in `contracts/claude-code/fixtures/<cli-version>/` are captured by the nightly canary from the real CLI and land by PR. Each PR checks:
 - every fixture validates against our schema, and our Rust and TS types round-trip it byte-equivalently (no silently dropped fields we use);
-- `apps/plugin/hooks/hooks.json` validates against **our** hooks schema (exec form only, `onFailure: "block"` on PreToolUse and PermissionRequest and **on nothing else**, timeouts ≤ 10 s), because `claude plugin validate --strict` doesn't check hook fields (`spikes/companion-hook-shape`).
+- `apps/plugin/hooks/hooks.json` and the elevate helper's embedded managed entries validate against **our** hooks schema (exec form only: **every hook has `args`**, SP-H1, because a shell-form hook under `shell: "powershell"` blocks every call; observational hooks `async: true`, `onFailure: "block"` on PreToolUse and PermissionRequest and **on nothing else**, timeouts ≤ 10 s), because `claude plugin validate --strict` doesn't check hook fields (`spikes/companion-hook-shape`).
 
 ### 3.2 Live contracts (nightly on the latest CLI; PRs on the pinned CLI)
 In a throwaway git repo and a temp `CLAUDE_CONFIG_DIR`-style home, with the built guard installed as a plugin:
@@ -46,7 +52,9 @@ In a throwaway git repo and a temp `CLAUDE_CONFIG_DIR`-style home, with the buil
 | PreToolUse fires for the `PowerShell` tool, subagent (`Task`) tool calls, and `mcp__*` tools | A check event per call |
 | Status line: JSON matches the schema; `rate_limits` absent on API key; our wrapper's output equals the saved command's output byte for byte | Byte compare |
 | `claude agents --json` matches its schema (optional input; a failure here only warns) | Schema valid |
-| Plugin installed while a session runs: does that session pick up hooks? (S-3) | Recorded either way; drives UX edge N |
+| Plugin installed while a session runs: does that session pick up hooks? (S-3) | Recorded either way; drives UX edge N. **SP-H1 baseline: it doesn't** (settings-file and managed hooks do, within ~3 s); a change in either direction opens a canary issue |
+| A `claude --resume` session keeps or changes its `session_id` (per-session budgets, SYSTEM-DESIGN §1) | Recorded; the budget keying follows it |
+| `CLAUDE_CODE_ENTRYPOINT` and the version arrive in `SessionStart` for each host (per-host badge, ADR-0014) | Fields present |
 | Managed precedence (Windows runner is admin): managed hook still fires with project `disableAllHooks: true`, with `--settings '{"disableAllHooks":true}'`, and with a user-level allow rule for the same command | Tool not executed |
 | Canary S-1: the synthetic hook path reaches our guard without a model turn | Deny receipt |
 
@@ -54,13 +62,13 @@ A failure on the latest CLI opens the canary issue (CI-CD §3); a failure on the
 
 ## 4. End-to-end (Playwright)
 
-**Setup.** The built app runs with `EUCAS_HOME` and `EUCAS_CLAUDE_HOME` pointed at a temp folder holding a **fake Claude Code home** (settings, synthetic transcripts from `packages/test-fixtures`). A test driver (`tests/e2e/driver/`) plays guard events into the app's pipe with exact timings, so time-based states (heartbeat, idle, tripwire window) are deterministic. On Windows, Playwright attaches to WebView2 over CDP (one fixture per surface: `trayFlyout`, `mainWindow`, `firstRun`); on Ubuntu, `tauri-driver` runs a smaller smoke set. Locators are roles and accessible names from DESIGN §8 (`getByRole('dialog', { name: 'Eucas' })`), never CSS classes; no fixed sleeps, only web-first assertions; traces on first retry.
+**Setup.** The built app runs with `EUCAS_HOME` and `EUCAS_CLAUDE_HOME` pointed at a temp folder holding a **fake Claude Code home** (settings, synthetic transcripts from `packages/test-fixtures`). A test driver (`tests/e2e/driver/`) plays guard events into the app's pipe with exact timings, so time-based states (heartbeat, idle, tripwire window) are deterministic. On Windows, Playwright attaches to WebView2 over CDP (one fixture per surface: ~~`trayFlyout`, `mainWindow`, `firstRun`~~ **`panel` (incl. peek mode) and `setup`** since CR-011; the notch has no DOM and is covered by the notch layer in §1); a **fake Worker** (local Workers runtime with D1) serves accounts, the meter and scripted model answers; on Ubuntu, `tauri-driver` runs a smaller smoke set. Locators are roles and accessible names from DESIGN §8 (`getByRole('dialog', { name: 'Eucas' })`), never CSS classes; no fixed sleeps, only web-first assertions; traces on first retry.
 
 | Flow | Asserts |
 |---|---|
 | First run happy path (UX screens 1–6) with a fake UAC result | Detection lines, retro cards in order, "Turn on protection · 3 rules", checklist with Look inside paths, canary receipt is a `LogRow`, "You're protected", the heartbeat ticks only on check events |
 | First run edges A, B, D, F, G, H, I, J, K | The exact copy and primary per edge; **never "You're protected" after J** |
-| Needs-you: Notification event → card → Open session → undo toast | Card in popover and Today; toast budget (one per 2 min per session) |
+| Needs-you: Notification event → card → Open session → undo toast | Marker on the notch, row in the panel list (CR-011); toast budget (one per 2 min per session) |
 | Block: limit deny → toast → Why? → log row expanded → Copy command | Receipt fields; no "Allow anyway" control exists |
 | Not guarded: transcript tool-use without a check | Red row, tray state `off`, banner with Fix it, within 2 s |
 | Guard failing → Off for 15 minutes → back on by itself | Countdown and automatic return |
@@ -68,7 +76,12 @@ A failure on the latest CLI opens the canary issue (CI-CD §3); a failure on the
 | Rules: suggestion → preview (dry run, conflict, runner warning) → save → counter → undo | Rulebook file written; runner rows never pre-ticked |
 | Usage: plan, tokens-only, API, limit reached | Never red; amber only with the word "close" |
 | Remove Eucas | Eucas's keys reversed in every file of `install-manifest.json`; a file untouched since install is byte-equal to its backup; **a user edit made after install survives**; status line restored only if ours was still set |
-| Accessibility | `@axe-core/playwright` on every surface and state: no serious/critical violations; keyboard path through the popover (↑/↓, Esc returns focus) |
+| Sign in *(CR-012)* | Email → code → signed in; wrong code; resend; a disposable domain shows "Please use an address you'll keep. This one expires."; offline → "Sign in later" and **protection still installs** |
+| Account *(CR-012)* | Sign out → supervisor and drafting rules only, guard unchanged; Delete account → server row gone, local tokens gone, rules still enforced |
+| New account starts empty *(founder, 2026-10-26)* | Account A adds a rule and learns an item; sign in as B → none of A's rules, history, ledger or learned items visible; the four limits and machine locks still block; sign back in as A → A's data is back |
+| What is sent *(always-on supervisor)* | Setup shows a redacted payload from the fixture week; Settings › What is sent lists the payloads the fake Worker received, **byte-equal** |
+| Meter *(CR-011)* | Trial, taste, low, empty (rules only + "asks you more" copy), unreachable; **no `$` or count anywhere in the panel** (text scan) |
+| Accessibility | `@axe-core/playwright` on every surface and state: no serious/critical violations; keyboard path through the panel (↑/↓, Esc returns focus) |
 | Copy | The four fixed strings render exactly (`fixed.*` keys), and appear wherever DESIGN says |
 
 **On the founder's PC before each stable release (manual, 15 minutes, scripted checklist):** real Claude Code in Windows Terminal, the desktop app's Code tab and VS Code; real UAC; real toast with buttons; Defender on; one canary.
@@ -97,11 +110,13 @@ Each case is a tool call an agent could make; expected result **deny by limit**,
 |---|---|---|
 | PreToolUse p95 ≤ 50 ms, p99 ≤ 150 ms (cold start of the guard, Defender on) | `tests/perf/guard_latency`: 2,000 sequential + 4 × 500 parallel invocations with real hook-input fixtures; the nightly also measures inside a real CLI session | PR fails over budget or > 20 % slower than `dev` |
 | Check-event loss ≤ 1/10,000 with the app running | Soak: 6 simulated sessions × 1 call/s × 30 min | Nightly |
-| Idle < 0.5 % CPU, < 90 MB private bytes (core + pre-warmed hidden flyout; set in SP-ST1) | Sampler over 10 min, windows hidden, 3 idle sessions | PR (Windows) |
-| Active < 3 % CPU, < 180 MB | Popover open, 6 sessions playing events | Nightly |
-| Popover first frame < 150 ms | Playwright trace from tray click to first paint | PR |
+| Idle < 0.5 % CPU, < 90 MB private bytes (core + **native notch resting** + pre-warmed hidden panel; SP-ST1 measured ≈ 80 MB) | Sampler over 10 min, panel hidden, 3 idle sessions | PR (Windows) |
+| Notch < 2 MB; < 0.3 % CPU at rest; < 1.5 % following at 30 Hz (ADR-0016) | The SP-ST1 fake-cursor mode circles the notch for 60 s | PR (Windows) |
+| Active < 3 % CPU, < 180 MB | Panel open, 6 sessions playing events | Nightly |
+| Panel first frame < 150 ms (SP-ST1 p95 8 ms) | Playwright trace from a notch click (synthetic) to first paint | PR |
 | Retro first card ≤ 5 s, all ≤ 30 s on 500 MB of transcripts | Synthetic corpus | Nightly |
-| Tripwire: stop starts ≤ 1 s after the threshold; tree gone ≤ 3 s | Integration test deleting 2,000 tracked temp files from a child process tree, including a `run_in_background`-style detached child of the session | PR (Windows) |
+| Tripwire: stop starts ≤ 1 s after the threshold; tree gone ≤ 3 s | Integration test deleting 2,000 tracked temp files from a child process tree, including a `run_in_background`-style detached child of the session **and an orphan started through `Start-Process` whose parent exits at once** (SP-TW1: must be killed via the parent-link registry; deletes after the kill < 200) | PR (Windows) |
+| Tripwire under overflow | A 4 KB buffer with a 200 ms reader stall (SP-TW1's `TW_SLOW_MS`): the count is exact after recount, the card reports the measured count | Nightly (Windows) |
 | Tripwire: no false stop | Deleting 50,000 files inside a git-ignored `node_modules` and a `dist` folder doesn't trip; the same delete escaping one path outside the project root trips at once | PR (Windows) |
 | Installer < 20 MB; guard < 4 MB | Release job | PR build |
 
@@ -109,7 +124,18 @@ Each case is a tool call an agent could make; expected result **deny by limit**,
 
 The badge is only as good as its tests, so its logic is tested at three levels: the table in §2 (unit), the nightly publish step (CI-CD §3: a version is appended only if **every** matrix leg passed), and an e2e that feeds a config with and without the CLI version and asserts the sentence. The app never shows "Verified" for a version that isn't in a correctly signed list.
 
-## 8. What isn't automated (and how it's covered)
+## 8. Worker tests (CR-011, CR-012; added 2026-10-26)
+
+| Area | Cases |
+|---|---|
+| Auth | Code expires at 10 min; the 6th try kills it; 3 codes per email per hour; same response for known and unknown emails; constant-time compare; refresh fails after sign-out (epoch) and after delete; access token rejected after 1 h |
+| Disposable domains | Exact domain, subdomain, mixed case, IDNA, the allowlist override; the regenerated module is sorted and deduped |
+| Budget | 50 parallel calls against a nearly empty budget never take `used + reserved` above the cap; settle with and without `usage.cost`; lazy period rollover (pending → trial → taste; a spent trial stays empty until day 14); `trial/start` twice = one trial; a deleted account's calls fail |
+| Prompt cap | A prompt over ~2,000 tokens drops guidance text first, then `413`; the drafting schema stays ≤ 800 tokens |
+| No money leaves | Every response schema the app receives (`meter`, `account`, `supervise`, `draft-rule`) has no money or count field; a test scans the JSON for `usd`, `cost`, `price`, `count` keys |
+| Egress | Every provider call carries `zdr: true` and `data_collection: "deny"`; no request body reaches a log (a lint rule plus a test with a spy logger) |
+
+## 9. What isn't automated (and how it's covered)
 
 - Real UAC dialogs and SmartScreen → the founder's pre-release checklist, on a clean Windows VM.
 - Toast rendering by Windows → screenshot check in the checklist; toast **payloads** are unit-tested.

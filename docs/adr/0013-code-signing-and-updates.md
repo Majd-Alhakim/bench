@@ -36,3 +36,10 @@ Prices are list prices seen in 2026 and **must be re-checked at purchase**. Rout
   - Each new release is a new set of binaries with no publisher identity tying them together; the updater key and the published hashes are the only chain of trust.
 - Losing the updater key strands every install, so there are two sealed backups and a documented rotation path (a release signed by the old key that ships the new public key).
 - Re-evaluate SignPath if the licence moves to an OSI licence at v1.
+
+## Amendment 2026-10-26 (SP-H1 finding 6, SP-ST1 finding 7)
+- **Measured unsigned behaviour:** an unsigned guard with a Mark-of-the-Web runs normally when Claude Code starts it (16 ms, no prompt); SmartScreen gates only Explorer launches. Once installed, the app and guard run from `%LOCALAPPDATA%` without prompts. The updater round trip works unsigned and refused a tampered manifest.
+- **Smart App Control (SAC) blocks unsigned executables.** New Windows 11 installs ship it in evaluation or on. With SAC on, the unsigned installer doesn't run at all. In evaluation it can switch on later, and then every tool call fails closed (a brick). **So:** setup's detection reads `HKLM\SYSTEM\CurrentControlSet\Control\CI\Policy\VerifiedAndReputablePolicyState` (0 off, 1 on, 2 evaluation) and **refuses to install the guard when it isn't 0**, with a plain reason, until releases are signed. The heartbeat re-reads it daily and at start: if SAC turns on, the session state becomes `failing` with the "Off for 15 minutes" escape and the uninstall path. Authenticode signing is what lets SAC users in; how many people that excludes is a launch question (BUILD-PLAN §6).
+- **The cold-start cost (130–196 ms) recurs after every guard update** (Defender scans the new file); the core's warm-up run absorbs it (ADR-0009 amendment).
+- **The installer creates a Start-menu shortcut carrying Eucas's AUMID** (toast buttons route back only with it; SP-ST1).
+- The download page and README keep the SmartScreen "More info → Run anyway" steps.
