@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in Bench doesn't work as expected
+description: Something in Eucas doesn't work as expected
 labels: [bug]
 body:
   - type: checkboxes
@@ -28,7 +28,7 @@ body:
     id: versions
     attributes:
       label: Versions
-      description: Bench version, `claude --version`, OS
+      description: Eucas version, `claude --version`, OS
     validations:
       required: true
   - type: textarea

@@ -24,7 +24,7 @@ Target platforms: **Windows first**, then macOS and Linux (ADR-0001). CI builds 
 ## Connectors (MCP) by sprint
 | Connector | For which agent | Sprint | Notes |
 |---|---|---|---|
-| **Bench MCP** (ours, in-process) | All | S2 | handoff, ask_agent, post_to_group, remember, recall |
+| **Eucas MCP** (ours, in-process) | All | S2 | handoff, ask_agent, post_to_group, remember, recall |
 | Filesystem (scoped to the workspace) | Developers, writers | S1 | Built into the SDK tools |
 | **GitHub** ⭐ first | CTO, developers | S6 | Official GitHub MCP server; fine-grained PAT in the OS keychain |
 | **Gmail** ⭐ first | Chief of Staff (Haiku) | S6 | Read-only first; drafts next; sending always needs approval. Needs a Google Cloud OAuth client (Desktop app type) |

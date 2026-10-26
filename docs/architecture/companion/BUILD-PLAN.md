@@ -11,7 +11,7 @@
 | P3 | CR-010 (the companion-first change request the pre-mortem calls for) approved with the v0.1 scope above | Founder + BA | Backlog baseline |
 | P4 | Spikes in §2 at GO | Tech lead | The stories they name |
 | P5 | Landing page + waitlist for 2 weeks (pre-mortem's cheapest test), if the founder wants the signal before building | Founder | Optional go/no-go |
-| P6 | Naming: user-visible artefacts and crates named `eucas-*` now, ahead of the rename task (CLAUDE.md keeps "Bench" in code until then; SYSTEM-DESIGN header) | Founder | S1-1 |
+| P6 | Naming: user-visible artefacts and crates named `eucas-*` (resolved: the rename to Eucas is done, CR-010; SYSTEM-DESIGN header) | Founder | S1-1 |
 | P7 | Copy: the privacy line becomes "…nothing about your work leaves this PC unless you turn it on" (ADR-0015), and the diagnostic line "…no paths to your projects or files…" (OPERATIONS §3) | Founder + UI | O-1, D-1 |
 
 ## 2. Spikes still needed before Gate 6

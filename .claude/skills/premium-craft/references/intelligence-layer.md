@@ -3,12 +3,12 @@
 ## Idea
 Engagement (smooth onboarding, satisfying interactions) is layer one: it brings users in. Layer two is **investment**: every session deposits something that compounds, so the product gets better *for this user* over time. AI turns stored data into a learned model of the user (the video's examples: a taste profile trained by ranking images, years of personal health baselines, a company's encoded spending rules). People also value what they helped shape (the IKEA effect).
 
-## Bench's version, with ethics
-Bench's memory, lessons and per-agent knowledge **are** this layer. Bench is local-first and open source, and memory is plain Markdown, so we design the value to be **visible, explainable and exportable**. The client stays because the team truly knows them, not because leaving is hard. No dark lock-in, no hidden data.
+## Eucas's version, with ethics
+Eucas's memory, lessons and per-agent knowledge **are** this layer. Eucas is local-first and open source, and memory is plain Markdown, so we design the value to be **visible, explainable and exportable**. The client stays because the team truly knows them, not because leaving is hard. No dark lock-in, no hidden data.
 
 ## Checks for any screen or flow
-1. **Investment loop:** does this core action make Bench better *for this client specifically*, or only better in general? If only general, it is a feature, not stored value.
-2. **Compounding action:** what is Bench's equivalent of ranking images? Candidates:
+1. **Investment loop:** does this core action make Eucas better *for this client specifically*, or only better in general? If only general, it is a feature, not stored value.
+2. **Compounding action:** what is Eucas's equivalent of ranking images? Candidates:
    - approving or rejecting a draft (learns style)
    - editing an agent's output (learns preferences)
    - routing corrections (learns who does what)
@@ -20,7 +20,7 @@ Bench's memory, lessons and per-agent knowledge **are** this layer. Bench is loc
    - A weekly "your team learned" summary.
 4. **Measure the compounding:** can we show that a 6-month client gets better results than a 10-day one (fewer corrections, fewer approvals needed, faster tasks)? Surface it ("Approvals needed down 40 % since September").
 5. **The exit question:** if the client left today, what would they rebuild from scratch? The answer should be "a team that knows me". They can still take every note with them in one click.
-6. **Integration roots:** connectors and routines that depend on Bench (GitHub, Gmail, schedules) deepen the value. Show them on agent profiles.
+6. **Integration roots:** connectors and routines that depend on Eucas (GitHub, Gmail, schedules) deepen the value. Show them on agent profiles.
 
 ## UI patterns
 - **Home strip:** "Your team learned 7 things this week" → it expands to a list with sources.

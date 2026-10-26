@@ -4,7 +4,7 @@
 - **Date:** 2026-10-26
 
 ## Context
-The supervisor's model calls can't go straight from the app to OpenRouter: that would ship our provider key to every PC, and we couldn't enforce the per-user allowance (10,000 calls a month), swap models without a release, or kill a bad config. The business constraint is **infrastructure under $100/month** and a solo maintainer. Security-baseline §1 says Bench has no server; this ADR adds one, so its surface must stay minimal: **no user content stored, no accounts, no logs of payloads.**
+The supervisor's model calls can't go straight from the app to OpenRouter: that would ship our provider key to every PC, and we couldn't enforce the per-user allowance (10,000 calls a month), swap models without a release, or kill a bad config. The business constraint is **infrastructure under $100/month** and a solo maintainer. Security-baseline §1 says Eucas has no server; this ADR adds one, so its surface must stay minimal: **no user content stored, no accounts, no logs of payloads.**
 
 ## Options
 | | Ops load | Cost at 1k Pro users | Fit |

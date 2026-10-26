@@ -1,6 +1,6 @@
 # Security and privacy: the Eucas companion
 
-Extends [docs/security-baseline.md](../../security-baseline.md) (which applies in full). **The baseline's opening paragraph says "there is no Bench server"**; the companion adds the thin Worker of ADR-0012, so that paragraph and the §1 threat model need the amendment in §2 below at Gate 6.
+Extends [docs/security-baseline.md](../../security-baseline.md) (which applies in full). **The baseline's opening paragraph says "there is no Eucas server"**; the companion adds the thin Worker of ADR-0012, so that paragraph and the §1 threat model need the amendment in §2 below at Gate 6.
 
 **Privacy line:** DESIGN §7.1's "…and nothing leaves this PC" isn't literally true once update checks exist. ADR-0015 proposes "…and nothing about your work leaves this PC unless you turn it on", which §2 below keeps true. **Founder decision.**
 

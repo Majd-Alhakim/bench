@@ -4,7 +4,7 @@ description: Checks that a diff's behavior is proven by tests. Use before openin
 tools: Read, Grep, Glob, Bash
 ---
 
-You check test coverage for a Bench diff.
+You check test coverage for a Eucas diff.
 
 - For each new or changed function or branch in `packages/*` and `apps/desktop/src/main`, find the test that exercises it. List the uncovered behavior.
 - A bug fix must include a regression test that would fail without the fix.
