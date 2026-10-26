@@ -2,7 +2,7 @@
 
 | Date | Author | Status | Read with |
 |---|---|---|---|
-| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **Needs founder design approval** (CR-011 §6) | [CR-011](../../../requirements/change-requests/CR-011.md) · [setup-flow.md](setup-flow.md) · [UI DESIGN.md](../../ui/companion/DESIGN.md) · [the 2026-10-25 notch design](../2026-10-25-atlas-notch-design.md) |
+| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **§1–§8 approved by the founder 26 Oct** (D-1 to D-8 as recommended) · **§9 "New since approval" needs approval** | [CR-011](../../../requirements/change-requests/CR-011.md) · [setup-flow.md](setup-flow.md) · [UI DESIGN.md](../../ui/companion/DESIGN.md) · [the 2026-10-25 notch design](../2026-10-25-atlas-notch-design.md) |
 
 **Replaces** the surfaces, map and flows in [ia-and-flows.md](ia-and-flows.md) (tray popover as home, six-section main window). **Keeps** from it: the honest promise, the notification budget idea, the needs-you rules, the same-file rules, the heartbeat as evidence, the tripwire's content, the diagnostic, the Pro rules that never nag, and the edge paths. Where this file is silent, those still apply.
 
@@ -86,7 +86,7 @@ Only one state shows at a time. **Priority:** Not protected › Tripwire stop �
 | **Working** | Same | The composer's voice glow gathered into a **beam that sweeps** under the eyes, in the Euca's colour | none | At least one session ran a tool in the last 20 s |
 | **Needs you** | Glance at the marker once, then back | as above | **Amber count**, stays until dealt with | Any needs-you item |
 | **Not protected** | **Concerned** | off | "**Not protected**" in red, red ring | The heartbeat failed: tool activity with no matching check, the guard missing, or the safety test failed |
-| **Tripwire stop** | Concerned | off | Red marker "**Stopped notes**" | The tripwire stopped a session |
+| **Tripwire stop** | Concerned | off | Red marker "**Stopped: notes**" (the project after a colon) | The tripwire stopped a session |
 | **Dozing** | **Sleepy** (closed arcs, dimmed) | off | none | No input for 5 min **and** nothing running. Pointer movement or a session starting wakes it with a blink |
 | Before setup ends | Closed, grey | off | none | First run, until the Euca is made |
 
@@ -99,7 +99,7 @@ Only one state shows at a time. **Priority:** Not protected › Tripwire stop �
 1. **Arrives:** the notch drops 3 px and settles (spring, 640 ms, the only overshoot), the marker pops in, the eyes glance at it, and the soft **needs-you** sound plays once (BRAND §11; not in full-screen apps or calls; Windows Focus silences it). Then everything is still.
 2. **Waits:** the count stays. With several items, the count is the total.
 3. **You hover:** after 280 ms of rest the notch grows into the **peek**: up to 3 items (glyph, one line, one action) and a footer with the status and "Open panel ›". Moving away folds it back after 360 ms; the marker stays.
-4. **You act or not:** each item's one action takes you somewhere (Open session, Show both, See what happened, Fix it). "Not now" lives in the panel only (snoozes 15 min). An item answered in the terminal resolves itself.
+4. **You act or not:** each item's one action takes you somewhere (Open session, Show both, See what happened, See why). "Not now" lives in the panel only (snoozes 15 min). An item answered in the terminal resolves itself.
 
 **The 280 ms rule.** The top centre is where browser tabs and title bars live. A peek that opens on a passing pointer would be the notch opening by itself in all but name, so it needs a resting pointer.
 
@@ -112,8 +112,8 @@ Only one state shows at a time. **Priority:** Not protected › Tripwire stop �
 | A session waits on a prompt or a question | amber | "bench is waiting for you · wants to run `pnpm build`" | Open session | Answered in the terminal, or the session ends ("bench ended before you answered. Nothing ran.") |
 | A long run finished and waits (≥ 2 min) | calm | "api-docs finished and is waiting · ran 14 min, changed 3 files" | Open session | You type in it |
 | Two sessions edit one file | amber | "Two sessions are editing one file · bench and api-docs · `src/router.ts`" | Show both | One commits or stops |
-| **Tripwire stop** | red | "Pip stopped notes · deleted 1,240 files in 20 s" | See what happened | You open it (the record stays in the log) |
-| **Not protected** | red | "bench isn't protected · no check for 40 s while it ran tools" | Fix it | A real check passes |
+| **Tripwire stop** | red | "Pip stopped the notes session · deleted 1,240 files in 20 s" | See what happened | You open it (the record stays in the log) |
+| **Not protected** | red | "bench isn't protected · no check for 40 s while it ran tools" | See why | A real check passes |
 | **Guided merge** offer: a session finished on a branch | calm | "search is ready · It finished on its branch. Update it from your default branch, run the tests and open the PR?" | Update, test, open PR | You run it (the item becomes its result) or snooze it |
 | Guided merge result | green (a real result) | "search: PR #71 is open · Updated from your default branch, 128 tests passed, PR #71 opened. Nothing was merged." · or "Tests failed: 2 of 128. Nothing was pushed." | Open the PR · or Open session | You open it |
 | **Budget reached** (Pro) | amber | "Budget reached for this task. Continue? · Pip stopped bench before its next step. The task used the 4% of your week you gave it." | Continue · Open session | You choose |
@@ -153,7 +153,7 @@ Trigger: the Notification/Stop hook. → Notch: nudge, marker, sound. → Hover:
 Trigger: session B writes a file A wrote in the last 15 min. → Item: "Two sessions are editing one file". → Show both opens the sub-page: both sessions' last edits side by side, Open bench / Open api-docs, "Don't warn for this file today". Never blocks; never says "conflict" when git would merge cleanly.
 
 ### 4.3 Tripwire stop (the worst moment)
-Eucas stops the process tree, **verifies it stopped**, then: red notch marker "Stopped notes", concerned eyes, the sound. Hover: one line + See what happened. Sub-page: "Pip stopped notes at 14:02:31", what was deleted (grouped by folder, exportable), how to get it back (git restore / File History / OneDrive, whichever is on), **Open the folder**, "This was expected" (adds the folder to the tripwire's allowed list, consequence spelled out). If deletes continue after the stop, the page updates live and never claims "stopped" until the count stops moving.
+Eucas stops the process tree, **verifies it stopped**, then: red notch marker "Stopped: notes", concerned eyes, the sound. Hover: one line + See what happened. Sub-page: "Pip stopped notes at 14:02:31", what was deleted (grouped by folder, exportable), how to get it back (git restore / File History / OneDrive, whichever is on), **Open the folder**, "This was expected" (adds the folder to the tripwire's allowed list, consequence spelled out). If deletes continue after the stop, the page updates live and never claims "stopped" until the count stops moving.
 
 ### 4.4 Not protected
 Trigger: tool activity with no check, within one tool call. → The notch widens with "Not protected", red ring, concerned eyes; overrides thin line. → Item "bench isn't protected" [Fix it]. → Sub-page: a checklist (what's fine, what isn't, why), the specific repair ("Restart bench to protect it. Nothing it did was lost."), Run the diagnostic. Never green until a real check passes. **Fail-closed brick** (our guard crashes and blocks every call) keeps the old design: the only place a 15-minute off switch is offered, with an automatic return.
@@ -227,3 +227,79 @@ Every cell is designed or marked N/A with why. *(proto)* = drawn in the prototyp
 3. "Something needs you. What, and where do you go?" Success: hovers, reads the line, presses the one action.
 4. "Make Pip block edits to a folder you care about." Success: describes it, reads the draft, adds it.
 5. "How much supervisor help is left, and what happens when it's gone?" Success: finds Usage › Supervisor and reads the reset date.
+
+
+---
+
+## 9. New since approval (26 Oct): the full app's UX features, for the companion
+
+The founder approved this design with the 8 recommendations and asked for *"the same ux features we planned for in the full app like the undo or learns you by time"*. Sources: [premium/README §4](../premium/README.md) (signatures), [intelligence-layer.md](../premium/intelligence-layer.md), [moments-and-motion.md §3](../premium/moments-and-motion.md), [worst-moments.md §0](../premium/worst-moments.md), [state-matrix.md §1](../premium/state-matrix.md) (P01–P10), [coherence-audit.md](../premium/coherence-audit.md) C-18 and C-22. **Calm rule:** learning shows as quiet lines in the panel, never as a new tab (except What Pip knows, inside Settings), and nothing opens by itself.
+
+### 9.1 Pip learns you, and shows its work
+
+Every deposit comes from something you already did: an allow, a deny or an answer. Nothing is learned from file contents or from other people.
+
+| Feature | Where | Copy |
+|---|---|---|
+| **Ongoing rule suggestions** (not only the setup retro) | A quiet item in the panel's list, **never counted in the notch** and never a sound; after 3 identical allows in a week; never for the four limits | "You've allowed `pnpm test` in bench 3 times this week. Make it a rule?" · the exact rule first: `allow pnpm test · in bench/` · "Other commands still ask." · **Allow pnpm test in bench** (blue) · Keep asking (never suggested again) |
+| **"Pip learned" line**, with Undo | Top of the panel, once, where it happened | "**Pip learned:** you answer “use .env.example” to secrets questions." · "From 2 of your answers, 24 Oct and today · See it" · **Undo** |
+| **Applied chip** | Wherever something learned shaped a decision: the away digest, the Why page | "Applied: how you answer secrets questions · 24 Oct" (neutral, never the Euca's colour) |
+| **Ledger line** | Settings › What Pip knows (row and page) | "Together since 28 Sep · 1,204 checks · 9 rules learned" |
+| **Monthly compounding line** | Top of Usage, only after 4+ weeks of data; shown the same way if it gets worse | "Pip asked you **40% less** this month than in September. See why" |
+| **What Pip knows** | Settings › What Pip knows (the one new page) | Grouped: *From what you allowed* · *From how you answer* · *From what you denied*; each item with its source, how often it was used, and **Forget**; the switch "Learn from what you allow, deny and answer"; **Export as Markdown** · Open the folder; "Forget everything · forgets 12 things; your rules stay as they are." |
+| **The honest zero** | Setup step 8, and What Pip knows when empty | "Pip knows nothing about how you work yet. It learns from what you allow, deny and answer. You can read and delete all of it in Settings." |
+
+### 9.2 Undo everywhere (C-18)
+
+Every reversible change gets a **10-second Undo** with a thin timer line in the toast: a rule switched on or off, a rule added (also from a suggestion), a learned item forgotten, **Not now**, Keep asking, a lock change ("Undo asks for admin again"), Forget. What can't be undone says so: "bench continues with 2% more of your week. It can't be taken back once bench takes its next step." Guided merge offers **Close the PR** on its result ("The branch and its commits stay as they were"). Nothing that happened is hidden: a hidden item says when it comes back ("Hidden until 14:21. It comes back if it's still waiting.").
+
+### 9.3 The Receipt (the glass box)
+
+One meta line under everything Pip **did or decided**, one format everywhere: `time · tokens (supervisor) · rule or reason · Why?`, mono, Text 3. Examples: `14:02:31 · no supervisor · rule: stop a session that deletes 200+ files · Why?` and `13:52 · 0.6k tokens (supervisor) · rule: block reading secrets · learned 24 Oct · Why?`. **Why?** opens one page: what Pip saw (at Level 2, the trimmed question; never files), the rule that decided first, what you taught it (Applied), the decision ("It never approves a tool call"), the receipt, and **That was wrong** (forgets the learned item, with Undo).
+
+### 9.4 Moments
+
+- **All caught up** (peak-end): when the last item folds, the list becomes "**You're all caught up.** Pip is watching 3 sessions." with pleased eyes in the notch for 1.6 s and the done sound.
+- **While you were away**: when you come back after 30+ min, the peek and the panel show a digest the next time you look (never opening by themselves): "While you were away · 1 h 12 min: answered your agents 6 times from your rules and what you taught it (Applied …) · blocked `git push --force` in site at 13:10 · search finished; it's waiting below", a receipt and **Got it**.
+- **Back to normal** (P10): after an outage, one card: "Back online · 18 min offline: the guard kept checking the whole time (212 checks, 1 block) · the supervisor couldn't be reached, so Pip asked you 2 times instead · usage caught up. Nothing was lost." · Got it.
+
+### 9.5 Worst moments, with the recovery recipe
+
+Each says the cause, what's safe, one next step, and catches you up after (9.4).
+
+| Moment | Where | Copy | Next step |
+|---|---|---|---|
+| **Offline** | Panel banner (neutral); peek status | "You're offline. The guard keeps working: it runs on this PC. The supervisor can't be reached, so Pip asks you instead. Usage catches up when you're back." | none needed; Back to normal after |
+| **Your Claude login expired** | Needs-you item | "Your sessions can't reach Claude until you sign in. Pip keeps guarding. Run `claude /login` in a terminal; Pip never handles your login." (ADR-0002) | **Copy the command** |
+| **The weekly limit** | Panel banner + the week meter at 100% (amber, with the word) | "Your week is used up. Claude Code pauses new requests until Mon 26 Oct at 09:00. Your sessions keep their work, and Pip keeps guarding." (Claude's own pause, not ours) | none; no upsell |
+| **Claude isn't answering** | Panel banner | "Claude isn't answering right now. Your sessions wait and retry on their own. Pip keeps guarding and tells you when they're moving again." | none |
+| **Not protected** | §4.4 | unchanged | See why |
+| **The supervisor meter empty** | §4.9 | unchanged | none; Pro line |
+| **A write failed** | Inline, where it happened (Rules draft) | "**Didn't save:** Pip couldn't write your Claude Code settings (another app has the file open). Your rule is still here." | **Try again** |
+
+### 9.6 Eye grammar for the notch (moments-and-motion §3, adapted)
+
+| Eyes | When | Motion |
+|---|---|---|
+| **Calm** | Protected, nothing running | follows the pointer; blinks every 4–7 s |
+| **Focused** (narrower) | Sessions are working | reads left to right with the beam (2.4 s), the only loop |
+| **Glance** | Something just arrived | one look at the marker, 900 ms |
+| **Toward you** (up and front) | Something waits for you | follows the pointer; no bobbing |
+| **Concerned** (softened, looking down) | Not protected; Pip stopped a session | still; never alarmed, no shake |
+| **Sleepy** | You're away and nothing runs | wakes with a blink |
+| **Pleased** | You're all caught up | 1.6 s, then calm |
+| **Closed** (grey) | Before you make your Euca | — |
+
+### 9.7 Coherence rules
+
+- **One blue means your call (R1):** blue only on a decision only you can make (Allow pnpm test in bench, Open a PR for search · tests first, Continue · +2% of your week, Add rule · blocks about 3 a week, Lock 4 limits + 4 rules). Navigation (Open session, Show both, See why) is never blue.
+- **Primaries are a verb plus its object, with the consequence before commit (C-22).**
+- **One time format:** `14:02` for events; dates as `24 Oct`; relative time only for the heartbeat ("checked 2 s ago").
+- **One status vocabulary:** Protected / Not protected · Locked / Not locked · and the session words from §3.3.
+
+### 9.8 Sounds (BR-89 family)
+
+**Needs you** (A4 → D5) when an item arrives · **Done** (F♯5) for caught up, the safety test and the homecoming · **Stopped** (F5 → C5, falling) for a tripwire or budget stop. On by default, one mute in Settings, quiet in full-screen apps and calls; Windows Focus silences all three; every sound has a visible twin.
+
+### 9.9 New states in the matrix
+Suggestion (quiet item) · learned line · undo toast · Why page · What Pip knows (full and empty) · away digest (peek and panel) · all caught up · back to normal · offline · login expired · weekly limit · Claude not answering · write failed. All drawn in the prototype (jump menu: *Learns you, undo, receipts* and *Worst moments*).

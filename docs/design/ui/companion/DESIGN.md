@@ -2,11 +2,11 @@
 
 | Date | Author | Status | Builds on |
 |---|---|---|---|
-| 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **Needs founder design approval — do not build or reuse before it** (CR-011 §6) | [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
+| 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **§1–§10 approved by the founder 26 Oct** with D-1 to D-8 as recommended · **§11 "New since approval" needs approval** | [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
 
-**In this folder:** this file · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (60 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
+**In this folder:** this file · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (78 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
 
-**Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 57 states, light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
+**Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 74 states, light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
 
 ---
 
@@ -64,7 +64,7 @@
 | Beam | 2 px, inset 12 px, a 46 % wide gradient `transparent → --euca-light → --euca-base → transparent` sweeping 1.7 s each way, `ease-in-out`, alternate |
 | Glow | 12 px tall ellipse below the notch, blur 8, the Euca's base colour at 55 %, swaying with the beam. Hidden while the peek is open |
 | Marker (amber) | 18 px pill, `--marker-attn`, Ink text 11/600 tabular: the count |
-| Marker (red) | 18 px pill, `--marker-danger`, white: stop glyph + "Stopped notes" |
+| Marker (red) | 18 px pill, `--marker-danger`, white: stop glyph + "Stopped: notes" (the project after a colon; "Stopped notes" read like a typo) |
 | Label | "Not protected", 12/600, `--notch-danger`, left of the eyes; red ring `inset 0 0 0 1px` 50 % |
 | Thin line | 96 × 4, radius 0 0 4 4; the beam runs along it; needs-you adds an 8 px dot at the right end (amber or red) with a 2 px black ring |
 
@@ -106,7 +106,7 @@ The notch's own body grows down into a 372 px card (clip-path morph from the not
 | `PromiseText` | Rules | the one honest-promise string |
 | `LockRow` | Rules | locked (neutral) / not locked (amber, with Lock) |
 | `LimitRow` | Rules, setup 4 and 5 | the four limits: title, detail, **Locked** chip or amber **Not locked** (press to lock); never a switch |
-| `GuidedMergeItem` | needs-you | the offer ("Update, test, open PR") becomes its result in place (green check, "Open the PR") |
+| `GuidedMergeItem` | needs-you | the offer ("Open a PR for search · tests first"; in the peek "Update, test, open PR") becomes its result in place (green check, "Open the PR") |
 | `BudgetItem` (Pro) | needs-you | "Budget reached for this task. Continue?" · Continue · Open session |
 | `RuleRow` | Rules, setup 4 | title, detail, lock glyph, switch; locked switches explain on press |
 | `RuleComposer` + `DraftCard` | Rules, setup 4 | described → exact rule in mono → effect last week → Add · Reword · Lock it too |
@@ -201,3 +201,34 @@ See [SELF-REVIEW.md §5](SELF-REVIEW.md).
 - The peek and the panel can be the same transparent window that resizes, so the morph is one surface; or the panel a second window. SP-ST1 measured a flyout first frame at p95 67 ms; the morph needs ≤ 100 ms to feel attached.
 - Idle: the beam and blink are the only loops; pause both when the display sleeps or the notch is hidden.
 - Tokens: `tokens.css` + `tokens-notch.css` move to `packages/ui-tokens/` at S1-1 (CODE-STRUCTURE).
+
+
+---
+
+## 11. New since approval (26 Oct)
+
+The founder approved §1–§10 with the 8 recommendations and asked for the full app's UX features. The UX is in [notch-and-panel.md §9](../../ux/companion/notch-and-panel.md). What it looks like:
+
+| Component | Spec |
+|---|---|
+| `SuggestionItem` | A needs-you item marked quiet: grey check glyph, the noticed pattern as the title, the exact rule in mono first, **blue verb + object** ("Allow pnpm test in bench"), ghost "Keep asking". Excluded from the notch count, the badge and sounds. The list's title reads "A suggestion" when it's the only item |
+| `LearnedLine` | A surface-tone card at the top of the panel: note glyph · "**Pip learned:** …" · a source line (12, Text 3) with "See it" · **Undo** on the right |
+| `AppliedChip` | Neutral sunken pill, 12 px: note glyph + "Applied: {what} · {date}". Never in the Euca's colour (identity ≠ learning) |
+| `Receipt` | 11.5 px JetBrains Mono, Text 3, tabular: `time · tokens (supervisor) · rule or reason` + a "Why?" button with the Look glyph (hit area grown to 32 px). One line, never a box or a chip |
+| `WhyPage` | Sub-page: a 20 px title (what Pip did), the question in italics, a 4-line checklist (saw · a rule decided · what you taught it · the decision), the receipt, "That was wrong" + Open bench |
+| `WhatPipKnows` | Sub-page under Settings: ledger line (12, Text 3) · the compounding sentence · three groups with Forget per row · the learning switch · Export as Markdown / Open the folder · "Forget everything" with its count |
+| `Digest` | Surface card: title + duration (12, Text 3) · 3 bullets · footer with the receipt left and **Got it** right. Also a two-line version at the top of the peek |
+| `CaughtUp` | Surface card with a 44 × 28 black mini notch showing pleased eyes · "**You're all caught up.**" · "Pip is watching 3 sessions." |
+| `Banner` | Neutral sunken card, never red: glyph (cloud-slash for offline, clock for limits and Claude) · **bold cause** · what's safe |
+| `InlineError` | Danger-tint row inside the form that failed: "**Didn't save:** …" and the primary becomes **Try again** |
+| `UndoToast` | The inverse pill with **Undo** and a 2 px timer line that runs out over 10 s; non-reversible toasts have no Undo and say so when it matters |
+
+**Eye grammar** ([the sheet](screens/eyes-sheet-d.png)): Calm (5 × 13 pills) · **Focused** (6 × 9, reads ±2 px over 2.4 s, the only loop) · Glance · **Toward you** (1.5 px up, follows the pointer) · **Concerned** (±16°, 1.5 px down) · Sleepy · **Pleased** (9 × 5 arcs, 1.6 s) · Closed. Reduced motion keeps every shape and drops the movement. Eye-follow runs only for Calm and Toward you.
+
+**Colour:** the new parts add no colour. Blue appears only on decisions (R1); the learned line, chips, receipts, digest and banners are neutral; green is the merge result's check (a real result); red stays for danger.
+
+**Sounds:** `stopped` joins the family (F5 → C5, 400 ms, falling): a tripwire or budget stop. Settings › The notch › Sounds: "Needs you, done and stopped. Quiet in full-screen apps".
+
+**Wording fixed:** the tripwire marker reads **"Stopped: notes"**; the item and the Windows notification read "Pip stopped the notes session".
+
+**Screens:** `new-suggest-d`, `new-learned-d`, `new-knows-d` / `-l`, `new-knows-empty-d`, `new-why-d`, `new-undo-d`, `new-away-d` / `-l`, `peek-away-d`, `new-caught-up-d`, `eyes-sheet-d`, `worst-offline-d`, `worst-login-d`, `worst-week-d`, `worst-claude-d`, `worst-write-failed-d`, `worst-back-to-normal-d` (78 screens in all; the prototype has 74 states).

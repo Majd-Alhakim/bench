@@ -912,6 +912,67 @@ html.rm .eyes .eye{--ex:0px!important;--ey:0px!important}
 .sev-p.ok{background:var(--ok-tint);color:var(--ok-ink)}
 .rules-s .col{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 18px),transparent);padding-bottom:14px}
 
+/* ===== New since approval: eye grammar, receipts, learning, digest, worst moments ===== */
+.eyes[data-x="focused"] .eye{height:9px;width:6px;border-radius:3px;animation:scan 2.4s var(--ease-in-out) infinite alternate}
+@keyframes scan{from{transform:translateX(-2px)}to{transform:translateX(2px)}}
+.eyes[data-x="front"] .eye{transform:translate(var(--ex),calc(var(--ey) - 1.5px)) rotate(-12deg)}
+.eyes[data-x="concerned"] .eye:first-child{transform:translate(0,1.5px) rotate(16deg)}
+.eyes[data-x="concerned"] .eye:last-child{transform:translate(0,1.5px) rotate(-16deg)}
+.eyes[data-x="pleased"] .eye{height:5px;width:9px;border-radius:9px 9px 3px 3px;transform:translate(0,-1px)}
+html.freeze .eyes[data-x="focused"] .eye{animation:none!important}
+html.rm .eyes[data-x="focused"] .eye{animation:none!important}
+@media (prefers-reduced-motion: reduce){.eyes[data-x="focused"] .eye{animation:none!important}}
+.rcpt{font-family:var(--font-mono);font-size:11.5px;line-height:16px;color:var(--text-3);margin-top:6px;letter-spacing:-.01em}
+.rcpt .why{border:0;background:none;padding:0 2px;color:var(--text-3);font:600 12px var(--font-text);display:inline-flex;align-items:center;gap:3px;border-radius:4px;position:relative}
+.rcpt .why::after{content:"";position:absolute;inset:-8px -4px}
+.rcpt .why svg{width:12px;height:12px}
+.rcpt .why:hover{color:var(--action-text)}
+.applied{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:16px;padding:2px 7px 2px 5px;border-radius:99px;background:var(--bg-sunken);color:var(--text-2);white-space:nowrap}
+.applied svg{width:12px;height:12px}
+.applied span{color:var(--text-3)}
+.learned{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:start;font-size:13px;line-height:18px;color:var(--text-2);padding:10px 12px;border-radius:14px;background:var(--bg-surface);box-shadow:var(--elev-1);margin-bottom:12px}
+html[data-theme="light"] .learned{background:var(--bg-ground)}
+.learned>svg{width:16px;height:16px;margin-top:1px;color:var(--text-3)}
+.learned b{color:var(--text-1);font-weight:600}
+.learned .rcpt{margin-top:2px}
+.month{font-size:13px;line-height:18px;color:var(--text-2);margin:0 2px 12px}
+.month b{color:var(--text-1);font-weight:600}
+.digest{border-radius:14px;padding:12px 14px;background:var(--bg-surface);box-shadow:var(--elev-1);margin-bottom:12px}
+html[data-theme="light"] .digest{background:var(--bg-ground)}
+.digest .dt{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;margin-bottom:6px}
+.digest .dt b{font-weight:600}
+.digest .dt span{font-size:12px;color:var(--text-3)}
+.digest ul{margin:0;padding:0 0 0 16px;font-size:13px;line-height:19px;color:var(--text-2)}
+.digest li+li{margin-top:4px}
+.digest li .applied{margin-top:4px}
+.digest .mono{color:var(--text-1);background:var(--bg-sunken);padding:1px 5px;border-radius:5px}
+.dg-f{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}
+.dg-f .rcpt{margin:0}
+.caught{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:var(--bg-surface);box-shadow:var(--elev-1);font-size:13px;line-height:18px}
+html[data-theme="light"] .caught{background:var(--bg-ground)}
+.caught b{display:block;font-weight:600;color:var(--text-1)}
+.caught span{color:var(--text-2)}
+.cg-eyes{width:44px;height:28px;border-radius:0 0 12px 12px;background:var(--notch-bg);display:grid;place-items:center;flex:none}
+.cg-eyes .eyes{gap:6px}
+.cg-eyes .eye{width:4px;height:10px}
+.cg-eyes .eyes[data-x="pleased"] .eye{width:7px;height:4px}
+.banner{display:grid;grid-template-columns:16px 1fr;gap:10px;padding:10px 12px;border-radius:14px;background:var(--bg-sunken);font-size:13px;line-height:18px;color:var(--text-2);margin-bottom:12px}
+.banner svg{width:16px;height:16px;margin-top:1px;color:var(--text-2)}
+.banner b{color:var(--text-1);font-weight:600}
+.werr{display:grid;grid-template-columns:16px 1fr;gap:8px;font-size:13px;line-height:18px;color:var(--danger-ink);background:var(--danger-tint);border-radius:10px;padding:8px 10px;margin:0 0 10px}
+.werr svg{width:16px;height:16px;margin-top:1px}
+.werr b{font-weight:600}
+.ledger{font-size:12px;color:var(--text-3);margin:0 2px 6px}
+.zero{font-size:13px;line-height:18px;color:var(--text-3);max-width:46ch;margin:14px auto 0}
+.p-away{display:flex;flex-direction:column;gap:2px;padding:6px 10px 8px;font-size:12px;line-height:16px;color:var(--notch-text-2);border-bottom:1px solid var(--notch-line);margin-bottom:2px}
+.p-away b{color:var(--notch-text);font-weight:600;font-size:13px}
+.toast{position:absolute;overflow:hidden}
+.toast .tt{position:absolute;left:0;bottom:0;height:2px;width:100%;background:currentColor;opacity:.35;transform-origin:left;animation:tt 10s linear forwards}
+@keyframes tt{to{transform:scaleX(0)}}
+html.freeze .toast .tt{animation:none!important;transform:scaleX(.6)}
+.learned .src{font-size:12px;line-height:16px;color:var(--text-3);margin-top:2px}
+.learned .src .link{font-size:12px}
+
 </style>
 </head>
 <body>
@@ -995,6 +1056,11 @@ const I = {
   wait: ic('<path d="M8 2.5a5.5 5.5 0 1 1-5.2 3.7"/>'),
   files: ic('<rect x="3" y="4.5" width="7" height="9" rx="1.4"/><path d="M6 4.5V3.6c0-.6.5-1.1 1.1-1.1h4.8c.6 0 1.1.5 1.1 1.1v7.8c0 .6-.5 1.1-1.1 1.1H10"/>'),
   done: ic('<circle cx="8" cy="8" r="5.5"/><path d="M5.6 8.2l1.7 1.7 3.2-3.6"/>'),
+  note: ic('<rect x="3.5" y="2.5" width="9" height="11" rx="1.6"/><path d="M6 6h4M6 8.5h4M6 11h2"/>'),
+  look: '<svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><g fill="currentColor"><rect x="3.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 7)"/><rect x="8.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 7)"/></g></svg>',
+  cloud: ic('<path d="M4.5 12h7a2.8 2.8 0 0 0 .4-5.6A4 4 0 0 0 4.2 7a2.5 2.5 0 0 0 .3 5z"/><path d="M3 3l10 10"/>'),
+  key: ic('<circle cx="5.5" cy="10.5" r="2.5"/><path d="M7.3 8.7L13 3M11 5l1.5 1.5"/>'),
+  clock: ic('<circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/>'),
   close: '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" stroke-width="1"/></svg>',
   min: '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 5h8" stroke="currentColor" stroke-width="1"/></svg>',
   max: '<svg viewBox="0 0 10 10" aria-hidden="true"><rect x="1" y="1" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1"/></svg>',
@@ -1008,16 +1074,20 @@ const COPY = {
   privacy: "Nothing about your work leaves this PC unless you turn it on.",
   diag: "No paths to your projects or files."
 };
+/* Needs-you items. dec = a decision only you can make: the only kind that gets the blue (R1, "blue means your call").
+   rc = the Receipt under anything Pip did (time · supervisor tokens · rule or reason · Why?). quiet = never counted in the notch. */
 const NEEDS = {
-  wait:{sev:"attn", t:"bench is waiting for you", e:'Wants to run <span class="mono">pnpm build</span>', pe:'wants to run <span class="mono">pnpm build</span>', a:"Open session", time:"2 min", snooze:true},
-  same:{sev:"attn", t:"Two sessions are editing one file", e:'bench and api-docs both changed <span class="mono">src/router.ts</span> in the last 4 minutes.', pe:'bench and api-docs · <span class="mono">src/router.ts</span>', a:"Show both", sub:"same", time:"4 min", snooze:true},
-  done:{sev:"calm", t:"api-docs finished and is waiting", e:"Ran for 14 minutes and changed 3 files.", pe:"ran 14 min · changed 3 files", a:"Open session", time:"6 min", snooze:true},
-  trip:{sev:"danger", t:"$N stopped notes", e:"It deleted 1,240 files in 20 seconds. $N stopped it at 14:02:31 and checked it isn't running.", pe:"deleted 1,240 files in 20 s", a:"See what happened", sub:"trip", time:"now"},
-  off:{sev:"danger", t:"bench isn't protected", e:"$N hasn't seen a check from bench for 40 seconds while it ran tools.", pe:"no check for 40 s while it ran tools", a:"Fix it", sub:"fix", time:"now"},
-  merge:{sev:"calm", t:"search is ready", e:"It finished on its branch. Update it from your default branch, run the tests and open the PR?", pe:"finished on its branch", a:"Update, test, open PR", time:"1 min", snooze:true, then:"mergedone"},
-  mergedone:{sev:"ok", t:"search: PR #71 is open", e:"Updated from your default branch, 128 tests passed, PR #71 opened. Nothing was merged.", pe:"128 tests passed · PR #71 opened", a:"Open the PR", time:"now"},
-  budget:{sev:"attn", t:"Budget reached for this task. Continue?", e:"$N stopped bench before its next step. The task used the 4% of your week you gave it.", pe:"$N stopped bench before its next step", a:"Continue", a2:"Open session", time:"now"},
-  unver:{sev:"attn", t:"Claude Code 2.1.315 isn't verified yet", e:"It updated at 13:58. The safety test reruns now; until it passes, $N says so.", pe:"updated 13:58 · the safety test is rerunning", a:"Run the test", time:"8 min"}
+  wait:{sev:"attn", t:"bench is waiting for you", e:'Wants to run <span class="mono">pnpm build</span>', pe:'wants to run <span class="mono">pnpm build</span>', a:"Open session", time:"14:04", snooze:true},
+  same:{sev:"attn", t:"Two sessions are editing one file", e:'bench and api-docs both changed <span class="mono">src/router.ts</span> since 14:02.', pe:'bench and api-docs · <span class="mono">src/router.ts</span>', a:"Show both", sub:"same", time:"14:06", snooze:true},
+  done:{sev:"calm", t:"api-docs finished and is waiting", e:"Ran for 14 minutes and changed 3 files.", pe:"ran 14 min · changed 3 files", a:"Open session", time:"14:00", snooze:true},
+  trip:{sev:"danger", t:"$N stopped the notes session", e:"It deleted 1,240 files in 20 seconds. $N stopped it at 14:02:31 and checked it isn't running.", pe:"deleted 1,240 files in 20 s", a:"See what happened", sub:"trip", time:"14:02", rc:["14:02:31","no supervisor","rule: stop a session that deletes 200+ files"]},
+  off:{sev:"danger", t:"bench isn't protected", e:"$N hasn't seen a check from bench for 40 seconds while it ran tools.", pe:"no check for 40 s while it ran tools", a:"See why", sub:"fix", time:"14:05", rc:["14:05","no supervisor","heartbeat: no check for 40 s"]},
+  merge:{sev:"calm", t:"search is ready", e:"It finished on its branch. Update it from your default branch, run the tests and open the PR?", pe:"finished on its branch", a:"Open a PR for search · tests first", pa:"Update, test, open PR", dec:true, time:"14:05", snooze:true, then:"mergedone"},
+  mergedone:{sev:"ok", t:"search: PR #71 is open", e:"Updated from your default branch, 128 tests passed, PR #71 opened. Nothing was merged.", pe:"128 tests passed · PR #71 opened", a:"Open PR #71", a2:"Close the PR", time:"14:06", rc:["14:06","no supervisor","plain commands: git rebase · pnpm test · gh pr create"]},
+  budget:{sev:"attn", t:"Budget reached for this task. Continue?", e:"$N stopped bench before its next step. The task used the 4% of your week you gave it.", pe:"$N stopped bench before its next step", a:"Continue · +2% of your week", pa:"Continue", dec:true, a2:"Open session", time:"14:06", rc:["14:06","no supervisor","your budget: 4% of your week"]},
+  suggest:{sev:"calm", quiet:true, t:"You've allowed pnpm test in bench 3 times this week. Make it a rule?", e:'<span class="mono">allow pnpm test · in bench/</span> Other commands still ask. It never covers the four limits.', pe:"allowed 3 times this week", a:"Allow pnpm test in bench", dec:true, no:"Keep asking", time:"14:01", rc:["learned from 3 allows","13:12 · 13:40 · 14:01"]},
+  login:{sev:"attn", t:"Your Claude login has expired", e:'Your sessions can\'t reach Claude until you sign in. $N keeps guarding. Run <span class="mono">claude /login</span> in a terminal; $N never handles your login.', pe:'sessions can\'t reach Claude · run <span class="mono">claude /login</span>', a:"Copy the command", time:"14:03"},
+  unver:{sev:"attn", t:"Claude Code 2.1.315 isn't verified yet", e:"It updated at 13:58. The safety test reruns now; until it passes, $N says so.", pe:"updated 13:58 · the safety test is rerunning", a:"Run the test", time:"13:58"}
 };
 /* The four limits are always on (founder, 26 Oct). Per limit you choose locked with admin or not; there is no off switch. */
 const LIMITS = [
@@ -1046,7 +1116,7 @@ const BASE = () => ({
   guard:"ok", working:true, doze:false, mode:"pill", needs:[], peek:false, arrive:false, born:false,
   panel:false, tab:"usage", sub:null, meter:"trial", locked:true, level:1, draft:false, coach:false,
   menu:false, fullscreen:false, wtoast:null, toast:null, uac:false, declined:false, testFail:false, sheet:null,
-  where:"today", sessions:3
+  where:"today", sessions:3, learned:false, month:false, away:false, caught:false, banner:null, writeFail:false, pleased:false, knowsEmpty:false
 });
 let S = BASE();
 
@@ -1087,7 +1157,10 @@ const ROUTES = [
     ["n-thin-needs","Thin line: something needs you", {mode:"thin", needs:["wait"]}],
     ["n-thin-off","Thin line: not protected overrides it", {mode:"thin", guard:"off", needs:["off"]}],
     ["n-fullscreen","Full-screen app: steps aside", {fullscreen:true, needs:["trip"], wtoast:"trip"}],
-    ["sheet-notch","Sheet: every notch state", {sheet:"notch"}]
+    ["n-away-peek","Back from away: the digest in the peek", {needs:["merge"], away:true, peek:true, working:false}],
+    ["n-pleased","All caught up: the eyes are pleased", {pleased:true, working:false}],
+    ["sheet-notch","Sheet: every notch state", {sheet:"notch"}],
+    ["sheet-eyes","Sheet: the eye grammar", {sheet:"eyes"}]
   ]],
   ["The panel", [
     ["p-needs","Needs you + Usage", {panel:true, needs:["wait","same","merge"]}],
@@ -1105,6 +1178,24 @@ const ROUTES = [
     ["p-off","Not protected", {panel:true, guard:"off", needs:["off"]}],
     ["p-fix","Not protected › fix it", {panel:true, guard:"off", needs:["off"], sub:"fix"}],
     ["p-idle","No sessions running", {panel:true, working:false, sessions:0}]
+  ]],
+  ["Learns you, undo, receipts", [
+    ["p-suggest","A rule suggestion from what you allow", {panel:true, needs:["suggest"], learned:false}],
+    ["p-learned","Pip learned something (Undo)", {panel:true, learned:true, month:true, meter:"pro"}],
+    ["p-knows","Settings › What Pip knows", {panel:true, tab:"settings", sub:"knows", month:true, meter:"pro"}],
+    ["p-knows-empty","What Pip knows: the honest zero", {panel:true, tab:"settings", sub:"knows", knowsEmpty:true}],
+    ["p-why","Why? (what Pip saw and why it chose that)", {panel:true, sub:"why", meter:"pro", level:2}],
+    ["p-undo","Undo after Not now", {panel:true, needs:["same"], toast:{t:"bench's prompt is back at 14:21", undo:true}}],
+    ["p-away","While you were away (digest)", {panel:true, away:true, needs:["merge"], working:false, meter:"pro"}],
+    ["p-caught","All caught up", {panel:true, caught:true, pleased:true, working:false}]
+  ]],
+  ["Worst moments", [
+    ["w-offline","Offline", {panel:true, banner:"offline", meter:"taste"}],
+    ["w-login","Your Claude login expired", {panel:true, needs:["login"], working:false}],
+    ["w-week","Weekly limit reached", {panel:true, banner:"week", working:false}],
+    ["w-claude","Claude isn't answering", {panel:true, banner:"claude"}],
+    ["w-write","A write failed (Rules)", {panel:true, tab:"rules", draft:true, writeFail:true}],
+    ["w-back","Back to normal (after offline)", {panel:true, banner:"back"}]
   ]],
   ["Supervisor meter and plans", [
     ["m-trial","Trial: 12 days left", {panel:true, meter:"trial"}],
@@ -1128,11 +1219,12 @@ function go(id, keep){
   cur = id;
   const keepTheme = S.theme, keepRm = S.rm, keepMode = keep ? S.mode : null;
   S = Object.assign(BASE(), structuredClone(r.s));
-  S.theme = keepTheme; S.rm = keepRm;
+  S.theme = keepTheme; S.rm = keepRm; UNDO = S.toast && S.toast.undo ? () => {} : null;
   if (keepMode && !("mode" in r.s)) S.mode = keepMode;
   const u = new URL(location.href); u.searchParams.set("r", id); history.replaceState(null, "", u);
   render();
   if (S.arrive) sfx("needs", 120);
+  if (r.s.needs && (r.s.needs.includes("trip") || r.s.needs.includes("budget"))) sfx("stopped", 120);
   if (r.s.scroll === "plan") requestAnimationFrame(() => document.getElementById("plan")?.scrollIntoView({block:"start"}));
 }
 
@@ -1147,8 +1239,21 @@ function eucaVars(){
   ROOT.style.setProperty("--euca-base", P.base); ROOT.style.setProperty("--euca-light", P.light); ROOT.style.setProperty("--euca-deep", P.deep);
 }
 function hasDanger(){ return S.needs.some(k => NEEDS[k].sev === "danger"); }
+const loud = (needs = S.needs) => needs.filter(k => !NEEDS[k].quiet);
+/* Undo everywhere (C-18): every reversible change gets a 10 s Undo; what can't be undone says so. */
+let UNDO = null, toastT = 0;
+function showToast(t, undoFn, ms = 10000){
+  UNDO = undoFn || null; S.toast = {t, undo:!!undoFn};
+  clearTimeout(toastT); toastT = setTimeout(() => { S.toast = null; UNDO = null; render(); }, FREEZE ? 1e9 : ms);
+}
+function snap(){ const keep = {needs:[...S.needs], learned:S.learned, locked:S.locked, mine:MINE.map(r => ({...r}))}; return () => { S.needs = keep.needs; S.learned = keep.learned; S.locked = keep.locked; MINE.length = 0; keep.mine.forEach(r => MINE.push(r)); }; }
+/* The Receipt: one format everywhere. */
+function rcpt(parts, why = "why"){ return `<div class="rcpt num">${parts.map(esc).join(" · ")} · <button class="why" data-act="sub" data-sub="${why}">${I.look}Why?</button></div>`; }
+const applied = (t, from) => `<span class="applied">${I.note}Applied: ${t} <span>· ${from}</span></span>`;
 function statusLine(){
   if (S.guard === "off") return {off:true, t:"Not protected · bench: no check for 40 s"};
+  if (S.banner === "offline") return {t:"Protected · offline · checked 2 s ago"};
+  if (S.banner === "week") return {t:"Protected · week used up until Mon 09:00"};
   if (!S.sessions) return {t:"Protected · no sessions running"};
   return {t:`Protected · ${S.sessions} sessions · checked 2 s ago`};
 }
@@ -1173,7 +1278,7 @@ function renderDesk(){
     ['<span class="c">// TODO: drop the legacy table after the 2.0 cut</span>']
   ];
   const editor = `<div class="ln">${code.map((_, i) => i + 1).join("\n")}</div><div class="code">${code.map(c => c[0]).join("\n")}</div>`;
-  const badge = S.needs.length ? `<span class="tb-badge num">${S.needs.length}</span>` : "";
+  const badge = loud().length ? `<span class="tb-badge num">${loud().length}</span>` : "";
   $("#desk").innerHTML = `<div class="wall"></div>
   <div class="win term" aria-hidden="true"><div class="cap"><span class="t">bench — PowerShell</span><span class="cb">${I.min}</span><span class="cb">${I.max}</span><span class="cb">${I.close}</span></div><div class="body">${term}</div></div>
   <div class="win editor" aria-hidden="true"><div class="cap"><span class="t">router.ts — api-docs</span><span class="cb">${I.min}</span><span class="cb">${I.max}</span><span class="cb">${I.close}</span></div><div class="body">${editor}</div></div>
@@ -1195,29 +1300,34 @@ function renderDesk(){
 function notchHTML(o = {}){
   const s = Object.assign({}, S, o);
   const danger = s.needs.find(k => NEEDS[k].sev === "danger");
-  const markerKind = s.guard === "off" ? null : danger === "trip" ? "danger" : s.needs.length ? "attn" : null;
-  const expr = s.guard === "off" || danger === "trip" ? "concerned" : s.doze ? "sleepy" : s.arrive ? "glance" : s.unborn ? "closed" : "";
-  const marker = markerKind === "danger" ? `<span class="marker danger">${I.stop} Stopped notes</span>` : `<span class="marker attn num">${s.needs.length}</span>`;
+  const count = loud(s.needs).length;
+  const markerKind = s.guard === "off" ? null : danger === "trip" ? "danger" : count ? "attn" : null;
   const working = s.working && s.guard !== "off" && !s.doze && !danger ? 1 : 0;
+  /* Eye grammar (moments-and-motion §3, for the notch): calm · focused while sessions work · glance, then toward you, when
+     something needs you · concerned for a stop or not protected · sleepy when dozing · pleased for 1.6 s when you're caught up. */
+  const expr = s.guard === "off" || danger === "trip" ? "concerned" : s.doze ? "sleepy" : s.unborn ? "closed" : s.arrive ? "glance" : s.pleased ? "pleased" : count ? "front" : working ? "focused" : "";
+  const marker = markerKind === "danger" ? `<span class="marker danger">${I.stop} Stopped: notes</span>` : `<span class="marker attn num">${count}</span>`;
   const label = s.guard === "off"
     ? `${N()}: not protected. ${s.needs.length} need you. Open the panel.`
-    : `${N()}: protected${working ? ", sessions working" : ""}${s.needs.length ? `, ${s.needs.length} need you` : ""}. Open the panel.`;
+    : `${N()}: protected${working ? ", sessions working" : ""}${count ? `, ${count} need you` : ""}. Open the panel.`;
   return `<button class="notch${s.arrive ? " arrive" : ""}${s.born ? " born" : ""}${s.peek ? " peeking" : ""}" data-act="notch" aria-label="${esc(label)}" aria-expanded="${s.panel ? "true" : "false"}"
     data-guard="${s.guard}" data-working="${working}" data-mode="${s.mode}" data-doze="${s.doze ? 1 : 0}"${markerKind ? ` data-marker="${markerKind}"` : ""}>
     <span class="label">Not protected</span><span class="m-spacer"></span>
-    <span class="eyes" data-x="${expr}"${o.static ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
+    <span class="eyes" data-x="${expr}"${o.static || !["", "front"].includes(expr) ? "" : " data-follow"}><i class="eye"></i><i class="eye"></i></span>
     ${marker}<span class="beam"><i></i></span><span class="glow"></span><span class="thin-dot${markerKind === "danger" ? " danger" : ""}"></span>
   </button>`;
 }
 function peekHTML(){
   const st = statusLine();
   const foot = `<div class="p-foot"><span>${st.off ? '<span class="offdot"></span>' : '<span class="okdot"></span>'}${esc(st.t.split(" · ").slice(0, st.off ? 1 : 2).join(" · "))}</span><button data-act="notch">Open panel ›</button></div>`;
-  if (!S.needs.length) return `<div class="p-status"><span><span class="okdot"></span>${esc(st.t)}</span><span class="s2 num">5-hour 46% · week 62% · supervisor 78% left</span></div>`;
-  const items = S.needs.slice(0, 3).map((k, i) => {
+  const away = S.away ? `<div class="p-away"><b>While you were away · 1 h 12 min</b><span>6 answered from your rules · 1 blocked · 1 waiting</span></div>` : "";
+  const list = loud();
+  if (!list.length) return `${away}<div class="p-status"><span><span class="okdot"></span>${esc(st.t)}</span><span class="s2 num">${S.banner === "offline" ? "Offline: the guard keeps working on this PC" : "5-hour 46% · week 62% · supervisor 78% left"}</span></div>`;
+  const items = away + list.slice(0, 3).map((k, i) => {
     const n = NEEDS[k];
     return `<div class="p-item"><span class="sev ${n.sev}">${n.sev === "danger" ? (k === "trip" ? I.stop : I.alert) : n.sev === "ok" ? I.check : n.sev === "calm" ? I.done : I.alert}</span>
       <span style="min-width:0"><div class="t">${esc(nm(n.t))}</div><div class="e">${nm(n.pe)}</div></span>
-      <button class="pbtn${i === 0 && n.sev === "danger" ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button></div>`;
+      <button class="pbtn${i === 0 && n.sev === "danger" ? " pri" : ""}" data-act="need" data-k="${k}">${n.pa || n.a}</button></div>`;
   }).join("");
   return items + foot;
 }
@@ -1229,7 +1339,8 @@ function needItem(k, pri){
   return `<div class="need ${n.sev}"><span class="sev-p ${n.sev}">${g}</span><div>
     <div class="t"><span>${esc(nm(n.t))}</span><span class="time">${n.time}</span></div>
     <div class="e">${nm(n.e)}</div>
-    <div class="acts"><button class="btn${pri ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button>${n.a2 ? `<button class="btn" data-act="open" data-v="bench">${n.a2}</button>` : ""}${n.snooze ? `<button class="btn ghost" data-act="snooze" data-k="${k}">Not now</button>` : ""}</div></div></div>`;
+    ${n.rc ? rcpt(n.rc, k === "suggest" ? "knows" : "why") : ""}
+    <div class="acts"><button class="btn${pri ? " pri" : ""}" data-act="need" data-k="${k}">${n.a}</button>${n.a2 ? `<button class="btn" data-act="${k === "mergedone" ? "closepr" : "open"}" data-v="bench">${n.a2}</button>` : ""}${n.no ? `<button class="btn ghost" data-act="keepasking" data-k="${k}">${n.no}</button>` : ""}${n.snooze ? `<button class="btn ghost" data-act="snooze" data-k="${k}">Not now</button>` : ""}</div></div></div>`;
 }
 function panelHTML(){
   const st = statusLine();
@@ -1239,16 +1350,47 @@ function panelHTML(){
     <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span>${lock}</div><div class="st${st.off ? " off" : ""}">${st.off ? '<span class="offd"></span>' : '<span class="okd"></span>'}${esc(st.t)}</div></div></div>`;
   if (S.sub) return `<div class="panel" role="dialog" aria-label="${esc(N())}">${subHTML()}${S.toast ? toastHTML() : ""}</div>`;
   const danger = hasDanger();
-  const needs = S.needs.length
-    ? `<div class="sec-t"><span>Needs you · ${S.needs.length}</span></div>${S.needs.slice(0, 3).map((k, i) => needItem(k, i === 0)).join("")}${S.needs.length > 3 ? `<button class="more">Show ${S.needs.length - 3} more</button>` : ""}`
+  const order = [...loud(), ...S.needs.filter(k => NEEDS[k].quiet)];
+  const blue = order.find(k => NEEDS[k].dec);
+  const needs = order.length
+    ? `<div class="sec-t"><span>${loud().length ? `Needs you · ${loud().length}` : "A suggestion"}</span></div>${order.slice(0, 3).map(k => needItem(k, k === blue)).join("")}${order.length > 3 ? `<button class="more">Show ${order.length - 3} more</button>` : ""}`
+    : S.caught ? `<div class="caught"><span class="cg-eyes" aria-hidden="true"><span class="eyes" data-x="pleased"><i class="eye"></i><i class="eye"></i></span></span><div><b>You're all caught up.</b><span>${esc(N())} is watching ${S.sessions} sessions.</span></div></div>`
     : `<p class="quiet">Nothing needs you.</p>`;
+  const extra = bannerHTML() + (S.away ? digestHTML() : "") + (S.learned ? learnedHTML() : "");
   const tabs = [["usage","Usage"],["rules","Rules"],["settings","Settings"]];
-  return `<div class="panel" role="dialog" aria-label="${esc(N())}">${head}<div class="p-body">${needs}
+  return `<div class="panel" role="dialog" aria-label="${esc(N())}">${head}<div class="p-body">${extra}${needs}
     <div class="tabs" role="tablist" aria-label="Panel sections">${tabs.map(([id, l]) => `<button role="tab" aria-selected="${S.tab === id}" data-act="tab" data-tab="${id}">${l}</button>`).join("")}</div>
     <div role="tabpanel">${S.tab === "usage" ? usageHTML(danger || S.needs.length) : S.tab === "rules" ? rulesHTML() : settingsHTML()}</div>
   </div>${S.toast ? toastHTML() : ""}</div>`;
 }
-function toastHTML(){ return `<div class="toast" role="status">${esc(S.toast)}<button data-act="undo">Undo</button></div>`; }
+function toastHTML(){
+  const T = typeof S.toast === "string" ? {t:S.toast, undo:false} : S.toast;
+  return `<div class="toast" role="status">${esc(T.t)}${T.undo ? `<button data-act="undo">Undo</button><i class="tt" aria-hidden="true"></i>` : ""}</div>`;
+}
+function bannerHTML(){
+  const B = {
+    offline:[I.cloud, "You're offline.", `The guard keeps working: it runs on this PC. The supervisor can't be reached, so ${N()} asks you instead. Usage catches up when you're back.`],
+    week:[I.clock, "Your week is used up.", `Claude Code pauses new requests until Mon 26 Oct at 09:00. Your sessions keep their work, and ${N()} keeps guarding.`],
+    claude:[I.clock, "Claude isn't answering right now.", `Your sessions wait and retry on their own. ${N()} keeps guarding and tells you when they're moving again.`],
+    back:null
+  }[S.banner];
+  if (S.banner === "back") return `<div class="digest"><div class="dt"><b>Back online</b><span>18 min offline, 13:40–13:58</span></div><ul>
+    <li>The guard kept checking the whole time: it runs on this PC. 212 checks, 1 block.</li>
+    <li>The supervisor couldn't be reached, so ${esc(N())} asked you 2 times instead.</li>
+    <li>Usage caught up: 5-hour 51%, week 63%. Nothing was lost.</li></ul>
+    <div class="dg-f"><button class="btn" data-act="gotit">Got it</button></div></div>`;
+  return B ? `<div class="banner" role="status">${B[0]}<div><b>${B[1]}</b> ${esc(B[2])}</div></div>` : "";
+}
+function digestHTML(){
+  return `<div class="digest"><div class="dt"><b>While you were away</b><span>1 h 12 min · 12:54–14:06</span></div><ul>
+    <li>Answered your agents 6 times from your rules and what you taught it. ${applied("how you answer secrets questions", "24 Oct")}</li>
+    <li>Blocked <span class="mono">git push --force</span> in site at 13:10.</li>
+    <li>search finished on its branch. It's waiting for you below.</li></ul>
+    <div class="dg-f">${rcpt(["3.1k tokens (supervisor)", "6 answers"])}<button class="btn" data-act="gotit">Got it</button></div></div>`;
+}
+function learnedHTML(){
+  return `<div class="learned">${I.note}<div><b>${esc(N())} learned:</b> you answer “use .env.example” to secrets questions.<div class="src">From 2 of your answers, 24 Oct and today · <button class="link" data-act="sub" data-sub="knows">See it</button></div></div><button class="link" data-act="forget">Undo</button></div>`;
+}
 
 function supervisorHTML(){
   const M = {
@@ -1268,14 +1410,16 @@ function supervisorHTML(){
 }
 function usageHTML(){
   const W = S.where === "today" ? [["bench",58],["api-docs",30],["notes",12]] : [["bench",51],["api-docs",22],["notes",14],["site",9],["infra",4]];
-  return `<div class="sec-t"><span>Your Claude usage</span><span class="meta">updated 20 s ago</span></div>
+  const month = S.month ? `<div class="month">${esc(N())} asked you <b>40% less</b> this month than in September. <button class="link" data-act="sub" data-sub="knows">See why</button></div>` : "";
+  const wk = S.banner === "week";
+  return `${month}<div class="sec-t"><span>Your Claude usage</span><span class="meta">updated 20 s ago</span></div>
   <div class="group">
     <div class="meter"><div class="m-top"><span class="ml">5-hour</span><span class="mr">resets 15:40</span><span class="mv">46%</span></div>
       <div class="bar" role="meter" aria-label="5-hour limit used" aria-valuenow="46" aria-valuemin="0" aria-valuemax="100"><i style="width:46%"></i><b style="left:85%" title="Your warning line: 85%"></b></div>
       <div class="m-line">At this pace you reach it around <b>15:10</b>, 30 minutes before it resets.</div></div>
-    <div class="meter"><div class="m-top"><span class="ml">Week</span><span class="mr">resets Mon 09:00</span><span class="mv">62%</span></div>
-      <div class="bar" role="meter" aria-label="Weekly limit used" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><i style="width:62%"></i><b style="left:85%"></b></div>
-      <div class="m-line">On pace for about <b>81%</b> by Monday.</div></div>
+    <div class="meter"><div class="m-top"><span class="ml">Week</span><span class="mr">resets Mon 09:00</span><span class="mv">${wk ? "100%" : "62%"}</span></div>
+      <div class="bar${wk ? " close" : ""}" role="meter" aria-label="Weekly limit used" aria-valuenow="${wk ? 100 : 62}" aria-valuemin="0" aria-valuemax="100"><i style="width:${wk ? 100 : 62}%"></i><b style="left:85%"></b></div>
+      <div class="m-line">${wk ? "Used up. Claude Code starts again <b>Mon 26 Oct at 09:00</b>." : "On pace for about <b>81%</b> by Monday."}</div></div>
   </div>
   <div class="sec-t"><span>Where it went</span><span class="seg" role="group" aria-label="Period"><button aria-pressed="${S.where === "today"}" data-act="where" data-v="today">Today</button><button aria-pressed="${S.where === "week"}" data-act="where" data-v="week">7 days</button></span></div>
   <div class="group where">${W.map(([p, v]) => `<div class="wr"><span>${p}</span><span class="wb"><i style="width:${v}%"></i></span><span class="wp">${v}%</span></div>`).join("")}</div>
@@ -1297,7 +1441,8 @@ function draftHTML(){
     <div class="rule"><span class="k">block</span> Edit, Write · <span class="k">in</span> api-docs/migrations/ <span class="k">and everything in it</span></div>
     <div class="fx">Last week it would have blocked 3 calls, all from api-docs. It can't loosen a limit or a locked rule.</div>
     <div class="q" style="margin:-4px 0 10px">Drafted with supervisor help · counts on the meter</div>
-    <div class="acts"><button class="btn pri" data-act="adddraft">Add rule</button><button class="btn ghost" data-act="nodraft">Reword</button>
+    ${S.writeFail ? `<div class="werr" role="alert">${I.alert}<span><b>Didn't save:</b> ${esc(N())} couldn't write your Claude Code settings (another app has the file open). Your rule is still here.</span></div>` : ""}
+    <div class="acts"><button class="btn pri" data-act="adddraft">${S.writeFail ? "Try again" : "Add rule · blocks about 3 a week"}</button><button class="btn ghost" data-act="nodraft">Reword</button>
     <label><span class="cb-box on">${I.check}</span>Lock it too</label></div></div>`;
 }
 function rulesHTML(){
@@ -1322,7 +1467,8 @@ function planHTML(){
     <button class="btn">Get Pro · $20/month</button><div class="pd" style="margin:8px 0 0">The first 200 people keep $15/month for life.</div></div>`;
 }
 function settingsHTML(){
-  return `<div class="group"><button class="row" data-act="sub" data-sub="edit"><span style="width:28px;height:28px;flex:none">${avatarSVG(S.euca)}</span><span class="rl"><div class="rt">${esc(N())}</div><div class="rd">${HUE[S.euca.hue].n} ${SHAPES[S.euca.shape].n.toLowerCase()} · name and look</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>
+  return `<div class="group"><button class="row" data-act="sub" data-sub="edit"><span style="width:28px;height:28px;flex:none">${avatarSVG(S.euca)}</span><span class="rl"><div class="rt">${esc(N())}</div><div class="rd">${HUE[S.euca.hue].n} ${SHAPES[S.euca.shape].n.toLowerCase()} · name and look</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button>
+    <button class="row" data-act="sub" data-sub="knows"><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;color:var(--text-2)">${I.note.replace("<svg", '<svg width="16" height="16"')}</span><span class="rl"><div class="rt">What ${esc(N())} knows</div><div class="rd num">Together since 28 Sep · 1,204 checks · 9 rules learned</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>
   <div class="sec-t"><span>Protection</span></div>
   <div class="group">
     <div class="row"><span class="rl"><div class="rt">Admin lock</div><div class="rd">${S.locked ? "On · 4 limits and 5 rules no agent can change" : "Off · the limits and your rules run, not locked"}</div></span><button class="btn" data-act="tab" data-tab="rules">${S.locked ? "Rules" : "Lock"}</button></div>
@@ -1336,7 +1482,7 @@ function settingsHTML(){
   <div class="sec-t"><span>The notch</span></div>
   <div class="group">
     <div class="row"><span class="rl"><div class="rt">Look</div><div class="rd">Thin line suits screens with a thick top bezel</div></span><span class="seg" role="group" aria-label="Notch look"><button aria-pressed="${S.mode === "pill"}" data-act="mode" data-v="pill">Pill</button><button aria-pressed="${S.mode === "thin"}" data-act="mode" data-v="thin">Thin line</button></span></div>
-    <div class="row"><span class="rl"><div class="rt">Sounds</div><div class="rd">Needs you and done, quiet in full-screen apps</div></span><button class="sw" role="switch" aria-checked="true" aria-label="Sounds" data-act="toggle"></button></div>
+    <div class="row"><span class="rl"><div class="rt">Sounds</div><div class="rd">Needs you, done and stopped. Quiet in full-screen apps</div></span><button class="sw" role="switch" aria-checked="true" aria-label="Sounds" data-act="toggle"></button></div>
     <div class="row"><span class="rl"><div class="rt">Theme</div></span><span class="seg" role="group" aria-label="Theme"><button aria-pressed="${S.theme === "dark"}" data-act="theme" data-v="dark">Dark</button><button aria-pressed="${S.theme === "light"}" data-act="theme" data-v="light">Light</button><button aria-pressed="false">Windows</button></span></div>
   </div>
   <div class="sec-t"><span>Help</span></div>
@@ -1356,13 +1502,14 @@ function subHTML(){
       <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn pri" data-act="open" data-v="bench">Open bench</button><button class="btn" data-act="open" data-v="api-docs">Open api-docs</button></div>
       <p class="quiet" style="margin-top:12px"><button class="link" data-act="back">Don't warn for this file today</button></p></div>`;
     case "trip": return back("Tripwire stop") + `<div class="p-body">
-      <div class="big">${esc(N())} stopped notes at 14:02:31</div>
+      <div class="big">${esc(N())} stopped the notes session at 14:02:31</div>
       <p class="lead">It deleted 1,240 files in 20 seconds, starting with <span class="mono">notes/drafts/</span>. ${esc(N())} stopped the session and checked it isn't running.</p>
       <div class="sec-t"><span>What was deleted</span><button class="link" style="font-size:12px">Export the list</button></div>
       <div class="group files"><div><span>notes/drafts/</span><span>912 files</span></div><div><span>notes/archive/2025/</span><span>301 files</span></div><div><span>notes/.obsidian/</span><span>27 files</span></div></div>
       <div class="sec-t"><span>How to get them back</span></div>
       <ol class="steps"><li>notes is a git repo: run <span class="mono">git restore .</span> in it to bring back what was committed.</li><li>File History is on: open the folder, then Home › History.</li></ol>
-      <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap"><button class="btn pri">Open the folder</button><button class="btn ghost">This was expected</button></div></div>`;
+      ${rcpt(["14:02:31", "no supervisor", "rule: stop a session that deletes 200+ files"])}
+      <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap"><button class="btn">Open the notes folder</button><button class="btn ghost">This was expected</button></div></div>`;
     case "fix": return back("bench isn't protected") + `<div class="p-body">
       <p class="lead">bench ran tools for 40 seconds and ${esc(N())} saw no check. Until a real check comes through, ${esc(N())} says so here and in the notch.</p>
       <div class="group">
@@ -1372,8 +1519,34 @@ function subHTML(){
       <p class="lead">Restart bench to protect it. Nothing it did was lost.</p>
       <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn pri" data-act="open" data-v="bench">Open bench</button><button class="btn">Run the diagnostic</button></div></div>`;
     case "edit": return back("Name and look") + `<div class="p-body">${createFields(true)}</div>`;
+    case "knows": return back(`What ${esc(N())} knows`) + `<div class="p-body">${knowsHTML()}</div>`;
+    case "why": return back(`Why ${esc(N())} did this`) + `<div class="p-body">
+      <div class="big">${esc(N())} answered bench: “use .env.example”</div>
+      <p class="lead">At 13:52 bench asked: <i>“Should I read .env to get the API key?”</i> and wanted to run <span class="mono">Read .env</span>.</p>
+      <div class="group">
+        <div class="check"><span class="wait">${I.look}</span><span>What ${esc(N())} saw<small>The question, trimmed to 240 characters (Level 2), and the tool it wanted. No files.</small></span></div>
+        <div class="check"><span class="ok">${I.lock}</span><span>A rule decided first<small>“Block reading secrets” (locked) blocked <span class="mono">Read .env</span>.</small></span></div>
+        <div class="check"><span class="ok">${I.note}</span><span>Then what you taught it<small>${applied("how you answer secrets questions", "24 Oct")}</small></span></div>
+        <div class="check"><span class="ok">${I.check}</span><span>The decision<small>Answered from what you taught it, so bench didn't wait for you. It never approves a tool call.</small></span></div></div>
+      ${rcpt(["13:52", "0.6k tokens (supervisor)", "rule: block reading secrets", "learned 24 Oct"])}
+      <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"><button class="btn" data-act="wrong">That was wrong</button><button class="btn ghost" data-act="open" data-v="bench">Open bench</button></div></div>`;
   }
   return "";
+}
+function knowsHTML(){
+  if (S.knowsEmpty) return `<div class="caught" style="margin-top:4px"><span class="cg-eyes" aria-hidden="true"><span class="eyes"><i class="eye"></i><i class="eye"></i></span></span><div><b>${esc(N())} knows nothing about how you work yet.</b><span>It learns from what you allow, deny and answer. You can read and delete all of it here.</span></div></div>`;
+  const item = (t, src, used) => `<div class="row"><span class="rl"><div class="rt">${t}</div><div class="rd num">${src} · ${used}</div></span><button class="btn ghost" data-act="forgetitem">Forget</button></div>`;
+  return `<div class="ledger num">Together since 28 Sep · 1,204 checks · 9 rules learned</div>
+    <p class="lead">${esc(N())} asked you <b style="color:var(--text-1);font-weight:600">40% less</b> this month than in September: 9 rules from your approvals answered 312 prompts, and the supervisor answered 41 questions using what you taught it.</p>
+    <div class="sec-t"><span>From what you allowed</span><span class="meta">9</span></div>
+    <div class="group">${item('Allow <span class="mono">pnpm test</span> in bench', "from 212 allows · 28 Sep", "used 212 times")}${item('Allow <span class="mono">git status</span> everywhere', "from 540 allows · 28 Sep", "used 611 times")}${item('Allow <span class="mono">pnpm lint</span> in bench', "from 3 allows · 19 Oct", "used 40 times")}</div>
+    <div class="sec-t"><span>From how you answer</span><span class="meta">2</span></div>
+    <div class="group">${item("Secrets questions → “use .env.example”", "from your answers on 24 and 26 Oct", "applied 6 times")}${item("Run the whole suite? → “only the changed package”", "from 3 answers · 15 Oct", "applied 4 times")}</div>
+    <div class="sec-t"><span>From what you denied</span><span class="meta">1</span></div>
+    <div class="group">${item('No deletes in <span class="mono">notes/archive/</span>', "you denied it on 12 Oct", "applied 2 times")}</div>
+    <div class="group"><div class="row"><span class="rl"><div class="rt">Learn from what you allow, deny and answer</div><div class="rd">Nothing is learned from file contents or from other people.</div></span><button class="sw" role="switch" aria-checked="true" aria-label="Learn from what you allow, deny and answer" data-act="toggle"></button></div></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn">Export as Markdown</button><button class="btn ghost">Open the folder</button></div>
+    <p class="quiet" style="margin-top:12px"><button class="link" data-act="forgetall">Forget everything</button> · forgets 12 things; your rules stay as they are.</p>`;
 }
 function retroHTML(compact){
   const days = [32, 48, 41, 88, 60, 22, 30];
@@ -1460,7 +1633,8 @@ function setupHTML(){
   } else if (st === 8) {
     body = `<div class="done-wrap"><span class="hero" id="hero">${avatarSVG(S.euca, {soft:true, follow:true})}</span><h1>${esc(N())} is watching</h1>
       <p class="lede">2 sessions running, both protected. ${esc(N())} lives at the top of your screen and never opens by itself.</p>
-      <span class="hb"><i></i>Checked 2 s ago</span></div>`;
+      <span class="hb"><i></i>Checked 2 s ago</span>
+      <p class="zero">${esc(N())} knows nothing about how you work yet. It learns from what you allow, deny and answer. You can read and delete all of it in Settings.</p></div>`;
     foot = `<span class="sp"></span><button class="btn pri lg" data-act="fly">Send ${esc(N())} to the top</button>`;
   }
   const uac = S.uac ? `<div class="uac-scrim"><div class="uac" role="dialog" aria-label="User Account Control"><div class="bar">User Account Control</div><div class="in"><h3>Do you want to allow this app from an unknown publisher to make changes to your device?</h3>
@@ -1473,6 +1647,11 @@ function setupHTML(){
 
 /* ---------- sheets ---------- */
 function sheetHTML(){
+  if (S.sheet === "eyes") {
+    const E = [["", "Calm", "Resting: protected, nothing running. Follows your pointer, blinks every 4–7 s."], ["focused", "Focused", "Sessions are working: narrower eyes read left to right with the beam."], ["glance", "Glance", "Something arrived: one look at the marker."], ["front", "Toward you", "It waits for you: eyes up and front, following your pointer. No bobbing."], ["concerned", "Concerned", "Not protected, or Pip stopped a session: softened, looking down. Never alarmed."], ["sleepy", "Sleepy", "You're away and nothing runs. Wakes with a blink."], ["pleased", "Pleased", "You're all caught up, for 1.6 s."], ["closed", "Closed", "Before you make your Euca."]];
+    return `<div class="sheet"><h1>The eye grammar</h1><p class="sl">The eyes carry the feeling; the marker, the words and the panel carry the meaning. Only Focused moves on a loop. Reduced motion keeps every shape and drops the movement.</p>
+      <div class="sgrid">${E.map(([x, t, d]) => `<div class="scell"><div class="stop"><div class="notch-wrap" style="left:50%"><span class="notch" style="pointer-events:none"><span class="eyes" data-x="${x}"><i class="eye"></i><i class="eye"></i></span></span></div></div><div class="cap2"><b>${t}</b><span>${d}</span></div></div>`).join("")}</div></div>`;
+  }
   if (S.sheet === "notch") {
     const cells = [
       ["Resting", "Protected, nothing running. The eyes follow your pointer and blink.", {working:false}],
@@ -1524,7 +1703,7 @@ function render(){
       ${S.coach ? `<div class="coach" role="status"><p><b>${esc(N())} lives here.</b> Hover to peek at what needs you. Click to open the panel. Nothing here opens by itself.</p><button class="btn" data-act="coach">Got it</button></div>` : ""}</div>`;
   }
   if (S.menu) html += `<div class="ctx" role="menu"><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="m-mode">${S.mode === "thin" ? "Show the notch as a pill" : "Show the notch as a thin line"}</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
-  if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped notes</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
+  if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped the notes session</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
   html += demoHTML();
   $("#app").innerHTML = html;
   if (S.arrive && !FREEZE) setTimeout(() => { const n = $(".notch"); n && n.classList.remove("arrive"); $(".eyes[data-x='glance']")?.setAttribute("data-x", ""); S.arrive = false; }, 1100);
@@ -1576,7 +1755,8 @@ function tone(t0, f, dur, o = {}){
 }
 const SFX = {
   needs(t){ tone(t, 440, .17, {gain:.17}); tone(t + .11, 587.33, .21, {gain:.18}); },
-  done(t){ tone(t, 739.99 * 1.012, .38, {gain:.19, glide:1 / 1.012}); tone(t, 1479.98, .16, {gain:.04}); }
+  done(t){ tone(t, 739.99 * 1.012, .38, {gain:.19, glide:1 / 1.012}); tone(t, 1479.98, .16, {gain:.04}); },
+  stopped(t){ tone(t, 698.46, .14, {gain:.16}); tone(t + .1, 523.25, .26, {gain:.17}); }
 };
 function sfx(k, delay = 0){
   if (!SND.on || !SND.armed || FREEZE) return;
@@ -1616,28 +1796,37 @@ function act(a, el, ev){
     case "need": {
       const n = NEEDS[d.k];
       if (n.then) { S.needs = S.needs.map(k => (k === d.k ? n.then : k)); S.peek = false; }
-      else if (d.k === "mergedone") { S.needs = S.needs.filter(k => k !== d.k); S.toast = "Opened PR #71 in your browser"; setTimeout(() => { S.toast = null; render(); }, 4000); }
-      else if (d.k === "budget") { S.needs = S.needs.filter(k => k !== d.k); S.toast = "bench continues with 2% more of your week"; setTimeout(() => { S.toast = null; render(); }, 4000); }
+      else if (d.k === "mergedone") { resolve(d.k); showToast("Opened PR #71 in your browser"); }
+      else if (d.k === "budget") { resolve(d.k); showToast("bench continues with 2% more of your week. It can't be taken back once bench takes its next step."); }
+      else if (d.k === "suggest") { const u = snap(); resolve(d.k); MINE.unshift({t:'Allow <span class="mono">pnpm test</span> in bench', d:"From your approvals · learned today", on:true, lock:false}); showToast("Rule added: allow pnpm test in bench", u); }
+      else if (d.k === "login") { showToast("Copied: claude /login"); }
       else if (n.sub) { S.panel = true; S.peek = false; S.sub = n.sub; }
       else if (d.k === "unver") { say("Running the safety test"); }
-      else { S.needs = S.needs.filter(k => k !== d.k); S.toast = `Opened ${d.k === "done" ? "api-docs" : "bench"} in Windows Terminal`; S.peek = false; setTimeout(() => { S.toast = null; render(); }, 4000); }
+      else { resolve(d.k); showToast(`Opened ${d.k === "done" ? "api-docs" : "bench"} in Windows Terminal`); S.peek = false; }
       break;
     }
-    case "snooze": S.needs = S.needs.filter(k => k !== d.k); S.toast = "Back at 14:21"; setTimeout(() => { S.toast = null; render(); }, 4000); break;
-    case "undo": S.toast = null; break;
-    case "open": S.toast = `Opened ${d.v} in Windows Terminal`; S.sub = null; setTimeout(() => { S.toast = null; render(); }, 4000); break;
+    case "snooze": { const u = snap(); resolve(d.k); showToast("Hidden until 14:21. It comes back if it's still waiting.", u); break; }
+    case "keepasking": { const u = snap(); S.needs = S.needs.filter(k => k !== d.k); showToast("Pip keeps asking about pnpm test and won't suggest it again", u); break; }
+    case "closepr": { resolve("mergedone"); showToast("Closed PR #71. The branch and its commits stay as they were."); break; }
+    case "undo": if (UNDO) UNDO(); UNDO = null; S.toast = null; S.caught = false; S.pleased = false; break;
+    case "open": showToast(`Opened ${d.v} in Windows Terminal`); S.sub = null; break;
+    case "gotit": S.away = false; S.banner = null; break;
+    case "forget": { const u = snap(); S.learned = false; showToast(`Forgotten: ${N()} will ask you about secrets again`, u); break; }
+    case "forgetitem": { el.closest(".row").remove(); showToast("Forgotten. Pip asks you about this again.", () => {}); return; }
+    case "forgetall": showToast(`Forgot 12 things. Your rules stay as they are.`, () => {}); break;
+    case "wrong": S.sub = null; showToast(`Forgotten: ${N()} will ask you about secrets questions again`, () => {}); break;
     case "where": S.where = d.v; break;
     case "sw": {
       const list = d.kind === "lib" ? LIB : MINE, r = list[+d.i];
-      if (r.lock && S.locked && S.scene === "desk") { S.toast = "Locked rules change with admin. Windows will ask."; setTimeout(() => { S.toast = null; render(); }, 4000); }
-      else r.on = !r.on;
+      if (r.lock && S.locked && S.scene === "desk") showToast("Locked rules change with admin. Windows will ask.");
+      else { r.on = !r.on; if (S.scene === "desk") showToast(`${r.on ? "On" : "Off"}: ${r.t.replace(/<[^>]+>/g, "")}`, () => { r.on = !r.on; }); }
       break;
     }
     case "draftform": ev.preventDefault(); S.draft = true; break;
-    case "adddraft": S.draft = false; if (S.scene === "desk") { S.toast = "Rule added and locked"; setTimeout(() => { S.toast = null; render(); }, 4000); } break;
+    case "adddraft": S.draft = false; S.writeFail = false; if (S.scene === "desk") showToast("Rule added and locked: block edits in api-docs/migrations/", () => {}); break;
     case "nodraft": S.draft = false; break;
-    case "relock": if (S.scene === "setup") { S.declined = false; S.uac = true; } else { S.locked = true; S.toast = "Locked with Windows admin"; setTimeout(() => { S.toast = null; render(); }, 4000); } break;
-    case "lockchange": S.toast = "Changing the lock asks for admin. Windows will ask."; setTimeout(() => { S.toast = null; render(); }, 4000); break;
+    case "relock": if (S.scene === "setup") { S.declined = false; S.uac = true; } else { const u = snap(); S.locked = true; showToast("Locked with Windows admin. Undo asks for admin again.", u); } break;
+    case "lockchange": showToast("Changing the lock asks for admin. Windows will ask."); break;
     case "level": S.level = +d.v; break;
     case "mode": S.mode = d.v; S.menu = false; break;
     case "theme": S.theme = d.v; break;
@@ -1647,7 +1836,7 @@ function act(a, el, ev){
     case "traymenu": S.menu = !S.menu; break;
     case "m-panel": S.menu = false; S.panel = true; break;
     case "m-mode": S.mode = S.mode === "thin" ? "pill" : "thin"; S.menu = false; break;
-    case "quit": S.menu = false; S.toast = "Protection stays on while Eucas is closed. The notch and the heartbeat stop."; setTimeout(() => { S.toast = null; render(); }, 5000); break;
+    case "quit": S.menu = false; showToast("Protection stays on while Eucas is closed. The notch and the heartbeat stop."); break;
     case "sim-arrive": S.needs = S.needs.includes("wait") ? S.needs : ["wait", ...S.needs]; S.arrive = true; S.panel = false; jumpOpen = false; render(); sfx("needs", 60); say(`${NEEDS.wait.t}. ${S.needs.length} need you.`); return;
     case "sim-work": S.working = !S.working; S.doze = false; break;
     case "sim-doze": S.doze = !S.doze; if (S.doze) S.working = false; break;
@@ -1665,6 +1854,11 @@ function act(a, el, ev){
     default: return;
   }
   render();
+}
+/* Resolving the last item ends on "all caught up" (peak-end): pleased eyes for 1.6 s and the done sound. */
+function resolve(k){
+  const before = loud().length; S.needs = S.needs.filter(x => x !== k);
+  if (before && !loud().length) { S.caught = true; S.pleased = true; sfx("done", 200); setTimeout(() => { S.pleased = false; if (!S.panel) render(); else { const e = $(".notch .eyes"); e && e.setAttribute("data-x", ""); } }, 1600); }
 }
 function bornBoop(){ setTimeout(() => { const h = $("#hero"); if (h) { h.classList.remove("boop"); void h.offsetWidth; h.classList.add("boop"); } $(".blinker")?.animate([{transform:"scaleY(1)"},{transform:"scaleY(.1)"},{transform:"scaleY(1)"}], {duration:180}); }, 0); }
 function fly(){

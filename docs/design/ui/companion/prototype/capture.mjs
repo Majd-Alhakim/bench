@@ -77,7 +77,25 @@ const SHOTS = [
   ["meter-empty-d", "m-empty"],
   ["plan-trial-d", "m-plan-trial"],
   ["plan-taste-d", "m-plan-taste"],
-  ["tray-menu-d", "t-menu"]
+  ["tray-menu-d", "t-menu"],
+  ["eyes-sheet-d", "sheet-eyes"],
+  ["peek-away-d", "n-away-peek", TOP(520, 260)],
+  ["new-suggest-d", "p-suggest"],
+  ["new-learned-d", "p-learned"],
+  ["new-knows-d", "p-knows"],
+  ["new-knows-l", "p-knows", { theme: "light" }],
+  ["new-knows-empty-d", "p-knows-empty"],
+  ["new-why-d", "p-why"],
+  ["new-undo-d", "p-undo"],
+  ["new-away-d", "p-away"],
+  ["new-away-l", "p-away", { theme: "light" }],
+  ["new-caught-up-d", "p-caught"],
+  ["worst-offline-d", "w-offline"],
+  ["worst-login-d", "w-login"],
+  ["worst-week-d", "w-week"],
+  ["worst-claude-d", "w-claude"],
+  ["worst-write-failed-d", "w-write"],
+  ["worst-back-to-normal-d", "w-back"]
 ];
 
 const only = process.argv.slice(2);

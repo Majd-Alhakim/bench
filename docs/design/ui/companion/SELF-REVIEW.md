@@ -10,6 +10,18 @@
 
 ---
 
+## 00. New since approval (26 Oct, evening)
+The founder approved D-1 to D-8 as recommended and asked for the full app's UX features. Added (spec: [notch-and-panel §9](../../ux/companion/notch-and-panel.md), [DESIGN §11](DESIGN.md)):
+- **Learns you:** ongoing rule suggestions (quiet, never in the notch count), the "Pip learned" line with Undo, Applied chips, the ledger line, the monthly compounding line, **What Pip knows** in Settings (sources, Forget, export), the honest zero at setup.
+- **Undo everywhere** with a 10 s timer; what can't be undone says so; Close the PR on a guided merge.
+- **The Receipt** under everything Pip did, and one **Why?** page.
+- **Moments:** all caught up, While you were away (peek and panel), Back to normal.
+- **Worst moments:** offline, login expired, weekly limit, Claude not answering, write failed (plus not protected and the empty meter, already designed).
+- **Eye grammar** for the notch (8 expressions, one loop), **R1** (blue only on decisions), **C-22** (verb + object + consequence), one time format, the **stopped** sound.
+- **Fix:** the tripwire marker reads "Stopped: notes".
+
+Checked: rendered every new state (dark, two in light) and looked at them; fixed the learned card's wrapped mono source line, the digest footer, a suggestion-only list title, and a wrapped receipt. A second smoke test passes: Not now + Undo, the merge offer becoming its result, the last item folding into all caught up, suggestions not counting in the notch, Undo on rules and learned items, What Pip knows, the tripwire wording; no console errors. The first smoke test still passes.
+
 ## 0. Founder decisions applied (26 Oct, later)
 | Decision | Where it landed |
 |---|---|
