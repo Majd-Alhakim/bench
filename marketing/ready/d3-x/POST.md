@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | X |
 | **When** | Wednesday 17:00 Doha |
-| **Media** | `../media/videos/V2-s.mp4` (square, 27 s). Pip: Focused (the panel is open while sessions work); Calm on the end card |
+| **Media** | **Pending:** V2 is being remade as motion graphics after V1 is approved. Until it lands in `../media/videos`, post this text with `../media/stills/V1-panel.png` instead |
 | **Link** | In a reply: `https://eucas.app/?utm_source=x&utm_medium=social&utm_campaign=waitlist-w1` |
 
 **Before you post:** read it once out loud and change anything that doesn't sound like you. You post by hand; nothing here is posted for you.

@@ -55,7 +55,7 @@ Answer every comment within the hour for the first 3 hours.
     write("d1-x", head("Day 1 · X announcement (4 posts)",
         "X, your account: post 1, then three replies to it",
         "Monday 17:00 Doha (09:00 US Eastern)",
-        "Post 1: `../media/videos/V1-s.mp4` (square, 32.5 s, captions burned in). Pip: Concerned → Focused → Glance → Toward you → Concerned; Calm on the end card",
+        "Post 1: `../media/videos/V1-s.mp4` (square, 23.5 s, motion graphics, captions burned in). Pip: Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm",
         f"Reply 2 only: `{u('x', 'social')}`") + f"""
 ## Post 1 (attach V1-s.mp4)
 
@@ -250,7 +250,7 @@ Fill the [brackets] from tonight's query before posting. Never post a number you
 
     write("d3-x", head("Day 3 · X post",
         "X", "Wednesday 17:00 Doha",
-        "`../media/videos/V2-s.mp4` (square, 27 s). Pip: Focused (the panel is open while sessions work); Calm on the end card",
+        "**Pending:** V2 is being remade as motion graphics after V1 is approved. Until it lands in `../media/videos`, post this text with `../media/stills/V1-panel.png` instead",
         f"In a reply: `{u('x', 'social')}`") + """
 ## Text
 
@@ -270,7 +270,7 @@ Checkpoint tonight: under 40 sign-ups means the fallback in `marketing/WAITLIST.
     # ---------- Day 4 ----------
     write("d4-x", head("Day 4 · X thread: what leaves your PC",
         "X", "Thursday 17:00 Doha",
-        "Post 1: `../media/videos/V3-h.mp4` (16:9, 21 s). Pip: Focused, then Focused on the account panel; no Euca face on the setup screen",
+        "Post 1: **Pending:** V3 is being remade as motion graphics after V1 is approved. Until it lands in `../media/videos`, post this text with `../media/stills/V1-end.png` instead",
         f"Post 6: `{u('x', 'social')}`") + f"""
 ## Thread
 
@@ -433,7 +433,7 @@ Eucas: a notch at the top of your Windows screen that watches your Claude Code s
 """)
     write("d6-shorts", head("Day 6 · YouTube Shorts, TikTok, Instagram Reels",
         "Upload natively in each app (no cross-post links)", "Saturday, from 12:00 Doha, one per platform",
-        "Vertical 1080×1920: `../media/videos/V5-v.mp4` (15 s) and `../media/videos/V6-v.mp4` (13 s). Add a quiet track from the platform's own library (the files are silent)",
+        "Vertical 1080×1920: `../media/videos/V1-v.mp4` now; V5 and V6 follow once V1 is approved. Add a quiet track from the platform's own library (the files are silent)",
         f"Description: YouTube `{u('yt', 'video')}`, TikTok `{u('tiktok', 'video')}` (bio link), Reels `{u('reels', 'video')}` (bio link)") + """
 ## V5 · title / caption
 

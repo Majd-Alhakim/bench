@@ -14,7 +14,7 @@ SHORTS = os.path.join(ROOT, "..", "shorts")
 FACE = {"": "Calm", "front": "Toward you", "focused": "Focused", "glance": "Glance", "concerned": "Concerned",
         "closed": "Closed", "pleased": "Pleased", "sleepy": "Sleepy"}
 USE = {
-    "V1-s": "d1 X · d3 r/ClaudeAI (as GIF)", "V1-h": "launch X · launch Reddit", "V1-v": "Shorts / TikTok / Reels (any day)",
+    "V1-s": "d1 X · d3 r/ClaudeAI (as GIF) · LinkedIn", "V1-h": "launch X · launch Reddit · YouTube", "V1-v": "Shorts / TikTok / Reels",
     "V2-s": "d3 X", "V2-v": "Shorts / TikTok / Reels", "V3-h": "d4 X thread", "V3-v": "Shorts / TikTok / Reels",
     "V4-h": "Product Hunt video · YouTube", "V4-v": "YouTube Shorts", "V5-v": "d6 Shorts / TikTok / Reels",
     "V6-v": "d6 Shorts / TikTok / Reels",
@@ -22,6 +22,8 @@ USE = {
 
 
 def faces(video_id):
+    if video_id == "V1":  # motion graphics: the face keys in marketing/shorts/src/mg/V1.tsx
+        return "Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm; Calm on the end card"
     """Pip's faces in the order the video shows them, read from the captured screens (setup screens without Pip are skipped)."""
     src = open(os.path.join(SHORTS, "src", "videos.ts"), encoding="utf-8").read()
     boxes = json.load(open(os.path.join(SHORTS, "src", "boxes.json"), encoding="utf-8"))
@@ -148,7 +150,7 @@ Launch media are from the prototype and say "Design preview": re-record the same
 
 ### Videos (silent H.264; add a quiet platform-library track on Shorts, TikTok and Reels)
 
-Every frame is a real prototype screen, step by step, with Pip titled "Pip · your Euca" the first time it appears and a "Design preview · Eucas is in development" line throughout. Pip's faces come from the screens themselves, so they follow the eye grammar (DESIGN.md §2.3). Sources and shot lists: `marketing/shorts` (`npm run capture`, then `npm run render`).
+Motion graphics drawn in Remotion from the design spec (DESIGN.md §2, tokens-notch.css): the notch, Pip's eyes (only the eight faces of §2.3, checked against `eyes-sheet-d.png` with the `eye-sheet` still), the peek and the panels. Pip is titled "Pip · your Euca" the first time it appears, and "Design preview · Eucas is in development" stays on screen. Source: `marketing/shorts/src/mg`. **V2–V6 are being remade in this style after V1 is approved;** the old screenshot cuts were removed. Review stills: `stills/`.
 
 | File | Size | Length | Used in | Pip's faces, in order |
 |---|---|---|---|---|

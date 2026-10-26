@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | producthunt.com → Submit (you are the maker; no hunter needed) |
 | **When** | L+7 (a Tuesday) 11:01 Doha (00:01 US Pacific) |
-| **Media** | Gallery `../media/images/ph-1.png` … `ph-6.png` (1270×760), thumbnail `../media/images/ph-thumb.png` (240×240), video `../media/videos/V4-h.mp4`. **Before launch:** the media here are from the prototype and say "Design preview". Re-record the same shot lists from the shipped app (`marketing/shorts`, the same routes) and drop the label; keep Pip's faces as listed. |
+| **Media** | Gallery `../media/images/ph-1.png` … `ph-6.png` (1270×760), thumbnail `../media/images/ph-thumb.png` (240×240), video: V4 (pending, being remade as motion graphics). **Before launch:** the media here are from the prototype and say "Design preview". Re-record the same shot lists from the shipped app (`marketing/shorts`, the same routes) and drop the label; keep Pip's faces as listed. |
 | **Link** | Website: `https://eucas.app/?utm_source=producthunt&utm_medium=launchsite&utm_campaign=launch` · GitHub: `https://github.com/eucas-app/eucas` |
 | **Rules check** | Never ask for upvotes (Product Hunt penalises it). Ask people to "take a look and tell me what's missing". |
 
@@ -22,7 +22,7 @@
 
 | # | File | Caption | Pip |
 |---|---|---|---|
-| 1 | `V4-h.mp4` (the video slot) | Set up in a minute, step by step | Closed → Calm → Focused |
+| 1 | V4 16:9 (pending; the video slot) | Set up in a minute, step by step | Closed → Calm → Focused |
 | 2 | `ph-1.png` | One glance: which session needs you | Toward you |
 | 3 | `ph-2.png` | What each session is waiting for, in one panel | Toward you |
 | 4 | `ph-3.png` | A delete, a push, a send or a payment always comes to you | none (the limits list) |

@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | X |
 | **When** | Thursday 17:00 Doha |
-| **Media** | Post 1: `../media/videos/V3-h.mp4` (16:9, 21 s). Pip: Focused, then Focused on the account panel; no Euca face on the setup screen |
+| **Media** | Post 1: **Pending:** V3 is being remade as motion graphics after V1 is approved. Until it lands in `../media/videos`, post this text with `../media/stills/V1-end.png` instead |
 | **Link** | Post 6: `https://eucas.app/?utm_source=x&utm_medium=social&utm_campaign=waitlist-w1` |
 
 **Before you post:** read it once out loud and change anything that doesn't sound like you. You post by hand; nothing here is posted for you.

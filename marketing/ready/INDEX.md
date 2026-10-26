@@ -65,21 +65,13 @@ Launch media are from the prototype and say "Design preview": re-record the same
 
 ### Videos (silent H.264; add a quiet platform-library track on Shorts, TikTok and Reels)
 
-Every frame is a real prototype screen, step by step, with Pip titled "Pip · your Euca" the first time it appears and a "Design preview · Eucas is in development" line throughout. Pip's faces come from the screens themselves, so they follow the eye grammar (DESIGN.md §2.3). Sources and shot lists: `marketing/shorts` (`npm run capture`, then `npm run render`).
+Motion graphics drawn in Remotion from the design spec (DESIGN.md §2, tokens-notch.css): the notch, Pip's eyes (only the eight faces of §2.3, checked against `eyes-sheet-d.png` with the `eye-sheet` still), the peek and the panels. Pip is titled "Pip · your Euca" the first time it appears, and "Design preview · Eucas is in development" stays on screen. Source: `marketing/shorts/src/mg`. **V2–V6 are being remade in this style after V1 is approved;** the old screenshot cuts were removed. Review stills: `stills/`.
 
 | File | Size | Length | Used in | Pip's faces, in order |
 |---|---|---|---|---|
-| `videos/V1-h.mp4` | 1920×1080 (16:9) | 32.5 s | launch X · launch Reddit | Concerned → Focused → Glance → Toward you → Concerned → Calm (end card) |
-| `videos/V1-s.mp4` | 1080×1080 (1:1) | 32.5 s | d1 X · d3 r/ClaudeAI (as GIF) | Concerned → Focused → Glance → Toward you → Concerned → Calm (end card) |
-| `videos/V1-v.mp4` | 1080×1920 (9:16) | 32.5 s | Shorts / TikTok / Reels (any day) | Concerned → Focused → Glance → Toward you → Concerned → Calm (end card) |
-| `videos/V2-s.mp4` | 1080×1080 (1:1) | 26.5 s | d3 X | Focused → Calm (end card) |
-| `videos/V2-v.mp4` | 1080×1920 (9:16) | 26.5 s | Shorts / TikTok / Reels | Focused → Calm (end card) |
-| `videos/V3-h.mp4` | 1920×1080 (16:9) | 20.5 s | d4 X thread | Focused → Calm (end card) |
-| `videos/V3-v.mp4` | 1080×1920 (9:16) | 20.5 s | Shorts / TikTok / Reels | Focused → Calm (end card) |
-| `videos/V4-h.mp4` | 1920×1080 (16:9) | 52.5 s | Product Hunt video · YouTube | Closed → Calm → Focused → Calm (end card) |
-| `videos/V4-v.mp4` | 1080×1920 (9:16) | 52.5 s | YouTube Shorts | Closed → Calm → Focused → Calm (end card) |
-| `videos/V5-v.mp4` | 1080×1920 (9:16) | 14.5 s | d6 Shorts / TikTok / Reels | Focused → Glance → Toward you → Calm (end card) |
-| `videos/V6-v.mp4` | 1080×1920 (9:16) | 16.0 s | d6 Shorts / TikTok / Reels | Focused → Calm (end card) |
+| `videos/V1-h.mp4` | 1920×1080 (16:9) | 23.5 s | launch X · launch Reddit · YouTube | Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm; Calm on the end card |
+| `videos/V1-s.mp4` | 1080×1080 (1:1) | 23.5 s | d1 X · d3 r/ClaudeAI (as GIF) · LinkedIn | Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm; Calm on the end card |
+| `videos/V1-v.mp4` | 1080×1920 (9:16) | 23.5 s | Shorts / TikTok / Reels | Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm; Calm on the end card |
 
 `gif/V1-s.gif` (480 px) is V1 for places that take a GIF but not a video.
 

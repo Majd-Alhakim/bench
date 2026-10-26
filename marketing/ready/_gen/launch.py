@@ -160,7 +160,7 @@ Use `marketing/drafts/emails.md` §4 as written, with [date], [N] and the downlo
     write("launch-5-producthunt", head("Launch L+7 · Product Hunt kit",
         "producthunt.com → Submit (you are the maker; no hunter needed)",
         "L+7 (a Tuesday) 11:01 Doha (00:01 US Pacific)",
-        "Gallery `../media/images/ph-1.png` … `ph-6.png` (1270×760), thumbnail `../media/images/ph-thumb.png` (240×240), video `../media/videos/V4-h.mp4`. " + RERECORD,
+        "Gallery `../media/images/ph-1.png` … `ph-6.png` (1270×760), thumbnail `../media/images/ph-thumb.png` (240×240), video: V4 (pending, being remade as motion graphics). " + RERECORD,
         f"Website: `{u('producthunt', 'launchsite', L)}` · GitHub: `{GITHUB}`",
         "Never ask for upvotes (Product Hunt penalises it). Ask people to \"take a look and tell me what's missing\".") + f"""
 | Field | Text |
@@ -175,7 +175,7 @@ Use `marketing/drafts/emails.md` §4 as written, with [date], [N] and the downlo
 
 | # | File | Caption | Pip |
 |---|---|---|---|
-| 1 | `V4-h.mp4` (the video slot) | Set up in a minute, step by step | Closed → Calm → Focused |
+| 1 | V4 16:9 (pending; the video slot) | Set up in a minute, step by step | Closed → Calm → Focused |
 | 2 | `ph-1.png` | One glance: which session needs you | Toward you |
 | 3 | `ph-2.png` | What each session is waiting for, in one panel | Toward you |
 | 4 | `ph-3.png` | A delete, a push, a send or a payment always comes to you | none (the limits list) |

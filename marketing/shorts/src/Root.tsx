@@ -1,6 +1,8 @@
 import { Composition, Still } from "remotion";
 import { Card, Count, CountProps, Screen } from "./Card";
 import { IMAGES } from "./images";
+import { EyeSheet } from "./mg/EyeSheet";
+import { V1, V1_FRAMES } from "./mg/V1";
 import { Format, LAYOUTS, Short } from "./Short";
 import { FPS, VIDEOS, durationOf } from "./videos";
 
@@ -37,6 +39,10 @@ export const RemotionRoot: React.FC = () => (
         height={height}
       />
     ))}
+    {(["h", "v", "s"] as const).map((fmt) => (
+      <Composition key={fmt} id={`MG-V1-${fmt}`} component={V1} defaultProps={{ fmt }} durationInFrames={V1_FRAMES} fps={30} width={fmt === "v" ? 1080 : fmt === "h" ? 1920 : 1080} height={fmt === "v" ? 1920 : 1080} />
+    ))}
+    <Still id="eye-sheet" component={EyeSheet} width={1440} height={900} />
     {/* Product Hunt thumbnail: the notch at rest, Calm eyes. */}
     <Still
       id="ph-thumb"

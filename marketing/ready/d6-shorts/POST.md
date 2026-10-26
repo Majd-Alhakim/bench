@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | Upload natively in each app (no cross-post links) |
 | **When** | Saturday, from 12:00 Doha, one per platform |
-| **Media** | Vertical 1080×1920: `../media/videos/V5-v.mp4` (15 s) and `../media/videos/V6-v.mp4` (13 s). Add a quiet track from the platform's own library (the files are silent) |
+| **Media** | Vertical 1080×1920: `../media/videos/V1-v.mp4` now; V5 and V6 follow once V1 is approved. Add a quiet track from the platform's own library (the files are silent) |
 | **Link** | Description: YouTube `https://eucas.app/?utm_source=yt&utm_medium=video&utm_campaign=waitlist-w1`, TikTok `https://eucas.app/?utm_source=tiktok&utm_medium=video&utm_campaign=waitlist-w1` (bio link), Reels `https://eucas.app/?utm_source=reels&utm_medium=video&utm_campaign=waitlist-w1` (bio link) |
 
 **Before you post:** read it once out loud and change anything that doesn't sound like you. You post by hand; nothing here is posted for you.

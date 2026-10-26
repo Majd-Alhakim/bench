@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | X, your account: post 1, then three replies to it |
 | **When** | Monday 17:00 Doha (09:00 US Eastern) |
-| **Media** | Post 1: `../media/videos/V1-s.mp4` (square, 32.5 s, captions burned in). Pip: Concerned → Focused → Glance → Toward you → Concerned; Calm on the end card |
+| **Media** | Post 1: `../media/videos/V1-s.mp4` (square, 23.5 s, motion graphics, captions burned in). Pip: Focused → Glance → Toward you → Pleased → Calm → Focused → Concerned → Pleased → Calm |
 | **Link** | Reply 2 only: `https://eucas.app/?utm_source=x&utm_medium=social&utm_campaign=waitlist-w1` |
 
 **Before you post:** read it once out loud and change anything that doesn't sound like you. You post by hand; nothing here is posted for you.
