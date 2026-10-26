@@ -1,6 +1,6 @@
 # ADR-0018: The supervisor allowance is a hidden dollar budget per account, metered on the server
 
-- **Status:** Proposed (2026-10-26). Requirement: [CR-011](../requirements/change-requests/CR-011.md) §4–5 (approved), the founder's answer on drafting ([2026-10-26](../requirements/interviews/2026-10-26-v1.4-open-items.md)), [CR-012](../requirements/change-requests/CR-012.md) (the budget belongs to the account). **Amends ADR-0011** (allowance) and **ADR-0012** (quota). Evidence: the running-cost study §7b–7c (`docs/business/ops-cost-study-2026-10-26.md`).
+- **Status:** Proposed (2026-10-26). Requirement: [CR-011](../requirements/change-requests/CR-011.md) §4–5 (approved), the founder's answer on drafting ([2026-10-26](../requirements/interviews/2026-10-26-v1.4-open-items.md)), [CR-012](../requirements/change-requests/CR-012.md) (the budget belongs to the account). **Amends ADR-0011** (allowance) and **ADR-0012** (quota). Evidence: the running-cost study §7b–7c (`docs/business/ops-cost-study-2026-10-26.md`). **Amended 2026-10-26** for the no-account taste (per install; amendment at the end).
 - **Date:** 2026-10-26
 
 ## Context
@@ -48,3 +48,36 @@ ADR-0011 and SUPERVISOR §9 counted **calls** (10,000 a month). The cost study's
 - D1 cost: three writes per model call (reserve, settle, `spend_day`), about 4.8 M writes a month at the volume above, inside Workers Paid's included 50 M. The reserve is the only write on the critical path (≤ 150 ms from far regions), inside the supervisor's 3 s deadline.
 - **Every install now makes model calls** (always on, founder 2026-10-26). Exposure per account stays bounded by the caps: a Free user costs at most ~$0.52 in the first 14 days and $0.02 a month after. At 1,000 new installs a month and 10,000 free users, the worst case is about $500 + $200 a month; the typical case is about $110 + under $200. The cost study's §7b "everyone uses the full taste" is now the **expected** case, not the worst. Re-run the study with SP-SUP2's real prompt sizes and wake-up rate before launch.
 - The 1-hour access token plus the account read on every call means sign-out and delete stop spending at once.
+
+## Amendment 2026-10-26: the no-account taste (per install)
+
+Founder, 2026-10-26: *"we make people have a small taste without sign up and then they have to create account or buy pro"*, then *"Let the no account also have to try the supervisor also but like small number of usage"*. Setup can finish without an account (ADR-0017); such an install gets a **fixed number of supervised decisions in total, not monthly**. The trial start point moves too: ~~the trial **starts when setup finishes**~~ **open**, recommended at sign-up (ADR-0017); the no-account taste never counts against it.
+
+**Mechanism: the same reserve-and-settle, keyed by install instead of account.**
+- **Identity:** a random install ID made by the server at `POST /v1/install/register` (ADR-0012), held on the PC as a signed install token (DPAPI, like the account tokens). **No hardware fingerprint, no machine data** (the founder rejected fingerprints). A reinstall or a wiped profile gets a new taste; accepted, it costs cents.
+- **Period `install_taste`:** one row in D1 `install` (`id`, `decisions_used`, `used_micro_usd`, `reserved_micro_usd`, `created_at`); it never rolls over.
+- **Two caps, both checked in the one conditional `UPDATE`:** `decisions_used < anonTasteDecisions` **and** `used + reserved + :max <= anonTasteMicroUsd`. The decision count is what you see; the dollar cap is the hidden backstop, so a decision can never cost more than planned even if prompts grow (the reason this ADR rejected counting calls). Only a model call that returns a valid decision counts as one; a timeout, a `413` or a provider error settles its cost but not a decision.
+- **Anonymous daily cap:** every install-token reserve also checks `spend_day_anon` against `anonDailyMicroUsd`, inside the server-wide breaker. When it trips, no-account installs get `402 budget_empty` for the rest of the UTC day (rules only, the Euca asks you), and accounts are unaffected.
+- **Taste used up:** `402 budget_empty` with `taste: 0`; the app stores "used up", **stops calling the server**, the Euca asks you (the normal needs-you), and the panel shows one calm line, once: "Sign up for 14 more days of the supervisor". No reminders.
+- **What the app sees:** `{ period: "install_taste", tasteLeft }` (an integer of decisions). **Conflict to resolve:** decision 6 above and CR-011 say the app shows no counts; the approved addendum shows "7 of 10 supervisor answers left". Recommendation: allow a count **for the no-account taste only** (it counts answers, not budget; no money is ever sent), and scope the "no count field" contract test to the account meter. Needs the founder's OK; the fallback is a percentage like the account meter.
+
+| Config key | Starting value | Why |
+|---|---|---|
+| `anonTasteDecisions` | **10** (open: 5 / 10 / 25) | Founder brief recommendation |
+| `anonTasteMicroUsd` | 5,000 ($0.005) | 10 × the worst-case reservation (~$0.0005 at the cap on the dearest fallback model) |
+| `anonDailyMicroUsd` | 5,000,000 ($5) | Bounds farming to $150 a month; at the measured average that is ~33,000 anonymous decisions a day |
+| `installRegisterPerIp` | 3 an hour, 10 a day | Farming friction; in-memory rate limiting, no IP stored |
+
+**The size, checked.** The brief's "~$0.002 per decision" is **4 – 13 times too high**: SP-SUP1 measured **$0.000148** a call, and the cap (2,000 in, 300 out) is **~$0.00035**, **~$0.0005** on the dearest fallback (Numbers, above). So 10 decisions cost **~$0.0015 typical, $0.005 worst**, not $0.02. Ten is about one working session's worth of unclear stops (the trial's ~750 calls over 14 days is ~50 a day), enough to see Pip decide something, small enough to leave a reason to sign up. **Recommendation: keep 10, keep the hidden dollar backstop, add the anonymous daily cap.** 25 would still cost only ~$0.0125 worst per install; 5 risks the taste ending before the user has seen one useful answer. SP-SUP2's real wake-up rate should re-check it before launch (config, no release).
+
+**Worst-case cost (one-off per install, not monthly):**
+
+| Installs that use the whole taste | At the brief's $0.002 | At the cap $0.0005 (worst) | At the measured $0.00015 |
+|---|---|---|---|
+| 1,000 | $20 | $5 | $1.50 |
+| 10,000 | $200 | $50 | $15 |
+| 100,000 | $2,000 | $500 | $150 |
+
+**Farming case:** a script that re-registers installs to mint tastes gets 10 per IP a day; 1,000 rotating IPs → 10,000 installs a day × $0.005 = $50 a day, cut to **$5 a day ($150 a month at most)** by `anonDailyMicroUsd`, with OpenRouter's credit limit as the outer bound and the founder's kill switch for the anonymous path. Every farmed decision still needs a real redacted moment of the right shape to be useful, so the gain to an abuser is small.
+
+**D1 load:** one register write + three writes per decision ≈ 31 writes per install; 100,000 installs ≈ 3.1 M writes, inside the included 50 M. Each `install` row is ~60 bytes (100,000 ≈ 6 MB); rows idle for 90 days are deleted.

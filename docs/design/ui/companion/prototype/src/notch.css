@@ -555,11 +555,11 @@ html.freeze .toast .tt{animation:none!important;transform:scaleX(.6)}
 .auth .werr,.auth .banner{margin:10px 0 0}
 .field.bad{box-shadow:inset 0 0 0 1px var(--danger-fill)}
 .lede b,.lead b.em{color:var(--text-1);font-weight:600}
-.code{display:grid;grid-template-columns:repeat(6,48px);gap:8px;margin:2px 0 14px;cursor:text;width:max-content}
-.code i{height:56px;border-radius:12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-control);display:grid;place-items:center;font-style:normal;font-size:20px;line-height:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1)}
-.code i.cur{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
-.code i.cur::after{content:"";width:2px;height:22px;border-radius:1px;background:var(--text-1)}
-.code.bad i{box-shadow:inset 0 0 0 1px var(--danger-fill)}
+:is(.swin,.p-body) .code{display:grid;grid-template-columns:repeat(6,48px);gap:8px;margin:2px 0 14px;cursor:text;width:max-content}
+:is(.swin,.p-body) .code i{height:56px;border-radius:12px;background:var(--bg-ground);box-shadow:inset 0 0 0 1px var(--line-control);display:grid;place-items:center;font-style:normal;font-size:20px;line-height:26px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--text-1)}
+:is(.swin,.p-body) .code i.cur{box-shadow:inset 0 0 0 1px var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 25%,transparent)}
+:is(.swin,.p-body) .code i.cur::after{content:"";width:2px;height:22px;border-radius:1px;background:var(--text-1)}
+:is(.swin,.p-body) .code.bad i{box-shadow:inset 0 0 0 1px var(--danger-fill)}
 .p-body .code{grid-template-columns:repeat(6,44px);gap:6px}
 .p-body .code i{height:48px;background:var(--bg-surface)}
 html[data-theme="light"] .p-body .code i{background:var(--bg-ground)}

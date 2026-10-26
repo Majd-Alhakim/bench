@@ -138,7 +138,7 @@ const BASE = () => ({
   scene:"desk", step:1, euca:{name:"Pip", shape:"sphere", hue:"lavender"},
   guard:"ok", working:true, doze:false, mode:"pill", needs:[], peek:false, arrive:false, born:false,
   panel:false, tab:"usage", sub:null, meter:"trial", locked:true, draft:false, coach:false,
-  signedIn:true, auth:"email", authEmail:EMAIL, resent:false, sample:false,
+  signedIn:true, noacct:false, taste:10, auth:"email", authEmail:EMAIL, resent:false, sample:false,
   menu:false, fullscreen:false, wtoast:null, toast:null, uac:false, declined:false, testFail:false, sheet:null,
   where:"today", sessions:3, learned:false, month:false, away:false, caught:false, banner:null, writeFail:false, pleased:false, knowsEmpty:false
 });
@@ -169,7 +169,10 @@ const ROUTES = [
     ["s-rules-draft","7 · A described rule, drafted", {scene:"setup", step:7, draft:true}],
     ["s-sent","8 · What is sent (your last session, redacted)", {scene:"setup", step:8}],
     ["s-sent-sample","8 · What is sent: a labelled sample", {scene:"setup", step:8, sample:true}],
+    ["s-sent-noacct","8 · What is sent (no account)", {scene:"setup", step:8, noacct:true, signedIn:false}],
     ["s-done","9 · Pip is watching", {scene:"setup", step:9}],
+    ["s-noacct-done","9 · Pip is watching (no account)", {scene:"setup", step:9, noacct:true, signedIn:false}],
+    ["s-noacct-declined","9 · Pip is watching (no account, not locked)", {scene:"setup", step:9, noacct:true, signedIn:false, locked:false}],
     ["s-coach","After setup: the notch, once", {coach:true, born:true, working:false}]
   ]],
   ["The notch", [
@@ -249,14 +252,18 @@ const ROUTES = [
     ["p-account-founders","Settings › Account (Founders' $15 for life)", {panel:true, tab:"settings", meter:"founders", scroll:"account"}],
     ["p-signout","Account › Sign out", {panel:true, tab:"settings", sub:"signout"}],
     ["p-delete","Account › Delete account", {panel:true, tab:"settings", sub:"delete"}],
-    ["p-deleted","Account deleted: the panel shows only sign-in", {panel:true, signedIn:false, toast:{t:"Account deleted. Your rules and history stay on this PC.", undo:false}}],
-    ["p-signedout","Signed out: the panel shows only sign-in", {panel:true, signedIn:false, toast:{t:"Signed out. Pip keeps guarding.", undo:false}}],
+    ["p-deleted","Account deleted: back to no account", {panel:true, signedIn:false, noacct:true, taste:0, toast:{t:"Account deleted. Your rules and history stay on this PC.", undo:false}}],
+    ["p-signedout","Signed out: back to no account", {panel:true, signedIn:false, noacct:true, taste:0, toast:{t:"Signed out. Pip keeps guarding.", undo:false}}],
     ["p-signin","Signed out: sign in (panel)", {panel:true, signedIn:false}],
     ["p-signin-code","Sign in: the code (panel)", {panel:true, signedIn:false, auth:"code"}],
     ["p-switch","Sign in with a different account: the warning", {panel:true, signedIn:false, auth:"switch", authEmail:"kim@studio.dev"}]
   ]],
   ["Fallback", [
-    ["t-menu","Tray icon menu (fallback)", {menu:true}]
+    ["t-menu","Tray icon menu (fallback)", {menu:true}],
+    ["p-noacct","No account: the minimal panel", {noacct:true, signedIn:false, panel:true, taste:7, needs:["wait"]}],
+    ["p-noacct-empty","No account: the supervisor taste is used up", {noacct:true, signedIn:false, panel:true, taste:0, needs:["wait"]}],
+    ["t-noacct","No account: the tray menu", {noacct:true, signedIn:false, needs:[], menu:true}],
+    ["t-noacct-off","No account: the tray menu, not protected", {noacct:true, signedIn:false, needs:[], guard:"off", menu:true}]
   ]]
 ];
 const ROUTE = Object.fromEntries(ROUTES.flatMap(([, list]) => list.map(([id, label, s]) => [id, {label, s}])));
@@ -395,7 +402,8 @@ function panelHTML(){
                         : `<button class="chip attn" data-act="tab" data-tab="rules">${I.unlock}Not locked</button>`;
   const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:true, expr:S.guard === "off" ? "concerned" : undefined})}</span>
     <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span>${lock}</div><div class="st${st.off ? " off" : ""}">${st.off ? '<span class="offd"></span>' : '<span class="okd"></span>'}${esc(st.t)}</div></div></div>`;
-  if (!S.signedIn) return signedOutPanel();
+  if (S.noacct && !S.sub) return noacctPanel(head);
+  if (!S.signedIn && !S.noacct) return signedOutPanel();
   if (S.sub) return `<div class="panel" role="dialog" aria-label="${esc(N())}">${subHTML()}${S.toast ? toastHTML() : ""}</div>`;
   const danger = hasDanger();
   const order = [...loud(), ...S.needs.filter(k => NEEDS[k].quiet)];
@@ -559,6 +567,23 @@ function newsBox(){
   return `<label class="optin"><input type="checkbox"${S.news ? " checked" : ""} data-act="news"><span>Send me product news</span></label>`;
 }
 /* Founder, 2026-10-26 (U-1): signed out, the panel shows only sign-in. The guard and the locked limits keep protecting. */
+/* Founder, 2026-10-26: no account = the four limits, the tripwire and a small supervisor taste. What needs you and protection only. */
+function noacctPanel(head){
+  head = head.replace(/<button class="chip([^"]*)" data-act="tab" data-tab="rules"[^>]*>([\s\S]*?)<\/button>/, '<span class="chip$1">$2</span>'); /* no Rules tab without an account */
+  const order = [...loud(), ...S.needs.filter(k => NEEDS[k].quiet)];
+  const needs = order.length ? `<div class="sec-t"><span>Needs you · ${loud().length}</span></div>${order.slice(0, 3).map(k => needItem(k, false)).join("")}` : `<p class="quiet">Nothing needs you.</p>`;
+  const meter = S.taste > 0
+    ? `<div class="row"><span class="rl"><div class="rt num">${S.taste} of 10 supervisor answers left</div><div class="rd">When ${esc(N())} isn't sure, the supervisor answers. After that, ${esc(N())} asks you.</div></span></div>`
+    : `<div class="row"><span class="rl"><div class="rt">${esc(N())} asks you now</div><div class="rd">The 10 supervisor answers are used.</div></span></div>`;
+  return `<div class="panel" role="dialog" aria-label="${esc(N())}">${head}<div class="p-body"${S.toast ? ' style="padding-bottom:56px"' : ""}>${bannerHTML()}${needs}
+    <div class="sec-t" style="margin-top:14px"><span>Without an account</span></div><div class="group">
+      <div class="row"><span class="rl"><div class="rt">The four limits and the tripwire</div><div class="rd">${S.locked ? "Locked · they work offline" : "On, not locked · they work offline"}</div></span>${S.locked ? "" : `<button class="btn" data-act="relock">Lock</button>`}</div>
+      ${meter}
+      <button class="row" data-act="sub" data-sub="sent"><span class="rl"><div class="rt">What is sent</div><div class="rd">Only when the supervisor answers</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>
+    <p class="quiet" style="margin-top:12px">${S.taste > 0 ? "An account adds a 14-day supervisor trial, your own rules and Usage." : "Sign up for 14 more days of the supervisor."} <button class="link" data-act="signup">Create an account</button></p>
+    <div class="quiet" style="display:flex;justify-content:flex-end;margin-top:4px"><button class="link" data-act="quit">Quit Eucas</button></div>
+  </div>${S.toast ? toastHTML() : ""}</div>`;
+}
 function signedOutPanel(){
   const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:true})}</span>
     <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span></div><div class="st"><span class="okd"></span>Protected · signed out</div></div></div>`;
@@ -739,9 +764,10 @@ function setupHTML(){
       <div class="auth"><div class="field-l">Email</div><input class="field${bad ? " bad" : ""}" type="email" autocomplete="email" aria-label="Email" placeholder="you@example.com" value="${bad ? "sam@tempmail.dev" : esc(EMAIL)}"${bad ? ' aria-invalid="true" aria-describedby="auth-err"' : ""}>
       ${bad ? `<div class="werr" id="auth-err" role="alert">${I.alert}<span>Please use an address you'll keep. This one expires.</span></div>` : ""}
       ${off ? `<div class="banner" role="status">${I.cloud}<div>${esc(nm(COPY.offline)).replace(/^([^.]+.)/, "<b>$1</b>")} ${esc(N())} is already guarding: the four limits ${S.locked ? "are locked" : "run, not locked"}.</div></div>` : newsBox()}</div>
-      ${off ? "" : `<ul class="conseq"><li>${I.clock}<span>Your 14-day supervisor trial starts when setup finishes. No card.</span></li><li>${I.key}<span>Your Claude login stays as it is. Eucas never sees it.</span></li></ul>`}`;
-      foot = off ? `${backB}<span class="sp"></span><button class="btn pri lg" data-act="auth" data-v="email">Retry</button>`
-                 : `${backB}<span class="sp"></span>${send(bad)}`;
+      ${off ? "" : `<ul class="conseq"><li>${I.clock}<span>Your 14-day supervisor trial starts when setup finishes. No card.</span></li><li>${I.key}<span>Your Claude login stays as it is. Eucas never sees it.</span></li><li>${I.check}<span>Without an account: the four limits, the tripwire and 10 supervisor answers to try. Your own rules and the 14-day trial need one.</span></li></ul>`}`;
+      const skip = `<button class="btn ghost lg" data-act="noacct">Continue without an account</button>`;
+      foot = off ? `${backB}<span class="sp"></span>${skip}<button class="btn pri lg" data-act="auth" data-v="email">Retry</button>`
+                 : `${backB}<span class="sp"></span>${skip}${send(bad)}`;
     }
   } else if (st === 7) {
     const sugg = [['Allow <span class="mono">pnpm test</span> in bench',"You approved it 212 times",true],['Allow <span class="mono">git status</span> everywhere',"Read-only · 540 times",true],['Allow <span class="mono">pnpm lint</span> in bench',"Runs code from the project · 96 times",false]];
@@ -773,8 +799,17 @@ function setupHTML(){
     foot = S.testFail ? `<button class="btn ghost lg">Show what happened</button><span class="sp"></span><button class="btn pri lg">Run the diagnostic</button>` : `<span class="sp"></span>${next("Sign in")}`;
   } else if (st === 8) {
     /* CR-012 / always-on, 2026-10-26: no level to choose. Show exactly what is sent, from your own last session. */
-    body = `<h1>What is sent</h1><p class="lede">${esc(nm(COPY.privacy))}</p>${sentHTML(S.sample)}<p class="always">${esc(COPY.alwaysOn)}</p>`;
-    foot = `<span class="hint">Always in Settings › What is sent</span><span class="sp"></span>${next("Start watching")}`;
+    const privacy = S.noacct ? COPY.privacy.replace(/Your account holds .*$/, "Without an account, Eucas keeps only a random ID for this install and how many answers it has used.") : COPY.privacy;
+    body = `<h1>What is sent</h1><p class="lede">${esc(nm(privacy))}</p>${sentHTML(S.sample)}<p class="always">${esc(COPY.alwaysOn)}</p>`;
+    foot = `<span class="hint">${S.noacct ? "Always in the panel › What is sent" : "Always in Settings › What is sent"}</span><span class="sp"></span>${next("Start watching")}`;
+  } else if (st === 9 && S.noacct) {
+    /* Founder, 2026-10-26: "a small taste without sign up" + "try the supervisor ... small number of usage" */
+    const L = [[S.locked ? "The four limits are locked" : "The four limits are on, but not locked", S.locked ? "Any agent, any session" : "An agent or a repo could change them. Lock them from the panel any time; Windows asks once more."], ["The tripwire is on", "Stops a session that deletes 200+ files"], [`${S.taste} supervisor answers to try`, `When ${esc(N())} isn't sure, the supervisor answers your agents so they don't wait for you`]];
+    body = `<div class="done-wrap"><span class="hero" id="hero" style="width:84px;height:88px;margin-bottom:2px">${avatarSVG(S.euca, {soft:true, follow:true})}</span><h1>${esc(N())} is watching</h1>
+      <span class="hb"><i></i>Checked 2 s ago</span>
+      <div class="checklist" style="margin:8px auto 0;text-align:left;max-width:540px">${L.map(([t, d], i) => `<div class="ci">${i === 0 && !S.locked ? I.alert : I.check}<span>${t}<small>${d}</small></span></div>`).join("")}</div>
+      <p class="zero">With an account, ${esc(N())} gets 14 days of the supervisor, turns your words into rules and learns how you work. <button class="link" data-act="signup">Create an account</button></p></div>`;
+    foot = `<span class="sp"></span><button class="btn pri lg" data-act="fly">Send ${esc(N())} to the top</button>`;
   } else if (st === 9) {
     body = `<div class="done-wrap"><span class="hero" id="hero">${avatarSVG(S.euca, {soft:true, follow:true})}</span><h1>${esc(N())} is watching</h1>
       <p class="lede">2 sessions running, both protected. ${esc(N())} lives at the top of your screen and never opens by itself.</p>
@@ -786,7 +821,7 @@ function setupHTML(){
     <div class="app"><i style="color:#eceef3">${I.quartet.replace("<svg", '<svg width="18" height="18"')}</i><b>Eucas</b></div><div class="kv">Publisher: Unknown<br>File origin: Hard drive on this computer</div></div>
     <div class="btns"><button class="y" data-act="uacyes">Yes</button><button data-act="uacno">No</button></div></div></div>` : "";
   return `<div class="setup-scrim"><div class="swin" role="dialog" aria-label="Set up Eucas"><div class="cap"><span class="t">Eucas</span><span class="cb">${I.min}</span><span class="cb">${I.close}</span></div>
-    <div class="s-prog"><span class="dots" aria-hidden="true">${dots}</span><span>Step ${st} of ${STEPS}</span></div>
+    <div class="s-prog"><span class="dots" aria-hidden="true">${dots}</span><span>Step ${st} of ${STEPS}${S.noacct ? " · no account" : ""}</span></div>
     <div class="s-body">${body}</div><div class="s-foot">${foot}</div></div></div>${uac}`;
 }
 
@@ -847,7 +882,9 @@ function render(){
       ${S.panel ? panelHTML() : ""}
       ${S.coach ? `<div class="coach" role="status"><p><b>${esc(N())} lives here.</b> Hover to peek at what needs you. Click to open the panel. Nothing here opens by itself.</p><button class="btn" data-act="coach">Got it</button></div>` : ""}</div>`;
   }
-  if (S.menu) html += `<div class="ctx" role="menu"><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="m-mode">${S.mode === "thin" ? "Show the notch as a pill" : "Show the notch as a thin line"}</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  if (S.menu && S.noacct) html += `<div class="ctx" role="menu" style="width:264px"><div style="padding:8px 12px 6px;line-height:1.35">${S.guard === "off" ? "<b>Not protected</b><br><span style='opacity:.7'>The guard isn't answering. Restart Eucas.</span>" : `<b>Protected</b><br><span style='opacity:.7'>4 limits ${S.locked ? "locked" : "on, not locked"} · tripwire on</span>`}</div><hr><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="signup">Create an account</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  else if (S.menu) html += `<div class="ctx" role="menu"><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="m-mode">${S.mode === "thin" ? "Show the notch as a pill" : "Show the notch as a thin line"}</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  if (S.noacct && S.toast && S.scene !== "setup" && !S.panel) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div>${esc(S.toast.t)}</div>`; /* no account: Windows notifications, no panel */
   if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped the notes session</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
   html += demoHTML();
   $("#app").innerHTML = html;
@@ -976,17 +1013,19 @@ function act(a, el, ev){
     case "auth": if (d.v === "code" && S.auth === "wrong") S.resent = true; else if (d.v === "code" && S.auth === "code") { S.resent = true; say("A new code is on its way"); } S.auth = d.v; break;
     case "fillcode": if (S.scene === "setup") S.auth = "done"; else { S.signedIn = true; S.sub = null; S.auth = "email"; showToast(`Signed in as ${S.authEmail}`); } break;
     case "news": S.news = el.checked; return;
-    case "dosignout": S.signedIn = false; S.sub = null; S.auth = "email"; showToast(`Signed out. ${N()} keeps guarding.`); break;
-    case "dodelete": S.signedIn = false; S.sub = null; S.auth = "email"; showToast("Account deleted. Your rules and history stay on this PC."); break;
+    case "dosignout": S.noacct = true; S.taste = 0; S.signedIn = false; S.sub = null; S.auth = "email"; showToast(`Signed out. ${N()} keeps guarding.`); break;
+    case "dodelete": S.noacct = true; S.taste = 0; S.signedIn = false; S.sub = null; S.auth = "email"; showToast("Account deleted. Your rules and history stay on this PC."); break;
     case "mode": S.mode = d.v; S.menu = false; break;
     case "theme": S.theme = d.v; break;
     case "rm": S.rm = !S.rm; break;
     case "toggle": el.setAttribute("aria-checked", el.getAttribute("aria-checked") !== "true"); SND.on = el.getAttribute("aria-checked") === "true"; return;
     case "coach": S.coach = false; break;
     case "traymenu": S.menu = !S.menu; break;
+    case "noacct": S.noacct = true; S.signedIn = false; S.uac = false; S.step = 8; break;
+    case "signup": S.menu = false; S.noacct = false; S.sub = null; S.panel = false; S.scene = "setup"; S.step = 6; S.auth = "email"; break;
     case "m-panel": S.menu = false; S.panel = true; break;
     case "m-mode": S.mode = S.mode === "thin" ? "pill" : "thin"; S.menu = false; break;
-    case "quit": S.menu = false; showToast("Protection stays on while Eucas is closed. The notch and the heartbeat stop."); break;
+    case "quit": S.menu = false; showToast(S.noacct ? "The four limits stay on while Eucas is closed. The tripwire stops." : "Protection stays on while Eucas is closed. The notch and the heartbeat stop."); break;
     case "sim-arrive": S.needs = S.needs.includes("wait") ? S.needs : ["wait", ...S.needs]; S.arrive = true; S.panel = false; jumpOpen = false; render(); sfx("needs", 60); say(`${NEEDS.wait.t}. ${S.needs.length} need you.`); return;
     case "sim-work": S.working = !S.working; S.doze = false; break;
     case "sim-doze": S.doze = !S.doze; if (S.doze) S.working = false; break;

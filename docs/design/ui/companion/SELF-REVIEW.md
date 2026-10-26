@@ -10,6 +10,44 @@
 
 ---
 
+## 0000. No account: safety and a taste of Pip, 2026-10-26 (needs approval)
+
+**Founder decisions:** *"we make people have a small taste without sign up and then they have to create account or buy pro"* (Show HN and the awesome-claude-code list exclude sign-up-gated tools), then *"Let the no account also have to try the supervisor also but like small number of usage"*. **Partly reverses U-1** (§5b). Spec: [setup-flow.md](../../ux/companion/setup-flow.md) step 6 secondary, step 8 and step 9 without an account, edges S, T, V, W, §4, §6, §7 rows 13–17, §8 · [notch-and-panel.md §11](../../ux/companion/notch-and-panel.md) (and the signed-out and deleted states in §10) · [DESIGN §12.8](DESIGN.md).
+
+- **Path:** 1–5 the same · 6 **Continue without an account** (ghost, left of the primary; also offline) → 8 What is sent (the taste uses the supervisor) → 9 **Pip is watching** without an account (three ticks: limits locked, tripwire on, 10 supervisor answers to try; one invite line; the flight). Step 7 is skipped. About **3:45**.
+- **Surface (pending (a)):** a **minimal notch** (full eye grammar, marker, peek) and a **minimal panel** (header, what needs you, the taste "7 of 10 supervisor answers left", one quiet Create an account block). The tray is the fallback. Tray-only is the listed alternative.
+- **Taste (pending (c), ~10 per install):** used up → "0 of 10 · Pip asks you instead" + one line, once: "Sign up for 14 more days of the supervisor".
+- **Signed out / deleted** → the minimal panel (replaces "the panel shows only sign-in"); sign-in moves to the setup window (step 6), opened from the panel or the tray.
+- **Superseded during the same session:** a "Safety is on" end screen and a tray-only surface were drafted first, then replaced when the founder added the taste (the coordinator's addendum). Nothing of them remains in the docs except one mention in setup-flow step 9.
+
+**Calm and never nag, checked:** no greyed-out tabs or padlocks; the notch never changes face, marker or sound because you have no account; one invite in setup, one block in the panel, one tray item, one line once when the taste runs out. **Second person / voice:** Pip speaks of itself by name; no "I/me". **Removal test:** cut the honest zero and the trial line from step 9 (both untrue without an account); kept the third `conseq` line on step 6 (without it the ghost button is a choice you can't weigh).
+
+**Things the founder or tech lead should look at:**
+- **A count on a supervisor meter** ("7 of 10") breaks §5's "never a call count" on purpose; reasoned in DESIGN §12.8.
+- **The approved privacy line's last sentence** changes on the no-account path only (new copy for approval).
+- **Step 5's primary still reads "Sign in"**, which can look like a gate before you see the secondary on step 6. Left as approved; renaming it "Continue" is a one-word change if the founder wants the door visible a screen earlier.
+- **Measuring the no-account path:** the server sees only install IDs and taste used; linking the install ID at sign-up (to know conversion) needs a tech lead check against the privacy line.
+- **Edge D (org policy) without an account:** assumes the tripwire runs without hooks; tech lead to confirm.
+- **Assumption:** step 2 (Make your Euca) runs for everyone.
+
+**Render-and-look:** done by the coordinator, who is building the prototype states in parallel (this session has no shell and didn't touch `prototype/` or `screens/`). Screens: `setup-6-signin-d`, `setup-6-signin-offline-d`, `setup-9-noacct-d` / `-l`, `panel-noacct-d` / `-l`, `panel-noacct-empty-d`, `noacct-tray-d` / `-l`, `noacct-tray-off-d`, and the re-renders `acct-signedout-d`, `acct-deleted-d`. Results (2026-10-26): rendered at 1440×900 and looked at. **Fixed:** step 9 without an account overflowed 600 px; the lede is cut by the removal test, the hero is 84 px and the checklist 540 px wide, and the declined variant (the tallest) fits. The step 6 footer's three buttons fit at 760 px. **Fixed (pre-existing on dev):** the 6-digit code cells' `.code` grid also styled the desktop editor's `.code`, garbling the backdrop in desk and setup shots since CR-012; it is scoped to `.swin` / `.p-body` and every screen is re-rendered. The minimal panel reads calm: Needs you, then the three no-account rows and one quiet invite; the header's Locked chip is a label, not a link to Rules. Click-through s-signin → Continue without an account → What is sent → Pip is watching → the notch: no console errors. Risks to look for: the step 6 footer with three buttons at 760 px; step 9's three ticks plus the invite line inside 600 px; the `MiniPanel` empty state reading as unfinished rather than calm; the light tray menu.
+
+**Rubric for this round (on paper, before render-and-look):**
+
+| Axis | Level | Why |
+|---|---|---|
+| Copy | **Staff** | Every no-account line says what you have before what you'd get; the step 6 consequence line answers "what do I lose?" before the click; no "upgrade/unlock/limited" anywhere |
+| Visuals | **Senior** | Same character, less around it; nothing greyed out |
+| Color | **Senior** | No new colour; Cobalt never on the invite; amber only for Not locked and a low taste |
+| Type | **Senior** | ≤ 4 sizes per view, two weights, tabular counts |
+| Structure | **Senior** | Minimal panel: status → what needs you → taste → invite; the invite is last |
+| States and recovery | **Senior** | Taste full / low / used up / offline; signed out; deleted; declined lock; org policy; matrix rows in both UX files |
+| Motion and emotion | **Senior** | The homecoming is kept for everyone; no new motion |
+| Coherence | **Senior** | Same notch, header, needs-you item, meter and setup patterns; one invite pattern |
+| Intelligence | **Senior** | The taste's value line counts what Pip already did for you |
+
+**No axis below Senior on paper. Blocker before hand-off:** render-and-look of the screens above (gate 10).
+
 ## 000. Setup reorder, 2026-10-26: protect the PC before sign-in
 
 **Founder decision (*"okay do that"*):** the admin lock and the four limits move before sign-in, so a PC is protected even when setup waits at sign-in (offline, or the code email doesn't arrive). New order: 1 Find your sessions · 2 Make your Euca · 3 Your week · **4 Lock the four limits** (one UAC prompt) · **5 Watch it block a test** · **6 Sign in** · **7 Choose your rules** · 8 What is sent · 9 Pip is watching. Spec: [setup-flow.md](../../ux/companion/setup-flow.md) §1–§7.
@@ -155,7 +193,7 @@ Also worth a glance: the example Euca is "Pip", a lavender sphere; the name sugg
 
 | # | Decision | Recommended | Alternative | Answer |
 |---|---|---|---|---|
-| **U-1** | When "Sign in later" is offered | **Only when the code can't be sent or doesn't arrive** (offline, server down, edge T): accounts stay for everyone, and a broken mail provider can't block setup | Always, as a secondary on the email screen (more installs finish setup without an account) | **Revised: sign-in is mandatory:** *"don't allow to access without sign in"*. No "Sign in later" anywhere; offline, setup waits at sign-in ("You need to be online to sign in. Setup carries on once you're connected. Pip is already guarding: the four limits are locked.", Retry, Back; copy revised with the reorder in §000, where the limits are locked before sign-in). Signed out, the panel shows only sign-in; the guard and the locked limits keep protecting (*"yes"*) |
+| **U-1** | When "Sign in later" is offered | **Only when the code can't be sent or doesn't arrive** (offline, server down, edge T): accounts stay for everyone, and a broken mail provider can't block setup | Always, as a secondary on the email screen (more installs finish setup without an account) | **Partly reversed 2026-10-26 (§0000):** *"we make people have a small taste without sign up and then they have to create account or buy pro"* (Show HN and awesome-claude-code exclude sign-up-gated tools): step 6 offers **Continue without an account**, online and offline; no account gets safety and a small supervisor taste. Struck below: ~~**Revised: sign-in is mandatory:** *"don't allow to access without sign in"*. No "Sign in later" anywhere; offline, setup waits at sign-in ("You need to be online to sign in. Setup carries on once you're connected. Pip is already guarding: the four limits are locked.", Retry, Back; copy revised with the reorder in §000, where the limits are locked before sign-in). Signed out, the panel shows only sign-in;~~ the guard and the locked limits keep protecting (*"yes"*); signed out now returns to the no-account state (the minimal panel, pending (a)) |
 | **U-2** | What happens to this PC's data when a different account signs in | **Kept per account on this PC**: the new account starts empty, the old one's rules, learning and history wait for it to sign back in (nothing is deleted without asking, CR-008's spirit) | Wiped on switch (simpler, but a mistyped email would erase your learning) | **Yes** |
 | **U-3** | When the trial starts for someone who chose Sign in later | **When they sign in** (the trial belongs to the account) | When setup finishes, account or not (they'd lose trial days while offline) | **Moot** (no Sign in later) |
 | **U-4** | After Delete account, can the same email get a new trial? | **No: the server keeps a one-way hash of the email and a "trial used" flag, nothing else**, and the delete page says so ("Signing up again with this email doesn't start a new trial") | Delete everything; the same email gets a fresh trial (easy trial abuse) | **Yes** (also tech lead Q1) |
@@ -165,6 +203,7 @@ Also worth a glance: the example Euca is "Pip", a lavender sphere; the name sugg
 | **U-8** | Show the unredacted original beside the example | **No**: it would put a real secret on screen during setup; the counts say what was removed | A "Show the original (stays on this PC)" toggle | **Yes** |
 
 ## 6. Gaps (honest)
+- **No account, 2026-10-26 (§0000):** open questions (a) surface, (b) trial start, (c) taste size are pending; render-and-look is with the coordinator; spec-only: low taste, offline taste, the step 8 no-account privacy line, step 9 with H / K / D, Lock from the Not locked chip without an account, creating an account later (edge W).
 - **CR-012 / always-on, 2026-10-26:** the new and renumbered screens are **not rendered** (no shell this session; §00a lists them); spec-only: expired code, too many tries, resend cooldown, the code never arriving (edge T), redaction failing, delete failed, sign-out/delete offline.
 - **Spec-only, not drawn:** the supervisor unreachable meter line (the Level 1 line is retired); org policy; offline plan check; the "supervisor wasn't sure" item; "Show n more"; the fail-closed brick (unchanged from #57's spec).
 - **Not rendered:** 125 % / 150 % display scaling; multi-monitor; a real Windows title bar under the notch (browser tabs at the top centre) to test the 280 ms hover intent against real pointer paths — **this is the biggest UX risk and needs a test on the founder's laptop in SP-ST1**.
