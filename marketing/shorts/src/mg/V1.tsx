@@ -21,20 +21,20 @@ const NOTCH: Box = [0, 26, 250, 115];
 // Camera: [frame, box]. Between keys the camera eases; the top of the screen never leaves the top of the frame.
 const CAM: [number, Box][] = [
   [0, NOTCH],
-  [56, NOTCH],
-  [74, [0, 92, 430, 200]],
-  [140, [0, 92, 430, 200]],
+  [60, NOTCH],
+  [72, [0, 92, 430, 200]],
+  [148, [0, 92, 430, 200]],
   [160, [0, 205, 450, 350]],
-  [270, [0, 205, 450, 350]],
-  [292, [0, 150, 470, 270]],
-  [340, [0, 150, 470, 270]],
-  [356, [0, 120, 400, 230]],
-  [396, [0, 120, 400, 230]],
-  [420, [0, 200, 450, 320]],
-  [456, [0, 200, 450, 320]],
-  [476, [0, 400, 450, 320]],
-  [516, [0, 400, 450, 320]],
-  [540, NOTCH],
+  [278, [0, 205, 450, 350]],
+  [290, [0, 150, 470, 270]],
+  [344, [0, 150, 470, 270]],
+  [352, [0, 120, 400, 230]],
+  [404, [0, 120, 400, 230]],
+  [416, [0, 200, 450, 320]],
+  [460, [0, 200, 450, 320]],
+  [472, [0, 400, 450, 320]],
+  [522, [0, 400, 450, 320]],
+  [534, NOTCH],
 ];
 
 const FACES: FaceKey[] = [
@@ -49,29 +49,30 @@ const FACES: FaceKey[] = [
   { at: 580, face: "calm" },
 ];
 const BLINKS = [72, 108, 206, 252, 596];
+const PUNCHES = [24, 132, 346, 532];
 export const V1_FRAMES = 705;
 
 // Sound, synced to the motion. Eucas's own sounds carry the story beats; ticks and whooshes stay quiet.
 const CUES: Cue[] = [
-  { at: 24, sound: "needs", volume: 0.9 },
+  { at: 24, sound: "needs", volume: 0.6 },
   { at: 58, sound: "whoosh", volume: 0.21 },
   { at: 118, sound: "tick", volume: 0.5 },
-  { at: 132, sound: "done", volume: 0.85 },
+  { at: 132, sound: "done", volume: 0.55 },
   { at: 154, sound: "whoosh", volume: 0.18 },
   ...[166, 178, 190, 202].map((at) => ({ at, sound: "tick" as const, volume: 0.22 })),
   { at: 283, sound: "whoosh", volume: 0.18 },
-  { at: 346, sound: "stopped", volume: 0.95 },
+  { at: 346, sound: "stopped", volume: 0.7 },
   { at: 402, sound: "whoosh", volume: 0.21 },
   { at: 470, sound: "tick", volume: 0.4 },
   { at: 520, sound: "whoosh", volume: 0.15 },
-  { at: 532, sound: "done", volume: 0.8 },
+  { at: 532, sound: "done", volume: 0.5 },
   { at: 598, sound: "whoosh", volume: 0.24 },
 ];
+// The score (Spring Hope, see CREDITS) swells on its own at the stop, so only the softer beats duck it.
 const DUCKS: Duck[] = [
-  { at: 24, depth: 0.45, hold: 12 },
-  { at: 132, depth: 0.4, hold: 14 },
-  { at: 346, depth: 0.7, hold: 22 },
-  { at: 532, depth: 0.4, hold: 14 },
+  { at: 24, depth: 0.3, hold: 10 },
+  { at: 132, depth: 0.25, hold: 10 },
+  { at: 532, depth: 0.25, hold: 10 },
 ];
 const END = 600;
 
@@ -83,7 +84,9 @@ function camera(f: number, fmt: Fmt) {
   const [fb, b] = CAM[Math.min(i + 1, CAM.length - 1)];
   const p = fb === fa ? 1 : interpolate(f, [fa, fb], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeInOut });
   const fit = (bx: Box) => Math.min(L.stage[0] / bx[2], L.stage[1] / bx[3]);
-  const S = Math.exp(interpolate(p, [0, 1], [Math.log(fit(a)), Math.log(fit(b))]));
+  // A small punch-in on the story beats (needs you, done, the stop), timed to the music's accents.
+  const punch = PUNCHES.reduce((m, at) => m + (f >= at ? 0.055 * Math.exp(-(f - at) / 6) * Math.min(1, (f - at + 1) / 2) : 0), 0);
+  const S = Math.exp(interpolate(p, [0, 1], [Math.log(fit(a)), Math.log(fit(b))])) * (1 + punch);
   const cx = interpolate(p, [0, 1], [a[0], b[0]]);
   const cy = interpolate(p, [0, 1], [a[1], b[1]]);
   const tx = L.sx + L.stage[0] / 2 - cx * S;
@@ -288,7 +291,7 @@ export const V1: React.FC<{ fmt: Fmt }> = ({ fmt }) => {
         {caption("Stop babysitting your agents.", 536, END - 4)}
       </div>
       <EndCard f={f} fmt={fmt} />
-      <Soundtrack music="music-v1" level={0.8} cues={CUES} ducks={DUCKS} />
+      <Soundtrack music="music-v1-spring" level={0.85} cues={CUES} ducks={DUCKS} />
     </AbsoluteFill>
   );
 };

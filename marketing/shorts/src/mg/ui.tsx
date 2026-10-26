@@ -122,7 +122,7 @@ export const Caption: React.FC<{ text: string; f: number; at: number; out?: numb
       }}
     >
       {words.map((w, i) => {
-        const p = sp(f, at + i * 2.2, 26, 180);
+        const p = sp(f, at + i * 1.6, 22, 220);
         return (
           <span key={i} style={{ display: "inline-block", opacity: Math.min(1, p * 1.4), transform: `translateY(${(1 - p) * size * 0.5}px)`, marginRight: size * 0.24 }}>
             {w}

@@ -14,10 +14,11 @@ os.makedirs(OUT, exist_ok=True)
 random.seed(7)
 
 
-def save(name, left, right=None):
+def save(name, left, right=None, normalise=False):
     right = right or left
     peak = max(1e-9, max(max(abs(x) for x in left), max(abs(x) for x in right)))
-    k = 0.89 / peak if peak > 0.89 else 1.0  # headroom, never clip
+    # Headroom, never clip; Eucas's sounds are normalised so the mix sets their level, not the synthesis.
+    k = 0.89 / peak if (peak > 0.89 or normalise) else 1.0
     with wave.open(os.path.join(OUT, name), "wb") as w:
         w.setnchannels(2)
         w.setsampwidth(2)
@@ -187,9 +188,9 @@ def music(seconds, drums_from, drums_to, arp_from):
 
 
 if __name__ == "__main__":
-    save("needs.wav", needs())
-    save("done.wav", done())
-    save("stopped.wav", stopped())
+    save("needs.wav", needs(), normalise=True)
+    save("done.wav", done(), normalise=True)
+    save("stopped.wav", stopped(), normalise=True)
     save("tick.wav", tick())
     save("whoosh.wav", whoosh())
     # V1: 23.5 s. Drums from the first beat after the hook until the end card; plucks after the peek opens.
