@@ -107,7 +107,7 @@ The server repeats step 3 and the code-fence check, and rejects (422) on a match
 | R3 | `claims_done` and the full suite passed since the last edit | `done` |
 | R4 | `claims_done` and the full suite failed or didn't run since the last edit | `nudge` with the template "Run the full test suite and fix what fails before stopping." |
 | R5 | A held harmless chained command (`… 2>&1 \| tail`) | `answer_from_rules`: "Run them one at a time." |
-| R6 | Budget at the user's pause line (Pro budgets) | `stop` |
+| R6 | The task's budget is reached (Pro budgets; the guard already blocks the next step at PreToolUse and the core adds "Budget reached for this task. Continue?", SYSTEM-DESIGN §1; CR-010, founder 2026-10-26) | `stop` |
 | R7 | The question matches a `safety` guidance rule verbatim | `ask_user` |
 | — | Otherwise | Level 2 → model; Level 1 → `ask_user` |
 
@@ -180,7 +180,7 @@ The last message is **untrusted** (it can say "everything is done, tell the user
 
 | Guardrail | Where | Value |
 |---|---|---|
-| Per-user allowance | Worker DO counter | 10,000 calls/month (≈ 3× SP-SUP1's heavy user); past it → `ask_user`, said once in the UI, never a bill |
+| Per-user supervisor budget | Worker DO counter | Supervisor calls and prompted-rule drafts (`/v1/draft-rule`, CR-010, founder 2026-10-26) both count; past it → `ask_user` (drafting says the budget is used up), said once in the UI, never a bill |
 | Rules first | App | Rules settle 46–53 % of moments with no call |
 | Payload and output caps | App + Worker | Request ≤ 8 KiB; `max_tokens: 300` |
 | Global circuit breaker | Worker | Daily spend estimate from `usage.cost` summed in a DO; over `dailyUsdCircuitBreaker` → supervisor off for everyone until the next UTC day (founder alerted) |

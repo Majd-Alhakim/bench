@@ -10,8 +10,8 @@ Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priorit
 
 - **Before G6, spikes only (E17, about 5 days):** SP-H1, SP-ST1, S-1, SP-TW1, S-4, S-6, S-2 (optional); SP-SUP2 is Pro, after v0.1.
 - **Alongside:** landing page and waitlist on eucas.app (26.1, the demand test; published only after the client's review).
-- **After G6 (about 28 build days, six 3-day sprints over two lanes):** E18 foundation, server and release (unsigned v0.1, SHA-256 published) · E19 guard and limits · E20 proof (heartbeat, canary, tripwire) · E21 rules · E22 usage · E23 sessions (needs-you, same-file) · E24 first run and diagnostic.
-- **Placed but not estimated** (outside the 28 days; BRD §10 #45, #46, PRD §11.1 #1): 19.7 choose and lock your rules (D-4), 21.2 prompted rules, 23.3 guided merge.
+- **After G6 (about 32 build days, seven 3-day sprints over two lanes; CR-010's 28 plus 4 added 2026-10-26):** E18 foundation, server and release (unsigned v0.1, SHA-256 published) · E19 guard and limits · E20 proof (heartbeat, canary, tripwire) · E21 rules · E22 usage · E23 sessions (needs-you, same-file) · E24 first run and diagnostic.
+- **In v0.1, Free (founder, 2026-10-26):** 19.7 / A-2 choose and lock your rules (D-4, 1 d), 21.2 / R-2 prompted rules (1.5 d), 23.3 / M-1 guided merge (plain code, 1.5 d).
 - **After v0.1:** E25 Pro ($20/month; the first 200 payers keep $15/month for life: budgets, supervisor, unlimited details, cloud beta) · E26 launch (the Anthropic email after build and testing; signing once revenue covers it).
 
 ## Sprint 0: Inception

@@ -160,6 +160,7 @@ Native Windows 11 menu: **Open Eucas** · Pause notifications for 1 hour · Paus
 - **The state word isn't repeated:** inside a "What needs you" section the card doesn't carry a "Needs you" tag (copy removal test); the avatar badge has the accessible text.
 - **After:** the card leaves and an `UndoToast` says what happened for 10 s ("Opened bench · it's the Windows Terminal tab titled "bench"", "Snoozed until 14:17"). Answered in the terminal: it resolves itself ("Answered in bench") *(spec)*.
 - **Never** for anything a limit covers; those are blocked, not asked. No bulk "Allow all".
+- **Budget reached (Pro; CR-010, founder 2026-10-26; spec, not drawn yet):** when a budget runs out, Eucas stops the session before its next step and adds a card whose text is "**Budget reached for this task. Continue?**" Copy says "stops before the next step", never "pauses".
 
 ### 4.8 `SuggestedRuleChip`
 
@@ -175,6 +176,8 @@ The intelligence deposit, on the card where you're doing the work: after 10+ man
 
 - `RuleCard`: `command` · "in bench/" · "Auto-approved 1,204 times since 12 Oct · last used 2 min ago" · Ink switch · overflow (Edit scope, Delete). The live counter keeps each rule's effect visible.
 - `LimitsPanel` (top of Rules, collapsed to one line): lock · "**4 limits always on:** delete · push to your default branch · send · pay. No rule can change them." Expanded: **the promise** (fixed string), what each limit covers, **the gap** (fixed string) plus "Pattern checks catch common forms of these commands; they can't see every way a program could do the same thing.", and "Blocked calls are never asked: Eucas tells the session to hand back to you. If you meant it, run it yourself in a terminal."
+  - **Lock choice per limit (D-4, CR-010, founder 2026-10-26; spec, not drawn yet):** each of the four limit rows shows on with **no off switch**. Its one control is **Locked** (managed settings, with admin) / **Not locked** (user scope; the row carries the words "not locked"). Changing which limits are locked raises the UAC prompt again. Same control as first-run "Choose your rules" (§4.23).
+- `PromptedRule` ("Add your own", in v0.1, Free; CR-010, founder 2026-10-26; spec, not drawn yet): describe a rule in plain words → `RulePreview` shows exactly what it allows or blocks → **Confirm**. Drafted by the provider-hosted model through the Eucas server; only your sentence is sent; it counts toward the supervisor budget. No drafted rule can make Eucas auto-approve one of the four limits. Lives under Your rules and in first-run "Choose your rules".
 
 ### 4.11 `UsageMeter` and `ForecastLine`
 
@@ -189,7 +192,8 @@ By session / by project (segmented) × Today / 7 days (segmented). Columns: name
 
 ### 4.13 `SameFileCard`
 
-"**Two sessions are editing the same file**" · Warning tag (outline: it's not a needs-you) · "api-docs changed `src/router.ts` 4 minutes after bench did. If both keep going, one may overwrite the other's work." · two facts side by side (each session's avatar, last edit time, lines changed) · **Show both** (secondary) · Open bench · Open api-docs · "Don't warn for this file today". Compact in the popover: split glyph, `src/router.ts`, both names, Show both. Never blocks the edit; never says "conflict" when git would merge it.
+"**Two sessions are editing the same file**" · Warning tag (outline: it's not a needs-you) · "api-docs changed `src/router.ts` 4 minutes after bench did. If both keep going, one may overwrite the other's work." · two facts side by side (each session's avatar, last edit time, lines changed) · **Show both** (secondary) · **Merge safely** · Open bench · Open api-docs · "Don't warn for this file today". Compact in the popover: split glyph, `src/router.ts`, both names, Show both. Never blocks the edit; never says "conflict" when git would merge it.
+- **Merge safely** (guided merge, in v0.1, Free; CR-010, founder 2026-10-26; spec, not drawn yet): runs a plain-code rebase, runs your tests and opens the PR, with no AI. On a conflict or a failing test it stops and names the files.
 
 ### 4.14 `ProtectionStatusCard`
 
@@ -197,7 +201,7 @@ By session / by project (segmented) × Today / 7 days (segmented). Columns: name
 
 ### 4.15 `LogRow` (one row for blocks, warnings, tripwire stops, guard changes)
 
-Glyph (block: filled Ink disc with a bar · warning: amber triangle · tripwire: stop square, red · guard off: slashed circle, red · guard on: check, green) with its word for screen readers · time `13:58` (mono, Text 3) · session · what (mono, ellipsis) · why in plain words ("a push to your default branch") · chevron. Expands in place (`aria-expanded`): What · Why · Decided by ("Limit · push to default branch") · Session and where it runs · the raw hook decision (mono) · for blocks, "If you meant it, run it yourself in a terminal." and **Copy command** (secondary, the only escape). Filter chips: All · Blocks · Warnings · Tripwire · Guard; **Export** (Markdown/CSV). The same row is the canary's receipt in first run, so the first thing you ever see logged looks exactly like every later one. Pattern: Stripe's security history (Refero), quieter.
+Glyph (block: filled Ink disc with a bar · warning: amber triangle · tripwire: stop square, red · guard off: slashed circle, red · guard on: check, green) with its word for screen readers · time `13:58` (mono, Text 3) · session · what (mono, ellipsis) · why in plain words ("a push to your default branch") · chevron. Expands in place (`aria-expanded`): What · Why · Decided by ("Limit · push to your default branch") · Session and where it runs · the raw hook decision (mono) · for blocks, "If you meant it, run it yourself in a terminal." and **Copy command** (secondary, the only escape). Filter chips: All · Blocks · Warnings · Tripwire · Guard; **Export** (Markdown/CSV). The same row is the canary's receipt in first run, so the first thing you ever see logged looks exactly like every later one. Pattern: Stripe's security history (Refero), quieter.
 
 ### 4.16 `Checklist` (detection · install · diagnostic)
 
@@ -239,11 +243,11 @@ One per screen at most, inside the page: glyph · bold cause · one sentence (wh
 
 ### 4.22 `ProLine` (D-2: waitlist)
 
-A single Text 2 line with a text link, same look as everything else: "Pro can pause bench at a budget you set, before the limit does. **Get notified** · Not interested". After Get notified: "You're on the list. Eucas tells you here when it's ready." Not interested hides that moment for good. Shown only at the five moments in ia-and-flows §4, once a week each, one per day across the app; never in a worst moment, a toast or first run; hidden offline; hidden entirely when D-2 is (a).
+A single Text 2 line with a text link, same look as everything else: "Pro stops bench before the next step when it reaches a budget you set, before the limit does. **Get notified** · Not interested" (CR-010, founder 2026-10-26: "stops before the next step", never "pauses"). After Get notified: "You're on the list. Eucas tells you here when it's ready." Not interested hides that moment for good. Shown only at the five moments in ia-and-flows §4, once a week each, one per day across the app; never in a worst moment, a toast or first run; hidden offline; hidden entirely when D-2 is (a).
 
 ### 4.23 First-run components
 
-`FirstRunWindow` (720 × 560, a 5-bar step indicator "3 of 5", Back until something is written) · `UacFrame` (the sentence before it: "Windows is asking for permission. It will name Eucas Labs."; the button reads "Waiting for Windows…"; the prototype draws the Windows 11 UAC dialog as an illustration, grey for a verified publisher) · `CanaryLog` (three live lines, then the block lands on a gentle spring with the Done sound, then the same `LogRow` you'll see in Protection) · `PinHelper` (a drawn Windows 11 tray corner with the ^ arrow and the Eucas icon outlined in the Windows accent, one sentence, **Keep it visible**) · `Installer` (no choices: "For you only. No admin needed.").
+`FirstRunWindow` (720 × 560, a 5-bar step indicator "3 of 5", Back until something is written; gains one step for "Choose your rules", CR-010, founder 2026-10-26) · `ChooseRules` (CR-010, founder 2026-10-26; spec, not drawn yet; before `UacFrame`): the four limits shown on with no off switch, each with the Locked / Not locked choice (§4.10); other library rules each on or off; **Add your own** (`PromptedRule`, §4.10); the promise (fixed string) under the limits; the UAC step then asks admin only for the locked limits, and is skipped if none is locked · `UacFrame` (the sentence before it, v0.1 unsigned, CR-010, founder 2026-10-26: "Windows is asking for permission. Because Eucas isn't code-signed yet, it shows a yellow box that says 'Unknown publisher'. Check that it names `eucas-elevate.exe`, from Eucas's folder, then choose Yes." Was "It will name Eucas Labs."; no copy tells you to press No on "Unknown publisher"; the button reads "Waiting for Windows…"; the illustration of the Windows 11 UAC dialog should be the **yellow, Unknown publisher** version) · `CanaryLog` (three live lines, then the block lands on a gentle spring with the Done sound, then the same `LogRow` you'll see in Protection) · `PinHelper` (a drawn Windows 11 tray corner with the ^ arrow and the Eucas icon outlined in the Windows accent, one sentence, **Keep it visible**) · `Installer` (no choices: "For you only. No admin needed.").
 
 ---
 
@@ -275,7 +279,7 @@ type UsageMode = "plan" | "tokens_only" | "api" | "limit_reached";
 | Rules | Fewer than 3 rules: five templates appear | Dry run: "checking 7 days…" in the preview *(spec)* | "Your settings file is locked by another program. Nothing changed. Retry" *(spec)* | Unaffected | `rules` | Organisation: rules read-only with why |
 | Protection | Log empty: "Nothing blocked yet. Every block shows here with why." *(spec)* | Canary running: the header button reads "Running the test…" *(spec)* | Canary failed: amber, then red (`not-verified`) | Hook-only check passes; a full test reruns online | `protection` | Red ring + cause + action (`guard-off-protection`, `org-blocked`) |
 | Usage | "Usage appears after your first session." *(spec)* | — | Status line not reporting → Diagnostic *(spec)* | Unaffected | `usage` | — |
-| First run | Thin history → templates (`fr-edge-f`) | Detection lines with arcs; streaming retro cards (`fr-building`) | Canary not blocked (`fr-edge-j`), couldn't run (`fr-edge-k`), policy (`fr-edge-d`), admin declined (`fr-edge-h`) | Nothing in first run needs the network (unless D-5 = model turn) | `fr-protected` | Never shows "You're protected" after J |
+| First run | Thin history → templates (`fr-edge-f`) | Detection lines with arcs; streaming retro cards (`fr-building`) | Canary not blocked (`fr-edge-j`), couldn't run (`fr-edge-k`), policy (`fr-edge-d`), admin declined (`fr-edge-h`) | Nothing in first run needs the network (unless D-5 = model turn, or you use "Add your own", which drafts through the Eucas server, CR-010; its offline state is open) | `fr-protected` | Never shows "You're protected" after J |
 
 ### 5.3 Worst moments (each names the cause, what's safe, one next step)
 
@@ -325,7 +329,7 @@ Second person, the app speaking as your main agent; sentence case; numbers first
 - **The gap:** "Eucas sees tool calls, not what a program does once it runs, and nothing in the cloud. Keep git and backups on."
 - **The privacy line:** "Eucas keeps counts, never the text of your prompts or files, and nothing leaves this PC."
 
-The gap line sits next to the promise everywhere the promise appears (first run step 4, Rules › Limits) and in Protection › What Eucas can't see. No absolute claim about the agent anywhere: the agent-facing words are "blocks the known ways", "catches common forms". "Claude Code" appears only in plain text ("your Claude Code sessions", "Verified for Claude Code 2.1.314"), never as a product name, logo or visual.
+The gap line sits next to the promise everywhere the promise appears (first run "Choose your rules" (CR-010, founder 2026-10-26) and step 4, Rules › Limits) and in Protection › What Eucas can't see. No absolute claim about the agent anywhere: the agent-facing words are "blocks the known ways", "catches common forms". "Claude Code" appears only in plain text ("your Claude Code sessions", "Verified for Claude Code 2.1.314"), never as a product name, logo or visual.
 
 ### 7.2 What the copy removal test cut
 
@@ -364,8 +368,8 @@ Designed with the UX researcher's recommendations; each is a switch under **Clie
 |---|---|---|---|
 | D-1 | (b) cap details at 3, guard every session | (c) no cap | 4th session: "Showing details for 3 sessions. All 4 are guarded. Pro shows every session's details." in Today and the popover (`pro-sessions`) |
 | D-2 | (b) waitlist line | (a) hide | Every `ProLine` disappears |
-| D-3 | — | — | No screen changes; signing decides whether UAC shows a verified publisher (grey) or not (yellow). The illustration assumes signed |
-| D-4 | (a) ask for UAC | (b) user level only | First run step 4 loses "Without admin (weaker)", skips UAC, and every heartbeat says "user level"; Settings and Protection name it |
+| D-3 | Resolved (CR-010, founder 2026-10-26): unsigned v0.1 | — | UAC shows yellow, "Unknown publisher". **The illustration assumes unsigned** (was "assumes signed"); `UacFrame`'s sentence says what to check instead (§4.23) |
+| D-4 | Resolved (CR-010, founder 2026-10-26): four limits always on, each Locked (admin) or Not locked (user scope, labelled) | — | New first-run step "Choose your rules" before the UAC step (§4.23); step 4 loses "Without admin (weaker)"; UAC only for the locked limits, skipped if none; Rules › Limits carries the same choice and asks for admin again on a change (§4.10). The demo-bar D-4 switch no longer matches; the prototype isn't changed here |
 | D-5 | Hook-only canary (if spike S-1 passes) | Real model turn | The canary and Protection add "This test used about 400 tokens." |
 | S-2 | Not proven: Open session only, with "Answer in the terminal, or open it" | Proven | Needs-you cards and toasts add **Allow once** |
 

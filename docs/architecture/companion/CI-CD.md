@@ -9,9 +9,9 @@ flowchart LR
   F[feat/ fix/ chore/ docs/ spike/] -- PR, squash --> D[dev]
   D -- Version Packages PR, squash --> D
   D -- promotion PR, merge commit --> S[staging]
-  S -- tag vX.Y.Z-beta.N, signed build --> B[(beta channel)]
+  S -- tag vX.Y.Z-beta.N, updater-signed build --> B[(beta channel)]
   S -- release PR, merge commit --> M[main]
-  M -- tag vX.Y.Z, signed build, approval --> ST[(stable channel)]
+  M -- tag vX.Y.Z, updater-signed build, approval --> ST[(stable channel)]
   S -- wrangler deploy --env staging --> WS[Worker staging]
   M -- approval, wrangler deploy --env production --> WP[Worker production]
 ```
@@ -96,11 +96,11 @@ jobs:
 
 | Trigger | Job | Notes |
 |---|---|---|
-| Push to `staging` | `beta` | Build on `windows-latest` (x64; arm64 when signing works for it), sign (§6), verify signatures, build SBOM, attest provenance, create **GitHub prerelease** `vX.Y.Z-beta.N` with the installer, `latest.json`, SBOM and `SHA256SUMS`; then point the Worker's `beta` channel at it |
-| Push to `main` | `stable` | Same build from the merge commit; waits for **manual approval** on the `production` environment (founder), then GitHub release `vX.Y.Z`, Worker `stable` channel. Staged rollout: the manifest serves the update to 10 % of installs (a random rollout bucket 0–9 the app picks at install and sends as a header; not an identifier) for 48 h, then 100 %, unless paused |
-| Any | `verify` | Downloads the published installer on a clean Windows runner, installs per-user, runs the first-run e2e headless (fake Claude home), uninstalls, checks the restore |
+| Push to `staging` | `beta` | Build on `windows-latest` (x64; arm64 later) in a fixed order so each pinned hash exists before the binary that embeds it: limits guard → `eucas-elevate.exe` (embeds the limits guard) → `Eucas.exe` (embeds the helper's SHA-256, SYSTEM-DESIGN §5.6) → plugin guard (embeds `Eucas.exe`'s SHA-256, SECURITY-PRIVACY T4); sign the update with the Tauri updater key and skip Authenticode in v0.1 (§6); verify the updater signature and the embedded hashes; build SBOM, attest provenance, create **GitHub prerelease** `vX.Y.Z-beta.N` with the installer, `latest.json`, SBOM and `SHA256SUMS`, and publish the installer SHA-256 on the site; then point the Worker's `beta` channel at it |
+| Push to `main` | `stable` | Same build from the merge commit; waits for **manual approval** on the `production` environment (founder), then GitHub release `vX.Y.Z` with `SHA256SUMS`, the installer SHA-256 on the site, Worker `stable` channel. Staged rollout: the manifest serves the update to 10 % of installs (a random rollout bucket 0–9 the app picks at install and sends as a header; not an identifier) for 48 h, then 100 %, unless paused |
+| Any | `verify` | Downloads the published installer on a clean Windows runner, checks its SHA-256 against `SHA256SUMS` and the updater signature on `latest.json`, installs per-user, runs the first-run e2e headless (fake Claude home), uninstalls, checks the restore |
 
-**Rules:** signing secrets exist only in the `production` environment (beta signs from `production` too, behind an environment rule that allows `staging` and `main` refs only). No Claude step, no third-party action that isn't SHA-pinned, and no `pull_request_target` in release workflows. Release notes come from `CHANGELOG.md`; a limits-guard version change adds the line "this update asks Windows for permission once" (ADR-0013).
+**Rules:** signing secrets (in v0.1 only the Tauri updater key; an Authenticode credential once bought) exist only in the `production` environment (beta signs from `production` too, behind an environment rule that allows `staging` and `main` refs only). No Claude step, no third-party action that isn't SHA-pinned, and no `pull_request_target` in release workflows. Release notes come from `CHANGELOG.md`; a limits-guard version change adds the line "this update asks Windows for permission once" (ADR-0013).
 
 ### SBOM and provenance
 - `cargo auditable build` embeds the Rust dependency list in each exe; `cargo cyclonedx` + `@cyclonedx/cyclonedx-npm` produce CycloneDX SBOMs merged into `eucas-<version>.cdx.json` and attached to the release.
@@ -117,21 +117,26 @@ The app checks `GET /v1/updates/{channel}/{target}/{version}` at start and every
 
 ## 6. Signing (ADR-0013, decision D-3)
 
-The release job signs with the route the founder picks; the workflow has one `sign` step with a pluggable command (`tauri.conf.json` `bundle.windows.signCommand`) so switching route changes a secret and one line:
+**v0.1 is unsigned** (CR-010, founder 2026-10-26): no Authenticode on any binary. What the release still does:
+- **Updater signature:** `tauri build` signs the update artefacts with the Tauri updater's Ed25519 key (`TAURI_SIGNING_PRIVATE_KEY`, `production` environment only); the app rejects an update whose signature doesn't verify (§5).
+- **Published hashes:** `SHA256SUMS` is attached to every release, and the installer's SHA-256 is published on the site; the README shows how to check it (`Get-FileHash`).
+- **Pinned helper hash:** the build embeds `eucas-elevate.exe`'s SHA-256 in `Eucas.exe` (§4 build order); the `verify` job checks the embedded value matches the shipped helper.
 
-| Route | Step | Secrets (production environment only) |
+The workflow keeps one `sign` step with a pluggable command (`tauri.conf.json` `bundle.windows.signCommand`), **empty in v0.1**, so turning Authenticode on once revenue covers it changes a secret and one line:
+
+| Route (later) | Step | Secrets (production environment only) |
 |---|---|---|
-| A. OV + cloud signer (recommended) | Provider's CLI signer, e.g. `CodeSignTool sign -input_file_path %1 …` | Provider username, credential id, TOTP seed |
+| A. OV + cloud signer | Provider's CLI signer, e.g. `CodeSignTool sign -input_file_path %1 …` | Provider username, credential id, TOTP seed |
 | B. Azure Artifact Signing (if a company is formed) | `azure/trusted-signing-action@<sha>` or `signtool` with the dlib | Federated credential (OIDC), no long-lived secret |
 
-Then `signtool verify /pa /all` on every exe and the installer; failure stops the release.
+Once signing is on: `signtool verify /pa /all` on every exe and the installer; failure stops the release.
 
 ## 7. Worker deploy (`.github/workflows/deploy-api.yml`)
 
 | Trigger | Steps |
 |---|---|
 | PR touching `apps/api/**` or `contracts/api/**` | Vitest with the Workers pool, `wrangler deploy --dry-run --env staging`, bundle size < 1 MB |
-| Push to `staging` | `wrangler deploy --env staging` (Cloudflare API token scoped to the one Worker, KV and DO; stored in the `api-staging` environment) · smoke: `/v1/config/beta` signature valid, `/v1/supervise` rejects an unknown field (400) and a body with a fake key pattern (422) |
+| Push to `staging` | `wrangler deploy --env staging` (Cloudflare API token scoped to the one Worker, KV and DO; stored in the `api-staging` environment) · smoke: `/v1/config/beta` signature valid, `/v1/supervise` and `/v1/draft-rule` reject an unknown field (400) and a body with a fake key pattern (422) |
 | Push to `main` | Approval on `api-production`, `wrangler deploy --env production`, the same smoke, then `wrangler versions` keeps the previous version for one-command rollback (`wrangler rollback`) |
 
 Runtime config changes (model swap, kill switch, channel pause) are **not deploys**: `cargo xtask config sign` on the founder's machine (the signing key never leaves it), then `cargo xtask config push --env staging|production`, which writes KV after a schema check. Every config version is committed to `config/history/` in a PR for the record.
