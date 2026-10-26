@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_CORE || "puppeteer-core");
-const EDGE = process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
+const EDGE = process.env.BROWSER ?? process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
 const args = process.argv.slice(2);
 const BASE = args.find(a => !a.startsWith("--")) ?? "http://127.0.0.1:8788";
 const OUT = process.env.OUT ?? path.resolve(here, "../review");

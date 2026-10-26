@@ -1,6 +1,7 @@
-// Captures the companion prototype's real screens as 2x WebP crops for the landing page.
+// Captures the notch prototype's real screens as 2x WebP cut-outs for the landing page.
 //   PUPPETEER_CORE=<path to puppeteer-core> node apps/landing/scripts/capture-screens.mjs [names...]
-// The prototype is docs/design/ui/companion/prototype/companion.html; shots use ?bar=0&freeze=1 so they're stable.
+// The prototype is docs/design/ui/companion/prototype/notch.html; shots use ?bar=0&freeze=1 so they're stable.
+// The wallpaper and the windows behind are hidden, so every cut-out has a transparent background.
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -9,46 +10,53 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_CORE || "puppeteer-core");
-const EDGE = process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
+const BROWSER = process.env.BROWSER ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
 const OUT = process.env.OUT ?? path.resolve(here, "../public/screens");
-const FILE = pathToFileURL(path.resolve(here, "../../../docs/design/ui/companion/prototype/companion.html")).href;
+const FILE = pathToFileURL(path.resolve(here, "../../../docs/design/ui/companion/prototype/notch.html")).href;
 
-// [file name, route, CSS selector, crop inside that element in CSS px: [x, y, w, h] or null for all of it]
-// The page shows cropped fragments, not whole windows (the window is 1040 x 720).
+// [file name, route, what to capture, themes]. A selector captures that element; `top: [w, h]` captures a box of
+// that size at the top centre of the screen. The notch states on the page are drawn in CSS to the eye grammar.
 const SHOTS = [
-  ["popover", "popover", ".flyout", null],
-  ["tripwire", "tripwire-stopped", ".win", [308, 87, 641, 579]],
-  ["same-file", "same-file", ".win", [228, 505, 798, 215]],
-  ["usage", "usage", ".win", [228, 115, 798, 235]],
-  ["rules", "rules", ".win", [228, 115, 798, 350]],
-  ["retro", "retro", ".win", [607, 118, 425, 290]],
+  ["needs", "p-needs", { sel: ".panel" }],
+  ["usage", "p-usage", { sel: ".panel" }],
+  ["rules", "p-rules", { sel: ".panel" }],
+  ["tripwire", "p-trip", { sel: ".panel" }],
+  ["same-file", "p-same", { sel: ".panel" }],
+  ["sent", "s-sent", { sel: "figure.sent" }],
 ];
-const THEMES = (process.env.THEMES ?? "dark,light").split(",");
+const HIDE = ".wall, .win, .setup-scrim, .taskbar, .tb { visibility: hidden !important; } .swin { visibility: visible !important; } html, body { background: transparent !important; }"
+  // The shoulders and the ring join the notch to a black screen bezel; on the page there is none, so they read as hooks.
+  + " .notch::before, .notch::after, .peek::before, .peek::after { display: none !important; } .notch, .peek { box-shadow: none !important; } .glow { display: none !important; }";
 
 const only = process.argv.slice(2);
 fs.mkdirSync(OUT, { recursive: true });
-const browser = await puppeteer.launch({ executablePath: EDGE, headless: "new", args: ["--hide-scrollbars", "--force-color-profile=srgb"] });
+const browser = await puppeteer.launch({ executablePath: BROWSER, headless: true, args: ["--hide-scrollbars", "--force-color-profile=srgb"] });
 const page = await browser.newPage();
 await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 2 });
-for (const [name, route, sel, crop] of SHOTS) {
+for (const [name, route, what, themes = ["dark", "light"]] of SHOTS) {
   if (only.length && !only.includes(name)) continue;
-  for (const theme of THEMES) {
-    const q = new URLSearchParams({ bar: "0", freeze: "1", theme, os: theme });
-    await page.goto("about:blank");
-    await page.goto(`${FILE}?${q}#${route}`, { waitUntil: "networkidle0" });
+  for (const theme of themes) {
+    const q = new URLSearchParams({ r: route, bar: "0", freeze: "1", theme });
+    await page.goto(`${FILE}?${q}`, { waitUntil: "load" });
     await page.evaluate(() => document.fonts.ready);
-    await new Promise(r => setTimeout(r, 900));
-    const el = await page.$(sel);
-    if (!el) { console.warn(`no ${sel} on ${route}`); continue; }
-    const file = path.join(OUT, `${name}-${theme}.webp`);
-    if (crop) {
-      const box = await el.boundingBox();
-      const [x, y, width, height] = crop;
-      await page.screenshot({ path: file, type: "webp", quality: 82, clip: { x: box.x + x, y: box.y + y, width, height } });
-    } else {
-      await el.screenshot({ path: file, type: "webp", quality: 82 });
+    await page.addStyleTag({ content: HIDE });
+    // The prototype's sample project is "bench", our old codename; on the page it reads as jargon, so call it web-app.
+    await page.evaluate(() => {
+      const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let n; (n = w.nextNode());) n.nodeValue = n.nodeValue.replace(/\bbench\b/g, "web-app");
+    });
+    await new Promise(r => setTimeout(r, 500));
+    let clip;
+    if (what.top) clip = { x: (1440 - what.top[0]) / 2, y: 0, width: what.top[0], height: what.top[1] };
+    else {
+      const el = await page.$(what.sel);
+      if (!el) { console.warn(`no ${what.sel} on ${route}`); continue; }
+      const b = await el.boundingBox();
+      clip = { x: b.x, y: b.y, width: b.width, height: b.height };
     }
-    console.log(file);
+    const file = path.join(OUT, themes.length > 1 ? `${name}-${theme}.webp` : `${name}.webp`);
+    await page.screenshot({ path: file, type: "webp", quality: 76, clip, omitBackground: true });
+    console.log(path.relative(process.cwd(), file), `${Math.round(clip.width * 2)}x${Math.round(clip.height * 2)}`);
   }
 }
 await browser.close();

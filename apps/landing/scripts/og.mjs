@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_CORE || "puppeteer-core");
-const EDGE = process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
+const EDGE = process.env.BROWSER ?? process.env.EDGE ?? "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
 const BASE = process.argv[2] ?? "http://127.0.0.1:8788";
 const PUB = path.resolve(here, "../public");
 
@@ -21,12 +21,14 @@ await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 1 });
 await page.goto(BASE + "/", { waitUntil: "networkidle0" });
 await page.evaluate(() => document.fonts.ready);
 await page.addStyleTag({ content: `
-  .nav nav, .nav-end, .hero-actions, .hero-note { display: none !important; }
+  .live, .nav-links, .nav-end, .hero-actions { display: none !important; }
   .nav { padding-top: 40px; }
-  .hero { padding-top: 40px; }
-  h1 { font-size: 76px; }
-  .lede { font-size: 24px; margin-top: 28px; max-width: 30ch; }
-  .stage { margin-top: -120px; padding-top: 48px; }
+  .hero { min-height: 630px; }
+  .hero-copy { padding-top: 64px; }
+  h1 { font-size: 72px; max-width: 9ch; }
+  .lede { display: none; }
+  .hero-stage { top: 0; left: 50%; clip-path: none !important; }
+  .hero-stage .hero-panel { transform: none !important; }
 ` });
 await page.screenshot({ path: path.join(PUB, "og.png") });
 

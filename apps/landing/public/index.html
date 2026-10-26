@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Eucas: guard the Claude Code sessions you already run</title>
-<meta name="description" content="Eucas is a Windows tray app that guards and supervises the Claude Code sessions you already run. It never auto-approves a delete, a push to main, a send or a payment. Join the waitlist.">
+<title>Eucas: an agentsitter for your Claude Code sessions</title>
+<meta name="description" content="You run Claude Code sessions to go faster, then spend the day checking on them. Eucas watches them for you on Windows and taps you only when one needs you. Join the waitlist.">
 <link rel="canonical" href="https://eucas.app/">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#161616">
@@ -12,11 +12,11 @@
 <meta property="og:site_name" content="Eucas">
 <meta property="og:url" content="https://eucas.app/">
 <meta property="og:title" content="Eucas: stop babysitting your agents">
-<meta property="og:description" content="A Windows tray app that guards the Claude Code sessions you already run. It never auto-approves a delete, a push to main, a send or a payment.">
+<meta property="og:description" content="Your Euca lives in a notch at the top of your Windows screen, guards the Claude Code sessions you already run and tells you what needs you. It never auto-approves a delete, a push to your default branch, a send or a payment.">
 <meta property="og:image" content="https://eucas.app/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="The Eucas tray panel: guard on, three sessions, one push to main held for you.">
+<meta property="og:image:alt" content="A Euca in the notch at the top of the screen, over the Eucas panel: 3 things need you.">
 <meta name="twitter:card" content="summary_large_image">
 <!-- Turnstile site key (public). Empty = no challenge, for local runs. Set it before going live. -->
 <meta name="turnstile-sitekey" content="">
@@ -26,231 +26,231 @@
 <link rel="stylesheet" href="styles.css">
 <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <script src="main.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Eucas","operatingSystem":"Windows","applicationCategory":"DeveloperApplication","description":"A Windows tray app that guards and supervises the Claude Code sessions you already run.","url":"https://eucas.app/","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Free"},{"@type":"Offer","price":"20","priceCurrency":"USD","name":"Pro, per month"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Eucas","operatingSystem":"Windows","applicationCategory":"DeveloperApplication","description":"A Windows companion that guards and supervises the Claude Code sessions you already run.","url":"https://eucas.app/","offers":[{"@type":"Offer","price":"0","priceCurrency":"USD","name":"Free"},{"@type":"Offer","price":"20","priceCurrency":"USD","name":"Pro, per month"}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
+
+<!-- The live notch: Pip at the top edge of this page, like at the top of your screen. Its state follows the section you read. -->
+<div class="live" data-ui data-live>
+  <div class="goo" aria-hidden="true"><i class="goo-notch"></i><i class="goo-peek"></i></div>
+  <button class="notch" type="button" data-ui aria-expanded="false" aria-controls="live-peek" data-notch data-state="working">
+    <span class="sr" data-notch-label>Your Euca, in the Eucas notch: protected, sessions working. Show the peek.</span>
+    <span class="eyes" aria-hidden="true" data-eyes><i></i><i></i></span>
+    <span class="n-marker" aria-hidden="true" data-marker></span>
+    <span class="beam" aria-hidden="true"><i></i></span>
+  </button>
+  <div class="peek" id="live-peek" data-peek hidden>
+    <p class="pk-item"><span class="pk-glyph" aria-hidden="true">!</span><span><b>web-app is waiting for you</b><span class="pk-sub">wants to run <code>pnpm build</code></span></span></p>
+    <p class="pk-item"><span class="pk-glyph" aria-hidden="true">!</span><span><b>Two sessions are editing one file</b><span class="pk-sub">web-app and api-docs · <code>src/router.ts</code></span></span></p>
+    <p class="pk-foot"><span><i class="ok-dot" aria-hidden="true"></i>Protected · 3 sessions</span><a href="#join">Join the waitlist ›</a></p>
+  </div>
+</div>
 
 <header class="nav wrap">
   <a class="brand" href="/" aria-label="Eucas home">
     <svg class="mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#quartet"/></svg>
     <span>eucas</span>
   </a>
-  <nav aria-label="Main">
+  <nav class="nav-links" aria-label="Main">
+    <a href="#problem">Why</a>
+    <a href="#panel">How it works</a>
     <a href="#never">Safety</a>
-    <a href="#free">Free</a>
-    <a href="#pricing">Pro</a>
-    <a href="#trust">Privacy</a>
+    <a href="#sent">What is sent</a>
+    <a href="#pricing">Pricing</a>
   </nav>
   <div class="nav-end">
     <button class="theme" type="button" aria-pressed="false" data-theme-toggle>
       <span class="sr">Light theme</span>
       <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="4.2"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg>
     </button>
-    <a class="btn btn-ink btn-sm" href="#join">Join the waitlist</a>
+    <a class="btn btn-sm" href="#join">Join<span class="wide-only">&nbsp;the waitlist</span></a>
   </div>
 </header>
 
 <main id="main">
 
-<!-- Hero: the headline, then the tray panel at its real size on a Cobalt stage. The panel runs. -->
-<section class="hero wrap" aria-labelledby="hero-title">
-  <div class="hero-copy" data-rise>
-    <h1 id="hero-title">Stop babysitting your agents.</h1>
-    <p class="lede">Eucas guards the Claude Code sessions you already run, and tells you only what needs you. It never auto-approves a delete, a push to main, a send or a payment.</p>
-    <div class="hero-actions">
-      <a class="btn btn-ink" href="#join">Join the waitlist</a>
-      <a class="link-arrow" href="#never">What it never approves</a>
-    </div>
-    <p class="hero-note">For Windows first. In development: the waitlist gets the first build.</p>
-  </div>
-
-  <div class="stage" data-rise>
-    <div class="flyout" data-ui role="img" aria-label="The Eucas tray panel. Guard on, 3 sessions, checked a few seconds ago. bench wants to run git push origin main, a push to your default branch, held for you.">
-      <div class="fl-status">
-        <span class="hb-dot" aria-hidden="true"></span>
-        <span><b>Guard on</b> · 3 sessions · checked <span data-ago>2</span> s ago</span>
-        <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg>
-      </div>
-      <div class="fl-strip" aria-hidden="true" data-strip></div>
-      <div class="fl-head">What needs you <span class="count">1</span></div>
-      <div class="fl-cards" data-cards>
-        <article class="fl-card is-on">
-          <div class="fl-who"><span class="av av-lav"><svg viewBox="0 0 100 100"><use href="#av-sphere"/></svg><i class="bdg">!</i></span><b>bench</b><span class="when">now</span></div>
-          <p>wants to run <code>git push origin main</code></p>
-          <p class="fl-why">A push to your default branch. Eucas never approves this one; you do.</p>
-          <div class="fl-btns"><span class="fb fb-pri">Open session</span><span class="fb">Not now</span></div>
-        </article>
-        <article class="fl-card">
-          <div class="fl-who"><span class="av av-teal"><svg viewBox="0 0 100 100"><use href="#av-drop"/></svg><i class="bdg">!</i></span><b>api-docs</b><span class="when">waiting 6 min</span></div>
-          <p>Asks: Should the v2 routes keep the old <code>/users</code> alias for a release?</p>
-          <p class="fl-why">A question for you · the session is waiting</p>
-          <div class="fl-btns"><span class="fb fb-pri">Open session</span><span class="fb">Not now</span></div>
-        </article>
-        <article class="fl-card">
-          <div class="fl-who"><span class="av av-honey"><svg viewBox="0 0 100 100"><use href="#av-square"/></svg><i class="bdg bdg-stop"></i></span><b>notes</b><span class="when">14:02:31</span></div>
-          <p><b class="big">214</b> files deleted in 9 seconds. Eucas stopped notes.</p>
-          <p class="fl-why">The list of what went and how to get it back is ready.</p>
-          <div class="fl-btns"><span class="fb fb-pri">See what went</span><span class="fb">This was expected</span></div>
-        </article>
-      </div>
-      <div class="fl-log" data-log><span class="tick" aria-hidden="true"></span><span data-log-text>Allowed by your rule: <code>pnpm test</code> in bench/</span></div>
-      <div class="fl-row">
-        <span class="stack" aria-hidden="true"><span class="av av-lav"><svg viewBox="0 0 100 100"><use href="#av-sphere"/></svg></span><span class="av av-teal"><svg viewBox="0 0 100 100"><use href="#av-drop"/></svg></span><span class="av av-honey"><svg viewBox="0 0 100 100"><use href="#av-square"/></svg></span></span>
-        <span class="trunc">3 sessions · bench needs you · api-docs working · notes idle</span>
-      </div>
-      <div class="fl-row">
-        <span class="meter" aria-hidden="true"><i></i></span>
-        <span>5-hour: <b>46 %</b> · resets 15:40 · Week: 62 %</span>
-      </div>
-      <div class="fl-foot"><span>Open Eucas</span><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="2.6"/><path d="M10 2.5v2.2M10 15.3v2.2M2.5 10h2.2M15.3 10h2.2M4.7 4.7l1.6 1.6M13.7 13.7l1.6 1.6M4.7 15.3l1.6-1.6M13.7 6.3l1.6-1.6"/></svg></div>
+<!-- Hero: the headline left; a Cobalt "screen" right, with the notch on its top edge and the real panel under it. -->
+<section class="hero" data-state="working" aria-labelledby="hero-title">
+  <div class="wrap hero-copy">
+    <h1 id="hero-title" data-rise>Stop babysitting your agents.</h1>
+    <p class="lede" data-rise>You started three Claude Code sessions to go faster. Now you spend the day checking on them. Eucas watches them for you and taps you only when one needs you.</p>
+    <div class="hero-actions" data-rise>
+      <a class="btn" href="#join">Join the waitlist</a>
+      <p class="hero-note">Windows first · Claude Code only, for now · in development</p>
     </div>
   </div>
-</section>
-
-<!-- The promise, word for word, with the real tripwire screen. -->
-<section class="never wrap" id="never" aria-labelledby="never-title">
-  <div class="never-copy">
-    <h2 id="never-title" data-rise>Four things it never approves.</h2>
-    <ul class="never-list" data-rise>
-      <li>A delete</li>
-      <li>A push to main</li>
-      <li>A send</li>
-      <li>A payment</li>
-    </ul>
-    <p class="promise" data-rise>Eucas never auto-approves a delete, a push to main, a send or a payment, and no rule can change that.</p>
-    <p data-rise>The guard tells you the moment it isn't running. If a session starts deleting files in bulk, Eucas stops it and shows you what went and how to get it back.</p>
-  </div>
-  <figure class="shot shot-tall" data-rise>
-    <picture data-themed>
-      <img src="screens/tripwire-dark.webp" data-dark="screens/tripwire-dark.webp" data-light="screens/tripwire-light.webp" width="1282" height="1158" loading="lazy" decoding="async" alt="Eucas stopped bench: 1,240 files deleted in 20 seconds, with the folders that went and three ways to get them back.">
+  <div class="hero-stage" data-shutter>
+    <div class="screen-edge" aria-hidden="true"><span class="mini-notch"><i></i><i></i><b>3</b></span></div>
+    <picture class="hero-panel">
+      <img src="screens/needs-dark.webp" data-dark="screens/needs-dark.webp" data-light="screens/needs-light.webp" width="800" height="1280" fetchpriority="high" decoding="async" alt="The Eucas panel under the notch. Pip: protected, 3 sessions, checked 2 seconds ago. Needs you, 3: web-app is waiting for you and wants to run pnpm build; two sessions are editing one file, src/router.ts; search is ready, open a PR for search with the tests first.">
     </picture>
-    <figcaption>The tripwire, after it stopped a session at 1,240 files.</figcaption>
-  </figure>
+  </div>
 </section>
 
-<!-- Free: real screens in a row you can drag. The centred one is lit. -->
-<section class="free" id="free" aria-labelledby="free-title">
-  <div class="wrap free-head">
-    <h2 id="free-title" data-rise>Free, for every session you run.</h2>
-    <div class="row-ctl">
-      <button type="button" class="round" data-prev aria-label="Previous screen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12 4.5 6.5 10l5.5 5.5"/></svg></button>
-      <button type="button" class="round" data-next aria-label="Next screen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4.5l5.5 5.5L8 15.5"/></svg></button>
+<!-- Why: the visitor's own day, each pain with its fix. -->
+<section class="problem wrap" id="problem" data-state="marker" aria-labelledby="problem-title">
+  <h2 id="problem-title" data-rise>Running agents shouldn't feel like this.</h2>
+  <ul class="pains">
+    <li data-rise><p class="pain">Waiting for your yes since minute two.</p><p class="fix">You see it the second a session stops.</p></li>
+    <li data-rise><p class="pain">One delete you didn't read.</p><p class="fix">It can't happen without you.</p></li>
+    <li data-rise><p class="pain">Your limit, hit with the task half done.</p><p class="fix">You see when you'll run out, with time to spare.</p></li>
+    <li data-rise><p class="pain">Two agents writing in the same file.</p><p class="fix">You're warned before one overwrites the other.</p></li>
+  </ul>
+</section>
+
+<!-- Showcase: the panel's own three tabs pick the screen on the plate. -->
+<section class="show wrap" id="panel" data-state="marker" aria-labelledby="show-title">
+  <div class="plate" data-rise>
+    <div class="screen-edge" aria-hidden="true"><span class="mini-notch"><i></i><i></i></span></div>
+    <picture class="plate-panel">
+      <img src="screens/needs-dark.webp" data-dark="screens/needs-dark.webp" data-light="screens/needs-light.webp" width="800" height="1280" loading="lazy" decoding="async" alt="" data-show-img>
+    </picture>
+  </div>
+
+  <div class="show-side">
+    <div class="tabs" role="tablist" aria-label="The panel" data-rise>
+      <button type="button" role="tab" id="tab-needs" aria-selected="true" aria-controls="show-text" data-show="needs">Needs you</button>
+      <button type="button" role="tab" id="tab-usage" aria-selected="false" aria-controls="show-text" tabindex="-1" data-show="usage">Usage</button>
+      <button type="button" role="tab" id="tab-same" aria-selected="false" aria-controls="show-text" tabindex="-1" data-show="same">Same file</button>
+      <button type="button" role="tab" id="tab-rules" aria-selected="false" aria-controls="show-text" tabindex="-1" data-show="rules">Rules</button>
+    </div>
+    <div id="show-text" role="tabpanel" aria-labelledby="tab-needs" data-rise>
+      <h2 id="show-title" data-show-title>Know which session needs you.</h2>
+      <p data-show-text>One glance at the top of your screen. Hover for a peek, click for the panel. Nothing pops up and nothing steals your focus.</p>
+    </div>
+    <div class="cells" data-rise>
+      <a class="cell cell-ink" href="#join">Join the waitlist</a>
+      <a class="cell" href="#never">What it never approves</a>
     </div>
   </div>
-  <div class="row" data-row tabindex="0" role="region" aria-roledescription="carousel" aria-label="Screens from the free app. Use the arrow keys to move.">
-    <figure class="panel" data-name="Your last week, first" data-text="The first time you open Eucas it reads last week's history on your PC: tokens, same-file clashes, and the commands it would have stopped.">
-      <img src="screens/retro-dark.webp" data-dark="screens/retro-dark.webp" data-light="screens/retro-light.webp" width="850" height="580" loading="lazy" decoding="async" alt="Retro: 3 commands this week would have been stopped: git push origin main, Remove-Item -Recurse dist, a curl POST to Slack.">
+</section>
+
+<!-- The one full-width band: notch black, the promise word for word, the tripwire beside it. -->
+<section class="never" id="never" data-state="trip" aria-labelledby="never-title">
+  <div class="wrap never-in">
+    <div class="never-copy">
+      <h2 id="never-title" data-rise>Look away without fear.</h2>
+      <p class="never-lead" data-rise>Four things always come to you:</p>
+      <ul class="limits" data-rise>
+        <li>A delete</li>
+        <li>A push to your default branch</li>
+        <li>A send</li>
+        <li>A payment</li>
+      </ul>
+      <p data-rise>They're locked where no agent or repo can change them. And if a session starts deleting files in bulk, it's stopped, and you see what went and how to get it back.</p>
+    </div>
+    <figure class="trip" data-rise>
+      <img src="screens/tripwire-dark.webp" data-dark="screens/tripwire-dark.webp" data-light="screens/tripwire-light.webp" width="800" height="993" loading="lazy" decoding="async" alt="Tripwire stop: Pip stopped the notes session at 14:02:31. It deleted 1,240 files in 20 seconds. What was deleted: notes/drafts/ 912 files, notes/archive/2025/ 301 files, notes/.obsidian/ 27 files. How to get them back: git restore, or File History.">
     </figure>
-    <figure class="panel" data-name="A quiet tray inbox" data-text="One icon by the clock. It shows a count only when a session is waiting on you, and stays out of the way when nothing is.">
-      <img src="screens/popover-dark.webp" data-dark="screens/popover-dark.webp" data-light="screens/popover-light.webp" width="760" height="992" loading="lazy" decoding="async" alt="The tray panel: guard on, 2 things need you, bench wants to run pnpm build, api-docs has a question.">
-    </figure>
-    <figure class="panel" data-name="Where your usage went" data-text="Tokens by session and project, and the time you'll hit your 5-hour limit at today's pace.">
-      <img src="screens/usage-dark.webp" data-dark="screens/usage-dark.webp" data-light="screens/usage-light.webp" width="1596" height="470" loading="lazy" decoding="async" alt="Usage: 5-hour window at 46 %, resets 15:40. Weekly at 62 %, on pace to end the week at about 79 %.">
-    </figure>
-    <figure class="panel" data-name="Two sessions, one file" data-text="A warning the moment a second session edits a file another one just changed, before one overwrites the other.">
-      <img src="screens/same-file-dark.webp" data-dark="screens/same-file-dark.webp" data-light="screens/same-file-light.webp" width="1596" height="430" loading="lazy" decoding="async" alt="Two sessions are editing the same file: api-docs changed src/router.ts 4 minutes after bench did.">
-    </figure>
-    <figure class="panel" data-name="Rules you can read" data-text="Auto-approve what you always allow, scoped to one folder. Suggestions come from what you approved by hand.">
-      <img src="screens/rules-dark.webp" data-dark="screens/rules-dark.webp" data-light="screens/rules-light.webp" width="1596" height="700" loading="lazy" decoding="async" alt="Rules: 4 limits always on. Suggestions: pnpm test in bench, allowed 212 times by hand.">
-    </figure>
-  </div>
-  <div class="wrap panel-text" aria-live="polite">
-    <h3 data-panel-name>Your last week, first</h3>
-    <p data-panel-text>The first time you open Eucas it reads last week's history on your PC: tokens, same-file clashes, and the commands it would have stopped.</p>
   </div>
 </section>
 
-<!-- The rule library: real switches. The last one is the promise and doesn't move. -->
-<section class="rules" aria-labelledby="rules-title">
-  <div class="wrap">
-    <h2 id="rules-title" data-rise>Your rules, with a library you switch on.</h2>
-    <p class="sub" data-rise>Each rule in the library is tested against real sessions before it ships. Try them.</p>
+<!-- Rules: sentences with real switches. The last one is locked and doesn't move. -->
+<section class="rules" data-state="working" aria-labelledby="rules-title">
+  <div class="wrap rules-head">
+    <h2 id="rules-title" data-rise>Stop saying yes to the same command.</h2>
+    <p data-rise>Say once what your sessions may do, scoped to one folder, or describe it in plain words and your Euca writes the rule. Try them.</p>
   </div>
   <ul class="bands">
-    <li class="band" data-band="coral">
-      <div class="wrap band-in">
-        <div><p class="band-say">Let read-only git commands through</p><p class="band-then">git status, git diff and git log stop asking you, in every repo.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let read-only git commands through"><i></i></button>
-      </div>
-    </li>
     <li class="band" data-band="mint">
       <div class="wrap band-in">
-        <div><p class="band-say">Let file reads inside the project through</p><p class="band-then">Read, Glob and Grep inside the folder run without a prompt. Outside it, you're asked.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let file reads inside the project through"><i></i></button>
+        <div><p class="band-say">Let read-only git commands through</p><p class="band-then"><code>git status</code>, <code>git diff</code> and <code>git log</code> stop asking you, in every repo.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let read-only git commands through"><span class="knob"><i></i><i></i></span></button>
       </div>
     </li>
     <li class="band" data-band="honey">
       <div class="wrap band-in">
-        <div><p class="band-say">Let pnpm test run in bench</p><p class="band-then">It runs code from the repo, so the rule stays in bench/ and nowhere else.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="false" aria-label="Let pnpm test run in bench"><i></i></button>
+        <div><p class="band-say">Let the tests run in web-app</p><p class="band-then">They run code from the repo, so the rule stays in that one project.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let the tests run in web-app"><span class="knob"><i></i><i></i></span></button>
+      </div>
+    </li>
+    <li class="band" data-band="aqua">
+      <div class="wrap band-in">
+        <div><p class="band-say">Let file reads inside the project through</p><p class="band-then">Reads inside the folder run without a prompt. Outside it, you're asked.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="false" aria-label="Let file reads inside the project through"><span class="knob"><i></i><i></i></span></button>
       </div>
     </li>
     <li class="band band-locked" data-band="ink">
       <div class="wrap band-in">
-        <div><p class="band-say">Ask me before a delete, a push, a send or a payment</p><p class="band-then" data-locked-text>Always on. No rule can switch this off.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="Ask before a delete, a push to main, a send or a payment. Always on." data-locked><i><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></i></button>
+        <div><p class="band-say">Deletes, pushes, sends and payments</p><p class="band-then" data-locked-text>Always ask you. No rule can switch this off.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="Deletes, pushes, sends and payments always ask you. Locked." data-locked><span class="knob"><i></i><i></i></span><svg class="lock" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></button>
       </div>
     </li>
   </ul>
 </section>
 
-<!-- Pricing: Free and Pro as one large table. -->
-<section class="pricing wrap" id="pricing" aria-labelledby="pricing-title">
-  <table class="plans">
-    <caption class="sr">Free and Pro compared</caption>
-    <thead>
-      <tr>
-        <th scope="col" class="plans-title"><h2 id="pricing-title">Free, or Pro</h2></th>
-        <th scope="col"><span class="plan">Free</span><span class="price">$0</span></th>
-        <th scope="col" class="pro"><span class="plan">Pro</span><span class="price">$20<small>/month</small></span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><th scope="row">The guard and the four limits</th><td>Included</td><td class="pro">Included</td></tr>
-      <tr><th scope="row">Your rules and the rule library</th><td>Included</td><td class="pro">Included</td></tr>
-      <tr><th scope="row">Usage, and when you'll hit your limit</th><td>Included</td><td class="pro">Included</td></tr>
-      <tr><th scope="row">Same-file warnings and the tray inbox</th><td>Included</td><td class="pro">Included</td></tr>
-      <tr><th scope="row">Your last 7 days</th><td>Last week</td><td class="pro">Every week, kept</td></tr>
-      <tr><th scope="row">Budgets that pause work before your limit</th><td>Not included</td><td class="pro">Per session and project</td></tr>
-      <tr><th scope="row">A supervisor that keeps sessions going within your rules</th><td>Not included</td><td class="pro">Included. It never approves anything</td></tr>
-      <tr><th scope="row">Work that continues with the laptop closed</th><td>Not included</td><td class="pro">Beta, in Claude's cloud</td></tr>
-      <tr class="founding"><th scope="row">Founding members</th><td>No card, no account</td><td class="pro">The first 200 keep <b>$15/month</b> for life</td></tr>
-      <tr class="plans-cta"><th scope="row"><span class="sr">Join</span></th><td><a class="btn btn-ghost" href="#join" data-plan="free">Join for Free</a></td><td class="pro"><a class="btn btn-ink" href="#join" data-plan="pro">Join as a founding member</a></td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- Trust: what stays on your PC. -->
-<section class="trust wrap" id="trust" aria-labelledby="trust-title">
-  <div class="tiles">
-    <div class="tile tile-head" data-rise><h2 id="trust-title">What stays on your PC</h2><p>Everything Eucas reads, it reads where it already is.</p></div>
-    <div class="tile" data-rise><h3>It runs on your PC</h3><p>The guard, rules, usage and retro run locally. No Eucas server sits between you and Claude Code.</p></div>
-    <div class="tile" data-rise><h3>Your prompts and files stay there</h3><p>Eucas keeps counts and times, never the text of your prompts or files.</p></div>
-    <div class="tile" data-rise><h3>It never reads your login</h3><p>No access to your Claude credentials or tokens. You stay signed in the way you already are.</p></div>
-    <div class="tile" data-rise><h3>You can read the code</h3><p>It's public on GitHub under the FSL licence, so you can check every claim on this page.</p></div>
-    <div class="tile" data-rise><h3>A signed installer</h3><p>Planned for the first public build, so Windows can tell you who made it.</p></div>
-    <div class="tile" data-rise><h3>Off means off, out loud</h3><p>If protection is off or the guard stops, the tray says so until it's back.</p></div>
+<!-- The supervisor: what is sent, word for word, and the real redacted example from setup. -->
+<section class="sent wrap" id="sent" data-state="focused" aria-labelledby="sent-title">
+  <div class="sent-copy">
+    <h2 id="sent-title" data-rise>What leaves your PC, word for word.</h2>
+    <p class="statement" data-rise>Eucas has a supervisor: an AI model that keeps stopped sessions going within your rules, so fewer of them wait for you.</p>
+    <p class="statement" data-rise>When Eucas isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email, your plan and how much supervisor help you've used.</p>
+  </div>
+  <div class="sent-side">
+    <figure class="sent-shot" data-rise>
+      <div class="screen-edge" aria-hidden="true"><span class="mini-notch mini-focused"><i></i><i></i></span></div>
+      <img src="screens/sent-dark.webp" data-dark="screens/sent-dark.webp" data-light="screens/sent-light.webp" width="1240" height="358" loading="lazy" decoding="async" alt="From your last session, web-app, today 13:52, marked Yours, redacted: I need the API key to run the payment test. Should I read [path removed] to get it, or hard-code [secret removed] in [path removed] for now? I changed the client too: [6 lines of code removed]. Which do you… Removed 6 lines of code, 2 paths, 1 secret; trimmed from 1,830 to 240 characters. Goes to the supervisor: an open model hosted with zero data retention.">
+      <figcaption>Setup shows you this with a message from your own sessions. Settings always shows it too.</figcaption>
+    </figure>
+    <ul class="facts" data-rise>
+      <li><b>The supervisor is always on and can't be switched off.</b></li>
+    </ul>
   </div>
 </section>
 
-<!-- The waitlist. -->
-<section class="join wrap" id="join" aria-labelledby="join-title">
-  <h2 id="join-title" data-rise>Get the first build.</h2>
+<!-- Pricing: Free on the left, Pro's price very large, the founders' price over it. -->
+<section class="pricing wrap" id="pricing" data-state="rest" aria-labelledby="pricing-title">
+  <div class="free">
+    <h2 id="pricing-title" data-rise>Free, or Pro.</h2>
+    <p data-rise><b>Free</b>, with no card:</p>
+    <ul class="lines" data-rise>
+      <li>Deletes, pushes, sends and payments always ask you first</li>
+      <li>A stop when a session deletes files in bulk</li>
+      <li>Your rules, and where your usage went</li>
+      <li>The supervisor in full for 14 days, then a little every month</li>
+    </ul>
+    <a class="btn btn-quiet" href="#join" data-plan="free" data-rise>Join for Free</a>
+  </div>
+  <div class="pro">
+    <p class="price" data-rise><span class="cur">$</span>20<span class="per">/month</span></p>
+    <ul class="lines" data-rise>
+      <li>Everything in Free</li>
+      <li>Much more supervisor help every month</li>
+      <li>Budgets that stop a session before its next step</li>
+      <li>The first 200 who pay keep <b>$15/month for life</b></li>
+    </ul>
+    <a class="btn" href="#join" data-plan="pro" data-rise>Join as a founding member</a>
+  </div>
+</section>
+
+<!-- Before you install: the plain facts, in two columns. -->
+<section class="know wrap" data-state="rest" aria-labelledby="know-title">
+  <h2 id="know-title" data-rise>Before you install.</h2>
+  <dl class="know-list" data-rise>
+    <div><dt>Windows and Claude Code, for now</dt><dd>Sessions in a terminal, the desktop app or VS Code. What comes next depends on the waitlist's answers.</dd></div>
+    <div><dt>Your Claude login stays yours</dt><dd>Eucas never sees or stores it.</dd></div>
+    <div><dt>A Eucas account, by email</dt><dd>You sign in with your email and a 6-digit code, no password.</dd></div>
+  </dl>
+</section>
+
+<!-- The waitlist: a sentence with a blank. -->
+<section class="join wrap" id="join" data-state="pleased" aria-labelledby="join-title">
   <form class="wl" data-form action="/api/subscribe" method="post" novalidate>
     <input type="hidden" name="plan" value="free" data-plan-field>
     <input type="hidden" name="ref" value="" data-ref-field>
     <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
     <div class="step" data-step="1">
-      <p class="sentence">
-        <label for="email">Email the Windows build to</label>
-        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@domain.com" required aria-describedby="email-err consent">
-        <button class="go" type="submit" data-submit>Join</button>
-      </p>
+      <h2 id="join-title" class="sentence" data-rise>Get the first Windows build.</h2>
+      <div class="field-row" data-rise>
+        <label for="email" class="sr">Your email</label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required aria-describedby="email-err consent">
+        <button class="btn go" type="submit" data-submit>Join</button>
+      </div>
       <p class="err" id="email-err" role="alert" data-err></p>
 
-      <fieldset class="chips">
+      <fieldset class="chips" data-rise>
         <legend>Which agents do you use?</legend>
         <label><input type="checkbox" name="agents" value="claude-code"><span>Claude Code</span></label>
         <label><input type="checkbox" name="agents" value="cursor"><span>Cursor</span></label>
@@ -277,47 +277,41 @@
         <label><input type="radio" name="os" value="macos"><span>macOS</span></label>
         <label><input type="radio" name="os" value="linux"><span>Linux</span></label>
       </fieldset>
-      <div class="step-btns"><button class="btn btn-ink" type="button" data-details>Send answers</button></div>
+      <div class="step-btns"><button class="btn" type="button" data-details>Send answers</button></div>
       <p class="thanks" role="status" data-thanks></p>
     </div>
   </form>
 </section>
 
-<!-- Questions: one list, one answer at a time. -->
-<section class="faq wrap" id="faq" aria-labelledby="faq-title">
-  <div class="faq-list">
-    <h2 id="faq-title">Questions</h2>
-    <ul data-faq>
-      <li><button type="button" aria-expanded="true" aria-controls="a1" id="q1">Can I use it today?</button><div class="a" id="a1" role="region" aria-labelledby="q1"><p>Not yet. Eucas is in development. The waitlist gets the first Windows build, and you'll hear from us when it's ready to install.</p></div></li>
-      <li><button type="button" aria-expanded="false" aria-controls="a2" id="q2">Does it approve things for me?</button><div class="a" id="a2" role="region" aria-labelledby="q2" hidden><p>Only what your own rules allow. A delete, a push to main, a send or a payment always comes to you. Pro's supervisor can nudge a stopped session to keep going, but it never approves anything.</p></div></li>
-      <li><button type="button" aria-expanded="false" aria-controls="a3" id="q3">Does it work with Cursor or Codex?</button><div class="a" id="a3" role="region" aria-labelledby="q3" hidden><p>Claude Code comes first. Which one follows depends on the answers to "Which agents do you use?" in the waitlist.</p></div></li>
-      <li><button type="button" aria-expanded="false" aria-controls="a4" id="q4">Does it read my Claude login?</button><div class="a" id="a4" role="region" aria-labelledby="q4" hidden><p>No. Eucas never reads your credentials or tokens. It works beside Claude Code through its own hooks and the history already on your PC.</p></div></li>
-      <li><button type="button" aria-expanded="false" aria-controls="a5" id="q5">What will Pro cost?</button><div class="a" id="a5" role="region" aria-labelledby="q5" hidden><p>$20 a month. The first 200 people who pay keep $15 a month for as long as they stay. Free stays free.</p></div></li>
-      <li><button type="button" aria-expanded="false" aria-controls="a6" id="q6">What leaves my PC with Pro?</button><div class="a" id="a6" role="region" aria-labelledby="q6" hidden><p>Budgets and the supervisor run on your PC. Laptop-closed work is the exception: it runs in Claude's cloud under your own account, and Eucas's limits don't apply there. We'll say exactly what it sends before Pro opens.</p></div></li>
-      <li><button type="button" aria-expanded="false" aria-controls="a7" id="q7">macOS or Linux?</button><div class="a" id="a7" role="region" aria-labelledby="q7" hidden><p>Windows first. Tell us your computer in the waitlist: it's how we decide which one is next.</p></div></li>
-    </ul>
-  </div>
-  <div class="faq-pane" aria-hidden="true" data-faq-pane><p>Not yet. Eucas is in development. The waitlist gets the first Windows build, and you'll hear from us when it's ready to install.</p></div>
+<!-- Questions: index cards, one open at a time. -->
+<section class="faq wrap" id="faq" data-state="rest" aria-labelledby="faq-title">
+  <h2 id="faq-title" data-rise>Questions.</h2>
+  <ul class="cards" data-faq>
+    <li class="card"><h3><button type="button" aria-expanded="true" aria-controls="a1" id="q1"><span class="tab">Today</span>Can I use it today?</button></h3><div class="a" id="a1" role="region" aria-labelledby="q1"><p>Not yet. Eucas is in development. The waitlist gets the first Windows build, and you'll hear from us when it's ready to install.</p></div></li>
+    <li class="card"><h3><button type="button" aria-expanded="false" aria-controls="a4" id="q4"><span class="tab">Agents</span>Does it work with Cursor or Codex?</button></h3><div class="a" id="a4" role="region" aria-labelledby="q4" hidden><p>Not yet. Claude Code comes first. Which one follows depends on the answers to "Which agents do you use?" in the waitlist.</p></div></li>
+    <li class="card"><h3><button type="button" aria-expanded="false" aria-controls="a6" id="q6"><span class="tab">Computers</span>macOS or Linux?</button></h3><div class="a" id="a6" role="region" aria-labelledby="q6" hidden><p>Windows first. Tell us your computer after you join the waitlist: it's how we decide which one is next.</p></div></li>
+  </ul>
 </section>
 
 </main>
 
 <footer class="foot">
-  <div class="ft ft-say"><p>Eucas guards the Claude Code sessions you already run.</p><p class="legal">© 2026 Eucas. Not affiliated with Anthropic. Claude and Claude Code are trademarks of Anthropic, PBC.</p></div>
-  <nav class="ft ft-nav" aria-label="Footer"><a href="#never">Safety</a><a href="#free">Free</a><a href="#pricing">Pro</a><a href="/privacy">Privacy</a><a href="https://github.com/eucas-app/eucas">GitHub</a></nav>
-  <div class="ft ft-time"><p>Made in Doha</p><p class="muted"><time data-clock>--:--</time> there now</p></div>
-  <div class="ft ft-mail"><a href="mailto:hello@eucas.app">hello@eucas.app</a></div>
-  <div class="ft ft-word" aria-hidden="true"><svg class="mark" viewBox="0 0 100 100"><use href="#quartet"/></svg><span>eucas</span></div>
-  <a class="ft ft-go" href="#join"><span>Join the waitlist</span><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 32 32 8M14 8h18v18"/></svg></a>
+  <div class="wrap">
+    <div class="foot-mark" aria-hidden="true"><svg class="mark" viewBox="0 0 100 100"><use href="#quartet"/></svg><span>eucas</span></div>
+    <div class="foot-row">
+      <nav class="foot-nav" aria-label="Footer"><a href="#panel">The panel</a><a href="#never">Safety</a><a href="#sent">What is sent</a><a href="#pricing">Pricing</a><a href="/privacy">Privacy</a><a href="https://github.com/eucas-app/eucas">GitHub</a><a href="https://github.com/sponsors/eucas-app">Sponsor on GitHub</a></nav>
+      <div class="foot-say"><a href="mailto:hello@eucas.app">hello@eucas.app</a><p>Made in Doha. Source under the FSL licence.</p></div>
+    </div>
+    <p class="legal">© 2026 Eucas. Not affiliated with Anthropic. Claude and Claude Code are trademarks of Anthropic, PBC.</p>
+  </div>
 </footer>
 
 <svg class="sprite" width="0" height="0" aria-hidden="true">
   <defs>
+    <!-- Goo: blur the shapes, then sharpen their alpha, so shapes that touch melt into one. -->
+    <filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="6"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"/></filter>
+    <filter id="goo-sm"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"/></filter>
     <g id="quartet"><path d="M4.8 25A20.2 20.2 0 1 1 45.2 25A20.2 20.2 0 1 1 4.8 25Z"/><path d="M78.9 8.75L95.64 37.75A4.5 4.5 0 0 1 91.74 44.5L58.26 44.5A4.5 4.5 0 0 1 54.36 37.75L71.1 8.75A4.5 4.5 0 0 1 78.9 8.75Z"/><path d="M18 57L33 57A11 11 0 0 1 44 68L44 83A11 11 0 0 1 33 94L18 94A11 11 0 0 1 7 83L7 68A11 11 0 0 1 18 57Z"/><path d="M74.5 52.81C79.35 60.57 90.99 70.27 90.99 79.97C90.99 89.18 83.72 95 74.5 95C65.28 95 58.01 89.18 58.01 79.97C58.01 70.27 69.65 60.57 74.5 52.81Z"/></g>
-    <g id="eyes" fill="#fff"><rect x="-9.7" y="-8" width="6.4" height="16" rx="3.2" transform="rotate(-12 -6.5 0)"/><rect x="3.3" y="-8" width="6.4" height="16" rx="3.2" transform="rotate(-12 6.5 0)"/></g>
-    <g id="av-sphere"><circle cx="50" cy="52" r="40" fill="var(--av)"/><use href="#eyes" x="50" y="50"/></g>
-    <g id="av-drop"><path d="M50 8 C60 24 84 44 84 64 C84 83 69 95 50 95 C31 95 16 83 16 64 C16 44 40 24 50 8 Z" fill="var(--av)"/><use href="#eyes" x="50" y="66"/></g>
-    <g id="av-square"><rect x="12" y="13" width="76" height="76" rx="22" fill="var(--av)"/><use href="#eyes" x="50" y="50"/></g>
   </defs>
 </svg>
 </body>
