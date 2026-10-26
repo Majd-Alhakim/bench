@@ -11,9 +11,9 @@ Audience: developers, designers and QA. Every requirement is **testable** and tr
 **Founder decisions of 2026-10-26 applied here (newer than BRD v1.5 / PRD v0.6), cited as `FD-n`:**
 - FD-1: the waitlist is "weak" with under 100 sign-ups one week after the page goes live.
 - FD-2: kill if no user pays within 2 weeks of Pro going on sale (replaces the +12-week payer test).
-- FD-3: **no export** of the Protection log or rules, Free and Pro, so a setup can't move to a new account. Its wider reach is G3-2.
+- FD-3: **no export** of the Protection log or rules, Free and Pro, so a setup can't move to a new account. G3-2 (answered) extends it to What Pip knows.
 - FD-4: the build estimate of about 48 days, plus 2 – 3 for "learns you", is accepted.
-- FD-5: the tech lead proposes extra library safety rules from the bypass suite and the founder approves them ([Appendix A](#appendix-a-proposed-library-safety-rules-for-founder-approval), G3-7).
+- FD-5: the tech lead proposes extra library safety rules from the bypass suite and the founder approves them ([Appendix A](#appendix-a-library-safety-rules-approved-at-g3-7), G3-7).
 - FD-6: the [G6 manual checklist](../spikes/G6-MANUAL-CHECKLIST.md) passed in full.
 - FD-7: the SP-SUP2 recorder is installed (50 of 200 – 300 moments so far); the supervisor stays gated on SP-SUP2.
 - FD-8: **no supporter tier.** Support is through GitHub Sponsors only, from launch, with no payment code.
@@ -21,7 +21,7 @@ Audience: developers, designers and QA. Every requirement is **testable** and tr
 FD-1, FD-2 and FD-4 are product and plan decisions (PRD §8 – §9) and add no functional requirement.
 
 ## Contents
-1. [System overview](#1-system-overview) · 2. [Functional requirements](#2-functional-requirements) · 3. [Non-functional requirements](#3-non-functional-requirements) · 4. [Interfaces](#4-interfaces) · 5. [Data model](#5-data-model) · 6. [Constraints and compliance](#6-constraints-and-compliance) · 7. [Traceability](#7-traceability-matrix) · 8. [Assumptions resolved](#8-assumptions-resolved) · 9. [Open questions for G3](#9-open-questions-for-g3) · 10. [Sign-off](#10-sign-off) · Appendix [A](#appendix-a-proposed-library-safety-rules-for-founder-approval) (library safety rules) · Appendix [B](#appendix-b-source-conflicts-this-srs-settles-owners-fix-their-documents) (source conflicts)
+1. [System overview](#1-system-overview) · 2. [Functional requirements](#2-functional-requirements) · 3. [Non-functional requirements](#3-non-functional-requirements) · 4. [Interfaces](#4-interfaces) · 5. [Data model](#5-data-model) · 6. [Constraints and compliance](#6-constraints-and-compliance) · 7. [Traceability](#7-traceability-matrix) · 8. [Assumptions resolved](#8-assumptions-resolved) · 9. [Open questions for G3](#9-open-questions-for-g3) · 10. [Sign-off](#10-sign-off) · Appendix [A](#appendix-a-library-safety-rules-approved-at-g3-7) (library safety rules) · Appendix [B](#appendix-b-source-conflicts-this-srs-settles-owners-fix-their-documents) (source conflicts)
 
 ---
 
@@ -168,7 +168,7 @@ flowchart LR
 | FR-056 | When a session exceeds **200 deletes in 20 s** `[default (CR-010 design)]`, the system shall mark it tripped (every later tool call denied) and stop every process it started, including background jobs and orphaned children from the remembered process tree. | UC-56 | BR-101 | Must | G 2,000 deletes in 10 s T stopping ≤ 1 s, tree gone ≤ 3 s. SP-TW1; PRD 20.4 |
 | FR-057 | The system shall say "stopped" only when no process remains and the count has not moved for 3 s; if deletes continue, it shall stop `claude.exe` too and show live "bench is still deleting files". | UC-56 (A3) | BR-101 | Must | G an orphaned deleter T the page never says stopped while counting |
 | FR-058 | A trip shall show on the notch as a red "**Stopped: <project>**" marker with concerned eyes and the Stopped sound; the peek line "Pip stopped the notes session · deleted 1,240 files in 20 s" offers **See what happened**; nothing opens by itself; a Windows notification only if a full-screen app hides the notch. | UC-56 | BR-108, BR-121 (4) | Must | G a trip at the desk T no window opens. NP §4.3 |
-| FR-059 | **See what happened** shall show "Pip stopped notes at 14:02:31", the **measured** count (never the threshold), what was deleted grouped by folder, how to get it back (git restore, File History, OneDrive, whichever is on), **Open the folder** and **This was expected** (adds the folder to this project's allowed list, with the consequence spelled out). | UC-56 (A2) | BR-101, BR-127 (4) | Must | Test: overflow fixture reports 1,3xx, not 200. SP-TW1 |
+| FR-059 | **See what happened** shall show "Pip stopped notes at 14:02:31", the **measured** count (never the threshold), what was deleted grouped by folder, how to get it back (git restore, File History, OneDrive, whichever is on), **Open the folder**, a **Copy list** of the deleted files (the only export, for recovery; G3-2) and **This was expected** (adds the folder to this project's allowed list, with the consequence spelled out). | UC-56 (A2) | BR-101, BR-127 (4) | Must | Test: overflow fixture reports 1,3xx, not 200. SP-TW1 |
 | FR-060 | If Eucas crashes mid-stop, the tripped flag shall already be persisted, the session shall stay blocked, and the stop page shall show after restart. | UC-56 (E3) | BR-101 | Must | Kill the app during a trip → session still denied |
 | FR-061 | The gap list shall say the tripwire needs Eucas running and can't attribute detached processes (scheduled tasks, services). | UC-56 (E1, E2) | BR-99 | Must | Copy check in What Eucas can't see |
 
@@ -320,9 +320,9 @@ flowchart LR
 | FR-163 | After 3 identical allows in a week, the system shall add one quiet panel item (not counted on the notch, no sound): "You've allowed `pnpm test` in bench 3 times this week. Make it a rule?", the exact rule first, "Other commands still ask.", **Allow pnpm test in bench** (adds the rule with a 10-s Undo) or **Keep asking** (never suggested again); never for the four limits. | UC-67, UC-57 (A8) | BR-125 (2), BR-108 (6) | Must | PRD 27.7 |
 | FR-164 | A "Pip learned" line shall show once at the top of the panel with its source and dates, **See it** and **Undo**. | UC-67 (A1) | BR-125 (3) | Must | Fixture |
 | FR-165 | An **Applied** chip shall mark wherever something learned shaped a decision (the away digest, the Why page). | UC-67 | BR-125 (4) | Must | UI test |
-| FR-166 | Settings › What Pip knows shall group items (From what you allowed · From how you answer · From what you denied), each with source, use count and **Forget** (10-s Undo); "Forget everything · forgets N things; your rules stay as they are."; the learning switch; the ledger line "Together since 28 Sep · 1,204 checks · 9 rules learned"; and, when empty, the honest zero. Whether its "Export as Markdown" and "Open the folder" survive FD-3 is G3-2. | UC-67 (A2, A3) | BR-125 (5), (6) | Must | UI test. PRD 27.7 |
+| FR-166 | Settings › What Pip knows shall group items (From what you allowed · From how you answer · From what you denied), each with source, use count and **Forget** (10-s Undo); "Forget everything · forgets N things; your rules stay as they are."; the learning switch; the ledger line "Together since 28 Sep · 1,204 checks · 9 rules learned"; and, when empty, the honest zero. It has **no** Export and **no** Open the folder (FD-3, G3-2). "From how you answer" holds only guidance rules you confirmed, never your answer text (G3-3). | UC-67 (A2, A3) | BR-125 (5), (6) | Must | UI test. PRD 27.7 |
 | FR-167 | After 4+ weeks of data, Usage shall show "Pip asked you 40% less this month than in September. See why", and the same way if it got worse. | UC-67 (A5), UC-58 (A7) | BR-125 (7) | Should | Fixture of 5 weeks |
-| FR-168 | Learned items, history and the ledger shall be stored on the PC per signed-in account and never synced; a different account starts empty. | UC-67 | BR-124 (3), BR-125 (8), (9) | Must | Network capture; two-account test |
+| FR-168 | Learned items, history and the ledger shall be stored on the PC per signed-in account, in that profile's `eucas.db`, and never synced; a different account starts empty. Learning uses structured events only (allows and denies by exact command and folder, the supervisor's outcome kinds, and guidance rules you confirm), never answer text (G3-3). | UC-67 | BR-124 (3), BR-125 (8), (9) | Must | Network capture; two-account test |
 | FR-169 | Every reversible change (a rule on, off or added, a learned item forgotten, Not now, Keep asking, a lock change, which asks for admin again) shall offer a 10-s Undo; what can't be undone shall say so before you commit. | all | BR-126 (1), (2) | Must | UI checklist. PRD 27.8 |
 | FR-170 | Everything Pip did or decided shall carry one receipt line, `time · tokens (supervisor) · rule or reason · Why?`; **That was wrong** on a Why page forgets the learned item that shaped it, with Undo. | UC-55, UC-63, UC-67 (A4) | BR-126 (5), (6) | Must | PRD 27.8 |
 | FR-171 | After 30+ minutes away, the next time you look the peek and panel shall show "While you were away" (what was answered from your rules, what was blocked, what finished) with a receipt and **Got it**, never opening by itself. | UC-60 (A6) | BR-127 (2) | Must | Fixture. PRD 27.9 |
@@ -475,7 +475,7 @@ Reference PC = Windows 11, Defender real-time protection on, 125 % scaling (the 
 | NFR-100 | Privacy | Profile isolation: one folder per account (`sha256(account id)`); account B reads none of A's rules, history, receipts, ledger, learned items or sent log; nothing synced; machine locks show to B as "Locked on this PC", read-only | ADR-0015, ADR-0017, BR-125 (9) | Profile isolation e2e (mandatory) |
 | NFR-101 | Privacy | The diagnostic has no prompts, file contents, tokens, email, payload text or project paths | BR-109, OPERATIONS §3 | Redaction test |
 | NFR-102 | Privacy | `news_opt_in` set only by ticking the unticked box; `false` never clears earlier consent | ADR-0017, BR-124 (13) | e2e + Worker test |
-| NFR-103 | Privacy | **No export (founder, 2026-10-26):** no command, button or format exports the Protection log or rules, on Free or Pro; the only user-initiated output is the diagnostic report (copy or save). Learned items: G3-2 | Founder 2026-10-26 | Capability-file test (no export command); UI text scan |
+| NFR-103 | Privacy | **No export (founder, 2026-10-26):** no command, button or format exports the Protection log or rules, on Free or Pro; the only user-initiated output is the diagnostic report (copy or save). Learned items have no export either, and What Pip knows has no Open the folder (G3-2) | Founder 2026-10-26 | Capability-file test (no export command); UI text scan |
 
 ### 3.5 Cost
 | ID | Category | Requirement (measurable) | Source | Verification |
@@ -686,7 +686,7 @@ Source of truth: ADR-0015 (local), ADR-0017 (server), CODE-STRUCTURE §5 (SQLite
 | `needs_item` | profile `eucas.db` | id | kind, session, since, summary, snoozed, resolved | 30 days after resolved `[proposed – G3]` | Retention job |
 | `canary_run` | profile `eucas.db` | id | CLI version, path (hook-only), result, time | Last 50 `[proposed – G3]` | Retention job |
 | `sent_payload` | profile `eucas.db` (payload DPAPI-encrypted) | id | time, session, payload (verbatim as sent), outcome | Last 20 and ≤ 7 days | Retention; Clear history; Remove Eucas |
-| `learned_item` *(UC-67; storage decided at G3-3)* | profile | id | kind (allowed, denied, answered), structured key (program + args or question kind), source (dates, counts), use count, applied at | Until Forget | Forget, Forget everything, Clear history |
+| `learned_item` *(UC-67; in `eucas.db`, G3-3)* | profile | id | kind (allowed, denied, answered), structured key (program + args or question kind), source (dates, counts), use count, applied at | Until Forget | Forget, Forget everything, Clear history |
 | `setting` | profile `eucas.db` | key | Euca name and look, notch look, sounds, learning on/off, telemetry and crash opt-ins, setup step reached, account email, last known plan + meter (7-day grace), shortcut | Life of the profile | Remove Eucas |
 | Rule (`rulebook.json`) | profile file | rule id | kind `auto_approve`\|`block`, match (tool, exact program + args, MCP tool), folder scope, enabled, source (`library`, `suggestion`, `template`, `user`, `draft`), created; `guidance[]` (id, text, appliesTo, priority) | Until deleted | Rule delete; Remove Eucas |
 | Locked set | managed settings + `install-manifest.json` | — | which limits and block rules are locked | Until changed (admin) | `update-locked-set`, `remove` |
@@ -824,7 +824,7 @@ Cross-cutting NFRs that constrain **every** companion UC and aren't repeated per
 | UC-64 Cloud hand-off (Pro beta, not v0.1) | NFR-068, NFR-069, NFR-116, NFR-201 |
 | UC-65 Account (sign in, sign out, delete) | NFR-015, NFR-020, NFR-041, NFR-043, NFR-070, NFR-071, NFR-072, NFR-096, NFR-098, NFR-099, NFR-100, NFR-102 |
 | UC-66 Supervisor meter, trial, taste | NFR-020, NFR-042, NFR-044, NFR-110, NFR-111, NFR-112, NFR-113, NFR-114, NFR-115 |
-| UC-67 Learns you | NFR-093, NFR-094, NFR-100, NFR-103 (and G3-3, G3-2) |
+| UC-67 Learns you | NFR-093, NFR-094, NFR-100, NFR-103 (G3-2, G3-3 answered) |
 
 ---
 
@@ -886,7 +886,7 @@ Scope: `[ASSUMPTION – confirm]` tags (all variants) in the companion parts of 
 | 10 | BRD UC-59 notes (l. 4014) | The guided merge's exact steps and who runs them are set in the SRS | **Resolved.** Eucas runs fixed commands on your confirm: clean/idle check, fetch, `git merge --no-edit`, the project's tests, push of the non-default branch, `gh pr create`; stops on conflict or failure with nothing pushed; Close the PR as undo | SD §4.1 `eucas-merge`, BR-107, §10 #60 |
 | 11 | BRD UC-62 postconditions (l. 4121) | If a session budget can't be tracked (no usage data), Eucas says so | **Deferred (Pro, not v0.1).** Design basis: budgets count status-line usage per `session_id`; no samples → "can't enforce" state; `--resume` behaviour pinned by a contract test | SD §1, TEST §3.2 |
 | 12 | BRD UC-62 step 3 (l. 4129) | Near the budget, the system tells you once | **Deferred (Pro, not v0.1).** Not specified for v0.1 | — |
-| 13 | BRD §8.8 learned item storage (no tag; flagged here) | Learned items are "local plain files you can open and export" | **G3 question (G3-3, G3-2)**: conflicts with ADR-0015 (one store, no text) and with the export removal | — |
+| 13 | BRD §8.8 learned item storage (no tag; flagged here) | Learned items are "local plain files you can open and export" | **Resolved at G3 (G3-2, G3-3):** structured events only, in the profile's `eucas.db`, no export, no Open the folder | — |
 | 14 | BRD BR-115 (l. 4528, struck) | "Your plan" includes budget used and device count | **Resolved.** No device count is stored; the privacy line names "how much supervisor help you've used" | ADR-0017, §10 #58, #63; NFR-096 |
 | 15 | onboarding-flow §4, setup-flow §6 (untagged timing assumptions) | Setup step durations totalling ≈ 5:00 | **Set by this SRS** as a measured target, not a gate | NFR-013 |
 | 16 | BRD §10 #53 note (l. 4792) | A budget task = one session | **Resolved** (founder, "okay do per session") | BR-113 (4), SD §1 |
@@ -900,12 +900,18 @@ Scope: `[ASSUMPTION – confirm]` tags (all variants) in the companion parts of 
 Only decisions the sources don't already settle; everything the founder answered on 2026-10-26 is applied, not re-asked. Each question has a recommendation, and **this SRS is written to the recommendation until you answer**.
 
 ### G3-1. When does a trial start if the supervisor is still switched off at launch?
+
+**Answered 2026-10-26:** the supervisor is on from launch, so the trial starts when setup finishes (ADR-0018), one per account. SP-SUP2 stays the gate (BRD §10 #54), so **v0.1 launches only once SP-SUP2 passes**; `killSwitches.supervisor` remains an emergency switch, not a launch state.
+
 SP-SUP2 has 50 of its 200 – 300 moments, so v0.1 may ship with `killSwitches.supervisor` on (rules only for everyone). ADR-0018 and SYSTEM-DESIGN start the 14-day trial at setup finish; BR-110 (11) and BRD §10 #54 say the trial starts when the supervisor passes. Starting at setup finish would use up early users' trials with no supervisor.
 - **(a) Recommended:** the trial starts at setup finish **only while the supervisor is on**. An account that finishes setup while it is off stays `pending` (drafting keeps its small setup allowance), and its 14 days start at its first supervisor call after the switch is lifted. Still one trial per account.
 - (b) Always start at setup finish: simpler, but early users lose their trial.
 - **Why (a):** it keeps BR-110 (11), costs one Worker rule, and no early user is short-changed. **Affects:** NFR-044, NFR-049, NFR-110; FR §2.10.
 
 ### G3-2. How far does "no export" go?
+
+**Answered 2026-10-26: (a)**, *"yes"*. Applied in FR-059, FR-166, NFR-103; the BA rewords BR-118 to "no paid packs".
+
 You removed export of the Protection log and rules, because it would carry a setup to a new account. Three other ways out remain: **What Pip knows** has "Export as Markdown" and "Open the folder" (BR-125 (5), PRD 27.7); the **tripwire stop page** lists deleted files as "exportable" (NP §4.3); and BR-117 (6) / BR-118 say "no paid packs; sharing stays free".
 - **(a) Recommended:** remove Export and "Open the folder" from What Pip knows too. Keep a **Copy list** on the tripwire page, because it helps you recover files and carries no setup. Reword BR-118 to "no paid packs" and drop "sharing stays free" for v0.1.
 - (b) Remove export only from the log and rules, as decided; keep the rest.
@@ -913,6 +919,9 @@ You removed export of the Protection log and rules, because it would carry a set
 - **Why (a):** learned items are the most valuable thing to carry to a fresh account, so leaving their export would undo the decision; the recovery list never moves a setup. **Affects:** FR-049, FR-059, FR-080, FR-166, FR-168, FR-179; NFR-103; BR-117 (6), BR-118, BR-125 (5).
 
 ### G3-3. "Learns you": what may it learn from, and where is it kept?
+
+**Answered 2026-10-26: (a)**, *"yes"*. Applied in FR-166, FR-168 and §5.1.
+
 UC-67 and BR-125 learn from what you **allowed, denied or answered**, kept as "plain files you can open". But the guard discards your prompt text unread (ADR-0009) and the local store keeps counts, never text (ADR-0015). Learning from answers means keeping answer text.
 - **(a) Recommended:** v0.1 learns only from structured events (allows and denies by exact command and folder, and the supervisor's outcome kinds). "Answered the same way" becomes a guidance rule **you** confirm. Learned items live in the profile's `eucas.db`, isolated per account, removed by Forget and Clear history, and shown in Settings › What Pip knows. The rule and learned files stay readable on disk but the app doesn't link to them.
 - (b) Keep answer text locally (DPAPI, per profile) so Pip can learn from free text; the privacy line and ADR-0015 then need rewording.
@@ -936,7 +945,10 @@ Where no source gave a number, this SRS proposes one, marked `[proposed – G3]`
 - **(a) Recommended:** approve as a set. None changes what you see, so each can be re-tuned later without a change request.
 
 ### G3-7. Approve the extra library safety rules?
-You asked the tech lead to propose library rules from the bypass suite. [Appendix A](#appendix-a-proposed-library-safety-rules-for-founder-approval) proposes ten block rules (force-push to any branch, discarding uncommitted work, deleting branches and tags, reading secret files, piping a download into a shell, publishing packages, dropping databases, destroying cloud infrastructure, elevating, and disabling git hooks or Defender). Each is on by default, can be switched off or locked, never allows anything, and ships with its own bypass cases. The four hard limits are unchanged.
+
+**Answered 2026-10-26: (a)**, *"yes"*. All ten rules in Appendix A are in the v0.1 library (FR-069).
+
+You asked the tech lead to propose library rules from the bypass suite. [Appendix A](#appendix-a-library-safety-rules-approved-at-g3-7) proposes ten block rules (force-push to any branch, discarding uncommitted work, deleting branches and tags, reading secret files, piping a download into a shell, publishing packages, dropping databases, destroying cloud infrastructure, elevating, and disabling git hooks or Defender). Each is on by default, can be switched off or locked, never allows anything, and ships with its own bypass cases. The four hard limits are unchanged.
 - **(a) Recommended:** approve all ten for v0.1.
 - (b) Approve a subset (name the ones to drop). Any rule not approved simply isn't in the library.
 - **Affects:** FR-069; Appendix A.
@@ -951,7 +963,7 @@ You asked the tech lead to propose library rules from the bypass suite. [Appendi
 
 ---
 
-## Appendix A. Proposed library safety rules (for founder approval)
+## Appendix A. Library safety rules (approved at G3-7)
 
 The four hard limits (`limit.delete`, `limit.push_default`, `limit.send`, `limit.pay`) are **unchanged** and stay outside the library (ADR-0010). The rules below are **block rules** in the library: on by default, switchable off, lockable like any block rule (BR-102 (12)), and they can never allow anything. Each is implemented like the limits (a tested matcher in `crates/eucas-rules/src/library/` over the neutral `ToolCall`, with the same shell tokenizers; unresolved commands that contain the rule's tokens are denied), and each ships with its own bypass-suite cases in `tests/contract/bypass/library-*.yaml`. Deny message: the same hand-back wording as `guard.deny.limit`, naming the rule.
 
@@ -976,9 +988,9 @@ Pass bar per rule before it ships: its positive cases in bash, PowerShell 5.1/7 
 
 | # | Conflict | SRS position | Owner |
 |---|---|---|---|
-| 1 | Trial start: ADR-0018 / SD §5.6 "at setup finish" vs BR-110 (11) / §10 #54 "when the supervisor passes" while the kill switch is on | G3-1 (recommend: lazy start once the switch is lifted) | Founder → tech lead |
+| 1 | Trial start: ADR-0018 / SD §5.6 "at setup finish" vs BR-110 (11) / §10 #54 "when the supervisor passes" while the kill switch is on | Supervisor on from launch (G3-1), so the trial starts at setup finish, as ADR-0018 says | Founder → tech lead |
 | 2 | UC-63 priority still "Won't in v0.1 (D-2)" though the supervisor ships in v0.1 (§10 #54) | v0.1, behind the kill switch | BA |
-| 3 | UC-67 / §8.8 learned items as "plain files … export" vs ADR-0015 (one store, no text), ADR-0009 (prompt text discarded) and the export removal | G3-3, G3-2 | Founder → BA |
+| 3 | UC-67 / §8.8 learned items as "plain files … export" vs ADR-0015 (one store, no text), ADR-0009 (prompt text discarded) and the export removal | Answered: G3-2, G3-3 | BA (BRD UC-67, §8.8, BR-125 (5)) |
 | 4 | BR-108 / UC-55 (no notification for a block) vs SD §5.1 sequence and §5.4 toast policy and TEST §4 "limit deny → toast" | BR-108 wins (approved design): blocks are counters and receipts; toasts only for tripwire / Not protected behind a full-screen app | Tech lead (SD, TESTING) |
 | 5 | Rulebook path: ADR-0010 `%APPDATA%\Eucas\rulebook.json` vs ADR-0015/0017 amendments `profiles\<p>\rulebook.json` | Per-profile path (§4.5) | Tech lead (ADR-0010) |
 | 6 | PRD §10.1 "the guard lives in the plugin cache" vs SP-H1 (runs in place from the marketplace folder) | Marketplace folder is part of the install | PM |
@@ -994,3 +1006,4 @@ Pass bar per rule before it ships: its positive cases in bash, PowerShell 5.1/7 
 | B-1 | Setup step 8 in the approved design still shows the older privacy line ending "…your email and your plan." | The approved line naming "how much supervisor help you've used" (FR-138) | UX |
 | B-2 | Signing out while offline: SYSTEM-DESIGN signs out locally; the approved design says you can't sign out or delete while offline | The approved design (FR-159); tech lead to confirm | Tech lead |
 | B-3 | UC-58 A1 sends a notification at 85 % usage, which BR-108 now forbids | An amber meter, no notification (FR-087) | BA |
+| B-4 | BR-117 (6) / BR-118 "no paid packs; sharing stays free" vs no export (G3-2) | "No paid packs"; sharing dropped for v0.1 | BA |
