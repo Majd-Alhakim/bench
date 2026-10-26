@@ -2,7 +2,7 @@
 
 > **Draft only.** Nothing here is on GitHub yet. Creating these issues waits for your OK at Gate 6 (decision G6-7 in [G6-DECISIONS.md](G6-DECISIONS.md)). Generated from the task files; if a task file changes, regenerate before creating.
 
-**Labels to create first:** `companion`, `type:story`, `type:task`, `type:spike`, `lane:A`, `lane:B`, `priority:must`, `epic:E17` … `epic:E28`, `blocked:SP-ST2`, `blocked:SP-AC1`, `gate:SP-SUP2`.
+**Labels to create first:** `companion`, `type:story`, `type:task`, `type:spike`, `lane:A`, `lane:B`, `priority:must`, `epic:E17` … `epic:E28`, `blocked:SP-ST2`, `blocked:SP-AC1`, `gate:SP-SUP2`, `needs:founder-answer`.
 
 **Milestones:** `v0.1` (every issue), and `Sprint 0` … `Sprint 11` (from the [sprint plan](README.md#4-sprint-plan)). Sprint 1 task issues are listed in full; later sprints get their task issues at each `/plan-sprint`, from the task files.
 
@@ -426,7 +426,7 @@ Labels: `companion`, `type:story`, `lane:B`, `priority:must`, `epic:E21`, `epic:
 **Done when:** every task is merged into `dev` with its tests, CI is green, the trace event shows in the app, and the story is demoed at the sprint review (Definition of Done in [story-map.md §3](story-map.md#3-definition-of-ready-and-done-companion-tasks)).
 
 ### [R-2] Prompted rules
-Labels: `companion`, `type:story`, `lane:B`, `priority:must`, `epic:E21` · Milestone: `Sprint 10`, `v0.1`
+Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E21` · Milestone: `Sprint 10`, `v0.1`
 
 **Story:** Prompted rules · 1.75 d · depends: R-1, AC-2, BU-1, SUP-2.2 · PRD 21.2 · UC-57
 
@@ -525,7 +525,7 @@ Labels: `companion`, `type:story`, `lane:B`, `priority:must`, `epic:E28` · Mile
 
 **Tasks** (acceptance criteria, files and tests per task in [tasks-lane-b.md](tasks-lane-b.md)):
 - [ ] AC-2.1 Account client and DPAPI tokens (0.5 d)
-- [ ] AC-2.2 SignInStep and the signed-out panel (0.5 d)
+- [ ] AC-2.2 SignInStep (the signed-out panel is dropped: signed out = no account, NA-1.5) (0.5 d)
 - [ ] AC-2.3 Settings › Account, sign out, delete (0.5 d)
 - [ ] AC-2.4 Per-account profiles (0.75 d)
 
@@ -577,7 +577,7 @@ Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E25`, `epic:
 **Done when:** every task is merged into `dev` with its tests, CI is green, the trace event shows in the app, and the story is demoed at the sprint review (Definition of Done in [story-map.md §3](story-map.md#3-definition-of-ready-and-done-companion-tasks)).
 
 ### [R1] Release
-Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E18`, `epic:E26`, `gate:SP-SUP2`, `blocked:SP-AC1` · Milestone: `Sprint 9`, `v0.1`
+Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E18`, `epic:E26`, `gate:SP-SUP2`, `blocked:SP-AC1` · Milestone: `Sprint 5 (R1.1, R1.2), Sprint 6 (R1.4), Sprint 7 (R1.3)`, `v0.1`
 
 **Story:** Release · 1.75 d · depends: U-1, W-1 (+ AC-1 for the Worker workflow) · PRD 18.4, 26.2 · UC-54
 
@@ -594,7 +594,7 @@ Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E18`, `epic:
 **Done when:** every task is merged into `dev` with its tests, CI is green, the trace event shows in the app, and the story is demoed at the sprint review (Definition of Done in [story-map.md §3](story-map.md#3-definition-of-ready-and-done-companion-tasks)).
 
 ### [LY-1] Learns you
-Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E27` · Milestone: `Sprint 10`, `v0.1`
+Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E27` · Milestone: `Sprint 9 (LY-1.1–LY-1.4), Sprint 10 (LY-1.5–LY-1.8)`, `v0.1`
 
 **Story:** Learns you · 3.0 d (indicative 2–3) · depends: R-1, N-1, SUP-1, AC-2, P-1, L-1, N-0 · PRD 27.7, 27.8 ("That was wrong"), 27.9 (calm and worst moments) · UC-67, UC-60
 
@@ -611,6 +611,36 @@ Labels: `companion`, `type:story`, `lane:A`, `priority:must`, `epic:E27` · Mile
 - [ ] LY-1.6 The monthly compounding line (0.25 d)
 - [ ] LY-1.7 Moments: all caught up, while you were away, back to normal (0.5 d)
 - [ ] LY-1.8 Undo-everywhere audit and the worst-moment banners (PRD 27.9) (0.25 d)
+
+**Done when:** every task is merged into `dev` with its tests, CI is green, the trace event shows in the app, and the story is demoed at the sprint review (Definition of Done in [story-map.md §3](story-map.md#3-definition-of-ready-and-done-companion-tasks)).
+
+### [NA-1] No account: safety and a small supervisor taste
+Labels: `companion`, `type:story`, `lane:A`, `lane:B`, `priority:must`, `epic:E24`, `epic:E27`, `epic:E28`, `gate:SP-SUP2`, `needs:founder-answer` · Milestone: `Sprint 5` … `Sprint 10` (per task below), `v0.1`
+
+**Story:** As someone trying Eucas, I can finish setup without an account and still get the four locked limits, the mass-delete tripwire and about 10 supervisor answers, with Pip in a minimal notch and panel, so I can see it work before I sign up. Founder decisions 2026-10-26 ("we make people have a small taste without sign up and then they have to create account or buy pro"; addendum: "Let the no account also have to try the supervisor also but like small number of usage"). · 5.25 d · PRD 24.1, 25.3, 27.5, 28.2, 28.3 (as revised) · UC-54, UC-55, UC-56, UC-60, UC-63, UC-65
+
+**Estimate:** 5.25 d over 11 tasks (tech lead). **Spikes:** SP-SUP2 (acceptance, NA-1.9, NA-1.10). **Waits for:** founder answers (a) surface (minimal notch recommended), (b) trial at sign-up (recommended), (c) taste size (10 recommended); the design routes `s-noacct-done`, `p-noacct`, `p-noacct-empty`, `t-noacct`.
+
+**Acceptance (story level, Given/When/Then):**
+- Given a fresh install, When I press Continue without an account at step 6, Then I see step 8 What is sent and the no-account step 9, and Pip flies to a minimal notch.
+- Given no account and no network, When a session pushes to the default branch or mass-deletes files, Then the push is blocked and the delete is stopped.
+- Given no account, When Pip supervises, Then only supervisor-taste calls reach the Eucas server, and none once the taste is used up; then Pip asks me instead and shows "Sign up for 14 more days of the supervisor" once.
+- Given I sign out or delete my account, Then I'm back in the no-account state with protection unchanged.
+
+**Traces:** FR-020, FR-026 – FR-030, FR-054, FR-102 – FR-109, FR-116, FR-128, FR-129, FR-132, FR-133, FR-138, FR-139, FR-142 – FR-146, FR-155 – FR-159, FR-173, FR-184, NFR-033, NFR-041, NFR-044, NFR-070 – NFR-073, NFR-090, NFR-091, NFR-096, NFR-097 (as revised where marked)
+
+**Tasks** (acceptance criteria, files and tests per task in [tasks-lane-b.md §NA-1](tasks-lane-b.md)):
+- [ ] NA-1.1 AccountState and the server-call gate in the core (0.5 d · Sprint 5 · lane B)
+- [ ] NA-1.7 The trial starts at sign-up (0.25 d · Sprint 6 · lane B · needs founder answer (b))
+- [ ] NA-1.8 Worker: install registration and the signed install token (0.5 d · Sprint 7 · lane A)
+- [ ] NA-1.9 Worker: the anonymous supervisor-taste route (0.5 d · Sprint 9 · lane A · needs founder answer (c); gate SP-SUP2)
+- [ ] NA-1.10 Core: install ID, the taste counter and the used-up state (0.5 d · Sprint 9 · lane A; gate SP-SUP2)
+- [ ] NA-1.2 The no-account tray fallback menu (0.25 d · Sprint 9 · lane A)
+- [ ] NA-1.11 The minimal notch and minimal panel, and the taste-used-up state (0.75 d · Sprint 10 · lane B · needs founder answer (a))
+- [ ] NA-1.3 Setup without an account: step 6 → 8 → 9 (no account) (0.5 d · Sprint 10 · lane B)
+- [ ] NA-1.4 Sign up later: setup steps 6–9 (0.5 d · Sprint 10 · lane B)
+- [ ] NA-1.5 Sign out and delete → the no-account state (0.5 d · Sprint 10 · lane B)
+- [ ] NA-1.6 E2E: a fresh install with no account protects you offline; taste calls only, none after it's used up (0.5 d · Sprint 10 · lane B)
 
 **Done when:** every task is merged into `dev` with its tests, CI is green, the trace event shows in the app, and the story is demoed at the sprint review (Definition of Done in [story-map.md §3](story-map.md#3-definition-of-ready-and-done-companion-tasks)).
 

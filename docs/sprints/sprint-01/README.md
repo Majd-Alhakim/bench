@@ -47,6 +47,7 @@ Each task's traces (SRS FR/NFR ids), files, acceptance criteria, named tests and
   - **G-1.4's 8.3-name test** depends on the runner. It is skipped with a printed reason, never silently.
   - **CLAUDE.md still describes the Electron app.** S1-1.4's PR updates its Commands and Architecture sections for Tauri, Rust and pnpm, if you approve (G6 decision 11 (i)).
   - **No spike blocks Sprint 1.** SP-ST2 must be at GO by Sprint 2 (U-1.6).
+  - **The no-account decisions (2026-10-26) don't change Sprint 1.** Its scope, goal and capacity stand. The new NA-1 work (no account: safety and a small supervisor taste, +5.25 d) starts in Sprint 5. Sprint 1's only touchpoint is U-1.3: the `tray_state` sentence it writes is reused later by the no-account tray menu (NA-1.2), with no change now.
 - **Client approval of scope:** ☐ (date)
 
 ## Daily standups

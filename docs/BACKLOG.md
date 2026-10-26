@@ -1,6 +1,6 @@
 # Product Backlog — Eucas
 
-> **The companion v0.1 backlog is in [backlog/](backlog/README.md)** (Phase 6, draft for Gate 6, 2026-10-26): 33 stories and 146 tasks, 58.5 build days, 11 three-day sprints over two lanes, [Sprint 1](sprints/sprint-01/README.md), [GitHub issue drafts](backlog/github-issues.md) (not created) and [the G6 decisions](backlog/G6-DECISIONS.md). It replaces the "Now" section that was here. Everything below is the **team app, after the companion**: deferred, not deleted, and still provisional.
+> **The companion v0.1 backlog is in [backlog/](backlog/README.md)** (Phase 6, draft for Gate 6, 2026-10-26): 34 stories and 157 tasks, 63.75 build days (58.5 before NA-1, 2026-10-26), 11 three-day sprints over two lanes, [Sprint 1](sprints/sprint-01/README.md), [GitHub issue drafts](backlog/github-issues.md) (not created) and [the G6 decisions](backlog/G6-DECISIONS.md). It replaces the "Now" section that was here. Everything below is the **team app, after the companion**: deferred, not deleted, and still provisional.
 
 ## Sprint 0: Inception
 

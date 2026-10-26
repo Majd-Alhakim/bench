@@ -6,7 +6,7 @@
 |---|---|---|---|
 | Draft for Gate 6 (2026-10-26) | Tech lead, lane B | `/plan-sprint` | [BUILD-PLAN](../architecture/companion/BUILD-PLAN.md) §2–§4, [SRS](../requirements/SRS.md) v1.0 (FR/NFR ids), [CODE-STRUCTURE](../architecture/companion/CODE-STRUCTURE.md), [TESTING](../architecture/companion/TESTING.md), [SYSTEM-DESIGN](../architecture/companion/SYSTEM-DESIGN.md), [SP-ST1](../spikes/SP-ST1.md), [SP-H1](../spikes/SP-H1.md), [notch-and-panel](../design/ux/companion/notch-and-panel.md), [setup-flow](../design/ux/companion/setup-flow.md), ADR-0016/0017/0018 |
 
-**Scope:** U-1, N-0, N-1, L-1, R-1, R-2, P-1, O-1, W-1, AC-1, AC-2, BU-1, ME-1, SUP-2, R1, and the new **LY-1**. The other lead owns S1-1, G-1…G-5, A-1, A-2, H-1, C-1, T-1, F-1, M-1, D-1, SUP-1, SUP-3, Q-1; I cite their work by story id (or `<STORY>.<n>` where the id is certain).
+**Scope:** U-1, N-0, N-1, L-1, R-1, R-2, P-1, O-1, W-1, AC-1, AC-2, BU-1, ME-1, SUP-2, R1, the new **LY-1**, and the new **NA-1** (no account: safety and a small supervisor taste, founder decisions 2026-10-26; its tasks run in both lanes per the sprint plan). The other lead owns S1-1, G-1…G-5, A-1, A-2, H-1, C-1, T-1, F-1, M-1, D-1, SUP-1, SUP-3, Q-1; I cite their work by story id (or `<STORY>.<n>` where the id is certain).
 
 **Conventions.**
 - Estimates are focused build days; every task is ≤ 1 day.
@@ -29,6 +29,7 @@
   - No toast except the BR-108 (3) fallback; never for blocks, usage or the meter.
   - No log or rules export (FD-3, G3-2).
   - The approved privacy line everywhere (FR-138).
+- **The account gate (NA-1.1, from Sprint 5):** every call to the Eucas server goes through `net/gate.rs`, and every account-only feature (the full panel, Usage, your own rules, drafting, learns-you, receipts and the ledger, the trial) checks `AccountState` first. With no account (signed out counts as no account), Eucas is safety plus a small supervisor taste (NA-1): it never reads the account, and once the taste is used up it calls nothing.
 
 ---
 
@@ -98,7 +99,7 @@
 - **Acceptance criteria:**
   - `notch_state` returns exactly one of Not protected › Tripwire stop › Needs you › Working › Resting › Dozing, plus Before setup.
   - Working = a tool ran in the last 20 s; Dozing only with ≥ 5 min no input **and** nothing running.
-  - `tray_state` is never `calm` while any session is not protected; every tray state has a tooltip sentence in words (the FR-021 wait-at-sign-in tooltip uses it).
+  - `tray_state` is never `calm` while any session is not protected; every tray state has a tooltip sentence in words (the FR-021 Protected / Not protected tray line uses it; NA-1.2 reuses it for the no-account menu).
 - **Test approach:**
   - `derive::tests::notch_priority_cartesian`: all 64 combinations of `{not_protected, tripped, needs>0, working, idle_5min, setup_done}`.
   - `tray_never_calm_when_any_not_protected`, `no_doze_while_running`, `working_boundary_19_999_vs_20_000`, `every_tray_state_has_a_sentence`.
@@ -126,7 +127,7 @@
 - **Traces:** FR-116, FR-101, FR-048, FR-021
 - **Files:** `crates/eucas-app/src/{tray,context_menu,single_instance,autostart}.rs`, `crates/eucas-app/icons/tray/*.ico` (the UI's ICO set; placeholders until delivered), `contracts/copy/en/{tray,quit}.json` (`tray.menu.*`, `quit.*`)
 - **Acceptance criteria:**
-  - The menu is exactly Show the panel · Show the notch as a thin line / pill · Quit Eucas…; there is no "Turn off protection".
+  - Signed in, the menu is exactly Show the panel · Show the notch as a thin line / pill · Quit Eucas…; there is no "Turn off protection". (The no-account menu is NA-1.2's; this task builds the menu from a per-state item list so NA-1.2 adds a list, not a branch.)
   - The icon and tooltip follow `tray_state` through a cached handle (no getter in a loop).
   - A second launch exits and shows the panel in the first instance; Eucas registers to start at login (official Tauri plugins, no platform code).
   - Quit asks first and says the limits and rules keep working while the heartbeat, notifications and tripwire stop.
@@ -239,7 +240,7 @@
   - Window styles `WS_EX_LAYERED | NOACTIVATE | TOOLWINDOW | TOPMOST` and `MA_NOACTIVATE`; per-pixel alpha makes it click-through outside the pill.
   - Placed top centre of the primary display from the monitor's work area and scale; refreshed on `WM_DPICHANGED` or a display change, never polled.
   - Hides when `SHQueryUserNotificationState` is 3 or 4, or when the foreground window covers the monitor, but never on state 2 alone; returns with `SW_SHOWNOACTIVATE`.
-  - A panic in drawing or in the window procedure hides the notch, the tray shows the state, and the core keeps running. The notch appears only from setup step 9.
+  - A panic in drawing or in the window procedure hides the notch, the tray shows the state, and the core keeps running. The notch appears only from setup step 9, with an account or without (the no-account minimal notch and panel are NA-1.11; pending founder answer (a)).
 - **Test approach:** Win32 probes:
   - `foreground_unchanged_after_show`, `hit_test_corner_passes_through`;
   - `placement_at_100_125_150` (per-monitor DPI harness);
@@ -655,7 +656,8 @@
 **Constraint contract:**
 - One UAC prompt (FR-012); nothing written before step 4 (FR-015).
 - Never "Protected" after edge J (FR-018).
-- The limits block with no account and no network (NFR-033); no "Sign in later" (FR-020).
+- The limits block with no account and no network (NFR-033).
+- ~~No "Sign in later" (FR-020).~~ **Revised 2026-10-26 (founder: "we make people have a small taste without sign up and then they have to create account or buy pro"):** step 6 offers a secondary **Continue without an account**, online or offline, then step 8 (What is sent) and a no-account step 9 with the flight (NA-1.3). Step 7 is skipped on that path, and nothing is sent during setup.
 - Never the unredacted original (FR-027).
 - **+0.25:** the step-1 edges (Smart App Control, organisation policy, two installs) and the never-signed-in path are more than the slice assumed.
 
@@ -713,10 +715,10 @@
 - **Traces:** FR-020, FR-021, FR-022, FR-023, FR-025, NFR-043
 - **Files:** `apps/companion/src/surfaces/setup-window/{step-6-signin,step-7-rules}.tsx` (AC-2.2's `SignInStep`; R-1.6 rows; R-2.3's draft card with no Lock it too)
 - **Acceptance criteria:**
-  - There is no Sign in later. Offline, the wait copy shows (locked or declined variant) with Retry and Back, and the tray shows words; closing keeps the guard, and reopening returns to sign-in.
+  - ~~There is no Sign in later. Offline, the wait copy shows (locked or declined variant) with Retry and Back, and the tray shows words; closing keeps the guard, and reopening returns to sign-in.~~ **Revised 2026-10-26:** sign in is the primary; **Continue without an account** is the secondary, online and offline (built in NA-1.3), so offline no longer waits (supersedes the "setup waits" part of BRD #65 (a)). Offline, sign-in shows Retry next to it; the tray's Protected / Not protected line from #65 stays. Closing the window at step 6 keeps the guard, and reopening returns to step 6.
   - Step 7: the limits are read-only and library switches are on (except "Ask before installing packages"); suggestions and Add your own; the primary reads "Continue · n rules".
   - Rules are written at user scope with the Not locked hint; drafts draw on the `pending` allowance.
-- **Test approach:** Playwright offline at step 6 (a push to the default branch is still blocked; the tray tooltip reads Protected); step 7 writes user scope only and raises no second UAC; BU-1's pending-allowance Worker test.
+- **Test approach:** Playwright offline at step 6 (a push to the default branch is still blocked; the tray tooltip reads Protected; sign-in shows Retry, never a dead end); step 7 writes user scope only and raises no second UAC; BU-1's pending-allowance Worker test.
 - **Estimate:** 0.5 · **Depends:** O-1.5, AC-2.2, R-1.6, R-2.3 · **Blocked by spike:** none · **Trace event:** `setup.signin {result}`, `setup.rules {count}`
 
 ### O-1.7 · Steps 8–9 and finish
@@ -726,8 +728,8 @@
   - Step 8's lede is the **approved privacy line**, the `fixed.privacy` constant (FR-138, DESIGN §7.1: "When Pip isn't sure, … how much supervisor help you've used."). The stale "…your email and your plan." in setup-flow step 8 (SRS B-1) is not used.
   - Step 8 shows your last session redacted on the PC, with in-place tags and the footer; **Sample** when there's none or redaction fails; no toggle; never the original.
   - Step 9: each session's word, the restart line, the heartbeat and the honest zero.
-  - Send Pip to the top → `trial/start` once, the window destroyed, the flight (a crossfade with reduced motion), the Done sound, and the coach mark once.
-- **Test approach:** Playwright: the fixture's secret is absent from the DOM; `trial/start` is called once (fake Worker); the coach mark never shows twice.
+  - Send Pip to the top → the window destroyed, the flight (a crossfade with reduced motion), the Done sound, and the coach mark once. ~~`trial/start` once~~: **pending founder answer (b)**, the trial starts at sign-up (NA-1.7), not here; if (b) is answered "at the end of setup", this call comes back and NA-1.7 is dropped.
+- **Test approach:** Playwright: the fixture's secret is absent from the DOM; no `trial/start` call from step 9 (fake Worker; under (b)); the coach mark never shows twice.
 - **Estimate:** 0.5 · **Depends:** O-1.6, SUP-1, N-0.4, AC-2.1 · **Blocked by spike:** none · **Trace event:** `setup.finished {seconds}`
 
 ---
@@ -780,6 +782,7 @@
   - Get notified sends only `{moment, installHash}`.
   - The line shows at most once a week per moment and one a day, never on safety, a worst moment, a notification or setup; Not interested hides it for good.
   - Telemetry is asked once, off by default, counts only, with no token; Updates shows the channel and a failed update.
+  - With no account there is no ProLine, no waitlist call and no telemetry (NA-1.1 routes this client through the gate).
 - **Test approach:** Workers-pool schema tests; Vitest ProLine frequency rules; an e2e network capture.
 - **Estimate:** 0.5 · **Depends:** W-1.2, U-1.2 · **Blocked by spike:** none · **Trace event:** `waitlist.joined {moment}`, `telemetry.sent`
 
@@ -847,7 +850,7 @@
 
 **Constraint contract:**
 - Tokens live in DPAPI only, never in the DB, logs or renderer (NFR-070); the guard never links the account (FR-054).
-- Signed out, the panel shows only sign-in and protection is unchanged (FR-155, NFR-041).
+- ~~Signed out, the panel shows only sign-in and protection is unchanged (FR-155, NFR-041).~~ **Revised 2026-10-26:** the full panel is account-only now. Signed out (or account deleted) = the **no-account state**: the four limits, the tripwire and the install's supervisor taste, with the minimal notch and panel and the tray fallback; protection is unchanged (FR-155, NFR-041). Built in NA-1.5.
 - **Profile isolation is a mandatory test** (NFR-100).
 - **SRS App. B B-2, confirmed (tech lead):** follow the approved design and FR-159: you **can't sign out or delete while offline**; local tokens are kept and nothing changes. SYSTEM-DESIGN §5.9's "deletes the local tokens anyway, retries later" is superseded (owner: tech lead, in the Gate 6 docs pass).
   - Why: a local-only sign-out would leave the server epoch unbumped, so the refresh token stays valid. It would also show "Signed out" while the account still works elsewhere, and the approved copy can't say that honestly.
@@ -862,15 +865,16 @@
 - **Test approach:** a DPAPI round-trip (Windows); a `token_never_in_db_or_log` scan; refresh timing; 401 → signed-out state; check-deps (the guard doesn't link `account`).
 - **Estimate:** 0.5 · **Depends:** AC-1.3, U-1.2 · **Blocked by spike:** none · **Trace event:** `account.state {signed_in}`
 
-### AC-2.2 · `SignInStep` and the signed-out panel
+### AC-2.2 · `SignInStep` ~~and the signed-out panel~~
 - **Traces:** FR-146, FR-147, FR-148, FR-149, FR-150, FR-155, FR-161
-- **Files:** `apps/companion/src/components/sign-in-step/*`, `src/surfaces/panel/signed-out.tsx`, commands `account_start` / `account_verify`
+- **Files:** `apps/companion/src/components/sign-in-step/*`, ~~`src/surfaces/panel/signed-out.tsx`~~, commands `account_start` / `account_verify`
 - **Acceptance criteria:**
   - The email screen copy and the unticked product-news box.
   - The code: the 6th digit or a paste submits; a 30-s resend countdown; the wrong, expired, disposable and too-many-tries states.
   - No password field anywhere.
-  - Signed out, the panel shows only sign-in with the guarding lines; nothing account-related reaches the notch, the peek or a sound.
-- **Test approach:** Vitest for every state; Playwright sign in / wrong code / resend / disposable (fake Worker); a UI scan for password inputs.
+  - `SignInStep` is one component used by setup step 6 and by sign-up later from the tray (NA-1.4).
+  - ~~Signed out, the panel shows only sign-in with the guarding lines~~ (revised 2026-10-26: signed out = the no-account state, NA-1.5); nothing account-related reaches the notch, the peek or a sound.
+- **Test approach:** Vitest for every state; Playwright sign in / wrong code / resend / disposable (fake Worker); a UI scan for password inputs. (The effort freed by dropping the signed-out panel goes to the shared-use case; the estimate is unchanged.)
 - **Estimate:** 0.5 · **Depends:** AC-2.1 · **Blocked by spike:** none · **Trace event:** `account.signin {result}`
 
 ### AC-2.3 · Settings › Account, sign out, delete
@@ -878,8 +882,9 @@
 - **Files:** `apps/companion/src/screens/settings/account.tsx`, commands `account_sign_out` / `account_delete`
 - **Acceptance criteria:**
   - The email, the "Holds only…" line and the plan card.
-  - Sign out lists what keeps working first, then "Signed out. Pip keeps guarding.", with no Undo.
+  - Sign out lists what keeps working first, then "Signed out. Pip keeps guarding.", with no Undo. **Open (UX):** the "what keeps working" list must now say what no account keeps (the four limits, the tripwire, machine-locked rules, the install's supervisor taste); the copy is not changed here until UX supplies it.
   - Delete shows what is removed, the Pro line, the trial-claim note and "Delete account · can't be taken back".
+  - After a successful sign out or delete, the app enters the no-account state (NA-1.5 does the switch).
   - Offline: Sign out and Delete change nothing. The tokens stay, no server call is queued, and the page says "Can't sign out or delete while offline. Your account is unchanged." / "Couldn't reach the Eucas server, so nothing was deleted. Try again" (B-2).
 - **Test approach:** Playwright sign out / delete (the server row is gone, `trial_claim` kept, rules still enforced); offline sign-out and delete → tokens byte-equal before and after, no retry queued, the exact copy.
 - **Estimate:** 0.5 · **Depends:** AC-2.2, ME-1.2 · **Blocked by spike:** none · **Trace event:** `account.signed_out`, `account.deleted {result}`
@@ -889,7 +894,7 @@
 - **Files:** `crates/eucas-core/src/account/profiles.rs`, `crates/eucas-core/src/store/open.rs`, `apps/companion/src/components/sign-in-step/different-account.tsx`
 - **Acceptance criteria:**
   - `profiles\<sha256(account id)>\{eucas.db, rulebook.json}`.
-  - The first account adopts the pre-sign-in data (the Euca, the lock choices); a different account is warned before a code is sent and gets a fresh profile.
+  - The first account adopts the pre-sign-in data (the Euca, the lock choices), including a Euca made in a no-account setup, however long ago (**assumption** from the 2026-10-26 brief, flagged for the founder); a different account is warned before a code is sent and gets a fresh profile.
   - A switch swaps the DB and emits `ProfileSwitched` (R-1.2 recompiles); the limits and managed locks never drop.
 - **Test approach:**
   - **The isolation e2e**: A adds a rule and a learned item; B sees none of it and the limits still block; A signs back in and its data is back.
@@ -1133,6 +1138,163 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
 
 ---
 
+## NA-1 · No account: safety and a small supervisor taste · 5.25 d (new, 2026-10-26) · depends: AC-1, AC-2, BU-1, SUP-1, SUP-2, U-1.4, N-1, P-1, T-1, O-1 · PRD 24.1, 25.3, 27.5, 28.2, 28.3 (as revised) · UC-54, UC-55, UC-56, UC-60, UC-63, UC-65
+
+**Why:** founder decisions 2026-10-26:
+- *"we make people have a small taste without sign up and then they have to create account or buy pro"* (Show HN and the awesome-claude-code list exclude sign-up-gated tools). It partly reverses BRD §10 #57 / FR-020: setup can finish without an account.
+- **Addendum:** *"Let the no account also have to try the supervisor also but like small number of usage"*.
+
+**No account = safety + a small supervisor taste:** the four locked limits, the mass-delete tripwire, and a fixed number of supervised decisions per install (**about 10 in total, pending founder answer (c)**; alternatives 5 / 10 / 25), on the hidden-budget model. Tracked by a random **install ID** made on this PC (no hardware fingerprint) and a signed **install token** for one anonymous supervisor route; a reinstall resets the taste (accepted). Without an account the server keeps only the install ID and the budget used. Everything else needs an account: Usage, rules editing and drafting (including the library rules beyond the four limits), learns-you, receipts and the ledger, the 14-day trial.
+
+**Constraint contract:**
+- With no account, the only calls to the Eucas server are **supervisor-taste calls** (plus the update check and signed config, NA-Q1 answered yes); **none once the taste is used up**. The guard, the limits and the tripwire never need the network (NFR-033, NFR-041).
+- Signed out and account deleted are the same state as never signed in (no account); the install's taste is per install, not per account.
+- The taste uses the same What is sent payload, redaction and privacy line as the supervisor (FR-138, SUP-1.4); nothing is sent before step 8 has been shown.
+- **Never nag:** no timed pop-ups, no badges, no countdowns, no reminders, no expiring prompts. The invites are the quiet "Create an account" block in the minimal panel, one tray menu item, and one calm line, once, when the taste is used up.
+- Only approved routes (FR-189): `s-signin` (with "Continue without an account"), `s-noacct-done` (now "9 · Pip is watching (no account)"), `p-noacct`, `p-noacct-empty`, `t-noacct`. The design branch must be merged before NA-1.2, NA-1.3 and NA-1.11 start.
+- Undo: nothing here adds a reversible change.
+- Verified by: unit tests on the gate and the taste counter, Workers-pool tests on the anonymous route, a network capture in every NA e2e, golden images against the approved screens, and NA-1.6.
+
+### NA-1.1 · `AccountState` and the server-call gate in the core
+- **Traces:** FR-054, FR-155, FR-184, NFR-033, NFR-041, NFR-090, NFR-098
+- **Files:** `crates/eucas-core/src/account/state.rs` (`enum AccountState { NoAccount, SignedIn }`), `crates/eucas-core/src/net/gate.rs` (the one HTTP client for the Eucas server), `contracts/ipc/state.schema.json` (`AccountState`), `xtask/src/check_deps.rs` (one new rule, in its own function)
+- **Acceptance criteria:**
+  - `AccountState` is derived, never stored on its own: `SignedIn` only with valid DPAPI tokens (AC-2.1); never signed in, signed out, account deleted, or a 401 after refresh → `NoAccount`.
+  - Every Eucas-server client goes through `gate.rs`: the account client (AC-2.1), the config client (W-1.3), waitlist and telemetry (W-1.4) and the meter (ME-1.2) are moved onto it here; SUP-1.7, R-2.2 and the NA-1.7 trial call use it from the start.
+  - In `NoAccount`, the gate refuses every account-scoped route (`account`, `trial/start`, `meter`, `supervise`, `draft-rule`, `waitlist`, `telemetry`; `auth/*` only when the user starts a sign-in) with no request sent. It allows the anonymous taste routes (`install/register`, `supervise-taste`, NA-1.8 / NA-1.9) **only while the taste counter has answers left** (NA-1.10), and the update check (`/v1/updates`, `/v1/config`) with only the FR-184 headers. NA-Q1 answered yes by the PM (2026-10-26).
+  - The core publishes `AccountState` in the store; the notch and panel mode (NA-1.11), the supervisor client (NA-1.10), the learner and the rulebook compiler read it.
+  - `xtask check-deps` fails if any `eucas-core` module other than `net/gate.rs` builds an HTTP client.
+- **Test approach:**
+  - Unit `account::state::tests::{never_signed_in_is_no_account, signed_out_is_no_account, deleted_is_no_account, refresh_401_is_no_account}`.
+  - Unit `net::gate::tests::{no_account_blocks_every_account_route, no_account_allows_only_taste_routes, taste_used_up_allows_no_taste_route, update_check_carries_only_fr184_headers}` over a table of every route in `contracts/api/`.
+  - Integration against the fake Worker (replaces "zero calls"): a fixture day in `NoAccount` with sessions, blocks, supervised moments and a tripwire stop → **the only account-or-supervisor requests are supervisor-taste calls**, one per supervised decision, and **none after the taste is used up**; no request carries an account token, email or telemetry.
+  - The check-deps self-test `http_client_only_in_gate`.
+- **Estimate:** 0.5 · **Depends:** AC-2.1, W-1.3, W-1.4, ME-1.2 · **Blocked by spike:** none · **Trace event:** `account.state {state}`, `net.refused {route, reason: no_account}`
+
+### NA-1.2 · The no-account tray fallback menu
+- **Traces:** FR-116 (as revised), FR-021, NFR-036
+- **Files:** `crates/eucas-app/src/{tray,context_menu}.rs` (U-1.4's; adds the no-account item list), `contracts/copy/en/tray.json` (`tray.noacct.*`)
+- **Acceptance criteria:**
+  - In `NoAccount` the tray stays the fallback surface (BRD #65), as in `t-noacct`: the "Protected · 4 limits locked · tripwire on" line (or "Not protected …", the `-off` variant, from U-1.3's `tray_state`), the items the approved route lists, and one **Create an account** item. No badge, no dot on the icon, no timer.
+  - **Revised by the addendum:** the tray is no longer the only no-account surface; the minimal notch and panel are NA-1.11. If the founder picks tray only in (a) after all, NA-1.11 is dropped (−0.75 d) and this task takes back the toast-policy change (+0.25 d).
+- **Test approach:** unit `tray::tests::{no_account_menu_matches_route, no_account_no_badge, not_protected_line_in_no_account}`; golden images against `screens/noacct-tray-d.png`, `-l` and `-off-d`.
+- **Estimate:** 0.25 · **Depends:** NA-1.1, U-1.4, H-1.4 · **Blocked by spike:** none · **Trace event:** `tray.state_changed {state, account: none}`
+
+### NA-1.3 · Setup without an account: step 6 → 8 What is sent → 9 Pip is watching (no account)
+- **Traces:** FR-020 (as revised), FR-026, FR-027, FR-028, FR-029, FR-030, FR-138, FR-018, NFR-033, NFR-041
+- **Files:** `apps/companion/src/surfaces/setup-window/{step-6-signin,step-8-sent,step-9-watching}.tsx` (O-1.6 / O-1.7's; adds the no-account variants), `apps/companion/src/surfaces/setup-window/steps.ts` (the path 1–6, 8, 9), `crates/eucas-core/src/installer/setup_state.rs` (`finished_without_account`), `contracts/copy/en/setup.json` (`setup.noacct.*`)
+- **Acceptance criteria:**
+  - Step 6 (`s-signin`) shows **Continue without an account** as a secondary button, online and offline.
+  - It leads to **8 · What is sent**, the same screen and privacy line (FR-138) as with an account, since the taste uses it; step 7 (rules) is skipped and no rule is written beyond the limits.
+  - Then **9 · Pip is watching (no account)** (`s-noacct-done`): "Pip is watching" and "The four limits are locked · the tripwire is on · 10 supervisor answers to try" (the number from founder answer (c); "Not locked" in the declined-UAC variant, edge H); the quiet invite line; **Send Pip to the top** runs the flight into the minimal notch (NA-1.11), the Done sound and the coach mark once. The "Safety is on" screen of the first brief is **replaced** by this.
+  - No `trial/start`, no account call; nothing is sent during setup (the taste is used only by later supervised decisions).
+  - Offline at step 6: Continue without an account works, and so do steps 8 and 9 (the example is built on the PC).
+  - Never "Protected" after edge J (FR-018), on this path too. Resume: from step 6 on, the first step not done; finished stays finished.
+  - Step 2's Euca is the one in the minimal notch, and it carries over when you create an account (**assumption** from the brief, flagged; AC-2.4 adopts it).
+- **Test approach:**
+  - Playwright `setup-no-account.spec.ts`: online and offline → Continue without an account → step 8 → step 9 → flight → the minimal notch shows; step 7 never appears; the declined-UAC variant reads Not locked.
+  - A network capture over the whole no-account setup: no request to any account-scoped or taste route.
+  - Golden images against `screens/setup-9-noacct-d.png` and `-l`.
+  - A kill-at-each-step resume test on this path.
+- **Estimate:** 0.5 · **Depends:** O-1.7, NA-1.1, NA-1.11 · **Blocked by spike:** none · **Trace event:** `setup.step {n, result, account: none}`, `setup.finished {seconds, account: none}`
+
+### NA-1.4 · Sign up later from the tray: setup steps 6–9
+- **Traces:** FR-030, FR-146, FR-152, FR-022, FR-026, FR-029
+- **Files:** `crates/eucas-app/src/tray.rs` (the menu action), `apps/companion/src/surfaces/setup-window/{flow.tsx,steps.ts}` (an entry at step 6), `crates/eucas-app/src/commands.rs` (`setup_resume_from_tray`)
+- **Acceptance criteria:**
+  - **Create an account** (the minimal panel's block, the tray item, or the taste-used-up line) opens the setup window at step 6 (AC-2.2's `SignInStep`), then runs 7 (Choose your rules), 8 (What is sent) and 9 (Pip is watching), months later or at once. Steps 1–5 are not repeated; the limits' lock state carries over (Not locked stays Not locked, with step 4's "press to lock" route).
+  - Closing the window mid-way returns to the no-account state with nothing written beyond what was confirmed; reopening resumes at the first step not done.
+  - An existing account signing in on this PC keeps its plan and trial status (AC-1.2, AC-1.3). The no-account taste never counts against the trial.
+  - On finish, the full notch and panel replace the minimal ones, with the same Euca (AC-2.4 adoption), and the tray switches to the signed-in menu.
+- **Test approach:** Playwright: no-account install → Create an account (from the panel and from the tray) → steps 6–9 → the full panel opens; close at step 7 → back to no-account, nothing written; an existing-account fixture keeps its plan.
+- **Estimate:** 0.5 · **Depends:** NA-1.3, NA-1.11, AC-2.4 · **Blocked by spike:** none · **Trace event:** `setup.step {n, result, entry: noacct}`
+
+### NA-1.5 · Sign out and delete → the no-account state
+- **Traces:** FR-155 (as revised), FR-156, FR-157, FR-158, FR-159, NFR-041, NFR-100
+- **Files:** `crates/eucas-core/src/account/{profiles,state}.rs`, `apps/companion/src/screens/settings/account.tsx` (AC-2.3's), `crates/eucas-app/src/{tray,notch}.rs` (state switch only)
+- **Acceptance criteria:**
+  - After a successful sign out or delete (online; B-2's offline rule is unchanged): the full panel and notch switch to the minimal ones (NA-1.11), the tray shows the no-account menu, and the core switches to the no-account profile, which holds no account data.
+  - The install's taste continues from where it is (it is per install; a used-up taste stays used up). **Flagged (NA-Q3):** derived from "per install"; the founder may prefer otherwise.
+  - The compiled rulebook becomes limits only; **machine-locked rules keep blocking** (managed settings, "Locked on this PC"); the limits and the tripwire never drop during the switch (`rulebook.bin` never missing).
+  - A failed refresh (401) does the same switch.
+  - **Open (UX, NA-Q2):** whether the invite reads "Create an account" or "Sign in" after a sign-out (the first brief said "tray + Sign in"); built from one copy key either way.
+- **Test approach:**
+  - Playwright: signed in → Sign out → the minimal notch and panel, the no-account tray menu; an agent's delete and a default-branch push are still blocked; a machine-locked rule still blocks.
+  - The same after Delete account (the server row gone, `trial_claim` kept).
+  - An integration watcher: `rulebook.bin` never missing during the switch; NA-1.1's capture shows no account-scoped request afterwards.
+- **Estimate:** 0.5 · **Depends:** AC-2.3, AC-2.4, NA-1.2, NA-1.11 · **Blocked by spike:** none · **Trace event:** `account.state {state: no_account, via}`, `account.profile_switched {to: none}`
+
+### NA-1.6 · E2E: a fresh install with no account protects you offline
+- **Traces:** NFR-033, NFR-041, FR-055, FR-056, FR-057, FR-058, FR-012
+- **Files:** `tests/e2e/no-account-safety.spec.ts`, `tests/e2e/fixtures/offline.ts` (blocks every host)
+- **Acceptance criteria:**
+  - Fresh install (temp `EUCAS_HOME`) → setup 1–5 with a fake UAC → Continue without an account → 8 → 9, with the network off from step 6.
+  - A session's push to the default branch is **blocked**, with the deny receipt in the log.
+  - A scripted mass delete (≥ 200 git-tracked files in 20 s) **trips**: the session tree is stopped, the measured count is recorded, and the minimal notch shows the stop.
+  - Offline, a supervised moment falls back to asking you (rules only) and the taste counter doesn't move; zero requests to any host.
+  - A second, online run with the fake Worker: supervised moments make supervisor-taste calls only, until the taste is used up; then **no further call**, the next moment is a normal needs-you ask and the one calm line shows once (NA-1.1's capture).
+  - The same run with UAC declined: Not locked in the tray line and on step 9, and the push is still blocked at user scope.
+- **Test approach:** the spec itself, on the Windows e2e job; joins Q-1.2's full set.
+- **Estimate:** 0.5 · **Depends:** NA-1.3, NA-1.10, T-1, O-1.5 · **Blocked by spike:** none · **Trace event:** uses `setup.finished`, `log_entry kind=block`, `TripwireEvent`, `taste.used`
+
+### NA-1.7 · The trial starts at sign-up (**pending founder answer (b)**)
+- **Traces:** FR-144 (as revised by (b)), FR-145, FR-025, NFR-044
+- **Files:** `crates/eucas-core/src/account/client.rs` (after a successful verify). Step 9 never gets a `trial/start` call: O-1.7 (Sprint 9, later) is already written without it.
+- **Acceptance criteria:**
+  - Recommendation (b): the 14-day trial starts at account creation, in setup or months later from the tray. A no-account user never burns a trial, and the no-account taste doesn't count against it.
+  - The app calls `trial/start` once after each successful verify; AC-1.3's idempotency and the `trial_claim` email hash make it a no-op for an account that already had one (one trial per account, BR-123 (9) unchanged). An existing account on a new PC keeps its plan and trial status.
+  - Setup drafts at step 7 still draw on the `pending` allowance (FR-025), not the trial.
+  - If (b) is answered "at the end of setup" instead, this task is dropped (−0.25 d) and O-1.7 keeps its call.
+- **Test approach:** fake Worker: a new account → one `trial/start` right after verify; an existing account → the call is a no-op and the plan is unchanged; a no-account install → no `trial/start` ever; step 9 makes no call.
+- **Estimate:** 0.25 · **Depends:** AC-2.2, AC-1.3 · **Blocked by spike:** none · **Trace event:** `account.trial {result}`
+
+### NA-1.8 · Worker: install registration and the signed install token
+- **Traces:** FR-143, FR-153 (as extended), NFR-070, NFR-071, NFR-072, NFR-096, NFR-186
+- **Files:** `apps/api/src/routes/install.ts`, `apps/api/src/auth/install-token.ts`, `apps/api/src/db/migrations/00NN_install_taste.sql` (additive), `contracts/api/install-register.schema.json`, AC-1.1's column allow-list test (one new table)
+- **Acceptance criteria:**
+  - `POST /v1/install/register` takes only a random install ID (128-bit, made on the PC; no hardware fingerprint) and returns a `v1.` HMAC install token scoped to the taste route only; it can never call an account route.
+  - The new table holds exactly `install_id`, budget used and created-at; no IP, user agent, device or email column. Nothing else is stored for an install.
+  - Registration is rate-limited per IP (the value in signed config); a repeated ID returns the same token, idempotently.
+  - **Open (ADR-0017):** the server now keeps an install row without an account; ADR-0017's "tables are exactly…" needs an amendment (doc, tech lead).
+- **Test approach:** Workers pool: strictness (unknown key → 400), the column allow-list, an install token refused on `/v1/account` and `/v1/supervise` (401), idempotent re-register, the per-IP limit → 429, a spy logger (no body).
+- **Estimate:** 0.5 · **Depends:** AC-1.3, W-1.3 · **Blocked by spike:** none · **Trace event:** `api.install {status}`
+
+### NA-1.9 · Worker: the anonymous supervisor-taste route
+- **Traces:** FR-128, FR-129, FR-133, FR-143, NFR-044, NFR-073, NFR-091, NFR-097, NFR-111
+- **Files:** `apps/api/src/routes/supervise-taste.ts` (reuses SUP-2's validation, prompt, chain and settle), `apps/api/src/budget/taste.ts`, `contracts/api/supervise-taste-{request,response}.schema.json` (same body as `supervise`, plus `tasteLeft`)
+- **Acceptance criteria:**
+  - Install token required; the same strictness, secret re-scan, prompt cap, ZDR provider block, output validation and kill switch as `/v1/supervise` (one shared handler, two auth modes).
+  - The taste budget is per install, **in total, not monthly**: about 10 decisions (**pending founder answer (c)**; 5 / 10 / 25), reserved and settled on the hidden-budget model, the cap in signed config. Used up → `402 taste_used_up`, with no model call.
+  - Abuse: a per-IP rate limit and the **global daily spend cap** (BU-1.1's breaker) cover the taste; when the breaker trips, the taste answers `503` and the app asks you.
+  - The response carries only the decision and `tasteLeft` (a count of answers, never money).
+- **Test approach:** Workers pool: 50 parallel calls never overspend the install's cap; used up → 402 and no provider call; the breaker covers taste spend; per-IP 429; the ZDR contract test extended to this route; a key scan for `usd`, `cost`, `price`.
+- **Estimate:** 0.5 · **Depends:** NA-1.8, SUP-2.2, BU-1.1 · **Blocked by spike:** SP-SUP2 (acceptance: the same launch gate as the supervisor; the taste is off until it passes) · **Trace event:** `api.supervise_taste {status, decision}`
+
+### NA-1.10 · Core: install ID, the taste counter and the used-up state
+- **Traces:** FR-128, FR-132, FR-136, FR-142, NFR-042, NFR-070, NFR-095
+- **Files:** `crates/eucas-core/src/supervisor/{client,taste}.rs` (SUP-1.7's client gains the install-token mode), `crates/eucas-core/src/account/install.rs` (ID and DPAPI-held token), `contracts/ipc/state.schema.json` (`Taste { left, total, usedUp }`)
+- **Acceptance criteria:**
+  - The install ID is random, made on this PC at first use, stored with the token under DPAPI (AC-2.1's helper); never derived from hardware. Registration happens lazily, on the first supervised decision with no account.
+  - In `NoAccount`, a supervised moment the rules don't settle calls the taste route through the gate (NA-1.1) with the same What is sent payload and redaction (SUP-1.4, SUP-1.8's sent log); the counter follows the server's `tasteLeft`.
+  - **Taste used up:** no further taste call, ever, on this install; the moment becomes the normal needs-you ask ("Pip asks you instead"), and the store raises one `taste_used_up` flag that NA-1.11 shows as the calm line, **once**.
+  - Offline, 402, 429, 503 or the kill switch → rules only and an ask, as SUP-1.7; the counter doesn't move.
+  - Signing in switches the client to the account token; the taste counter is kept for this install.
+- **Test approach:** integration against the fake Worker: `taste::{lazy_register_once, counts_down_from_server, used_up_makes_no_call, used_up_line_once, offline_no_count}`; a DPAPI round-trip; a scan that the ID is not derived from any hardware API.
+- **Estimate:** 0.5 · **Depends:** NA-1.1, NA-1.9, SUP-1.7, SUP-1.8 · **Blocked by spike:** SP-SUP2 (acceptance, as SUP-1.7) · **Trace event:** `taste.used {left}`, `taste.used_up`
+
+### NA-1.11 · The minimal notch and minimal panel (**pending founder answer (a)**; the addendum recommends this)
+- **Traces:** FR-102, FR-103, FR-106, FR-107, FR-109, FR-139, FR-142, FR-173, NFR-132, NFR-136
+- **Files:** `apps/companion/src/surfaces/panel/noacct/{panel-noacct,taste-meter,create-account-block}.tsx`, `apps/companion/src/surfaces/panel/panel.tsx` (mode switch on `AccountState`; **not** `peek.tsx`, which LY-1.7 edits in the same sprint), `crates/eucas-app/src/notch.rs` (shows in `NoAccount`), `contracts/copy/en/panel-noacct.json`
+- **Acceptance criteria:**
+  - In `NoAccount`, Pip is in the notch with the eight-face eye grammar (N-0.2's `Face` only), the needs-you marker and the peek, exactly as signed in.
+  - The minimal panel (`p-noacct`) shows only: What needs you (N-1.2's list), the protection state (H-1's heartbeat line, Locked / Not locked), the taste meter ("7 of 10 supervisor answers left", `role=meter`, never money), and a quiet **Create an account** block (→ NA-1.4). No Usage, Rules editing, drafting, learns-you, receipts or ledger, and no tabs for them.
+  - **Taste used up** (`p-noacct-empty`): the meter shows none left and the one calm line "Sign up for 14 more days of the supervisor" shows **once**; after it is dismissed or seen, only the quiet block remains. No badge, timer or notification.
+  - The tray stays the fallback (NA-1.2) when the notch steps aside or panics.
+- **Test approach:** Vitest for every state (taste left, 1 left, used up, line already seen); Playwright: no account → needs-you item → peek → minimal panel; used up → the line once, never again after relaunch; golden images against `panel-noacct-d.png`, `-l` and `panel-noacct-empty-d.png`; axe; a text scan that no Usage / Rules / receipts string is reachable in no-account mode.
+- **Estimate:** 0.75 · **Depends:** NA-1.10, N-1.2, P-1.1, ME-1.1, N-0.4 · **Blocked by spike:** none · **Trace event:** `panel.mode {mode: noacct}`, `moment.shown {kind: taste_used_up}`
+
+---
+
 ## Totals
 
 | Story | Tasks | Task days | BUILD-PLAN | Δ | Why |
@@ -1154,7 +1316,8 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
 | R1 | 4 | 1.75 | 1.75 | 0 | |
 | **Subtotal** | **71** | **28.5** | **24.0** | **+4.5** | |
 | LY-1 (new) | 8 | 3.0 | 2–3 (indicative, not in the 48) | +3.0 | Learns-you core 2.25 + moments and the undo audit 0.75 |
-| **Lane B total** | **79** | **31.5** | | **+7.5** vs the 48.25 plan | |
+| NA-1 (new, 2026-10-26, with the taste addendum) | 11 | 5.25 | — (not in the 48) | +5.25 | No account = safety + a small supervisor taste: the gate 0.5, tray fallback 0.25, setup 6 → 8 → 9 0.5, sign up later 0.5, sign out / delete 0.5, the e2e 0.5, trial at sign-up 0.25, install token 0.5, taste route 0.5, taste counter 0.5, minimal notch and panel 0.75 |
+| **Lane B file total** | **90** | **36.75** | | **+12.75** vs the 48.25 plan | NA-1's tasks run in both lanes per the sprint plan (NA-1.2, NA-1.8, NA-1.9, NA-1.10 in lane A) |
 
 ## Tasks blocked by a spike
 
@@ -1168,6 +1331,7 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
   - AC-1.4 (`EmailSender` and the default provider);
   - R1.4 (acceptance: the staging code-send smoke).
 - **SP-SUP2 (acceptance)** (the supervisor's launch gate):
+  - NA-1.9, NA-1.10 (the no-account taste is the same supervisor);
   - W-1.3 (the production config needs the eval score);
   - BU-1.1 (cap values);
   - BU-1.2 (`promptTokenCap`);
@@ -1187,6 +1351,7 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
    - Lane B is +4.25 d on existing stories (1.25 of it is the library rules, 1.0 the gooey peek and switch, 0.25 the sounds). LY-1 is 3.0 d (inside FD-4's 2–3).
    - With Q2(a) and Q5, the plan goes from 48.25 to about **56 build days**, or about 57 with the story map's Windows 10 day.
    - **Recommendation:** accept it; sequence, don't cut. LY-1 takes Sprint 10's lane-B slack, the rest adds about one sprint (≈ 11 sprints, about 31–33 working days elapsed), and the day-6 re-plan checks actuals.
+   - **Update 2026-10-26:** NA-1 (no account: safety and a small supervisor taste) adds 5.25 d, for **63.75** in all. It fits the same 11 sprints by splitting R1 and LY-1 across sprints and using most re-plan buffers (README §4); no sprint is added.
 5. **Hot shared files break the "no two tasks on one file in a sprint" rule in most sprints.** Examples: `eucas-core/src/lib.rs`, `eucas-platform/src/windows/mod.rs`, `eucas-rules/src/lib.rs`, `contracts/copy/en.json`, `contracts/errors.schema.json`, `contracts/ipc/*.schema.json`, `routes.tsx`, `capabilities/*.json`, the lockfiles.
    - **Recommendation:** S1-1 (+0.25 d, the other lead) pre-creates every module CODE-STRUCTURE lists as an empty stub in those registries, and splits copy and error codes into per-surface files (`contracts/copy/en/<surface>.json`).
    - Lockfiles are regenerated by whoever merges second, never hand-merged.

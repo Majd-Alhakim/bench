@@ -1,7 +1,7 @@
 # Gate 6: what you decide
 
 **For:** you (the client) · **From:** PM, with the two tech leads · **Date:** 2026-10-26
-**On:** [the backlog](README.md) (33 stories, 146 tasks, 58.5 build days), [the sprint plan](README.md#4-sprint-plan) (11 three-day sprints over two lanes) and [Sprint 1](../sprints/sprint-01/README.md).
+**On:** [the backlog](README.md) (34 stories, 157 tasks, 63.75 build days; 58.5 before NA-1, the no-account taste, 2026-10-26), [the sprint plan](README.md#4-sprint-plan) (11 three-day sprints over two lanes) and [Sprint 1](../sprints/sprint-01/README.md).
 
 **Already settled, not asked again:**
 - the manual checklist (passed);
@@ -26,13 +26,18 @@ Reply with the numbers you accept, or "approve G6 as recommended".
 
 **Recommendation: (a).** Sprint 1 is pure foundation (the scaffold, the guard's parser and the shell). It needs nothing still open, and its demo takes five minutes.
 
-**2. Accept the estimate going from about 48 to 58.5 build days (11 sprints, about 33 working days)?**
+**2. Accept the estimate going from about 48 to 63.75 build days (11 sprints, about 33 working days)?** *(Updated 2026-10-26: 58.5 + 5.25 for NA-1, setup without an account with a small supervisor taste; slack drops from 7.5 to 2.25 lane-days, and a 12th sprint is the named fallback, never a cut. See [README §2](README.md#2-totals).)*
 - What's in the +10.25: +3 is learns-you and +1 is Windows 10, both of which you approved; +0.25 is your eight-face order. The other +6 is work no story owned (the SQLite store, sounds, tamper restore) and approved scope nobody had sized (the 10 library rules, the gooey peek and switches). The breakdown is in [README §2](README.md#2-totals).
 - (a) Accept it, and sequence rather than cut.
 - (b) Hold to 10 sprints by moving F-1 and L-1 to v0.1.1.
 - (c) Ask for cuts.
 
 **Recommendation: (a).** It's your rule ("sequence, don't cut"). Sprints 5, 7, 9 and 10 already hold buffer. If actuals beat the numbers at the day-6 re-plan, Q-1 starts a sprint early and v0.1 ends in 10 sprints.
+
+**2b. No account (NA-1, founder 2026-10-26: *"a small taste without sign up"*, *"try the supervisor also but like small number of usage"*): three answers the build needs before Sprint 9.**
+- (a) **What does a no-account user see?** Recommendation: **a minimal notch and panel** (the eight-face eyes, what needs you, protection, the taste meter, Create an account), because the supervisor's asks need a visible place. Alternative: the tray only (−0.5 d net).
+- (b) **Does the 14-day trial start at sign-up?** Recommendation: **yes**, whenever the account is made; the no-account taste doesn't count against it.
+- (c) **How big is the taste?** Recommendation: **10 supervised answers per install, in total** (about $0.002 each). Alternatives: 5 or 25.
 
 **3. The demand test: does the build wait for week 1?** Your rule is that under 100 waitlist sign-ups in the week after the page goes live means don't build. The page is on `main` but not deployed yet.
 - (a) Put the page live now. The build starts on day 8 if there are ≥ 100 sign-ups. The week goes on SP-ST2, SP-AC1, P9, creating the issues and recording SP-SUP2 moments.

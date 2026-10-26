@@ -525,7 +525,7 @@
 - **Traces:** NFR-065, NFR-042, NFR-049, NFR-154
 - **Files:** `crates/eucas-core/src/config/`, `contracts/api/{runtime-config,verified-versions}.schema.json` (**W-1 in lane B writes `runtime-config.schema.json` first, in Sprint 3; C-1 only consumes it**)
 - **Acceptance criteria:**
-  - Fetched at start and every 15 minutes.
+  - Fetched at start and every 15 minutes. With no account this fetch still runs, as part of the update check (NA-1.1; NA-Q1 answered yes by the PM, 2026-10-26).
   - Rejected: a bad signature, an older `version`, an unknown major version. The last good copy is kept for 7 days.
   - The canary key is trusted for `verified-versions.json` only.
   - `knownBadCli[]` is honoured.
@@ -814,7 +814,7 @@
 - **Traces:** FR-128, FR-129, FR-136, NFR-042, NFR-049, NFR-090, NFR-111
 - **Files:** `crates/eucas-core/src/supervisor/client.rs` (uses `contracts/api/supervise-*.schema.json` from SUP-2 in lane B, the token API from AC-2, and the retry helper `retry.rs`)
 - **Acceptance criteria:**
-  - A call happens only when signed in, the kill switch is off and the rules didn't settle it.
+  - A call happens only when signed in, the kill switch is off and the rules didn't settle it. The client goes through NA-1.1's gate (`net/gate.rs`); with no account (signed out included) it uses the install token on the taste route (NA-1.10) while the taste lasts, then rules only, sending nothing.
   - Each call has an idempotency key and a 3 s deadline.
   - 402, 413, 422, 429, 503, offline or signed out → rules only, plus the copy "The supervisor isn't reachable right now…" where it applies.
   - An app-side size precheck: ≤ 8 KiB body, ≤ 1,200-character message.
@@ -870,6 +870,7 @@
   - Hostile strings render as text.
   - Every reversible change in FR-169's list offers a 10-s Undo, and each irreversible one says so before you commit.
   - The fixed strings render exactly.
+  - The set includes NA-1.6's no-account spec, and axe runs on `s-noacct-done`, `p-noacct` and `p-noacct-empty`.
 - **Test approach:** Playwright + `@axe-core/playwright`; a Narrator pass on the top 5 flows (manual).
 - **Estimate:** 0.5 · **Depends:** Q-1.1 · **Blocked by spike:** **SP-ST2 (acceptance)**: the notch's UIA and keyboard checks follow the route SP-ST2 chooses (a UIA provider, or the hidden-companion fallback)
 - **Trace event:** n/a
@@ -942,6 +943,8 @@
 | **Lane A** | **27.0** | **24.25** | **+2.75** | +1 approved by the PM (Windows 10); +1.75 tech-lead re-estimate |
 
 17 stories and 67 tasks. The largest task is 0.75 d (M-1.2).
+
+**Added 2026-10-26 (sprint plan, not this file's stories):** lane A also runs four NA-1 tasks written in [tasks-lane-b.md §NA-1](tasks-lane-b.md): NA-1.8 the install token on the Worker (Sprint 7), NA-1.9 the taste route, NA-1.10 the taste counter and NA-1.2 the tray fallback (Sprint 9); 1.75 d. To make room, the sprint plan moves R1 (lane B's story) into lane A earlier (R1.1, R1.2 in Sprint 5; R1.4 in Sprint 6; R1.3 in Sprint 7), and LY-1 and R-2 run in lane A over Sprints 9 and 10.
 
 ## 4. Tasks blocked by a spike
 
