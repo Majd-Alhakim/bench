@@ -134,6 +134,8 @@ const SHOTS = [
   ["acct-delete-d", "p-delete"],
   ["acct-deleted-d", "p-deleted"],
   ["acct-signedout-d", "p-signedout"],
+  ["acct-signedout-rules-d", "p-signedout-rules"],
+  ["acct-signedout-tray-d", "t-signedout"],
   ["acct-signin-d", "p-signin"],
   ["acct-signin-code-d", "p-signin-code"],
   ["acct-switch-d", "p-switch"],

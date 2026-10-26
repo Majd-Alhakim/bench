@@ -6,7 +6,7 @@
 - **Running Eucas costs almost nothing:** about **$1/month** before Pro exists, about **$6/month** once Pro runs, and about **$32/month** after code signing.
 - **Each Pro user leaves about $13 (founding price) or $18 (regular price)** after every fee.
 - **1 paying user covers the running costs; 3 cover them with signing.**
-- **If nobody pays,** you lose about **$1/month**, even with 100,000 free users.
+- **If nobody pays,** you lose about **$1/month**, even with 100,000 free users. *(Before the free trial and tastes; with them, see §7b and §7d: at most about $450 a month at 10,000 users, and the no-account taste never more than $150 a month.)*
 - **The real constraint is reaching ~155 paying users for $2k/month, not cost.**
 
 All prices were checked on official pages on 2026-10-26 (sources at the end). Usage figures come from the benchmark (SP-SUP1, SP-SUP1b) plus the stated assumptions. This is planning, not accounting or tax advice.
@@ -103,7 +103,7 @@ Signing lowers each line by about $26. Option B lowers it by $0–25.
 
 ## 7b. Free trial and monthly taste (CR-011)
 
-The founder decided Free gets a taste of the supervisor: a **14-day full trial at install**, then a **small monthly taste**. Every limit is a hidden cost budget. The user sees a meter, never dollars.
+The founder decided Free gets a taste of the supervisor: a **14-day full trial** ~~at install~~ **that starts when the account is created** (founder, 2026-10-26: (b) *"yes"*), then a **small monthly taste**. An install without an account never starts a trial; it gets the 10-answer taste in §7d instead. Every limit is a hidden cost budget. The user sees a meter, never dollars.
 
 | Item | Hidden cap | Typical cost |
 |---|---|---|
@@ -112,12 +112,35 @@ The founder decided Free gets a taste of the supervisor: a **14-day full trial a
 
 | Scenario | Extra cost a month |
 |---|---|
-| 1,000 new installs a month (trials) | about **$110** |
+| 1,000 new accounts a month (trials; installs without an account don't start one) | about **$110** |
 | 10,000 free users, everyone using the full taste | at most **$200** |
 | **Worst case: 10,000 free users, nobody pays, 1,000 new trials a month** | about **$300** |
 | 10,000 users, 2% paying | profit about $2,600 → about **$2,300–2,500** after trial and taste |
 
 The free usage moves the all-free case from "about $6" to "up to about $300 a month at 10,000 users". It's bounded by the hidden caps and by one trial per verified email.
+
+## 7d. No account: the 10-answer taste per install (added 2026-10-26)
+
+The founder decided setup can finish without an account (*"we make people have a small taste without sign up"*, *"try the supervisor also but like small number of usage"*), with **10 supervisor answers per install, in total** (*"yes"*), including drafting your one rule. It's a one-off cost per install, not monthly. The install is identified by a random install ID, never a fingerprint ([ADR-0018](../adr/0018-supervisor-hidden-dollar-budget.md), [ADR-0012](../adr/0012-thin-server-cloudflare-workers.md)).
+
+| Item | Cost |
+|---|---|
+| One decision (gpt-oss-120b, SP-SUP1) | about **$0.00015** ($0.000148, about $0.000156 with OpenRouter's 5.5% fee) |
+| 10 answers, typical | about **$0.0015** per install |
+| Hidden backstop per install | **$0.005** (covers fallback models and bigger prompts) |
+| Anonymous daily cap, all installs together | **$5 a day**, so at most **$150 a month**, whatever happens |
+
+| New installs without an account | Typical (one-off) | Worst case (every install hits the $0.005 backstop) |
+|---|---|---|
+| 1,000 | about **$1.50** | **$5** |
+| 10,000 | about **$15** | **$50** |
+| 100,000 | about **$150** | **$500**, but the daily cap holds it to **$5 a day** |
+
+**The daily cap is the ceiling.** $5 a day covers about 3,300 typical installs (or 1,000 worst-case installs) a day. Past that, the taste pauses for the day and Pip asks you instead; protection never stops. Separate from the account budgets, so farming install IDs can't use up the money for paying users.
+
+**Farming** (scripts minting install IDs): a per-IP rate limit slows it, and the anonymous cap bounds it at **$150 a month** even if it succeeds. A reinstall resets the taste; that's accepted, because the cost is tiny.
+
+**Updated worst case, all free, at 10,000 users:** about $300 (§7b) + at most $150 for the no-account taste = about **$450 a month**, still with no revenue needed to stay solvent for months.
 
 ## 7c. How wrong could the model cost be? (sensitivity)
 
