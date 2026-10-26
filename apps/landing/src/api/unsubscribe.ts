@@ -1,6 +1,6 @@
 // /api/unsubscribe?t=…: GET shows one button (so mail scanners can't unsubscribe you); POST deletes the row.
 // POST also serves RFC 8058 one-click unsubscribe from the List-Unsubscribe header.
-import { type Ctx, isToken, page } from "../../lib/waitlist";
+import { type Ctx, isToken, page } from "../../lib/waitlist.ts";
 
 export const onRequestGet = async ({ request }: Ctx): Promise<Response> => {
   const t = new URL(request.url).searchParams.get("t");

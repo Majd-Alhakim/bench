@@ -1,5 +1,5 @@
-# Copy to .dev.vars for `pnpm dev`. Cloudflare's always-pass Turnstile test keys; no real secrets here.
+# Copy to .dev.vars for `npm run dev`. Cloudflare's always-pass Turnstile test keys; no real secrets here.
 # Site key for public/index.html during local tests: 1x00000000000000000000AA
 TURNSTILE_SECRET=1x0000000000000000000000000000000AA
 TURNSTILE_HOSTNAMES=localhost,127.0.0.1,example.com
-SITE_URL=http://localhost:8788
+SITE_URL=http://localhost:8787

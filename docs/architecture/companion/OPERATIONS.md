@@ -86,6 +86,8 @@ flowchart LR
 | Accounts and budgets *(CR-011, CR-012)* | D1 size and write rate; `402 budget_empty` and `413 prompt_too_large` rates; `spend_day` vs the breaker; `trial_claim` hits (alias or deleted-account re-sign-ups refused a second trial; a daily count, no email) ~~accounts with `device_count` > 10~~ (no device count is stored since 2026-10-26) | Email at 50 % and 90 % of the daily breaker |
 | Disposable-domain list | The weekly blocklist PR | Review it like any PR |
 
+**Cloudflare baseline.** The companion's Worker follows the same baseline as eucas.app: [apps/landing/DEPLOY.md](../../../apps/landing/DEPLOY.md) (2FA and one member, Workers Builds from `main` with previews off or on separate bindings, secrets only via `wrangler secret put`, custom domains only with `workers_dev`/`preview_urls` off, Workers Logs with `redact_query_string`, a WAF rate-limit rule plus the rate-limiting binding, Full (strict), DNSSEC, D1 Time Travel plus exports, version rollback). Where this Worker differs (Durable Objects, more routes), extend that runbook rather than starting a second one.
+
 No pager, no on-call. The safety layer doesn't depend on anything the founder runs, so an outage of the Worker degrades ~~Pro~~ the supervisor (every user since 2026-10-26) to rules only and "ask you", stops sign-ins, drafting and updates, and nothing else.
 
 ## 6. Runbooks (short)
