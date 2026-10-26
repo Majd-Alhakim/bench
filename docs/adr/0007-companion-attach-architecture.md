@@ -1,6 +1,6 @@
 # ADR-0007: The companion attaches to the user's own sessions (plugin + native guard + managed limits)
 
-- **Status:** Proposed (2026-10-26). Needs the founder's approval with the companion architecture ([SYSTEM-DESIGN](../architecture/companion/SYSTEM-DESIGN.md)).
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26 with the companion architecture ([SYSTEM-DESIGN](../architecture/companion/SYSTEM-DESIGN.md)).
 - **Numbering:** CR-009 reserved ADR-0004/5/6 for the notch, so the companion ADRs start at 0007.
 - **Date:** 2026-10-26
 - **Amended 2026-10-26 (SP-H1):** the spike answered this ADR's open questions; see "SP-H1 findings" at the end. Verdict GO with limits: 72 / 72 injected faults blocked, PreToolUse p95 33 ms as Claude Code times it, the managed hook survived 33 / 33 lower-scope disables.

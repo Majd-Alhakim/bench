@@ -1,12 +1,12 @@
 # ADR-0011: Supervisor: rules first, then a provider-hosted open model, never approves (always on since 2026-10-26; was "only at Level 2")
 
-- **Status:** Proposed (2026-10-26). Evidence: [SP-SUP1](https://github.com/eucas-app/eucas/pull/56). Pro feature; **not in v0.1** (Pro is a waitlist), designed now so v0.1 doesn't paint it into a corner.
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. Evidence: [SP-SUP1](https://github.com/eucas-app/eucas/pull/56). Pro feature; **not in v0.1** (Pro is a waitlist), designed now so v0.1 doesn't paint it into a corner.
 - **Date:** 2026-10-26
 - **Amended 2026-10-26 (CR-011, CR-012, founder answers):** the allowance is a **hidden dollar budget per account**, never shown as dollars, with prompts capped at about 2,000 tokens ([ADR-0018](0018-supervisor-hidden-dollar-budget.md)). **Free gets the supervisor too:** a 14-day trial (about $0.50) at sign-up, then a monthly taste (about $0.02). Every call needs a Eucas account token ([ADR-0017](0017-accounts-email-code-d1.md)). Pressing **Draft** is the opt-in for that one sentence.
 - **Amended again 2026-10-26 (founder decisions, relayed by the PM):**
   1. The trial and taste **ship in v0.1**, with **SP-SUP2 as the gate**.
   2. **Level 1 / Level 2 are retired.** The supervisor is **always on for every user, Free included, with no off switch**: *"The supervisor is the main thing for this tool so keep it on and tell the user what is being sent."* What is sent equals the old Level 2 (signals + the trimmed, redacted last message), through the Worker to the zero-data-retention provider. Setup and Settings show exactly what is sent.
-  3. The tiers differ only in budget. The 14-day trial starts when setup finishes, one per account.
+  3. The tiers differ only in budget. The 14-day trial ~~starts when setup finishes~~ starts **when the account is created** (revised 2026-10-26, founder: (b) "yes"), one per account. Without an account, an install gets a 10-decision taste instead ([ADR-0017](0017-accounts-email-code-d1.md), [ADR-0018](0018-supervisor-hidden-dollar-budget.md)).
   4. When the budget is empty, the supervisor falls back to rules only and asks the user more.
 
   Decisions 2, 4 and 6 below are rewritten to match; struck text is kept for history.
