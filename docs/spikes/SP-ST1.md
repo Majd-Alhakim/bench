@@ -5,15 +5,15 @@
 
 **Verdict: GO with limits.** Tauri stays; the ADR-0008 kill criterion is **not** triggered.
 - **One design change:** the CR-011 notch must be **drawn natively** (a per-pixel-alpha layered window from the Rust core), not as a WebView2 window. As a webview it misses the idle budget in **both** Tauri and Electron.
-- **Still open (manual):** toast button activation, a real tray click, 100 % / 150 % / multi-monitor placement, full-screen step-aside.
+- **Still open (manual):** toast button activation, 100 % / 150 % / multi-monitor placement, full-screen step-aside. A real tray click, real hover, and notch click + Esc were checked on screen with the founder's OK (only the spike's own windows; your other apps were masked).
 
 ## Results against the GO bar
 
 | Item | Result |
 |---|---|
 | Tray icon swaps + tooltip | ✅ 3 states (guarded, needs you, not guarded) with tooltips; `set_icon` + `set_tooltip` take **0.8–2.5 ms** |
-| Flyout at the tray (125 %) | ✅ Placed from the tray rect into the monitor's work area (centred on the icon, 12 px above the taskbar, clamped). At 125 %: icon at 1700,1050 → flyout 1460,405, 450×600 px. **First frame after click: p50 37 / p95 67 ms** (20 opens; bar < 150). 100 % / 150 %: ⏳ manual. |
-| Toasts with buttons, click activation (app running) | ⏳ **Built** (WinRT toast via `tauri-winrt-notification`, two buttons, `on_activated` logs the button and opens the main window). Clicking a toast needs a person: manual checklist. Unpackaged dev builds borrow PowerShell's AUMID; the installer must register Eucas's own AUMID (a Start-menu shortcut) for buttons to route back. |
+| Flyout at the tray (125 %) | ✅ Placed from the tray rect into the monitor's work area (centred on the icon, 12 px above the taskbar, clamped). **Real click** on the icon in the hidden-icons area: icon rect 1424,897 (50×50 px) → flyout 1224,405; **first frame 66 ms after the click**; a click on the desktop closed it. Synthetic clicks: p50 37 / p95 67 ms over 20 opens (bar < 150). 100 % / 150 %: ⏳ manual. |
+| Toasts with buttons, click activation (app running) | ⏳ **Built and delivered** (WinRT toast via `tauri-winrt-notification`, two buttons, `on_activated` logs the button and opens the main window). On this PC, Windows **put it straight into Notification Center with no banner** (dismissal reason "timed out", 1 entry in history). Windows reported "busy" (`QUNS_BUSY`) at the time, and Do Not Disturb holds banners back then. Clicking **Open session** in Notification Center is still a manual check. **Design consequence:** a toast can land silently, so the notch must carry needs-you on its own, and the app should read the notification state before counting on a banner. Unpackaged dev builds borrow PowerShell's AUMID; the installer must register Eucas's own AUMID (a Start-menu shortcut) for buttons to route back. |
 | Updater round trip with a signed manifest | ✅ Installed 0.1.0 per-user (NSIS, silent), served a signed `latest.json` for 0.1.1 on loopback. The app downloaded, verified, installed and **restarted at 0.1.1 in 3.1 s**. A **wrong signature was refused** ("The signature verification failed"), and the app stayed on 0.1.0. Uninstall left no folder, no Start-menu entry and no uninstall key. |
 | Playwright over WebView2 CDP | ✅ `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=9222` + `chromium.connectOverCDP`. It drives every webview (main, flyout, notch, panel): read DOM, click, hover, press Esc, call commands. The capability ACL is enforced too: `window.hide` was refused until allow-listed. |
 | Idle RAM/CPU, flyout pre-warmed | ✅ **78.5 MB private, 0.7 % of one core** (tray + hidden pre-warmed flyout, 9 processes). Electron hello-tray with the same flyout: **78.2 MB, 0.4 %** (4 processes). |
@@ -27,9 +27,9 @@
 | Never takes focus at rest | ✅ `WS_EX_NOACTIVATE`; showing it left the foreground window unchanged (Win32 probe) | ✅ same probe |
 | Click-through outside its shape | ✅ `SetWindowRgn` to the pill: `WindowFromPoint` at the window's corner returns the window below; at the pill centre it returns the notch | ✅ per-pixel alpha: transparent pixels aren't hit (same probe) |
 | Panel opens on click, closes on Esc / click-away | ✅ 21 opens via CDP click. Panel first frame **p50 5 / p95 8 ms**. Esc closed it **20 / 20**, click-away (focus moved to another window of ours) **1 / 1**. | (the panel is a webview in both designs) |
-| Hover detection | ✅ in-page hover via CDP. The OS-level hover (30 Hz cursor poll vs the pill rect) is built, but not exercised without moving the real mouse: manual. | same poll |
+| Hover detection | ✅ **Real mouse** over the pill: the 30 Hz poll logged `hover inside` and the pill grew. In-page hover via CDP too. | same poll |
 | Position at 100 / 125 / 150 % and multi-monitor | ✅ 125 %: top-centre at 797,0 (325×55 px). Placement is per monitor from `available_monitors()` (work area + scale). Other scales and a second display: ⏳ manual. | ✅ 125 % same rect |
-| Steps aside for a full-screen app or game | Built: `SHQueryUserNotificationState` (busy / D3D full screen / presentation) **or** a foreground window covering its monitor → hide; back with `SW_SHOWNOACTIVATE`. Today it reports state 5 (normal). Not triggered: ⏳ manual (it needs a full-screen window in front). | same logic |
+| Steps aside for a full-screen app or game | Built: Direct3D full screen or presentation mode (`SHQueryUserNotificationState` 3 or 4), **or** a foreground window covering its monitor → hide; back with `SW_SHOWNOACTIVATE`. **Found on screen:** state 2 ("busy") stayed on with **nothing full screen in front**, and the first build hid the notch for no reason. The rule now ignores 2 unless the foreground window also covers the monitor. A real full-screen app wasn't tested: Windows' foreground lock kept the spike's test window from coming to the front, and clicking it wasn't approved. ⏳ manual. | same logic |
 | **Idle with the eye-follow animation** | ❌ **87–99 MB private; 2.5 % of one core at rest, 13.8 % with the eyes following at 30 Hz** (after two fixes: a JS-timed blink instead of an infinite CSS animation, and caching the window handle and scale instead of asking Tauri 30× a second) | ✅ **0.9 MB; 0.16 % at rest, 0.94 % following at 30 Hz** (2,020 frames drawn in 95 s) |
 | Same notch in Electron (kill-criterion check) | 101–106 MB; 2.8 % at rest, 10.3 % following | – |
 
@@ -43,8 +43,9 @@ Not triggered. In about half a day, Tauri met or matched Electron on everything 
 2. **Never call Tauri window getters in a hot loop**: each is a round trip to the main thread. Cache the HWND, scale and rect, and refresh on `ScaleFactorChanged` / `Moved`.
 3. **No infinite CSS animations in always-visible webviews** (they keep the compositor at 60 fps).
 4. **WebView2 keeps a hidden window's `document.visibilityState` as `visible`**: signal "shown" with an event from Rust, not `visibilitychange`.
-5. The installer must create a Start-menu shortcut carrying Eucas's AUMID, for toast buttons and activation (unpackaged app).
-6. **Unsigned v0.1:**
+5. **`emit_to("panel", …)` also reached `listen()` in the flyout page** (a second `flyout_first_frame` appeared). Use window-scoped listeners (`getCurrentWebviewWindow().listen`) for per-window events.
+6. The installer must create a Start-menu shortcut carrying Eucas's AUMID, for toast buttons and activation (unpackaged app).
+7. **Unsigned v0.1:**
    - SmartScreen will warn on the downloaded installer ("Windows protected your PC" → More info → Run anyway). Say so on the download page.
    - Once installed, the app and guard run from `%LOCALAPPDATA%` without prompts.
    - **Smart App Control on would block the unsigned app and guard** (see SP-H1 finding 6).
