@@ -1,75 +1,113 @@
-# Self-review: the Eucas companion UI
+# Self-review: the notch redesign
 
 | Date | Reviewer | Scope |
 |---|---|---|
-| 2026-10-26 | Lead UI designer (Claude), scoring its own work | [DESIGN.md](DESIGN.md), [tokens-companion.css](tokens-companion.css), [prototype/companion.html](prototype/companion.html), the 72 [screens](screens/) |
+| 2026-10-26 | PM + UX/UI (Claude) | [DESIGN.md](DESIGN.md), [prototype/notch.html](prototype/notch.html), [screens/](screens/), UX [notch-and-panel.md](../../ux/companion/notch-and-panel.md) and [setup-flow.md](../../ux/companion/setup-flow.md) |
 
-**How it was checked.**
-- **Render gate (premium-craft gate 10):** every state rendered with headless Edge at 1440 × 900 (dark), the dense screens also at 1280 × 800, key states in light, the popover at 100 / 125 / 150 %. I looked at every PNG, fixed what was off and re-rendered three times (log below).
-- **Interaction smoke test** (headless Edge clicking the real prototype): 21 checks, 20 pass on the final build. They include: one Cobalt on Today and in the popover; Esc closes the popover; Open session resolves the card and Undo restores it; the rule chip opens Rules with the preview; Ctrl+3 opens Protection; no "Allow anyway" anywhere; no protection switch in the tray menu; the tripwire count keeps moving; the first-run player reaches "You're protected" and closing it raises the taskbar toast; S-2 adds Allow once; D-2 (a) removes every Pro line. The one fail is the test's fault, not the UI's: its click on a log row landed on the undo toast left over from the step before.
-- **Contrast:** every ratio quoted in the tokens and in DESIGN §8 was recomputed from the hex values. One was below 3:1 (the light tray badge's edge, 2.98) and was fixed: `#a86400` now gives 4.03.
-- **Not checked:** a screen-reader pass with NVDA or Narrator, the real Windows tray and toast rendering, and a moderated test with the founder (see gaps).
+**How it was checked.** Every state rendered with headless Edge at 1440 × 900 (dense panel also at 1280 × 800), zoomed crops of each notch state at 2×, light and dark; contact sheets reviewed and fixed (below). An interaction smoke test in headless Edge: no peek before 280 ms, peek opens on rest and folds on leave, click opens the panel, tabs work by mouse and arrow keys, Esc closes, setup runs end to end including the admin prompt, the flight lands in the notch with the coach mark, Continue stays disabled until the Euca has a name and a look, the jump menu lists all 57 states, **no console errors**.
+
+**Skills.** `premium-craft` and `ui-ux-guide` were loaded and followed (gates, rubric, checklist below). `better-frontend`, `design-taste-frontend` (app screens), `anthropic-skills:accessibility` and `anthropic-skills:ui-animations` were **not loaded in this session**; their standing rules (tabular figures, focus rings, hit areas, reduced motion, no decorative motion, contrast, one accent) were applied from the existing system and the earlier companion review. A pass with those skills loaded is a fair ask before Gate 5-style approval.
 
 ---
 
-## 1. Premium-craft rubric
+## 00. New since approval (26 Oct, evening)
+The founder approved D-1 to D-8 as recommended and asked for the full app's UX features. Added (spec: [notch-and-panel §9](../../ux/companion/notch-and-panel.md), [DESIGN §11](DESIGN.md)):
+- **Learns you:** ongoing rule suggestions (quiet, never in the notch count), the "Pip learned" line with Undo, Applied chips, the ledger line, the monthly compounding line, **What Pip knows** in Settings (sources, Forget, export), the honest zero at setup.
+- **Undo everywhere** with a 10 s timer; what can't be undone says so; Close the PR on a guided merge.
+- **The Receipt** under everything Pip did, and one **Why?** page.
+- **Moments:** all caught up, While you were away (peek and panel), Back to normal.
+- **Worst moments:** offline, login expired, weekly limit, Claude not answering, write failed (plus not protected and the empty meter, already designed).
+- **Eye grammar** for the notch (8 expressions, one loop), **R1** (blue only on decisions), **C-22** (verb + object + consequence), one time format, the **stopped** sound.
+- **Fix:** the tripwire marker reads "Stopped: notes".
 
-Any axis below Senior would block hand-off. None is below Senior.
+Checked: rendered every new state (dark, two in light) and looked at them; fixed the learned card's wrapped mono source line, the digest footer, a suggestion-only list title, and a wrapped receipt. A second smoke test passes: Not now + Undo, the merge offer becoming its result, the last item folding into all caught up, suggestions not counting in the notch, Undo on rules and learned items, What Pip knows, the tripwire wording; no console errors. The first smoke test still passes.
 
-| Axis | Level | Evidence | Left to do |
+## 0. Founder decisions applied (26 Oct, later)
+| Decision | Where it landed |
+|---|---|
+| Guided merge stays in Free | New needs-you item and its result (`p-needs`, `p-merge-done`, `n-peek-merge`); notch-and-panel §4.7 |
+| Choose your rules and prompted rules stay; drafting uses the supervisor and counts on the meter | Draft card line; guided exact-rule form when the meter is empty, at Level 1 or offline (§4.5) |
+| The four limits are always on; lock per limit | `LimitRow` in Rules and setup 4–5; no switch; Locked / Not locked chips |
+| "Your default branch", not "main" | All prose; `main` only in literal commands |
+| Budgets stop before the next step | `p-budget`, notch-and-panel §4.8 |
+| v0.1 unsigned, no "signed" badge | UAC copy says Unknown publisher; nothing claims signing |
+
+## 1. Fixed after looking at the renders
+1. The Euca's name overlapped the mini notch on the setup stage → the mini notch moved into the flow.
+2. The panel header's status line truncated ("…2 working · c…") → the lock chip moved onto the name row; the status line now has the full width; "working" is left to the beam.
+3. The drafted rule in setup step 4 was below the fold → "Your own" moved above "From your week"; the window grew to 600 px (still fits a 768 px laptop).
+4. The trial chip was green (green is only for proven checks) → neutral.
+5. The meter said "Help left … left until 9 Nov" → one label, the date on the right.
+6. The tripwire page repeated "Stopped notes" twice → the page title is "Tripwire stop".
+7. The thin-line dot hung below the line → it sits on the line's end.
+8. The glow spilled into the open peek → hidden while peeking.
+9. The tripwire line truncated in the peek; the not-protected peek repeated its item in the footer → both shortened.
+10. "Lock it too" wrapped in the draft card; "Change the words" → "Reword".
+11. Arrow keys lost the tab focus after a click re-render → focus restored.
+
+## 2. `ui-ux-guide` checklist
+
+| # | Item | ✓ | Note |
 |---|---|---|---|
-| **Copy** | **Senior** | Second person throughout; the four fixed strings appear verbatim and are never shortened; the copy removal test cut six things (DESIGN §7.2); every error names its cause, what's safe and one step; no absolute claim about the agent; "Claude Code" only in plain text | Fit-check on real Windows toasts (font metrics differ slightly from the emulation) |
-| **Visuals** | **Senior** (Staff in reach) | Emphasis only on the heartbeat and the one needs-you action; one card, one log row, one checklist reused everywhere; a visual language of its own: the shape avatars with eye-follow, the Quartet tray glyph, the heartbeat strip | Staff needs the strip and avatars to prove themselves in daily use, and a hand-hinted ICO |
-| **Color** | **Senior** | One Cobalt per view, smoke-tested; amber only for needs-you and weaker states, red only for not guarded and the tripwire, green only for a proven check; usage in Ink, never red; colour never stands alone | — |
-| **Type** | **Senior** | At most four sizes per view (12/13/15/20; 28 only for first-run headlines, 44 only for the tripwire count); two weights; tabular figures on every changing number; mono only for commands, paths and log times | — |
-| **Structure** | **Senior** | Three depths (icon, popover, window); 6 sidebar items; spacing by relationship (8 inside a card, 10–12 between cards, 28 between sections); the hierarchy test passes per surface (popover: status → needs you → usage; Today: finding → top card → sessions) | — |
-| **States and recovery** | **Senior → Staff** | Matrix for every surface (DESIGN §5.2) with a jump-menu route per drawn cell; worst moments designed first: tripwire "still deleting" before "stopped", canary not blocked, fail-closed with the only temporary off switch, limit reached with no upsell; undo after every triage action; the recovery steps make the stop a trust moment | A few matrix cells are written but not drawn (marked *(spec)* in DESIGN) |
-| **Motion and emotion** | **Senior** | Spring physics from the system tokens; three pinned moments (the retro reveal, the canary block with the Done sound, the first heartbeat); every motion has a reduced-motion fallback (DESIGN §6); nothing loops but the Working arc and the live count | Tune the heartbeat ring on a real build; it must feel steady, never anxious |
-| **Coherence** | **Senior** | One needs-you card in the popover, Today and the toast's landing; one heartbeat line in four places; one log row (the canary's receipt is the first Protection row); one status vocabulary (agent view's six states + four guard words); one promise string | An hour-long walk with the founder on the prototype |
-| **Intelligence** | **Senior** | The suggested-rule chip appears on the card where you're working, after 10+ manual allows; every rule shows its live counter; the forecast states its basis; the retro compares weeks; rules export as plain files | — |
+| 1 | One intent, one primary | ✅ | Notch: look. Peek: one action per item. Panel: one Cobalt per view. Setup: one primary per step |
+| 2 | ≤ 7 per group, progressive disclosure | ✅ | Needs-you shows 3 + more; 3 tabs; 7 safety rules |
+| 3 | Key actions large, on the eye's path | ✅ | The notch is 124 × 32 at the top centre (Fitts: an edge target); peek actions on the right of each line |
+| 4 | Weight leads to the primary and "needs you" | ✅ | Amber marker is the only colour in a resting notch |
+| 5 | 60-30-10, meaning colours, text on every status | ✅ | Eye shapes + words for serious states |
+| 6 | All interaction states distinct | ✅ | Hover, press (scale 0.97), focus ring, disabled (setup Continue) |
+| 7 | Measure, line height, one scale | ✅ | Lede ≤ 56 ch; 4 sizes in the panel |
+| 8 | A system | ✅ | One editor, one rule row, one needs-you item across surfaces |
+| 9 | Empty states | ✅ | "Nothing needs you.", no sessions, thin history, before setup |
+| 10 | Errors: cause + next step; worst moment designed | ✅ | Tripwire, not protected, test not blocked, not locked |
+| 11 | Smooth ending | ✅ | The homecoming + one-sentence coach mark |
+| 12 | Feedback on key actions | ✅ | Toasts with Undo, birth blink, done sound |
+| 13 | AA contrast, keyboard, reduced motion | ✅ | §8 of DESIGN.md |
+| 14 | 32 / 40 px targets | ✅ | Peek buttons 28 visual, 32 hit |
+| 15 | No dark patterns | ✅ | Pro only where the free answer runs out (empty meter, Settings › Plan); never in the notch |
+| 16 | Nothing decorative | ✅ | The glow is the activity signal, not ornament |
+| 17 | Avatar shows status with a label | ✅ | The Euca's eyes + the status line |
+| 18 | Microcopy | ✅ | Plain state names, exact times and percentages |
 
----
+## 3. `premium-craft` outputs
+- **State matrix:** [notch-and-panel.md §6](../../ux/companion/notch-and-panel.md), [setup-flow.md §4](../../ux/companion/setup-flow.md).
+- **Emotional moments (3):** birth (setup 2), the proof (setup 6), the homecoming (setup 8). Everyday micro-moment: the glance when something arrives.
+- **Worst moments:** tripwire stop, not protected, test not blocked, admin declined, meter empty, 5-hour limit, stale item, long names. Each names the cause, what's safe and one next step.
+- **Coherence fixed:** "Guarded" retired for "Protected" (one word, CR-011's); one needs-you item in peek and panel; one Euca editor; one rule row and draft card in setup and Rules; one status line in peek, header and setup end.
+- **Intelligence:** rule counters, the supervisor's value line, the forecast, Your week.
 
-## 2. The UX handoff's 14 points
+## 4. Rubric
 
-| # | Handoff point | Status | Where |
-|---|---|---|---|
-| 1 | The heartbeat line is the product: one component, real timestamp, distinct designs for every guard state, never green while unproven | **Done** | `HeartbeatLine`, DESIGN §4.2: 10 states, used in the sidebar, popover, first run and Protection; the seconds move only on real checks (prototype simulates checks at irregular 1.2–3.8 s intervals); plus the strip (§4.3) |
-| 2 | The tray icon at 16 px in six states, light and dark taskbars, high contrast, readable without colour, tested in the overflow | **Done, with a gap** | `sheet-tray` / `tray-states-d1440.png`: 6 states × dark, light, 200 %, 400 % detail, high contrast; the overflow flyout is drawn (`data-act="overflow"`). Gap: not tested on a real Windows 11 taskbar; the ICO still needs hand hinting |
-| 3 | The popover is a flyout: anchored, light-dismiss, 380 px, sections vanish when empty, at most one Cobalt; decide Acrylic vs solid and say why | **Done** | DESIGN §1.1 (solid, because Acrylic is the glass BRAND rejected) and §4.4; smoke-tested |
-| 4 | One needs-you card in compact, full and toast landing; mono command, consequence line, Open session primary; both versions of Allow once | **Done** | `NeedsYouCard`; S-2 toggle in the demo bar shows both versions |
-| 5 | The block receipt: toast ≤ 48/200 and its log row; no Allow anyway; Copy command visibly secondary | **Done** | `WinToast` (Blocked) → Why? → `LogRow` expanded (`protection-receipt-d1440.png`); smoke test confirms no "Allow anyway" |
-| 6 | The tripwire card: live count until deletes stop, verified "stopped at 14:02:31", restore steps; design "still deleting" first | **Done** | `tripwire-live` (count moves, never says stopped), `tripwire-stopped` (folders, recovery steps) |
-| 7 | The retro's four cards and the suggested-rule row with its three disabled variants; count-up reveal, off under reduced motion | **Done, one variant as a warning** | `fr-retro`, `retro`: four cards, the dry-run line, the conflict row disabled, the runner row warned and never pre-ticked. The third variant ("would touch a limit") never appears because limit commands are never suggested; DESIGN §4.9 says so |
-| 8 | Meters: reuse §11.16, add freshness, the forecast sentence with one time, tokens-only and API variants; no red | **Done** | `UsageMeter` + `ForecastLine`; `usage`, `usage-tokens`, `usage-api`, `usage-limit`, `pro-usage` |
-| 9 | Honest strings are fixed copy; the gap line one click from the promise | **Done** | `COPY` in components.js; DESIGN §7.1 |
-| 10 | Windows-native details: native right-click menu, Focus-aware toasts, UAC framed by a sentence, a real Windows 11 tray-pinning illustration, Windows title bar | **Done (emulated)** | `menu`, `sheet-toasts`, `fr-uac` ("Windows is asking for permission. It will name Eucas Labs."), `PinHelper` in `fr-protected`, the `Caption` component. Focus behaviour is specified in DESIGN, not simulated |
-| 11 | Dark first, light as an option; check the tray and toasts against both Windows themes separately | **Done** | Separate App and Windows theme switches; `popover-needs-d-oslight1440.png` shows a dark app on a light taskbar; `*-l1440.png` for light |
-| 12 | Keyboard: popover by Tab and arrows, Esc closes, Enter acts; Ctrl+1…6; visible focus everywhere | **Done** | DESIGN §8; Esc and Ctrl+3 smoke-tested |
-| 13 | Capture real reference screenshots first (agent view, desktop Code tab, Warp, Windows 11 tray flyout) | **Not done** | See gap 1 |
-| 14 | Render and look: 1440 × 900 and 1280 × 800 for the main window, the popover at 100 / 125 / 150 % | **Done** | `screens/`: 72 PNGs including `today-d1280`, `protection-d1280`, `usage-d1280`, `popover-125`, `popover-150` |
-
----
-
-## 3. Render log (what looking at the screenshots changed)
-
-| Round | Found | Fixed |
+| Axis | Level | Why |
 |---|---|---|
-| 1 | Two Cobalt buttons on Today and in the popover · a "Needs you" tag repeating its heading · the popover drawn over the open window (nothing opens by itself) · the sidebar heartbeat wrapping mid-phrase · the Protection strip using a third of its card · session guard words overflowing their column · the retro too tall for the 720 × 560 window | Primary only on the first card · tag cut (screen-reader text kept) · popover states close the window · a `stack` variant · `fill` strip · wider guard column · a compact retro variant for first run |
-| 2 | Decisions leaking from one route to the next (Protection said "user level" after visiting the declined-admin edge) · Today saying "3 sessions are guarded" while the guard failed · organisation policy still showing "Verified… Guarded" · a banner repeating the Protection card · "Nothing needs you" twice · the tripwire turning the tray into "guard off" · bright accent buttons on Windows toasts · tokens-only usage still showing plan shares · popover at 150 % clipped at the top · canary "Blocked" glyph empty · first-run proof screens half empty | Route-local decisions · subtitles by guard state · org semantics in the card and rows · banner dropped on Protection, the card holds the action · the empty section removed · tripwire counts as needs-you · neutral toast buttons · "—" with no plan data · height capped to the work area · real glyph · the canary's receipt as a `LogRow`, the first heartbeat with its strip |
-| 3 | Tray sheet's 200 % rows drawn at 16 px · Pro's supervisor line offered after a tripwire stop (a worst moment) · the light tray badge edge at 2.98:1 · the expanded receipt below the fold in its screenshot | Sizes forced inline + a 400 % detail row · Pro line only for `stopReason: "user"` · `#a86400` · the route scrolls to the receipt |
+| Copy | **Senior** | Second person, the Euca by name, numbers first, removal test applied (§7.2 of DESIGN.md); the fixed strings are stored once |
+| Visuals | **Staff** | The product *is* the brand's signature: two eyes in a black notch, with the beam in your Euca's colour; nothing on Windows looks like it |
+| Color | **Senior** | One Cobalt per view; amber, red and green only for meaning; the Euca's hue only on its own things |
+| Type | **Senior** | 4 sizes in the panel, 2 weights, tabular numbers |
+| Structure | **Senior** | One spacing scale; hierarchy test passes (notch: eyes → marker; panel: status → needs-you → tab content) |
+| States and recovery | **Senior** | Full matrix; some cells are spec-only (§6) |
+| Motion and emotion | **Senior** | Springs, reduced-motion safe, three pinned moments |
+| Coherence | **Senior** | One pattern per situation (§3) |
+| Intelligence | **Senior** | Counters and the value line are automatic deposits |
 
----
+**No axis below Senior.** Blockers left: none for review. Before the build: the gaps in §6.
 
-## 4. Gaps and risks (honest list)
+## 5. Decisions the founder needs to make
 
-1. **Real reference screenshots not captured** (handoff point 13). Capturing agent view, the desktop Code tab, Warp's notifications and a Windows 11 tray flyout means taking screenshots of the founder's own desktop, which can show private sessions and files. That needs the founder at the machine, so it wasn't done from here. The Windows chrome is built from Microsoft's documented metrics instead. **Next step:** a 15-minute capture session with the founder, then a pass to align the toast and flyout emulation.
-2. **The tray icon is a vector approximation.** At 16 px the four shapes plus a badge are tight. The production ICO must be hand-hinted per size and checked in the real taskbar, the overflow flyout and Windows' high-contrast themes.
-3. **Toasts and UAC are emulations.** Windows draws both; real metrics, Focus behaviour and Notification Center grouping need a check on the build. The UAC dialog in the prototype is labelled an illustration and must never be reused in marketing.
-4. **No screen-reader run.** The accessibility contract (DESIGN §8) comes from the markup and the roles, not from NVDA or Narrator. The build's QA should run both.
-5. **First-run window size.** At 720 × 560 the retro step scrolls to reach the rule list. Recommendation: test task 1 (onboarding-flow §4) with the founder; if the rules are missed, grow the window to 760 × 620 for that step only.
-6. **Some matrix cells are written but not drawn** (marked *(spec)* in DESIGN §5.2): log empty, canary running, settings file locked, usage before a first session, status line not reporting, and "Answered in bench".
-7. **The PR #52 effects are rebuilt in CSS** (eye-follow, the Working orb) to keep the file self-contained. The build can use the `thinking-orbs` package directly.
-8. **Quit confirmation uses the browser's `alert()`** in the prototype; the app uses a Windows dialog with the same sentence.
-9. **Popover scaling is emulated with CSS `zoom`.** Real 125 % and 150 % rendering comes from Electron's DPI handling.
-10. **A web guideline deliberately not followed:** the fetched Web Interface Guidelines ask for Title Case headings; BRAND's sentence case wins.
+| # | Decision | Recommended | Alternative |
+|---|---|---|---|
+| **D-1** | Tab order in the panel | **Usage · Rules · Settings** (by how often you open them) | Settings · Rules · Usage (your words' order) |
+| **D-2** | The notch colour in the light theme | **Always black** (it belongs to the screen, like a hardware notch) | Follows the theme (white notch in light) |
+| **D-3** | Where the trial email is asked | **Optional at setup when you pick Level 2**, skippable, startable later from Usage | Only later, from Usage (a shorter setup, fewer trials started) |
+| **D-4** | Hover when nothing needs you | **A two-line status peek** ("Protected · 3 sessions · checked 2 s ago" + usage) — answers "is it on?" | Nothing happens (the 25 Oct design's rule for Atlas) |
+| **D-5** | When the eyes doze | **Only when you're away 5 min *and* nothing is running** (so dozing never reads as "off") | Whenever you're away |
+| **D-6** | The Pro button in v0.1 | **"Join the Pro waitlist"** until checkout exists (CR-010 D-2) — the prototype shows "Get Pro · $20/month" so you can see the final copy | Real checkout at launch |
+| **D-7** | How the Euca refers to itself | **By its name** ("Pip will check with you more often until 1 Dec") | "Your Euca will…" (CR-011's literal line) |
+| **D-8** | Thin-line mode | **Offered in Settings, pill by default**; not protected always shows the full pill | Pill only |
+
+Also worth a glance: the example Euca is "Pip", a lavender sphere; the name suggestions (Pip, Moss, Juno, Kit); the setup headline "First, let's find your sessions".
+
+## 6. Gaps (honest)
+- **Spec-only, not drawn:** the supervisor unreachable and Level 1 meter lines; org policy; offline plan check; the "supervisor wasn't sure" item; "Show n more"; the fail-closed brick (unchanged from #57's spec).
+- **Not rendered:** 125 % / 150 % display scaling; multi-monitor; a real Windows title bar under the notch (browser tabs at the top centre) to test the 280 ms hover intent against real pointer paths — **this is the biggest UX risk and needs a test on the founder's laptop in SP-ST1**.
+- **Fonts** load from Google Fonts in the prototype; the app bundles them.
+- The unsigned-build UAC copy ("Unknown publisher") follows CR-010's no-signing decision; it changes when a certificate is bought.

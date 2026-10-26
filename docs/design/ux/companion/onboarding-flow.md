@@ -1,5 +1,7 @@
 # First run in under 5 minutes: the Eucas companion
 
+> **Partly superseded 2026-10-26 by [setup-flow.md](setup-flow.md)** ([CR-011](../../../requirements/change-requests/CR-011.md)): the screen sequence is replaced (make your Euca, choose and lock rules, privacy, the notch). The evidence, the timing method, the validation tasks and edge paths A–Q still apply and are referenced by letter. Kept as history.
+
 | Date | Author | Status | Read with |
 |---|---|---|---|
 | 2026-10-26 | Lead UX researcher (Claude) | Draft for the UI designer and the client; no gate yet | [ux-research.md](ux-research.md) (evidence), [ia-and-flows.md](ia-and-flows.md) (the app after first run) |

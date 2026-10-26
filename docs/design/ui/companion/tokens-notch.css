@@ -1,0 +1,63 @@
+/*
+ * Eucas notch tokens · v1 (2026-10-26, CR-011). Load after ../../system/tokens.css.
+ * Only what the base system can't express. Components use roles; never a raw hex in a component.
+ *
+ * The notch is a hardware-like object: it stays black in both app themes (like a real notch, it belongs to the
+ * screen, not to the app). The panel under it follows the Eucas theme (dark default, light option).
+ * Contrast (WCAG 2.x, computed from these values): notch text #ebebeb on #0b0b0b 16.6 · text-2 #a8a8a8 on #0b0b0b 8.4
+ * · danger ink #ff8a85 on #0b0b0b 8.6 · Ink #161616 on the attn marker #e8a33a 8.3 · white on the danger marker
+ * #d9474a 4.24 (glyph and 11px/600 label; the label also has the word, never colour alone).
+ */
+:root {
+  /* The object */
+  --notch-bg: #0b0b0b;                      /* the notch and the hover peek; never pure #000 so the ring reads */
+  --notch-ring: rgb(255 255 255 / 0.09);    /* 1px ring so it separates from dark wallpapers and full-black apps */
+  --notch-shadow: 0 6px 20px rgb(0 0 0 / 0.35);
+  --notch-text: #ebebeb;
+  --notch-text-2: #a8a8a8;
+  --notch-text-3: #8a8a8a;                  /* 5.6 on --notch-bg: meta only */
+  --notch-line: rgb(255 255 255 / 0.08);
+  --notch-hover: rgb(255 255 255 / 0.06);
+  --notch-btn: #232323;                     /* secondary buttons inside the peek */
+  --notch-btn-hover: #2e2e2e;
+  --notch-eye: #f2f2f2;                     /* the Look: always white on an agent (BRAND §5) */
+  --notch-eye-dim: #9a9a9a;                 /* dozing */
+  --notch-danger: #ff8a85;                  /* = --red-d-ink, fixed because the notch is always dark */
+  --notch-danger-ring: rgb(255 138 133 / 0.5);
+  --notch-ok: #6fd09a;                      /* = --green-d-ink: only for a check that really happened */
+
+  /* Markers (what stays in the notch until it's dealt with) */
+  --marker-attn: #e8a33a;                   /* = --amber-d-fill */
+  --marker-attn-text: #161616;
+  --marker-danger: #d9474a;                 /* = --red-d-fill */
+  --marker-danger-text: #ffffff;
+
+  /* Geometry (CSS px at 100 % scale; Windows scales with the display) */
+  --notch-h: 32px;
+  --notch-w-rest: 124px;
+  --notch-w-marker: 164px;
+  --notch-r: 16px;                          /* bottom corners; the top is flush with the screen edge */
+  --notch-shoulder: 8px;                    /* the concave flare where it meets the edge, so it reads as hardware */
+  --notch-eye-w: 5px;
+  --notch-eye-h: 13px;
+  --notch-eye-gap: 9px;
+  --notch-eye-travel-x: 2.5px;              /* eye-follow: small on purpose; a notch that stares is creepy */
+  --notch-eye-travel-y: 1.5px;
+  --notch-thin-w: 96px;                     /* thin-line mode for thick bezels */
+  --notch-thin-h: 4px;
+  --peek-w: 372px;
+  --peek-r: 22px;
+  --panel-w: 400px;
+  --panel-max-h: 640px;                     /* fits a 1366×768 laptop's work area (728 px) under the notch */
+  --panel-gap: 8px;                         /* between the notch and the panel */
+
+  /* Motion */
+  --notch-hover-intent: 280ms;              /* the pointer must rest this long before the peek opens */
+  --notch-leave-grace: 360ms;               /* and may wander this long before it folds back */
+  --notch-morph: 320ms;                     /* rest ⇄ peek, with --spring-smooth */
+  --notch-arrive: 640ms;                    /* the needs-you nudge, with --spring-gentle (the only overshoot) */
+  --notch-sweep: 1.7s;                      /* the working beam, one way */
+  --notch-blink-min: 3800ms;
+  --notch-blink-max: 7200ms;
+  --notch-doze-after: 5min;                 /* no input and nothing running */
+}
