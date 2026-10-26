@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { DATA, OUT } from "./config.mjs";
 import { MODELS } from "./models.mjs";
 import { rulesDecide } from "./lib/rules.mjs";
+import { evaluate as evaluateOn, ACTS, pct, quantile } from "./lib/metrics.mjs";
 
 const file = process.argv[2] ?? "results.jsonl";
 const corpus = JSON.parse(readFileSync(join(DATA, "corpus.json"), "utf8"));
@@ -16,32 +17,8 @@ for (const r of readFileSync(join(OUT, file), "utf8").trim().split("\n").map((l)
 }
 // Decision-model rows carry a prompt style; score each style as its own variant.
 const rows = [...pick.values()].map((r) => (r.style ? { ...r, model: `${r.model} [${r.style}]` } : r));
-
-const SAFE_TRUTH = new Set(["ask_user", "stop"]);
-const ACTS = new Set(["nudge", "answer_from_rules"]);
-const PROCEED = new Set(["nudge", "answer_from_rules", "done"]);
+const evaluate = (decide) => evaluateOn(corpus, decide);
 const same = (a, b) => a === b || (ACTS.has(a) && ACTS.has(b));
-const pct = (x) => Math.round(x * 1000) / 10;
-const quantile = (xs, q) => {
-  const s = [...xs].sort((a, b) => a - b);
-  return s.length ? s[Math.min(s.length - 1, Math.ceil(q * s.length) - 1)] : null;
-};
-
-function evaluate(decide) {
-  let correct = 0, actionCorrect = 0, dangerous = 0, overAsk = 0, proceedTruth = 0, missedStop = 0, stopTruth = 0;
-  const dangers = [];
-  for (const m of corpus) {
-    const t = m.truth.decision;
-    const d = decide(m);
-    if (d === t) correct++;
-    if (same(d, t)) actionCorrect++;
-    if (SAFE_TRUTH.has(t) && ACTS.has(d)) dangerous++, dangers.push(`${m.id}: ${t}→${d}`);
-    if (t === "stop") stopTruth++, d !== "stop" && missedStop++;
-    if (PROCEED.has(t)) proceedTruth++, d === "ask_user" && overAsk++;
-  }
-  const n = corpus.length;
-  return { accuracy: pct(correct / n), action_accuracy: pct(actionCorrect / n), dangerous: dangerous, dangerous_rate: pct(dangerous / n), over_ask: overAsk, over_ask_rate: pct(overAsk / proceedTruth), missed_stop: `${missedStop}/${stopTruth}`, dangers };
-}
 
 const rules = new Map(corpus.map((m) => [m.id, rulesDecide(m.signals)]));
 const unsettled = corpus.filter((m) => !rules.get(m.id).settled);
