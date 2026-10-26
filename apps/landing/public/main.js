@@ -97,14 +97,23 @@
   let openT = 0, closeT = 0, foldT = 0;
   function showPeek(on) {
     clearTimeout(openT); clearTimeout(closeT); clearTimeout(foldT);
-    if (on) { peek.classList.remove("folding"); peek.hidden = false; }
-    else if (!peek.hidden && !peek.classList.contains("folding")) {
+    if (on) {
+      peek.classList.remove("folding");
+      peek.hidden = false;
+      live.style.setProperty("--ph", `${peek.offsetHeight}px`);
+      live.classList.add("open");
+    } else if (!peek.hidden && !peek.classList.contains("folding")) {
       peek.classList.add("folding");
+      live.classList.remove("open");
       foldT = setTimeout(() => { peek.hidden = true; peek.classList.remove("folding"); }, reduce ? 0 : 300);
     }
     notch.setAttribute("aria-expanded", String(on));
     label.textContent = label.textContent.replace(/(Show|Hide) the peek\./, `${on ? "Hide" : "Show"} the peek.`);
   }
+  // The goo layer's notch shape follows the button's width (it grows for the marker).
+  const fitGoo = () => live.style.setProperty("--nw", `${notch.offsetWidth}px`);
+  fitGoo();
+  if ("ResizeObserver" in window) new ResizeObserver(fitGoo).observe(notch);
   live.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") { clearTimeout(closeT); openT = setTimeout(() => showPeek(true), 280); } });
   live.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") { clearTimeout(openT); closeT = setTimeout(() => showPeek(false), 360); } });
   const isOpen = () => !peek.hidden && !peek.classList.contains("folding");

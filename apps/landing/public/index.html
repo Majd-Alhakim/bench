@@ -33,6 +33,7 @@
 
 <!-- The live notch: Pip at the top edge of this page, like at the top of your screen. Its state follows the section you read. -->
 <div class="live" data-ui data-live>
+  <div class="goo" aria-hidden="true"><i class="goo-notch"></i><i class="goo-peek"></i></div>
   <button class="notch" type="button" data-ui aria-expanded="false" aria-controls="live-peek" data-notch data-state="working">
     <span class="sr" data-notch-label>Your Euca, in the Eucas notch: protected, sessions working. Show the peek.</span>
     <span class="eyes" aria-hidden="true" data-eyes><i></i><i></i></span>
@@ -155,25 +156,25 @@
     <li class="band" data-band="mint">
       <div class="wrap band-in">
         <div><p class="band-say">Let read-only git commands through</p><p class="band-then"><code>git status</code>, <code>git diff</code> and <code>git log</code> stop asking you, in every repo.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let read-only git commands through"><i></i></button>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let read-only git commands through"><span class="knob"><i></i><i></i></span></button>
       </div>
     </li>
     <li class="band" data-band="honey">
       <div class="wrap band-in">
         <div><p class="band-say">Let the tests run in web-app</p><p class="band-then">They run code from the repo, so the rule stays in that one project.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let the tests run in web-app"><i></i></button>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="Let the tests run in web-app"><span class="knob"><i></i><i></i></span></button>
       </div>
     </li>
     <li class="band" data-band="aqua">
       <div class="wrap band-in">
         <div><p class="band-say">Let file reads inside the project through</p><p class="band-then">Reads inside the folder run without a prompt. Outside it, you're asked.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="false" aria-label="Let file reads inside the project through"><i></i></button>
+        <button type="button" class="switch" role="switch" aria-checked="false" aria-label="Let file reads inside the project through"><span class="knob"><i></i><i></i></span></button>
       </div>
     </li>
     <li class="band band-locked" data-band="ink">
       <div class="wrap band-in">
         <div><p class="band-say">Deletes, pushes, sends and payments</p><p class="band-then" data-locked-text>Always ask you. No rule can switch this off.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="Deletes, pushes, sends and payments always ask you. Locked." data-locked><i><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></i></button>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="Deletes, pushes, sends and payments always ask you. Locked." data-locked><span class="knob"><i></i><i></i></span><svg class="lock" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></button>
       </div>
     </li>
   </ul>
@@ -307,6 +308,9 @@
 
 <svg class="sprite" width="0" height="0" aria-hidden="true">
   <defs>
+    <!-- Goo: blur the shapes, then sharpen their alpha, so shapes that touch melt into one. -->
+    <filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="6"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"/></filter>
+    <filter id="goo-sm"><feGaussianBlur in="SourceGraphic" stdDeviation="3"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"/></filter>
     <g id="quartet"><path d="M4.8 25A20.2 20.2 0 1 1 45.2 25A20.2 20.2 0 1 1 4.8 25Z"/><path d="M78.9 8.75L95.64 37.75A4.5 4.5 0 0 1 91.74 44.5L58.26 44.5A4.5 4.5 0 0 1 54.36 37.75L71.1 8.75A4.5 4.5 0 0 1 78.9 8.75Z"/><path d="M18 57L33 57A11 11 0 0 1 44 68L44 83A11 11 0 0 1 33 94L18 94A11 11 0 0 1 7 83L7 68A11 11 0 0 1 18 57Z"/><path d="M74.5 52.81C79.35 60.57 90.99 70.27 90.99 79.97C90.99 89.18 83.72 95 74.5 95C65.28 95 58.01 89.18 58.01 79.97C58.01 70.27 69.65 60.57 74.5 52.81Z"/></g>
   </defs>
 </svg>

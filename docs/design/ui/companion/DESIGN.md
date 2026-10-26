@@ -70,7 +70,7 @@
 
 ### 2.1 The peek
 
-The notch's own body grows down into a 372 px card (clip-path morph from the notch's size, `--spring-smooth` 320 ms), so the eyes never move: **spatial continuity**. Same black, radius 22, the shoulders continue. Content starts under the 32 px notch row.
+The notch's own body grows down into a 372 px card, so the eyes never move: **spatial continuity**. *Revised 2026-10-26 (founder): the growth is **gooey**, not a clip-path morph: the notch and the card are two black shapes under a goo filter (§5.1), so the card melts out of the notch and back into it.* Same black, radius 22, the shoulders continue. Content starts under the 32 px notch row.
 - **Items** (≤ 3): severity glyph (20 px circle, tinted) · title 13/600 · one evidence line 12 (commands in mono) · one action (28 px pill; the first danger item's action is white, the only "primary" in the notch).
 - **Footer:** status dot + "Protected · 3 sessions" · **Open panel ›**.
 - **Nothing waiting:** two lines: "● Protected · 3 sessions · checked 2 s ago" and "5-hour 46% · week 62% · supervisor 78% left".
@@ -146,11 +146,24 @@ Physics from `tokens.css`; only the character overshoots.
 | Blink | 150 ms, every 3.8–7.2 s | none |
 | Working beam | sweep 1.7 s alternate + glow sway | a still segment under the eyes |
 | **Needs you arrives** | notch drops 3 px and settles + marker pops (`--spring-gentle`, 640 ms) + glance | marker fades in |
-| Peek | clip-path morph from the notch (`--spring-smooth`, 320 ms) | instant |
+| Peek | **gooey** (§5.1): the card shape grows out of the notch from 30 % × 20 % with `--spring-gentle` (600 ms) and the two shapes melt into one; the words fade in 160 ms later. Folding: the words go first (140 ms), then the card melts back into the notch (300 ms). *Was: clip-path morph (revised 2026-10-26, founder)* | instant, no melt |
 | Panel | scale 0.97 → 1, rise 10 px, fade (320 ms) | fade |
 | **Birth** (setup 2) | squash 1.06/0.94 and settle (`--spring-gentle`), one blink | blink only |
 | **Homecoming** (setup 9; *CR-012*: was 8) | the avatar flies to the notch (900 ms) and becomes its eyes; eyes open from a line | crossfade |
 | Heartbeat chip | ring every 2.4 s, never faster than 2 s | timestamp only |
+| **Switches** (*new 2026-10-26, founder*) | **gooey** (§5.1): the knob is two blobs; the trail follows the lead 90 ms late (`--spring-gentle`, 450 ms), so the knob stretches as it slides and settles round. A locked switch's knob tugs 18 px toward off and snaps back, instead of a shake | the knob moves, no stretch |
+
+### 5.1 The goo effect (new 2026-10-26, founder: *"use this Gooey effect for the notch … and the switches"*)
+The shapes that should merge sit in one layer with an SVG filter: blur them, then sharpen their alpha, so shapes that touch melt into one liquid shape. Only the shapes are filtered; text, eyes, markers and icons sit on top, unfiltered, so they stay crisp.
+
+| Filter | Used for | Values |
+|---|---|---|
+| `goo` | notch + peek | `feGaussianBlur stdDeviation 6` → `feColorMatrix` alpha row `0 0 0 18 -7` |
+| `goo-sm` | switch knobs | `feGaussianBlur stdDeviation 3` → alpha row `0 0 0 20 -9` |
+
+- **The notch's black body is drawn by the goo layer**, not by the button: a notch shape (its width follows the button, which grows for the marker) and the card shape. The layer starts 24 px above the screen edge so the top stays flat after the blur.
+- **Build (Tauri, WebView2):** an inline SVG `<filter>` applied with `filter: url(#goo)`; no library. Reference implementation: `apps/landing/public/styles.css` (`.goo`, `.knob`) and `main.js` (`showPeek`). Only transform and opacity animate.
+- **Reduced motion:** shapes appear and fold instantly, the knob moves without stretching.
 
 ## 6. Sound (BRAND §11, P-7)
 - **Needs you** (A4 → D5, 320 ms): once when an item arrives, and for a tripwire stop. Not during full-screen apps or calls; Windows Focus silences it.
@@ -292,7 +305,7 @@ The landing page in `apps/landing/` is built on this design (PR #81). The founde
 ### 13.1 The notch on a web page
 - **No shoulders, no ring, no glow.** The concave shoulders and the 1 px ring join the notch to a black screen bezel; a web page has none, so on the page they read as hooks and a grey outline. The page draws only the black body: flat top, 16 px bottom radius. Captures hide them too (`apps/landing/scripts/capture-screens.mjs`).
 - **Only the eye grammar (§11).** Calm, Focused, Glance, Toward you, Concerned, Sleepy, Pleased, drawn to the spec in the sheet. **No red "Stopped" marker and no "Not protected" label** on the page; a stop shows Concerned eyes. The amber needs-you count stays.
-- **A live notch** sits on the page's top edge: the eyes follow the pointer and blink, its state follows the section in view (Focused → Glance with the count → Concerned → Calm → Pleased), and hover or tap opens the peek, which folds back into the notch (300 ms).
+- **A live notch** sits on the page's top edge: the eyes follow the pointer and blink, its state follows the section in view (Focused → Glance with the count → Concerned → Calm → Pleased), and hover or tap opens the peek, which melts out of the notch and back into it (the goo effect, §5.1). The rule switches use it too.
 
 ### 13.2 Words
 - **Why before what.** The page opens with the visitor's day ("You started three Claude Code sessions to go faster. Now you spend the day checking on them.") and names four pains before any feature: a session waiting for a yes, a delete you didn't read, the limit hit mid-task, two agents writing in the same file.

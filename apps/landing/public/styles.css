@@ -145,10 +145,21 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 .notch {
   position: relative; display: flex; align-items: center; justify-content: center; gap: 10px;
   height: 32px; min-width: 124px; padding: 0 22px; border: 0; cursor: pointer;
-  background: var(--notch-bg); color: var(--notch-text);
+  background: transparent; color: var(--notch-text); /* the black body is drawn by the goo layer */
   border-radius: 0 0 16px 16px;
   transition: min-width 0.32s var(--ease), padding 0.32s var(--ease);
 }
+/* The goo layer: the notch and the peek are two black shapes that melt into one as the peek grows out of the notch.
+   It starts above the screen edge so the top stays flat after the blur. */
+.goo { position: absolute; top: -24px; left: 50%; width: 440px; height: 360px; transform: translateX(-50%); filter: url(#goo); pointer-events: none; z-index: -2; }
+.goo i { position: absolute; top: 0; left: 50%; background: var(--notch-bg); }
+.goo-notch { width: var(--nw, 124px); height: 56px; border-radius: 0 0 16px 16px; transform: translateX(-50%); transition: width 0.32s var(--ease); }
+.goo-peek {
+  width: min(372px, calc(100vw - 32px)); height: calc(var(--ph, 200px) + 24px); border-radius: 0 0 22px 22px;
+  transform: translateX(-50%) scale(0.3, 0.2); transform-origin: top center; opacity: 0;
+  transition: transform 0.3s var(--ease), opacity 0s linear 0.3s;
+}
+.live.open .goo-peek { transform: translateX(-50%) scale(1); opacity: 1; transition: transform 0.6s var(--spring), opacity 0s; }
 .notch:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 .eyes { display: flex; gap: 9px; --ex: 0px; --ey: 0px; }
 .eyes i {
@@ -178,16 +189,14 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 
 .peek {
   position: absolute; top: 0; width: min(372px, calc(100vw - 32px)); padding: 40px 16px 14px;
-  background: var(--notch-bg); color: var(--notch-text); border-radius: 0 0 22px 22px;
-  box-shadow: 0 18px 48px rgb(0 0 0 / 0.45); /* taste-skill-ignore: the peek floats over the page, like a menu */
+  background: transparent; color: var(--notch-text); /* the goo layer draws the black card */
   font-size: 13px; line-height: 1.35; z-index: -1;
-  transform-origin: top center; animation: peek 0.32s var(--ease);
+  animation: peek-in 0.24s var(--ease) 0.16s both;
 }
-@keyframes peek { from { clip-path: inset(0 33% 83% 33% round 0 0 16px 16px); } to { clip-path: inset(0 0 0 0 round 0 0 22px 22px); } }
-/* folding back: the card shrinks into the notch, the way it came out */
-.peek.folding { animation: fold 0.3s var(--ease) forwards; pointer-events: none; }
-@keyframes fold { from { clip-path: inset(0 0 0 0 round 0 0 22px 22px); } to { clip-path: inset(0 33% 83% 33% round 0 0 16px 16px); } }
-:root[data-theme="light"] .peek { box-shadow: 0 18px 48px rgb(0 0 0 / 0.25); } /* taste-skill-ignore: the peek floats over the page, like a menu */
+@keyframes peek-in { from { opacity: 0; transform: translateY(-6px); } }
+/* folding back: the words go first, then the card melts back into the notch */
+.peek.folding { animation: peek-out 0.14s var(--ease) forwards; pointer-events: none; }
+@keyframes peek-out { to { opacity: 0; transform: translateY(-6px); } }
 .pk-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 4px; }
 .pk-item + .pk-item { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08); } /* taste-skill-ignore: the peek's own divider */
 .pk-item b { display: block; font-weight: 600; }
@@ -303,13 +312,17 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   position: relative; flex: none; width: 76px; height: 44px; border: 0; border-radius: 99px; cursor: pointer;
   background: var(--switch-off); transition: background-color 0.25s;
 }
-.switch i { position: absolute; top: 5px; left: 5px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--switch-knob); transition: transform 0.3s var(--spring), background-color 0.25s; }
 .switch[aria-checked="true"] { background: var(--switch-on); }
-.switch[aria-checked="true"] i { transform: translateX(32px); background: var(--switch-knob-on); }
-.switch svg { width: 16px; height: 16px; fill: none; stroke: var(--ink); stroke-width: 1.6; }
+/* The knob is two blobs under the goo filter: the trail follows the lead a beat late, so the knob stretches and melts as it slides. */
+.knob { position: absolute; inset: 0; filter: url(#goo-sm); pointer-events: none; }
+.knob i { position: absolute; top: 5px; left: 5px; width: 34px; height: 34px; border-radius: 50%; background: var(--switch-knob); transition: transform 0.45s var(--spring), background-color 0.25s; }
+.knob i + i { transition: transform 0.45s var(--spring) 0.09s, background-color 0.25s; }
+.switch[aria-checked="true"] .knob i { transform: translateX(32px); background: var(--switch-knob-on); }
+.switch .lock { position: absolute; top: 14px; left: 46px; width: 16px; height: 16px; fill: none; stroke: var(--ink); stroke-width: 1.6; }
 .switch[data-locked] { cursor: not-allowed; }
-.switch.nope { animation: nope 0.4s var(--ease); }
-@keyframes nope { 30% { transform: translateX(-4px); } 60% { transform: translateX(3px); } }
+/* the locked switch: the knob tugs toward off, stretches, and snaps back */
+.switch.nope .knob i:first-child { animation: tug 0.5s var(--spring); }
+@keyframes tug { 35% { transform: translateX(14px); } }
 
 /* ---------- What is sent ---------- */
 .sent { margin-top: var(--gap-section); display: grid; grid-template-columns: 5fr 7fr; gap: clamp(32px, 5vw, 80px); align-items: start; }
