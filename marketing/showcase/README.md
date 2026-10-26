@@ -1,5 +1,7 @@
 # Eucas showcase (51 s)
 
+> **Retired for marketing (2026-10-26). Don't post this video.** It shows the pre-pivot team app (Atlas, a bakery site), not the companion. The companion's videos are in [`marketing/shorts`](../shorts) and ready to post in [`marketing/ready`](../ready/INDEX.md).
+
 A Remotion project for the Eucas showcase, 1920×1080 at 30 fps: a hook, the problem, the five steps in the real app, then the brand.
 
 | Time | What you see | File |

@@ -1,0 +1,30 @@
+{
+  "name": "eucas-shorts",
+  "version": "1.0.0",
+  "description": "Short videos for the Eucas waitlist and launch, from real prototype screens (Remotion)",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "@remotion/google-fonts": "4.0.538",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.538"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "puppeteer-core": "24.10.0",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "capture": "node scripts/capture.mjs",
+    "render": "node scripts/render.mjs"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

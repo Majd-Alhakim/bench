@@ -35,7 +35,7 @@ Alternatives: "Show HN: Eucas – get asked less by your Claude Code sessions, o
 >
 > Stack: [Tauri + Rust, per the ADRs]. Windows 10 22H2 and 11. v0.1 isn't code-signed, so Windows will say "Unknown publisher".
 >
-> Licence: FSL-1.1-MIT. The source is on GitHub; you can read, run and change it, just not sell a competing product with it, and each version becomes MIT two years after release. So it's source-available, not open source, today.
+> Licence: fair source (FSL-1.1-MIT). The code is public on GitHub, so you can read exactly what it does. The name Eucas, Pip and its faces are trademarks.
 >
 > No account needed for the four limits and the bulk-delete stop. Rules, usage and the supervisor need a free account; more supervisor help and budgets are Pro.
 >
@@ -117,7 +117,7 @@ Same as above, framed as "how it was built with Claude": the design-to-build pro
 **Name:** Eucas
 **Tagline** (60 characters max): `A notch that watches your Claude Code sessions on Windows`
 **Alternative:** `Get asked less by your coding agents. Windows, free.`
-**Topics:** Developer Tools, Artificial Intelligence, Windows, Productivity (not Open Source: FSL-1.1-MIT is source-available)
+**Topics:** Developer Tools, Artificial Intelligence, Windows, Productivity (skip the Open Source topic: Eucas is fair source)
 **Pricing:** Free + paid (Pro $20/month; the first 200 keep $15/month for life)
 **Links:** eucas.app with `utm_source=producthunt`, the GitHub repo
 
@@ -159,7 +159,7 @@ Re-capture each with the sample project renamed from `bench` to `web-app`, and a
 >
 > Hi, Eucas is a Windows app that watches the Claude Code sessions you already run: it never auto-approves a delete, a push to your default branch, a send or a payment, stops bulk deletes, and answers safe prompts within your rules so you get asked less. v0.1, individual sign-up, free tier, source on GitHub: [link]. Happy to answer anything. [Name]
 
-**Changelog News** ([submit form](https://changelog.com/news/submit)): it excludes commercial products, and Eucas has a paid plan, so it may not qualify. If you submit, send the GitHub repo with one plain sentence and say it's FSL-1.1-MIT.
+**Changelog News** ([submit form](https://changelog.com/news/submit)): it excludes commercial products, and Eucas has a paid plan, so it may not qualify. If you submit, send the GitHub repo with one plain sentence and say it's fair source.
 
 **The Rundown AI** ([tool form](https://www.rundown.ai/submit)): the free "recommend a tool" route only.
 
