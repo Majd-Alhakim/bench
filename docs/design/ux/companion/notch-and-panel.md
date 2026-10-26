@@ -116,7 +116,7 @@ Only one state shows at a time. **Priority:** Not protected › Tripwire stop �
 | **Not protected** | red | "bench isn't protected · no check for 40 s while it ran tools" | See why | A real check passes |
 | **Guided merge** offer: a session finished on a branch | calm | "search is ready · It finished on its branch. Update it from your default branch, run the tests and open the PR?" | Update, test, open PR | You run it (the item becomes its result) or snooze it |
 | Guided merge result | green (a real result) | "search: PR #71 is open · Updated from your default branch, 128 tests passed, PR #71 opened. Nothing was merged." · or "Tests failed: 2 of 128. Nothing was pushed." | Open the PR · or Open session | You open it |
-| **Budget reached** (Pro) | amber | "Budget reached for this task. Continue? · Pip stopped bench before its next step. The task used the 4% of your week you gave it." | Continue · Open session | You choose |
+| **Budget reached** (Pro) | amber | "Budget reached for this session. Continue? · Pip stopped bench before its next step. The task used the 4% of your week you gave it." | Continue · Open session | You choose |
 | Not verified after an update | amber | "Claude Code 2.1.315 isn't verified yet" | Run the test | The safety test passes |
 | (Pro / trial) the supervisor wasn't sure | amber | the session-waiting line plus "Pip didn't answer: not sure" | Open session | as the first row |
 
@@ -171,7 +171,7 @@ A locked rule's switch shows a lock. Pressing it says "Locked rules change with 
 When a session finishes on a branch, a needs-you item offers the plain-code housekeeping: **update from your default branch, run the tests, open the PR**. One button runs those three steps as fixed commands (no model, no code written); the item becomes its result: "search: PR #71 is open · 128 tests passed" with **Open the PR**, or "Tests failed: 2 of 128. Nothing was pushed." with **Open session**. A conflict stops at once: "The update hit a conflict in `src/router.ts`. Nothing was pushed. Open session to resolve it." It never merges into your default branch.
 
 ### 4.8 Budget reached (Pro)
-When a task's budget runs out, the Euca **stops the agent before its next step** and adds "Budget reached for this task. Continue?" with **Continue** (gives it more of your week) and Open session. The copy says "stops before the next step", never "pauses": Eucas can't pause an idle session, it can only refuse the next tool call.
+When a task's budget runs out, the Euca **stops the agent before its next step** and adds "Budget reached for this session. Continue?" with **Continue** (gives it more of your week) and Open session. The copy says "stops before the next step", never "pauses": Eucas can't pause an idle session, it can only refuse the next tool call.
 
 ### 4.9 The supervisor meter runs out
 Usage › Supervisor shows "Help left this month · 0% · Resets 1 Dec" and, in bold, **"Pip will check with you more often until 1 Dec."** + "Your rules and protection don't change." One Pro line only here (where the free answer runs out): "Pro keeps it going all month: $20/month, $15 for the first 200. See Pro". Never a needs-you item, never in the notch, never a Windows notification.

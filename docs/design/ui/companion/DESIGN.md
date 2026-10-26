@@ -107,7 +107,7 @@ The notch's own body grows down into a 372 px card (clip-path morph from the not
 | `LockRow` | Rules | locked (neutral) / not locked (amber, with Lock) |
 | `LimitRow` | Rules, setup 4 and 5 | the four limits: title, detail, **Locked** chip or amber **Not locked** (press to lock); never a switch |
 | `GuidedMergeItem` | needs-you | the offer ("Open a PR for search · tests first"; in the peek "Update, test, open PR") becomes its result in place (green check, "Open the PR") |
-| `BudgetItem` (Pro) | needs-you | "Budget reached for this task. Continue?" · Continue · Open session |
+| `BudgetItem` (Pro) | needs-you | "Budget reached for this session. Continue?" · Continue · Open session |
 | `RuleRow` | Rules, setup 4 | title, detail, lock glyph, switch; locked switches explain on press |
 | `RuleComposer` + `DraftCard` | Rules, setup 4 | described → exact rule in mono → effect last week → Add · Reword · Lock it too |
 | `SettingsRow`, `Radio` (privacy), `Seg` (notch look, theme) | Settings | — |
@@ -168,7 +168,7 @@ Second person; your Euca speaks of itself by name ("Pip will check with you more
 - **Diagnostic (approved):** "No paths to your projects or files."
 - **Meter empty (CR-011, with the name):** "Pip will check with you more often until 1 Dec."
 - **Never approves:** "It never approves a tool call."
-- **Budget (founder, 26 Oct):** "Budget reached for this task. Continue?" + "Pip stopped bench before its next step." Always "stops before the next step", never "pauses".
+- **Budget (founder, 26 Oct):** "Budget reached for this session. Continue?" + "Pip stopped bench before its next step." Always "stops before the next step", never "pauses".
 - **Guided merge:** "search is ready · Update it from your default branch, run the tests and open the PR?"
 - **Branch wording:** "your default branch" in prose; `main` only inside a literal command.
 - **Unsigned v0.1:** setup warns that UAC will say "Unknown publisher"; no "signed" or "verified publisher" badge anywhere.
