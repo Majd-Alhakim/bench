@@ -188,13 +188,16 @@ fn fullscreen_loop(app: AppHandle) {
         let Some(w) = app.get_webview_window("notch") else { continue };
         let q = quns();
         let _ = &w;
-        // 2 busy (full-screen app), 3 Direct3D full screen, 4 presentation mode.
-        let full = matches!(q, 2 | 3 | 4) || foreground_is_fullscreen();
+        // 3 Direct3D full screen, 4 presentation mode. 2 ("busy") is not enough on its own: it stays set while any
+        // full-screen overlay exists (seen during the spike with nothing full screen in front), so it only counts
+        // when the foreground window also covers its monitor.
+        let fg_full = foreground_is_fullscreen();
+        let full = matches!(q, 3 | 4) || fg_full;
         if full != STEPPED_ASIDE.swap(full, Ordering::SeqCst) {
             unsafe {
                 let _ = ShowWindow(hwnd(&w), if full { SW_HIDE } else { SW_SHOWNOACTIVATE });
             }
-            log(serde_json::json!({ "kind": "notch_step_aside", "aside": full, "quns": q, "t": now_ms() }));
+            log(serde_json::json!({ "kind": "notch_step_aside", "aside": full, "quns": q, "fg_full": fg_full, "t": now_ms() }));
         }
     }
 }
