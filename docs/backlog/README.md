@@ -143,7 +143,7 @@ Before Sprint 1, S1-1 pre-creates every module file and splits copy, error codes
 
 ## 5. GitHub Issues
 
-Drafted in [github-issues.md](github-issues.md), **not created**. Creating them, with the labels and milestones listed there, waits for your OK (G6 decision 7). Later sprints get their task issues at each `/plan-sprint`.
+Drafted in [github-issues.md](github-issues.md) and approved at G6 (7a). The labels and the Sprint 0–11 milestones are on GitHub; the issues are next. Later sprints get their task issues at each `/plan-sprint`.
 
 ## 6. Requirement coverage
 

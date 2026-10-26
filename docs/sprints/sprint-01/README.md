@@ -1,6 +1,6 @@
 # Sprint 01: 3 working days from the day after Gate 6 is approved
 
-> **Draft for Gate 6.** Nothing starts until you approve G6 ([decisions](../../backlog/G6-DECISIONS.md)). If you choose to wait for week 1 of the demand test (decision 3), day 1 is the day after that week ends with ≥ 100 sign-ups.
+> **Approved at Gate 6 (2026-10-26, [decisions](../../backlog/G6-DECISIONS.md)).** Day 1 is day 8 after the landing page goes live, and only if the waitlist has ≥ 100 sign-ups by then (decision 3a).
 
 ## Planning
 - **Sprint goal** (one sentence the client can check): *The repo builds green on Windows and Ubuntu, the guard's parser turns bash, PowerShell and cmd commands into the exact calls and paths it will judge, and the hidden panel shows live state in under 150 ms.*
@@ -48,7 +48,7 @@ Each task's traces (SRS FR/NFR ids), files, acceptance criteria, named tests and
   - **CLAUDE.md still describes the Electron app.** S1-1.4's PR updates its Commands and Architecture sections for Tauri, Rust and pnpm, if you approve (G6 decision 11 (i)).
   - **No spike blocks Sprint 1.** SP-ST2 must be at GO by Sprint 2 (U-1.6).
   - **The no-account decisions (2026-10-26) don't change Sprint 1.** Its scope, goal and capacity stand. The new NA-1 work (no account: safety and a small supervisor taste, +5.25 d) starts in Sprint 5. Sprint 1's only touchpoint is U-1.3: the `tray_state` sentence it writes is reused later by the no-account tray menu (NA-1.2), with no change now.
-- **Client approval of scope:** ☐ (date)
+- **Client approval of scope:** ☑ 2026-10-26 (Gate 6)
 
 ## Daily standups
 Append entries from `/standup`:

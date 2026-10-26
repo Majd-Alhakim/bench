@@ -1,10 +1,10 @@
-# GitHub Issues: drafts (not created)
+# GitHub Issues: approved for creation
 
-> **Draft only.** Nothing here is on GitHub yet. Creating these issues waits for your OK at Gate 6 (decision G6-7 in [G6-DECISIONS.md](G6-DECISIONS.md)). Generated from the task files; if a task file changes, regenerate before creating.
+> **Approved at Gate 6 (decision 7a, 2026-10-26).** The labels and the milestones `Sprint 0` … `Sprint 11` are on GitHub; the 50 issues below (3 spikes, 34 stories, 13 Sprint 1 tasks) are next. Generated from the task files, NA-1 added by hand; if a task file changes, update this file before creating.
 
 **Labels to create first:** `companion`, `type:story`, `type:task`, `type:spike`, `lane:A`, `lane:B`, `priority:must`, `epic:E17` … `epic:E28`, `blocked:SP-ST2`, `blocked:SP-AC1`, `gate:SP-SUP2`, `needs:founder-answer`.
 
-**Milestones:** `v0.1` (every issue), and `Sprint 0` … `Sprint 11` (from the [sprint plan](README.md#4-sprint-plan)). Sprint 1 task issues are listed in full; later sprints get their task issues at each `/plan-sprint`, from the task files.
+**Milestones:** `Sprint 0` … `Sprint 11` (from the [sprint plan](README.md#4-sprint-plan)). GitHub allows one milestone per issue, so each issue takes its first sprint as its milestone (SP-SUP2 takes Sprint 0), and `v0.1` is a **label** on every issue. Sprint 1 task issues are listed in full; later sprints get their task issues at each `/plan-sprint`, from the task files.
 
 Format per issue: **title** · labels · milestone, then the body.
 

@@ -16,7 +16,23 @@
 - learns-you from structured events;
 - the eye grammar: Pip shows only the eight faces in DESIGN §11 (founder order, 2026-10-26; in N-0.2, +0.25 d).
 
-Reply with the numbers you accept, or "approve G6 as recommended".
+## Your answers (2026-10-26)
+
+**G6 approved with conditions.** You said *"Accept Gate 6"*, accepting the recommendations 1a, 2a, 3a, 4a, 5a, 6a and 7a ([gate log](../process/STATUS.md#gate-log)).
+
+| # | Answer | What it means now |
+|---|---|---|
+| 1 | (a) | The backlog, the sprint plan and Sprint 1 are approved as drafted. |
+| 2 | (a) | 63.75 build days (with NA-1), 11 sprints; sequence, don't cut. A 12th sprint is the named fallback. |
+| 3 | (a) | **Condition:** the page goes live now. The build starts on day 8 after it goes live, and only if the waitlist has ≥ 100 sign-ups. |
+| 4 | (a) | ADR-0007 to ADR-0018 are **Accepted**; the stale wording is fixed in a Sprint 1 docs PR. |
+| 5 | (a) | **Conditions:** SP-ST2 is GO before Sprint 2; SP-AC1 and P9 are done before Sprint 4. |
+| 6 | (a) | **Condition:** the launch waits for SP-SUP2 to pass. On a NO-GO, it re-runs once with the fallback models; then a change request. |
+| 7 | (a) | The GitHub Issues, labels and milestones are created from [github-issues.md](github-issues.md) (labels and milestones done 2026-10-26; the issues next). |
+
+Still open: 2b (a)–(c), the no-account answers, needed before Sprints 6–10 (NA-1 carries `needs:founder-answer`). Decisions 8–11 follow the recommendations unless you say otherwise.
+
+*The questions as asked:*
 
 ## The gate itself
 

@@ -2,14 +2,14 @@
 
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
-**Current phase:** 6 (backlog and Sprint 1), **in progress**, lean mode. G0, G1, G2, G3, G4 and G5 approved; **G6 pending**.
-**Next step:** your **Gate 6** decision on [the companion v0.1 backlog](../backlog/README.md):
+**Current phase:** 6 (backlog and Sprint 1), **G6 approved 2026-10-26**, lean mode. G0–G6 approved. Sprint 0 (SP-ST2, SP-AC1, P9) runs in the waitlist week; Sprint 1 starts on day 8 after the page goes live, only with ≥ 100 sign-ups (G6-3a).
+**Next step:** put the landing page live (starts the demand test), then Sprint 0. G6 approved [the companion v0.1 backlog](../backlog/README.md):
 - 34 stories and 157 tasks, each traced to SRS FR/NFR ids;
 - 63.75 build days in 11 three-day sprints over two lanes (58.5 before NA-1, setup without an account with a small supervisor taste, founder 2026-10-26);
 - [Sprint 1](../sprints/sprint-01/README.md);
-- [the decisions, each with a recommendation](../backlog/G6-DECISIONS.md).
+- [the decisions and your answers](../backlog/G6-DECISIONS.md).
 
-Before Sprint 2, SP-ST2 must be GO. Before Sprint 4, SP-AC1 and P9 must be done. The launch waits for SP-SUP2 (recorder installed, 50 of ≥ 300 moments). The GitHub Issues are drafted but not created; they wait for your OK (G6 decision 7). The demand test starts when the landing page goes live (decision 3). BRD §10 #56–#65 are all answered (2026-10-26).
+**G6 conditions:** SP-ST2 must be GO before Sprint 2 (5a). SP-AC1 and P9 must be done before Sprint 4 (5a). The build starts on day 8 after the page goes live, and only if the waitlist has ≥ 100 sign-ups (3a). The launch waits for SP-SUP2 to pass (6a; recorder installed, 50 of ≥ 300 moments). The GitHub Issues are approved for creation (7a): the labels and the Sprint 0–11 milestones exist; the 50 issues are still to be created. BRD §10 #56–#65 are all answered (2026-10-26).
 
 *Earlier:* CR-011 and CR-012 are applied in **BRD v1.5 / PRD v0.6** (your Euca in the notch and one panel; the supervisor meter, never dollars; the trial and taste; the supervisor always on for everyone; a Eucas account for everyone); companion SRS v1.0 approved at G3 (2026-10-26).
 
@@ -23,7 +23,7 @@ Before Sprint 2, SP-ST2 must be GO. Before Sprint 4, SP-AC1 and P9 must be done.
 | 3 | SRS / specs | ✅ Companion v0.1 SRS **v1.0** baselined (189 FRs, 118 NFRs, interfaces, data model, traceability; 7 G3 answers applied: supervisor on from launch, no export in What Pip knows, learns-you from structured events, $10/day spend cap, Windows 10 22H2 (tested in a VM) + 11, proposed numbers, 10 library rules) | [SRS](../requirements/SRS.md) | G3 ✅ 2026-10-26 |
 | 4 | UX design | ✅ Premium spec, Laws of UX audit; flows proven in prototype v0.8.2 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ✅ 2026-10-24 |
 | 5 | UI design & brand | ✅ Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.8.2** (review rounds 5–7 applied); **name: Eucas** (one agent is a Euca) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ✅ 2026-10-24 |
-| 6 | Backlog & Sprint 1 | 🟡 **In progress**: companion v0.1 backlog drafted (34 stories, 157 tasks, 63.75 d, 11 sprints), Sprint 1 planned, issue drafts ready (not created) | [backlog](../backlog/README.md), [Sprint 1](../sprints/sprint-01/README.md), [G6 decisions](../backlog/G6-DECISIONS.md) | G6 ⏳ pending |
+| 6 | Backlog & Sprint 1 | ✅ Companion v0.1 backlog approved (34 stories, 157 tasks, 63.75 d, 11 sprints), Sprint 1 planned, issue labels and milestones created (issues next); ADR-0007–0018 accepted | [backlog](../backlog/README.md), [Sprint 1](../sprints/sprint-01/README.md), [G6 decisions](../backlog/G6-DECISIONS.md) | G6 ✅ 2026-10-26 (with conditions) |
 | 7–10 | Delivery, QA, release, maintenance | ⚪ | — | — |
 
 ## Already decided (input to the phases above)
@@ -43,6 +43,7 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 | 2026-10-24 | G0 (Problem & feasibility) | **Approved (go)** on spikes S0-1, SP-B1 and M8 ([reports](../spikes/)) | "Approve G0: go on S0-1, SP-B1 and M8. Record it and move on." S0-2 and S0-3 run in Sprint 1 |
 | 2026-10-24 | G4 (UX) + G5 (UI) | **Approved** on prototype v0.8.2 | "Approve G4 (UX) and G5 (UI) on prototype v0.8.2." After three review rounds the same day: [UF5](../requirements/interviews/2026-10-24-ui-feedback-5.md) (titles and agent card, growing composer, drag-to-split, memory graph, scrollbars, fresh install), [UF6](../requirements/interviews/2026-10-24-ui-feedback-6.md) (left \| right split rules, pane borders, welcome copy), [UF7](../requirements/interviews/2026-10-24-ui-feedback-7.md) (compact panes) |
 | 2026-10-26 | G3 (SRS) | **Approved**: companion v0.1 SRS v0.2, baselined as v1.0 | "Approve G3 on SRS v0.2. Record it and move on." G3 answers: supervisor "on from launch"; no export and learns-you "yes"; spend cap and numbers "okay lets do this", "approve the numbers"; "Keep Windows 10 in v0.1 and test it in a free Windows 10 virtual machine on my PC."; library rules "yes" |
+| 2026-10-26 | G6 (Backlog & Sprint 1) | **Approved with conditions**: companion v0.1 backlog (34 stories, 157 tasks, 63.75 d, 11 sprints), Sprint 1, ADR-0007–0018 accepted | "Accept Gate 6": every recommendation in [G6-DECISIONS](../backlog/G6-DECISIONS.md) (1a–7a). Conditions: SP-ST2 GO before Sprint 2; SP-AC1 and P9 done before Sprint 4; the build starts on day 8 after the page goes live, only with ≥ 100 waitlist sign-ups; the launch waits for SP-SUP2 to pass |
 
 ## Change requests
 
