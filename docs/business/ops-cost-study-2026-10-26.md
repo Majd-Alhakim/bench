@@ -101,6 +101,43 @@ Signing lowers each line by about $26. Option B lowers it by $0–25.
 
 **Free users can't run up a bill:** they never call a model, everything they do runs on their own PC, and downloads come from GitHub for free. The worst case is **about $6/month** with no revenue, plus the time you spend supporting them, which is the real cost of free users.
 
+## 7b. Free trial and monthly taste (CR-011)
+
+The founder decided Free gets a taste of the supervisor: a **14-day full trial at install**, then a **small monthly taste**. Every limit is a hidden cost budget. The user sees a meter, never dollars.
+
+| Item | Hidden cap | Typical cost |
+|---|---|---|
+| 14-day trial (once per verified email) | $0.50 per trial | about $0.11 (average user) |
+| Monthly taste on Free (about 80 decisions) | $0.02 per free user a month | well under the cap; most free users won't use it all |
+
+| Scenario | Extra cost a month |
+|---|---|
+| 1,000 new installs a month (trials) | about **$110** |
+| 10,000 free users, everyone using the full taste | at most **$200** |
+| **Worst case: 10,000 free users, nobody pays, 1,000 new trials a month** | about **$300** |
+| 10,000 users, 2% paying | profit about $2,600 → about **$2,300–2,500** after trial and taste |
+
+The free usage moves the all-free case from "about $6" to "up to about $300 a month at 10,000 users". It's bounded by the hidden caps and by one trial per verified email.
+
+## 7c. How wrong could the model cost be? (sensitivity)
+
+The model cost per call is measured (SP-SUP1: about 935 tokens in and 103 out per call, $0.000148 for gpt-oss-120b). **The number of calls is an assumption** (6 wake-ups per agent-hour). Real prompts may also be bigger than the benchmark's.
+
+| Change from the measured case | Heaviest user, Jev + gpt-oss |
+|---|---|
+| As measured | $0.86 |
+| Prompts 3× bigger | about $2.60 |
+| Agents stop 3× more often | about $2.60 |
+| Both | about $7.50 |
+| Model prices double | ×2 |
+
+**Fix adopted (CR-011):**
+- The allowance is a **hidden dollar budget per user**, not a call count, so no user can cost more than the budget whatever the prompt size.
+- Each prompt is capped at about 2,000 tokens.
+- With a Pro budget of about $2 a month, a $15 founding user still leaves **at least about $11**.
+
+SP-SUP2 (real moments) measures the true prompt size and wake-up rate. Re-run this study with them before setting the final budgets.
+
 ## 8. Risks to these numbers
 
 - **Usage assumptions:** the wake-ups per agent-hour and the profile mix are estimates. Watch the real numbers from SP-SUP2 and the first Pro users; the allowance caps the downside either way.
