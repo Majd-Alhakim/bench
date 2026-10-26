@@ -1,0 +1,160 @@
+/*
+ * Eucas companion tokens · v0.1 (2026-10-26)
+ * Extends ../system/tokens.css. Load it after tokens.css. Spec: ./DESIGN.md §3.
+ *
+ * Only what the companion needs and the base system doesn't have: the guard states and the heartbeat,
+ * severity aliases, the tray icon, the Windows-owned chrome (window frame, flyout, toast, context menu, UAC)
+ * and the companion's fixed sizes. Everything else (colour roles, type, space, corners, motion) comes from
+ * tokens.css unchanged.
+ *
+ * Two kinds of token live here:
+ *   --guard-*, --sev-*, --hb-*, --cmp-*  follow the APP theme ([data-theme] on <html>), like every role token.
+ *   --os-*, --tray-*                     follow the WINDOWS theme ([data-os-theme] on the element that hosts
+ *                                        them), because the taskbar, toasts and context menus are drawn by
+ *                                        Windows in its own theme, not in Eucas's (UX handoff point 11).
+ * Contrast ratios are WCAG 2.x, computed from these exact values.
+ */
+
+:root,
+:root[data-theme="dark"] {
+  /* ---- Severity: aliases of the feedback roles, named by what they mean in the companion ---- */
+  --sev-calm: var(--text-3);           /* nothing to do: idle, done, informational log rows */
+  --sev-attn: var(--attn-ink);         /* needs you, not verified, user level (weaker): amber, always with a word */
+  --sev-attn-tint: var(--attn-tint);
+  --sev-danger: var(--danger-ink);     /* not guarded, tripwire, guard failing: red, always with a word */
+  --sev-danger-tint: var(--danger-tint);
+  --sev-ok: var(--ok-ink);             /* proven only: a real check passed. Never for a claim */
+  --sev-ok-tint: var(--ok-tint);
+
+  /* ---- Guard states: glyph colour per state (the word is always beside it) ---- */
+  --guard-guarded: var(--ok-ink);      /* 8.8 on surface. Only while a real check landed in the last interval */
+  --guard-idle: var(--text-3);         /* hollow ring: ready, not ticking */
+  --guard-not-guarded: var(--danger-ink);
+  --guard-not-verified: var(--attn-ink);
+  --guard-user-level: var(--attn-ink);
+  --guard-org: var(--text-2);          /* a lock: not ours to fix */
+  --guard-failing: var(--danger-ink);
+
+  /* ---- The heartbeat strip: one bar per 10 s bucket, newest on the right ---- */
+  --hb-bar: rgb(var(--ink-rgb) / 0.32);         /* a bucket with checks (height = count) */
+  --hb-bar-now: var(--ok-ink);                   /* the bucket that just got a real check */
+  --hb-bar-idle: rgb(var(--ink-rgb) / 0.12);     /* no tool calls: a 2 px baseline dot, not a bar */
+  --hb-bar-miss: var(--danger-ink);              /* tools ran, no check: full height, red */
+  --hb-gap: 2px;
+  --hb-bar-w: 3px;
+  --hb-h: 24px;                                  /* 18 px in a row, 24 px on the status card */
+  --hb-pulse: 2400ms;                            /* the glyph's ring: never faster than one per 2 s */
+  --hb-bucket: 10s;
+
+  /* ---- Companion surfaces ---- */
+  --cmp-flyout: var(--bg-raised);      /* the tray popover: solid, no Acrylic (BRAND: no glass) */
+  --cmp-flyout-card: var(--bg-surface); /* a card inside the popover sits one step down */
+  --cmp-mica: color-mix(in srgb, var(--bg-ground) 94%, #3a4250);  /* Mica, emulated: the ground faintly tinted by the wallpaper */
+  --cmp-scrim-trip: rgb(0 0 0 / 0.62);  /* behind the tripwire card */
+  --cmp-meter-track: rgb(var(--ink-rgb) / 0.1);
+  --cmp-meter-fill: var(--text-1);      /* usage is Ink, never red (BRAND tone: factual, never alarming) */
+  --cmp-meter-close: var(--attn-fill);  /* at your threshold, with the word "close" */
+  --cmp-meter-tick: var(--text-2);
+}
+
+:root[data-theme="light"] {
+  --cmp-flyout-card: var(--porcelain-25);
+  --cmp-mica: color-mix(in srgb, var(--bg-ground) 92%, #c9d6ea);
+  --cmp-scrim-trip: rgb(21 23 29 / 0.38);
+  --hb-bar: rgb(var(--ink-rgb) / 0.36);
+  --hb-bar-idle: rgb(var(--ink-rgb) / 0.14);
+}
+
+:root {
+  /* ---- Fixed sizes (UX ia-and-flows §1) ---- */
+  --cmp-flyout-w: 380px;
+  --cmp-flyout-max-h: 560px;
+  --cmp-window-w: 1040px;   --cmp-window-h: 720px;
+  --cmp-window-min-w: 880px; --cmp-window-min-h: 600px;
+  --cmp-firstrun-w: 720px;  --cmp-firstrun-h: 560px;
+  --cmp-sidebar-w: 216px;
+  --cmp-trip-count: var(--fs-display);   /* the live delete count: the one display figure in the product */
+
+  /* ---- Motion additions (springs and durations come from tokens.css) ---- */
+  --cmp-count-up: 400ms;          /* retro numbers count once, then settle */
+  --cmp-toast-in: 320ms;          /* Windows slides toasts in from the right */
+  --cmp-flyout-in: 200ms;         /* flyout: rise 8 px + fade, the Windows flyout timing */
+  --cmp-undo: 10s;                /* undo window after a triage action */
+}
+
+/* ==================================================================== */
+/* Windows-owned chrome. Set data-os-theme="dark|light" on the host.     */
+/* Values are the Windows 11 defaults, so Eucas sits in the OS, not on it. */
+/* ==================================================================== */
+[data-os-theme="dark"] {
+  --os-font: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --os-desktop: #0e0f11;
+  --os-taskbar: #1c1c1c;
+  --os-taskbar-line: rgb(255 255 255 / 0.08);
+  --os-text: #ffffff;
+  --os-text-2: rgb(255 255 255 / 0.79);
+  --os-text-3: rgb(255 255 255 / 0.54);
+  --os-hover: rgb(255 255 255 / 0.06);
+  --os-press: rgb(255 255 255 / 0.04);
+  --os-surface: #2c2c2c;           /* toasts, context menus, flyouts drawn by Windows */
+  --os-surface-line: rgb(255 255 255 / 0.08);
+  --os-button: rgb(255 255 255 / 0.06);
+  --os-button-line: rgb(255 255 255 / 0.09);
+  --os-accent: #4cc2ff;            /* the Windows default accent in dark (toast focus, UAC Yes) */
+  --os-accent-text: #000000;
+  --os-close-hover: #c42b1c;
+  --os-shadow: 0 8px 16px rgb(0 0 0 / 0.26), 0 0 0 1px rgb(0 0 0 / 0.3);
+  --os-secure-desktop: rgb(0 0 0 / 0.68);
+
+  /* Tray glyph: white on a dark taskbar */
+  --tray-glyph: #ffffff;
+  --tray-glyph-dim: rgb(255 255 255 / 0.5);
+  --tray-badge-attn: #f5a20a;      /* amber count / "!": Ink #15171d on it 8.58 */
+  --tray-badge-text: #15171d;
+  --tray-slash: #ff6b66;           /* 6.12 on #1c1c1c */
+  --tray-moon: #ffffff;
+}
+
+[data-os-theme="light"] {
+  --os-font: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --os-desktop: #d9dee6;
+  --os-taskbar: #eeeeee;
+  --os-taskbar-line: rgb(0 0 0 / 0.08);
+  --os-text: #1b1b1b;
+  --os-text-2: rgb(0 0 0 / 0.62);
+  --os-text-3: rgb(0 0 0 / 0.45);
+  --os-hover: rgb(0 0 0 / 0.04);
+  --os-press: rgb(0 0 0 / 0.025);
+  --os-surface: #f9f9f9;
+  --os-surface-line: rgb(0 0 0 / 0.07);
+  --os-button: #ffffff;
+  --os-button-line: rgb(0 0 0 / 0.1);
+  --os-accent: #005fb8;
+  --os-accent-text: #ffffff;
+  --os-close-hover: #c42b1c;
+  --os-shadow: 0 8px 16px rgb(0 0 0 / 0.14), 0 0 0 1px rgb(0 0 0 / 0.06);
+  --os-secure-desktop: rgb(0 0 0 / 0.42);
+
+  /* Tray glyph: near-black on a light taskbar */
+  --tray-glyph: #1b1b1b;
+  --tray-glyph-dim: rgb(0 0 0 / 0.42);
+  --tray-badge-attn: #a86400;      /* darker amber: badge edge 4.03 on #eeeeee (non-text 3:1), white digit on it 4.68 */
+  --tray-badge-text: #ffffff;
+  --tray-slash: #c42b1c;           /* 4.88 on #eeeeee */
+  --tray-moon: #1b1b1b;
+}
+
+/* Windows high contrast (forced colours): the glyph and its state marks use system colours; colour never carries the state */
+@media (forced-colors: active) {
+  [data-os-theme] { --tray-glyph: CanvasText; --tray-glyph-dim: GrayText; --tray-badge-attn: Highlight; --tray-badge-text: HighlightText; --tray-slash: CanvasText; --tray-moon: CanvasText; }
+}
+
+:root {
+  --os-radius-window: 8px;    /* DWM rounds every top-level window at 8 px; ours matches what Windows draws */
+  --os-radius-menu: 8px;
+  --os-radius-item: 4px;
+  --os-caption-h: 32px;       /* title bar height */
+  --os-caption-btn-w: 46px;   /* min / max / close */
+  --os-taskbar-h: 48px;
+  --os-toast-w: 364px;
+}
