@@ -90,7 +90,7 @@ The project follows a full lifecycle with client gates: [docs/process/LIFECYCLE.
 ## Project Status & Open Decisions
 
 - Live phase and gates: see [STATUS.md](docs/process/STATUS.md). Repo: github.com/eucas-app/eucas (public; moved from Majd-Alhakim/bench on 2026-10-24, old links redirect).
-- Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · open-source at v0.1.
+- Founder answers: personal first, maybe share later · Windows first, then macOS/Linux · first connectors Gmail + GitHub · **fair source (FSL-1.1-MIT), not open source** (founder, 2026-10-26); the name, Pip and the brand are all rights reserved ([TRADEMARKS.md](TRADEMARKS.md)). Never call it "open source".
 - **Product name: Eucas** ("you-kuz"); one agent is **a Euca**. Not "Euca" alone (EUCA is a registered EU/UK software mark). Use it everywhere in code and docs ([decision](docs/requirements/interviews/2026-10-24-product-name.md)). Never name it "Claude Code".
 - Agents save drafts and never send or post; they never delete on the computer (CR-008).
 - Roles: the founder is product owner and human in the loop; Claude acts as PM + CTO and asks before irreversible or outward-facing actions.

@@ -9,4 +9,4 @@
 
 ## Source
 
-- [GitHub: eucas-app/eucas](https://github.com/eucas-app/eucas): the source, under the FSL licence
+- [GitHub: eucas-app/eucas](https://github.com/eucas-app/eucas): the source: fair source under the FSL; the name, Pip and the brand are reserved (TRADEMARKS.md)
