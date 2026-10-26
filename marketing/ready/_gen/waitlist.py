@@ -438,13 +438,13 @@ Eucas: a notch at the top of your Windows screen that watches your Claude Code s
 ## V5 · title / caption
 
 ```text
-Two Claude Code sessions, one file. Eucas warns you before one overwrites the other. Design preview; Windows waitlist at eucas.app
+Two Claude Code sessions, one file. Eucas warns you before one overwrites the other. Coming to Windows; join the waitlist at eucas.app
 ```
 
 ## V6 · title / caption
 
 ```text
-Hit your usage limit halfway through? Eucas shows when you'll run out, with time to spare. Design preview; Windows waitlist at eucas.app
+Hit your usage limit halfway through? Eucas shows when you'll run out, with time to spare. Coming to Windows; join the waitlist at eucas.app
 ```
 
 Tags (YouTube): `claude code`, `ai coding`, `windows`, `developer tools`. No hashtag walls.

@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | X |
 | **When** | L 17:00 Doha, after the HN post is up |
-| **Media** | Post 1: `../media/videos/V1-h.mp4`. Posts 2–6: the matching clips cut from V1/V2/V3 (or the images listed). **Before launch:** the media here are from the prototype and say "Design preview". Re-record the same shot lists from the shipped app (`marketing/shorts`, the same routes) and drop the label; keep Pip's faces as listed. |
+| **Media** | Post 1: `../media/videos/V1-h.mp4`. Posts 2–6: the matching clips cut from V1/V2/V3 (or the images listed). **Before launch:** re-record these cuts from the shipped app in the same motion style (`marketing/shorts/src/mg`); keep Pip's faces as listed. |
 | **Link** | Post 8: `https://eucas.app/?utm_source=x&utm_medium=social&utm_campaign=launch` |
 
 **Before you post:** read it once out loud and change anything that doesn't sound like you. You post by hand; nothing here is posted for you.

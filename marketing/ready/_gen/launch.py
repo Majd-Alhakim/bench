@@ -2,8 +2,8 @@
 from common import REDDIT_BLOCKED, head, u, write
 
 GITHUB = "https://github.com/eucas-app/eucas"
-RERECORD = ("**Before launch:** the media here are from the prototype and say \"Design preview\". Re-record the same shot lists "
-            "from the shipped app (`marketing/shorts`, the same routes) and drop the label; keep Pip's faces as listed.")
+RERECORD = ("**Before launch:** re-record these cuts from the shipped app in the same motion style (`marketing/shorts/src/mg`); "
+            "keep Pip's faces as listed.")
 
 WHAT = """- Shows which session is waiting, and for what, in one glance.
 - Never auto-approves a delete, a push to your default branch, a send or a payment, and no rule can change that.

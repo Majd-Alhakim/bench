@@ -4,7 +4,7 @@
 |---|---|
 | **Where** | r/ClaudeCode (standalone post if its rules allow launches, otherwise the weekly showcase thread); r/ClaudeAI ("Built with Claude" megathread, or the main feed with flair if your karma allows); r/SideProject |
 | **When** | L+1 (Wednesday) 17:00 Doha; one subreddit per hour, never the same text in two |
-| **Media** | `../media/videos/V1-h.mp4` as native video. **Before launch:** the media here are from the prototype and say "Design preview". Re-record the same shot lists from the shipped app (`marketing/shorts`, the same routes) and drop the label; keep Pip's faces as listed. |
+| **Media** | `../media/videos/V1-h.mp4` as native video. **Before launch:** re-record these cuts from the shipped app in the same motion style (`marketing/shorts/src/mg`); keep Pip's faces as listed. |
 | **Link** | r/ClaudeCode `https://eucas.app/?utm_source=reddit-claudecode&utm_medium=community&utm_campaign=launch` · r/ClaudeAI `https://eucas.app/?utm_source=reddit-claudeai&utm_medium=community&utm_campaign=launch` · r/SideProject `https://eucas.app/?utm_source=reddit-sideproject&utm_medium=community&utm_campaign=launch` |
 | **Rules check** | Reddit's rules pages couldn't be read from this machine (blocked), so this comes from 2026 secondary sources. Read the sidebar, the rules and the pinned posts before posting. |
 
