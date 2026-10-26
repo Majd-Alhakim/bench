@@ -2,7 +2,7 @@
 
 | Status | Version | Date | Owner | Approver | Upstream |
 |---|---|---|---|---|---|
-| Draft | 0.4 | 2026-10-25 | Product Manager | Client | [BRD v1.3](BRD.md) (52 active use cases) + CR-001 – CR-008 + [G2 answers](interviews/2026-10-23-g2-answers.md) + [CR-009](change-requests/CR-009.md) |
+| Draft | 0.5 | 2026-10-26 | Product Manager | Client | **Companion:** [CR-010](change-requests/CR-010.md) + the approved companion design ([architecture](../architecture/companion/), [UX](../design/ux/companion/), [UI](../design/ui/companion/DESIGN.md), ADR-0007 – ADR-0015, [pre-mortem](../research/strategy-2026-10-26-premortem.md)); BRD v1.4 in progress, so new companion IDs are pending · **Team app:** [BRD v1.3](BRD.md) (52 active use cases) + CR-001 – CR-008 + [G2 answers](interviews/2026-10-23-g2-answers.md) + [CR-009](change-requests/CR-009.md) |
 
 | Version | Date | Author | Change |
 |---|---|---|---|
@@ -10,17 +10,42 @@
 | 0.2 | 2026-10-23 | PM | Applied CR-001 – CR-007, grilling rounds 1 and 2, UX recommendations R1 – R11, UI feedback rounds 1 – 4, brand decisions, the Laws of UX audit and UI direction v0.7. Cross-checked against **BRD v1.1** (UC-48 – UC-51, BR-77 – BR-93, O6, V-22 – V-27; BR-52, AS-3 and V-16 retired). **Positioning:** Bench complements Claude. **Usage:** no cap and no pacing; the runaway-bug guard is the only automatic stop. **Automation:** only five kinds of thing need you (BR-86), plus the safety net (BR-90). **Sprints re-sequenced** with the riskiest work first; all 50 use cases placed. **Added:** epics and stories (Appendix A), the BRD cross-check (Appendix B), and the merged open questions for G2 (§11). ADR-0001 and the MIT licence are closed |
 | 0.3 | 2026-10-23 | BA | Applied the client's **G2 answers** (G2-Q1 – Q12) and **CR-008**, cross-checked against **BRD v1.2**. **Drafts, not sends:** agents never send emails or publish posts; they save drafts in Gmail or the target app, and you send them. The 60 s send undo, the "Ask me before sending" switch and the wrong-email risk are gone, so §11 #6 is moot. **No deletes on the computer:** every delete is yours; the scratch area is withdrawn. **Browser agent** asks only before signing in to a site it hasn't signed in to before. **§11:** every question answered, with a "Client answer" column. Updated: §1, §5, §6 block E, §7, §8 (O3, O6), §9 (Sprint 3 exit, Sprint 5 goal, E13b, pull-forward), §9.1, §10, Appendix A (3.3, 4.9, 6.4, 11.1, 13.2, 13.3), Appendix B. Story 13.3 re-pointed to 5 (Sprint 5 ≈ 31 points). **No cut:** nothing left the scope; the drafts rule makes Sprint 5 lighter |
 | 0.4 | 2026-10-25 | PM | Applied **CR-009, the Atlas notch and voice input** (client decision 2026-10-25: option A, *"all of it in v0.1 as placed, with the N8/N9 check at the day-6 re-plan"*), cross-checked against **BRD v1.3** (UC-52, UC-53; UC-12 A7; notch flows in UC-23/24/25; UC-29 step 3 revised; BR-94 – BR-97; BR-40, BR-85, BR-89 amended) and the approved [notch design](../design/ux/2026-10-25-atlas-notch-design.md). **Added:** epic **E16 Atlas notch & voice** (stories N0 – N10, about 44 points) placed in Sprints 3 – 5 (N0 – N2 in 3; N4, N6, N7 late in 4; N3, N5, N8 – N10 in 5); block N in §6; the `spike/notch` day and ADR-0004/5/6 before G6; five ranked risks and the day-6 N8/N9 rule in §10; UC-52/53 in Appendix B. **Voice** leaves the non-goals (local voice input is now in scope, BR-97). Sprints 3 – 5 rise to about 94 / 87 / 48 points; the total from about 352 to about 395. **No cut:** nothing moves out; Sprint 1 is untouched |
+| 0.5 | 2026-10-26 | PM | Applied **CR-010, companion first** (client decision 2026-10-26: option A, *"Confirm with the last update"*; D-4, the copy lines, code signing, the Anthropic email and the rename settled the same day). **The first release is now the Eucas companion v0.1:** it guards and watches the Claude Code sessions you already run. **The team app moves after it** (v0.4 as written: E0 – E16, five sprints, the 14-day target, O4, O6): **deferred, not deleted.** The 14-day full-scope target no longer applies to v0.1. **Added:** a companion part in §1 – §10: scope tiers (Free / Pro shown as a waitlist / not in v0.1) with D-1, D-2, D-4 and D-5; companion metrics (§8.1) and the pre-mortem's **kill criteria** (§8.2); the release plan from the [BUILD-PLAN](../architecture/companion/BUILD-PLAN.md) (§9.1 – §9.6: about **5 spike days** before G6, then about **32 build days** in seven 3-day sprints over two lanes: CR-010's accepted 28 plus 4 added on 2026-10-26); the companion top 10; companion risks (§10.1). **Epics E17 – E26** (stories 17.1 – 26.5) in Appendix A. **E16 re-cut:** IDs kept; none of it ships in the companion; N6, N7 and N10 get companion counterparts. §11.1: open questions from CR-010. Appendix B: CR-010 rows. **Licence:** FSL replaces MIT. **Traces:** the companion use cases are BRD v1.4 **UC-54 – UC-64** and rules **BR-98 – BR-119** (§5.1). **Updated 2026-10-26:** applied your §11.1 answers (#1 – #4, #8, #14, and budgets) and the BUILD-PLAN replan. The three CR-010 Free items stay in v0.1 and are estimated: choose and lock your rules (19.7, A-2, 1 d), prompted rules (21.2, R-2, 1.5 d) and the guided merge (23.3, M-1, 1.5 d). The build is about **32 days** over **7 sprints** (about 21 – 23 working days elapsed). v0.1 is unsigned (Ed25519-signed updates, published SHA-256s); the four limits are always on (D-4); Pro can charge once built, and only the cloud beta waits for Anthropic; the app says "your default branch"; a budget stops the agent before its next step |
 
-Lean mode: this PRD links to BRD IDs (UC, BR, O, V, S) and doesn't repeat them. Design references are routes in [`direction.html`](../design/ui/prototype/direction.html) v0.7.
+Lean mode: this PRD links to BRD IDs (UC, BR, O, V, S) and doesn't repeat them. Team-app design references are routes in [`direction.html`](../design/ui/prototype/direction.html) v0.7. Companion design references are the docs under [`architecture/companion`](../architecture/companion/), [`design/ux/companion`](../design/ux/companion/) and [`design/ui/companion`](../design/ui/companion/DESIGN.md) (prototype `companion.html`).
 
 ## 1. Summary
+**v0.5 (CR-010): two releases, in this order.** First the **Eucas companion v0.1** (§1.1). Then the **team app** (§1.2), which is the v0.4 plan as written, deferred and not deleted. The companion is the team app's first slice.
+
+### 1.1 The companion (first release) *(CR-010)*
+Eucas plugs into the Claude Code sessions you already run: the terminal, the Claude desktop app's local sessions and VS Code. It uses the official, unmodified CLI and your own login, and it never reads credentials (ADR-0002). It can **watch, warn, block and explain**; it never "manages" a session ([ia-and-flows](../design/ux/companion/ia-and-flows.md)). Claude Code only for now; Cursor next, Codex later. The rulebook is vendor-neutral (ADR-0010).
+
+- **The core:** a guard on every local tool call that **proves it's running** and **holds the limits** even when the app is closed ([SYSTEM-DESIGN §1](../architecture/companion/SYSTEM-DESIGN.md)).
+- **The honest promise:** *"Eucas never auto-approves a delete, a push to your default branch, a send or a payment, and no rule can change that."* In the app it says "your default branch"; marketing may say "main" (§11.1 #14). Eucas makes no absolute "never" claims about the agent itself (pre-mortem).
+- **Free:** the honest limits with a fail-closed guard and a heartbeat that tells you the moment it isn't running; a mass-delete tripwire; a rules library plus prompted rules; a live token ledger and a 5-hour/weekly forecast; a same-file warning and a plain-code guided merge; a "needs you" inbox in the tray; a 7-day retro as the first run (about 4:30) with a live safety test (D-5); a one-button diagnostic. Every session is guarded; the free limit of 3 covers session *details* only (D-1).
+- **Pro, $20/month; the first 200 payers keep $15/month for life.** In v0.1, Pro is a **waitlist** line (D-2). Pro can charge once it's built; only the cloud beta waits for Anthropic's written OK (§11.1 #8). Pro adds per-task budgets, the AI supervisor, unlimited session details with history and export, and laptop-closed work (beta).
+- **Stack, server, licence:** Tauri 2 + a Rust core and guard + React (ADR-0008; Electron fallback if SP-ST1 fails). A thin, stateless Cloudflare Worker (ADR-0012). Licence **FSL**: source visible, and each version becomes Apache/MIT after 2 years.
+- **Usage:** the companion uses no Claude tokens itself, except the one-time setup safety test if it needs a model turn (D-5).
+
+**Target:** about 5 spike days before Gate 6, then about **32 build days** after it, in 7 sprints (§9). You accepted CR-010's estimate of 28 and will measure the actual days; you added 4 on 2026-10-26 by keeping the three CR-010 Free items in v0.1 (§11.1 #1).
+
+### 1.2 The team app (after the companion; v0.4, deferred by CR-010)
 Eucas is a Windows-first desktop app where you run **a software delivery team of Claude agents** on your own Claude subscription. You talk to one main agent, **Atlas** by default (BR-01). Atlas routes work to named agents. Each agent has its own memory, connectors, skills and folder grants, and its model is picked per task (BR-81). The team commits, tests and merges on its own, and comes to you only for the five kinds of thing: **delete, pay, answer, decide, test** (BR-86). It never sends an email or publishes a post: it saves a draft, and you send it (BR-64, CR-008). Every step, token and memory note stays visible and editable (BRD S1 – S12).
 
-**Positioning** (BRD §1): Eucas complements Claude; it doesn't compete with it. It puts Claude Code and Cowork-style abilities (files, documents, a browser agent) in one place, organised as a team, for people who build software and want less switching between chats. It's a personal project, shared openly under MIT so others can customise it. It runs locally only (BR-76).
+**Positioning** (BRD §1): Eucas complements Claude; it doesn't compete with it. It puts Claude Code and Cowork-style abilities (files, documents, a browser agent) in one place, organised as a team, for people who build software and want less switching between chats. It's a personal project, shared openly under MIT so others can customise it. It runs locally only (BR-76). *(CR-010: the licence is now FSL, not MIT.)*
 
-**Target:** Eucas is **open-source ready 14 days after Gate 6** (O4), full scope, sequenced rather than cut.
+**Target (v0.4):** Eucas is **open-source ready 14 days after Gate 6** (O4), full scope, sequenced rather than cut. *(CR-010: this target no longer applies to v0.1. It applies to the team app, counted from the team app's own Gate 6 after the companion, §9.7.)*
 
 ## 2. Problem and evidence
+**Companion (CR-010 "Reason"):**
+- **Problem:** babysitting several agents at once is real and loud. The space is crowded with free tools, and Anthropic absorbs the basics. What nobody does: limits enforced outside the model that fail closed on Windows; user-owned rules across sessions; same-file warnings; budgets that stop work before the next step.
+- **Evidence:**
+  - The [competitive brief](../research/competitive-brief-companion-2026-10-25.md) and the [pre-mortem](../research/strategy-2026-10-26-premortem.md) with its four teardowns ([market](../research/teardowns/eucas-premortem-market.md), [platform](../research/teardowns/eucas-premortem-platform.md), [trust](../research/teardowns/eucas-premortem-trust.md), [execution](../research/teardowns/eucas-premortem-execution.md)).
+  - Field incidents: four Windows users lost 116 – 600 GB to agent deletes in Sep – Oct 2026; hooks failed open on Windows three ways until Claude Code 2.1.310 (pre-mortem §1).
+  - Spikes [SP-CR1](../spikes/SP-CR1.md) (cloud hand-off works for GitHub repos), [SP-SUP1](../spikes/SP-SUP1.md) and [SP-SUP1b](../spikes/SP-SUP1b.md) (a cheap open model passed every bar at Level 2). Running the supervisor on your own Claude plan would burn your limits and is the most exposed under Anthropic's terms.
+  - A smaller first release reaches users months sooner and tests demand before the full team app.
+
+**Team app (v0.4):**
 - **Problem:** with one session, you route every role by hand, copy context between chats, and nobody remembers decisions. Agent-team products feel like a team, but you can't see what they did, what it cost or what they remember. They either ask too often ("botsitting") or act behind your back (BRD §1, §5.1).
 - **Evidence:**
   - Interviews B1 – B7 and the 2026-10-22/23 rounds ([grilling](interviews/2026-10-23-grilling-round-1.md), [UI feedback](interviews/), [CR-001 – CR-007](change-requests/)).
@@ -31,6 +56,25 @@ Eucas is a Windows-first desktop app where you run **a software delivery team of
   - Subscription use through the unmodified binary is allowed today for personal use ([risk facts §1](../research/risk-facts-2026-10-23.md), [ADR-0002](../adr/0002-auth-subscription-vs-api-key.md)).
 
 ## 3. Goals and non-goals
+### 3.1 Companion v0.1 *(CR-010)*
+- **Goals:**
+  - The honest promise holds and is **proven**: a fail-closed guard, a heartbeat and a canary, never green without a real check.
+  - Value in the first 5 minutes: your own 7-day retro, then protection you watched work.
+  - Demand is tested before building (landing page and waitlist) and after launch (kill criteria).
+  - Targets are in §8.1 and §8.2.
+- **Non-goals for companion v0.1** (CR-010 §7; [SYSTEM-DESIGN §1](../architecture/companion/SYSTEM-DESIGN.md)):
+  - **No voice input** (*"no need for voice input in this tool"*).
+  - **No phone feature,** including a Telegram bot (*"no phone in first release even telegram bot"*).
+  - **No paid packs** (sharing stays free) and **no AI conflict resolution**.
+  - **No notch.** CR-009's notch stays with the team app; whether the companion gets it later is open (§11.1 #11).
+  - **No payments or licence keys:** Pro is a waitlist line. The supervisor, budgets and cloud hand-off come with Pro, after v0.1.
+  - **No launching sessions from the app,** and no "Allow once" unless spike S-2 passes.
+  - **Windows only:** no macOS or Linux installers (CI still builds and tests on Ubuntu).
+  - **Claude Code only:** Cursor next, Codex later.
+  - **No Authenticode signing** until revenue covers it; updates are still signed with the updater's Ed25519 key (§9.4, §11.1 #3).
+
+### 3.2 Team app (v0.4, deferred by CR-010)
+"v0.1" in §3.2, §6.2 and §9.7 means the team app's first release.
 - **Goals:** BRD objectives **O1 – O6** (O3 revised in v1.1; O6 is the new head-to-head benchmark), plus the first-run targets (R10, UC-06). Targets are in §8.
 - **Non-goals for v0.1** (BRD §2 Out of scope):
   - **Phone:** no phone app or phone notifications; they come first after v0.1.
@@ -42,11 +86,47 @@ Eucas is a Windows-first desktop app where you run **a software delivery team of
   - **Notch:** no OS notification-centre integration, and the notch is not a chat or a general notch utility (music, timers); it hands off and opens the app ([notch design §2](../design/ux/2026-10-25-atlas-notch-design.md)).
 
 ## 4. Target users and personas
+**Companion (CR-010):**
+- **Primary persona: a developer on Windows who runs several Claude Code sessions at once,** in the terminal, the desktop app or VS Code, and babysits them. You're the first user (dogfooding); the build plan makes v0.1 ready for the first outside user at the end of Sprint 7 ([BUILD-PLAN §4](../architecture/companion/BUILD-PLAN.md)). There's no account: Eucas inherits your Claude Code setup.
+- UX detail: [ux-research](../design/ux/companion/ux-research.md), [onboarding-flow](../design/ux/companion/onboarding-flow.md), [ia-and-flows](../design/ux/companion/ia-and-flows.md), [DESIGN](../design/ui/companion/DESIGN.md).
+
+**Team app (v0.4, deferred):**
 - **Primary persona: the founder.** BA by day, aspiring PM on personal projects, and a developer. You use Claude Code daily and want a team, not a chat. You're the only user in v0.1, the product owner and the human in the loop (BRD §3). Dark first (BR-88), calm screens, second-person voice (BR-87).
 - **Secondary persona (after v0.1): a builder who clones the repo.** Has their own Claude subscription and `claude login`, and customises agents, skills and templates (BRD §1). v0.1 serves them only through O4: README, build from source and the guided first run (UC-06).
 - UX detail: [UX package](../design/ux/README.md), [premium spec](../design/ux/premium/README.md).
 
 ## 5. Jobs to be done and key scenarios
+### 5.1 Companion *(CR-010)*
+BRD v1.4 adds the companion use cases **UC-54 – UC-64** and rules **BR-98 – BR-119**. While BRD v1.4 was being written this PRD used the placeholders UC-54 – UC-64 (the same approach v0.2 used with BA-1 – BA-24); they're replaced by the BRD IDs below.
+
+| Placeholder | CR-010 use case | BRD v1.4 ID |
+|---|---|---|
+| CU-1 | Attach and first-run retro | UC-54; BR-102, BR-104, BR-105 |
+| CU-2 | Protection and heartbeat (guard, limits, tripwire, canary) | UC-55, UC-56; BR-99 – BR-102, BR-104 |
+| CU-3 | Rules library and prompted rules | UC-57; BR-103 |
+| CU-4 | Ledger and forecast | UC-58; BR-106 |
+| CU-5 | Same-file warning (with the guided merge) | UC-59; BR-107 |
+| CU-6 | Needs-you inbox | UC-60; BR-108 |
+| CU-7 | Diagnostic | UC-61; BR-109 |
+| CU-8 | Budgets (Pro) | UC-62; BR-113 |
+| CU-9 | Supervisor (Pro) | UC-63; BR-110 – BR-112 |
+| CU-10 | Cloud hand-off (Pro beta) | UC-64; BR-114 |
+
+| When … | you want to … | so you can … | Use cases |
+|---|---|---|---|
+| you install Eucas | see your own last 7 days with Claude Code, turn on protection, and watch it block a test push | get value and proof in about 4:30, with no account | UC-54 |
+| an agent tries a delete, a push to your default branch, a send or a payment | know Eucas never auto-approves it, and be told the moment the guard isn't running | trust the guard without watching it | UC-55, UC-56 |
+| a session starts mass-deleting | have it stopped, checked as stopped, and be shown how to get the files back | lose as little as possible | UC-55, UC-56 |
+| you keep approving the same commands by hand | turn them into exact rules: from suggestions, from the library, or from your own words | be asked less, safely | UC-57 |
+| you work through the day | see tokens and plan share live, and when you'll reach the 5-hour and weekly limits | plan your work | UC-58 |
+| two sessions edit the same file | be warned at once, and be guided through the merge | keep both sessions' work | UC-59 |
+| a session needs you or has finished | see it in the tray with a Windows notification, and jump to it | stop checking terminals | UC-60 |
+| something looks wrong | run one diagnostic and share a redacted report | get it fixed fast | UC-61 |
+| *(Pro)* a long task is on pace for the limit | have it stop before the next step at a budget you set | protect your plan | UC-62 |
+| *(Pro)* a session stops and asks something your rules already answer | have the supervisor answer from your rules or ask you, and never approve anything | be asked less | UC-63 |
+| *(Pro beta)* you close the laptop | hand GitHub repo work to your own Claude cloud routines | keep work moving | UC-64 |
+
+### 5.2 Team app (v0.4, deferred)
 | When … | you want to … | so you can … | Use cases |
 |---|---|---|---|
 | you install Eucas | be guided to a working Claude Code login and a first answer quickly | start without setup pain (R10) | UC-06, UC-08 |
@@ -62,7 +142,39 @@ Eucas is a Windows-first desktop app where you run **a software delivery team of
 | you hit the plan limit | see work wait clearly and resume on its own at the reset | lose nothing and never get a surprise | UC-40 – UC-42 |
 | you're in another app and catch an idea, find something to use, or the team needs you | hand it to Atlas from the notch in seconds (type, talk, attach or drop), and answer quick asks there on hover | keep your focus and never open the app for small things (CR-009) | UC-52, UC-53, UC-12 (A7), UC-23 – UC-25, UC-29 |
 
-## 6. Scope: no cut, capability blocks
+## 6. Scope
+### 6.1 Companion: scope tiers *(CR-010)*
+**MoSCoW:** **Must** = the Free tier plus the Pro waitlist line. **Later** = Pro, after v0.1. **Won't (v0.1)** = the §3.1 non-goals. The "32 days?" column says whether the item is in the BUILD-PLAN's estimate. The BUILD-PLAN and SYSTEM-DESIGN were first cut to the pre-mortem's v0.1 (28 days), which left out the guided merge and the free-text rules compiler. CR-010 puts both in Free, and its D-4 answer adds the "choose your rules" step. On 2026-10-26 you kept all three in v0.1 (§11.1 #1), and the BUILD-PLAN added them as A-2, R-2 and M-1 (+4 days).
+
+| Capability | Use cases | Tier | In the 32 days? | Stories (Appendix A) | Source |
+|---|---|---|---|---|---|
+| **Honest limits** (delete, push to your default branch, send, payment) as pre-defined, tested library rules, on by default; self-protection | UC-55, UC-56, UC-57 | Free | Yes | 19.2 | CR-010 §2, §6; ADR-0010 |
+| **Fail-closed guard** (`onFailure: "block"`) shipped as a user-scope plugin | UC-55, UC-56 | Free | Yes | 19.1, 19.3, 19.4, 19.5 | ADR-0007, ADR-0009 |
+| **Heartbeat** that tells you the moment the guard isn't running; **canary** and "Verified for Claude Code x.y" | UC-55, UC-56 | Free | Yes | 20.1, 20.2, 20.3 | ADR-0014 |
+| **Mass-delete tripwire** that stops the session | UC-55, UC-56 | Free | Yes | 20.4 | SYSTEM-DESIGN §5.5 |
+| **Lock the limits** in managed settings with one UAC prompt; labelled user-level fallback if you decline | UC-55, UC-56 | Free | Yes | 19.6 | ADR-0007; D-4 |
+| **Choose your rules** in setup: the four limits always on, each locked or not; other library rules on or off; add your own (D-4) | UC-55, UC-56, UC-57 | Free | Yes (added 2026-10-26: A-2, 1 d) | 19.7 | CR-010 §6 |
+| **Rules from suggestions,** 5 templates, the library switched on or off | UC-57 | Free | Yes | 21.1 | ia-and-flows §3.2 |
+| **Prompted rules:** you describe a rule; Eucas drafts an exact rule; you confirm | UC-57 | Free | Yes (added 2026-10-26: R-2, 1.5 d) | 21.2 | CR-010 §6 |
+| **Live token ledger and 5-hour/weekly forecast** through status-line chaining | UC-58 | Free | Yes | 22.1 | SYSTEM-DESIGN §5.3 |
+| **Same-file warning** across sessions | UC-59 | Free | Yes | 23.2 | ia-and-flows §3.4 |
+| **Plain-code guided merge** (rebase, test, PR) | UC-59 | Free | Yes (added 2026-10-26: M-1, 1.5 d) | 23.3 | CR-010 §2 |
+| **Needs-you inbox in the tray** with Windows notifications; calm, nothing opens by itself | UC-60 | Free | Yes | 18.2, 23.1 | ia-and-flows §1, §3.1 |
+| **7-day retro as the first run** (about 4:30) with the **live safety test** (D-5) | UC-54 | Free | Yes | 17.3, 17.6, 24.1 | onboarding-flow |
+| **One-button diagnostic** | UC-61 | Free | Yes | 24.2 | OPERATIONS §3 |
+| **Every session guarded;** the free limit of 3 covers session details only (D-1) | UC-55, UC-56, UC-60 | Free | Yes | 20.1 | SYSTEM-DESIGN §1 |
+| **Pro as a waitlist line** at five moments (D-2) | — | Free (v0.1) | Yes | 18.3 | ia-and-flows §4; DESIGN §4.22 |
+| Thin Worker: config, updates, waitlist counts, opt-in telemetry | — | Free (v0.1) | Yes | 18.3 | ADR-0012 |
+| **Per-task budgets** that stop the agent before its next step, ahead of the plan limit | UC-62 | Pro | No (after v0.1) | 25.2 | CR-010 §3 |
+| **AI supervisor** (rules first; Level 2 only, opt-in) | UC-63 | Pro | No (after v0.1) | 17.8, 25.3 | ADR-0011; SUPERVISOR |
+| **Unlimited session details,** history and export | — | Pro | No (after v0.1) | 25.4 | CR-010 §3 |
+| **Laptop-closed work (beta):** hand-off to Claude cloud routines, GitHub repos only, gated on branch protection | UC-64 | Pro (beta) | No (after Anthropic's written OK) | 25.5 | SP-CR1 |
+| Licence check, quota, payments (Lemon Squeezy), pricing; charges once Pro is built, with no wait for Anthropic (§11.1 #8) | — | Pro | No (after v0.1) | 25.1 | CR-010 §3 – §5 |
+| Landing page and waitlist; download page (SmartScreen steps, SHA-256); supporter tier and GitHub Sponsors; signing later | — | Launch (not app code) | — | 26.1 – 26.5 | CR-010 §5, §8 |
+
+### 6.2 Team app: no cut, capability blocks (v0.4, deferred by CR-010)
+**CR-010:** everything in §6.2 is the team app's scope as approved in v0.4. It moves after the companion; nothing is deleted. Block N (the notch) stays here. Voice input (N0) leaves the companion but stays in the team app (BR-97). The E16 re-cut is in Appendix A.
+
 **Client decisions D1 (2026-10-22) and the 14-day full scope:** all **52 active use cases** in BRD v1.3 are in v0.1; CR-008 changes how some behave, not what is in scope, and CR-009 adds UC-52 and UC-53 (option A, 2026-10-25). MoSCoW: everything listed is **Must**; the Won'ts are the §3 non-goals. Work is grouped into blocks and **sequenced** by risk and dependency (§9).
 
 | Block | Capability | Use cases | Key rules and v1.1 additions | Sprint |
@@ -86,6 +198,19 @@ Eucas is a Windows-first desktop app where you run **a software delivery team of
 The open-source work (README, clean-clone CI build, secret scan, licence check) runs as a **continuous lane from Sprint 1**.
 
 ## 7. Experience principles
+### 7.1 Companion *(CR-010; from the approved companion UX and UI)*
+| Principle | What it means in the product | How we check it |
+|---|---|---|
+| **Honest promise** | One fixed promise string, stored once, used in setup, Rules › Limits, Protection and the website. In the app it says "your default branch"; marketing may say "main" (§11.1 #14). No absolute "never" about the agent. "What Eucas can't see" is always on the Protection screen | Copy review; the string is one constant ([ia-and-flows §5](../design/ux/companion/ia-and-flows.md)) |
+| **Proof, not a claim** | "Guarded" needs a real check; the heartbeat is evidence, not a timer. First run ends only after you watch a test call get blocked (D-5). Never green without a check | "Not guarded" raised ≤ 2 s (contract test); after a failed canary (edge J), "You're protected" never shows |
+| **Watch, warn, guard** | Every fix button blocks the next call, stops the process or takes you to the session. A block has no "Allow anyway", only Copy command for you to run it yourself | UI review: no action outside those three |
+| **Calm and glanceable** | Tray icon, then popover, then main window. Nothing opens by itself after first run. Toast budget: one per event, ≤ 1 per 2 min per session, ≤ 2 on screen. Windows Focus is respected | Toast budget unit tests (DESIGN §4.18) |
+| **Never meter safety** (D-1) | Limits, heartbeat, tripwire, same-file warning and the inbox cover every session on Free. The cap of 3 applies only to session details | A 4th session is guarded (test) |
+| **Pro never nags** (D-2) | The five rules of [ia-and-flows §4](../design/ux/companion/ia-and-flows.md): never touch safety; only where the free answer runs out; never in a worst moment, a toast or first run; once a week per moment and one per day; the same look as everything else | Each Pro line appears only at its moment (e2e) |
+| **Counts, not text** (ADR-0015) | Transcripts are read, never copied. Approved copy: *"Nothing about your work leaves this PC unless you turn it on"* (setup privacy step and Settings) and *"No paths to your projects or files"* (diagnostic). Telemetry is opt-in and counts only | Redaction tests; the diagnostic report check |
+| **Your setup stays yours** | Your status line is chained, not replaced. Your own hooks keep working. Remove Eucas restores only Eucas's keys | Byte-equal status-line test; uninstall restore test |
+
+### 7.2 Team app (v0.4, deferred)
 | Principle | What it means in the product | How we check it |
 |---|---|---|
 | **Calm command** (C7, premium spec) | Home is the chat with Atlas. One question, one action. Panels closed by default; less on screen; dark first (BR-88). The notch never opens or takes focus by itself: a small animation and a marker that stays, and you hover to see (BR-94) | Hierarchy test per screen; the Laws of UX standing rules ([audit §3](../design/ux/laws-of-ux-audit.md)) |
@@ -97,6 +222,44 @@ The open-source work (README, clean-clone CI build, secret scan, licence check) 
 | **A team that feels alive and knows you** | Shape characters with eyes show status (BR-92). Handoffs travel. Applied chips and the Ledger show learning. Six sounds (BR-89, amended by CR-009), one mute | Visible at every sprint demo; reduced motion respected |
 
 ## 8. Success metrics
+### 8.1 Companion v0.1 *(CR-010)*
+Telemetry is **opt-in** and counts only ([OPERATIONS §1](../architecture/companion/OPERATIONS.md)). Without it, you still see GitHub downloads per release, waitlist counts, the canary and issues. Telemetry makes the kill-criteria numbers (installs, weekly actives) measurable, and the setup prompt says so.
+
+| # | Metric (target) | Type | How it is measured | Source |
+|---|---|---|---|---|
+| C1 | **Weekly actives** *(proposed north star: the design names no north star, and this is the number the kill criteria use)* | North star | Opt-in telemetry, deduped by `installHash`; GitHub release downloads as a proxy without it | OPERATIONS §1; pre-mortem §4 |
+| C2 | **Activation:** first run reaches "You're protected" with the canary blocked, **and** at least one real session is guarded within 24 h. Under 30 % reaching the first protected session is a stop signal | Input | Opt-in; local count first | [onboarding-flow §4](../design/ux/companion/onboarding-flow.md) |
+| C3 | **First run ≤ 4:30** to "You're protected" (goal: under 5 minutes) | First run | `firstRun.secondsToProtected`; also the UAC accepted/declined split (D-4) | onboarding-flow §1; OPERATIONS §1 |
+| C4 | **The guard is provably on:** zero minutes shown as guarded without a real check; "not guarded" raised ≤ 2 s after an unguarded tool's result | Guardrail | Contract test with the hook removed; `guardStateMinutes` | SYSTEM-DESIGN §2 |
+| C5 | **Zero known bypasses** among in-scope tool calls before launch | Guardrail (launch gate) | The published bypass suite in CI | [TESTING §5](../architecture/companion/TESTING.md) |
+| C6 | Guard decision p95 ≤ 50 ms and p99 ≤ 150 ms, with Defender on | Guardrail | CI benchmark plus the nightly canary | SYSTEM-DESIGN §2 |
+| C7 | Tripwire: "stopping" ≤ 1 s after the threshold; process tree gone ≤ 3 s | Guardrail | Tripwire e2e on a Windows runner | SYSTEM-DESIGN §2 |
+| C8 | Retro: first card ≤ 5 s; all cards ≤ 30 s for 7 days, 300 sessions, 500 MB | First run | Fixture of that size | SYSTEM-DESIGN §2 |
+| C9 | Idle < 0.5 % CPU and < 90 MB; popover < 150 ms to first frame; installer < 20 MB; guard < 4 MB | Guardrail | Perf and release jobs | SYSTEM-DESIGN §2 |
+| C10 | Claude tokens Eucas uses itself: **0**, except the one-time setup test if it needs a model turn (D-5) | Guardrail | The canary records its path (hook-only or model) | CR-010 impact analysis |
+| C11 | **Demand:** sign-ups on the eucas.app waitlist, and in-app "Get notified" counts per Pro moment | Demand | Worker waitlist counts (anonymous) | CR-010 §8; DESIGN §4.22 |
+| C12 | **SmartScreen abort rate** (10 % is a kill signal in the design) | Watch | Open: how to measure it (§11.1 #13) | onboarding-flow edge L |
+| C13 | Your maintenance load ≤ 5 h/week at steady state (about 3 – 4 h expected) | Delivery health | Weekly routine times | OPERATIONS §7 |
+| C14 | Actual vs estimated build days per story; re-plan on day 6 | Delivery health | Sprint reviews (you'll measure the actual days, CR-010) | BUILD-PLAN §3 |
+| C15 | *(Pro, before Pro launch)* Supervisor gate: 0 dangerous mistakes over ≥ 300 real moments; over-asking cut ≥ 50 %; p95 < 3 s; ≤ $1.48 per user per month at the full allowance | Pro gate | SP-SUP2 eval (17.8) | SUPERVISOR §9, §10 |
+
+### 8.2 Kill criteria *(CR-010, adopted from [pre-mortem §4](../research/strategy-2026-10-26-premortem.md))*
+If one is hit, the PM brings you the numbers and you decide whether the product continues ([SECURITY-PRIVACY §9](../architecture/companion/SECURITY-PRIVACY.md) step 7). An Anthropic policy change triggers a kill-criteria review against this table ([OPERATIONS §6](../architecture/companion/OPERATIONS.md)).
+
+| When | Kill if … |
+|---|---|
+| **Before building** (the cheapest test) | The landing page and waitlist on eucas.app run for 2 weeks: **if the waitlist is weak, don't build** (the threshold is open, §11.1 #7). The 1-day hooks spike from the pre-mortem is now SP-H1 (17.1) |
+| **Launch + 4 weeks** | Under **300 installs** or under **50 weekly actives** |
+| **Launch + 8 weeks** | Under **150 weekly actives** |
+| **Launch + 12 weeks** | Under **20 payers** or under **1 % conversion** (when this is counted from if Pro isn't on sale yet: §11.1 #9) |
+| **Launch + 6 months** | Under **$500/month** |
+| **Any time (events)** | Anthropic **refuses written approval for a paid tool**, or withdraws subscription use for third-party apps |
+| | Anthropic ships **interactive budget caps plus enforced user deny rules** for Pro and Max (the moat is gone) |
+| | **One confirmed data-loss incident while Eucas showed "protected",** or we can't detect that our hook stopped firing |
+
+### 8.3 Team app (v0.4, deferred by CR-010)
+These targets apply to the team app, counted from its own Gate 6. *(CR-010: O4's licence item is now FSL, not MIT.)*
+
 | # | Metric (target) | Type | How it is measured |
 |---|---|---|---|
 | O2 | **≥ 10 tasks/week** accepted without redo | **North star** | Tasks entering *Accepted* per ISO week (UC-24), shown in V-09 |
@@ -112,7 +275,100 @@ The open-source work (README, clean-clone CI build, secret scan, licence check) 
 | O5 | Products Eucas builds: full working product in **14 days** | Outcome | Project start vs. client acceptance (BR-35), shown as project age in V-09 |
 | — | Build velocity (points and tokens per accepted story) | Delivery health | Sprint reviews; re-plan on day 6 |
 
-## 9. Release plan (re-sequenced)
+## 9. Release plan
+**v0.5 (CR-010): companion v0.1 first, then the team app.** The companion plan comes from the [BUILD-PLAN](../architecture/companion/BUILD-PLAN.md). Its numbers are **focused build days** for you working with Claude: estimates, not commitments. You accepted them and will measure the actual days. **Only spikes run before Gate 6; product code starts after Gate 6.**
+
+### 9.1 Shape
+| Phase | What | Days | Gate |
+|---|---|---|---|
+| **0. Before G6** | Spikes (E17: SP-H1, SP-ST1, S-1, SP-TW1, S-4, S-6; S-2 optional) · the landing page and waitlist on eucas.app (26.1), about 2 weeks alongside, as the demand test · the G6 prerequisites (§9.2) · then the SRS and G3, the backlog and G6 | **About 5 spike days** (4.75; 5.25 with S-2) | Spike GO bars (§9.2); the waitlist test (§8.2); G3; G6 |
+| **1. Companion v0.1 build** | Sprints 1 – 7, two Claude developer lanes (§9.3), including the CR-010 Free items 19.7, 21.2 and 23.3 | **About 32 build days** (31.75), about 21 – 23 working days elapsed | Day-6 re-plan · end of Sprint 7: ready for the first outside user · G9 go/no-go |
+| **2. After v0.1 is built and tested** | Public release (unsigned, §9.4) · the Anthropic email, if it's worth pursuing (26.3) · the kill-criteria clock starts (§8.2) · Authenticode signing once Pro income pays for it (26.5) | — | G9; kill criteria |
+| **3. Companion Pro** | SP-SUP2 (17.8: 2 days plus labelling), then E25 | SP-SUP2 = 2 days; E25 not estimated | SP-SUP2 GO; Pro can charge once built; only the cloud beta waits for Anthropic's written OK (§11.1 #8) |
+| **4. The team app** | The v0.4 plan (§9.7), re-planned after the companion | v0.4: 14 days (superseded for v0.1) | The team app's own G6 |
+
+### 9.2 Before Gate 6: spikes and prerequisites
+Each spike runs on a `spike/*` branch with throwaway code under `spikes/` and a report in `docs/spikes/`, in dependency order ([BUILD-PLAN §2](../architecture/companion/BUILD-PLAN.md)). Spikes aren't implementation, so they don't break the Gate 6 rule (the G2-Q12 precedent; CR-010: *"run only the spikes now"*).
+
+| Spike | Story | Cost | GO bar | If NO-GO |
+|---|---|---|---|---|
+| **SP-H1** hook attach path | 17.1 | 1.5 d | All fail-closed cases block; p95 ≤ 50 ms; managed hooks survive lower-scope disables | Any fail-open case with no workaround → **stop and re-plan** (it's the core); latency over → long-lived helper (ADR-0009 option 2) |
+| **SP-ST1** Tauri shell on Windows | 17.2 | 1 d | Everything works or has a named workaround; idle < 90 MB with the flyout pre-warmed; popover first frame < 150 ms | Electron shell with the same Rust guard and rules (ADR-0008 kill criterion) |
+| **S-1** hook-only canary | 17.3 | 0.5 d | A deny receipt with 0 tokens | A real model turn (about 400 tokens); the copy says so (D-5) |
+| **SP-TW1** tripwire | 17.4 | 1 d | Stop ≤ 1 s after the threshold; tree gone ≤ 3 s; no missed overflow | Lower thresholds and per-folder watch; ETW service moves up to v0.2 |
+| **S-4** Open session | 17.5 | 0.5 d | Focus works for the top 3 hosts; otherwise names the tab | Name it only |
+| **S-6** tray settings deep link | 17.6 | 0.25 d | A link that opens the right page | Numbered steps (already designed) |
+| **S-2** Allow once *(optional)* | 17.7 | 0.5 d | No double prompt and no lost answer in 50 trials | No "Allow once" in v0.1 |
+| **SP-SUP2** *(Pro, before Pro launch, not v0.1)* | 17.8 | 2 d + labelling | SUPERVISOR §10 bars | Pro ships rules-only |
+
+**Gate 6 prerequisites** (BUILD-PLAN §1, updated by CR-010):
+| # | Item | Status after CR-010 |
+|---|---|---|
+| P1 | You approve ADR-0007 – ADR-0015 (or change them) | CR-010 accepts them; ADR-0013's v0.1 route is amended (unsigned); your 2026-10-26 Pro checkout answer amends ADR-0012 (§11.1 #8) |
+| P2 | D-3 signing route chosen and identity validation started | **Resolved, 2026-10-26 (§11.1 #3): no signing route is needed before G6.** v0.1 ships without Authenticode; updates are signed with the Tauri updater's Ed25519 key, and installer SHA-256s are published on the site (§9.4) |
+| P3 | CR-010 approved | **Done** (2026-10-26) |
+| P4 | The spikes above at GO | Open |
+| P5 | Landing page and waitlist for 2 weeks | **Required, not optional** (CR-010: "first", as the demand test); it isn't published without your review |
+| P6 | Naming: user-visible artefacts and crates named `eucas-*` | **Done** (the rename, CR-010) |
+| P7 | The privacy and diagnostic copy lines | **Done** (approved in CR-010) |
+
+### 9.3 Companion v0.1 sprints (3-day, goal-boxed; two lanes)
+Build start = G6 = **day 1**. Two Claude developer lanes work in separate worktrees; tasks in one sprint never touch the same files, and every dependency is in an earlier sprint or earlier in the same lane (→). Your review time is the bottleneck, not typing. Each sprint ends with a demo where you check the goal.
+
+| Sprint | Days | Goal (BUILD-PLAN) | What you verify at the demo | Lane A | Lane B | Build days |
+|---|---|---|---|---|---|---|
+| **0** (before G6) | — | The attach path and the shell are proven | The spike reports and your go/no-go | SP-H1, S-1 | SP-ST1, SP-TW1, S-4 (+ S-6) | ~5 spike days |
+| **1** | 1 – 3 | The repo builds, and a tool call is parsed the way the guard will see it | CI is green on windows + ubuntu, and a sample PowerShell command is shown as the guard parses it | 18.1 → 19.1 | 18.2 (after 18.1) | 4.5 |
+| **2** | 4 – 6 | A real tool call is blocked by a fail-closed guard | You watch `git push origin main` get blocked, and a crashed or hung guard still blocks | 19.2 → 19.3 | 18.3 → 18.4 | 5.5 |
+| **3** | 7 – 9 | The limits hold with the app closed, at admin level, and you can see the heartbeat | You quit Eucas and a limit still blocks; you remove the hook and the session turns Not guarded | 19.4 → 19.5 → 19.6 | 20.1 → 23.2 | 5.25 |
+| **4** | 10 – 12 | It proves itself and stops the dangerous thing | "Verified for Claude Code x.y" after the canary; the tripwire stops a test mass-delete | 20.2 → 20.3 | 23.1 → 20.4 | 5.5 |
+| **5** | 13 – 15 | Rules, your own rules and usage are in | You add a rule from a suggestion and see its dry run; you describe a rule in plain words, see exactly what it allows or blocks, and confirm it; the forecast shows on Usage | 21.1 → 21.2 | 22.1 → 24.2 | 5 |
+| **6** | 16 – 18 | First run delivers the retro, lets you choose your rules and turns protection on in under 5 minutes | On a clean Windows profile, first run lets you choose your rules (the four limits always on) and reaches "You're protected" in under 5 minutes; **Merge safely** on a same-file warning rebases, runs the tests and opens the PR, or stops and leaves both branches as they were | 19.7 → 24.1 | 23.3 | 4.5 |
+| **7** | 19 – 21 | Hardened and ready for the first outside user | Your manual checklist passes on a clean VM (real UAC and SmartScreen); zero known bypasses (C5) | 18.5 (after 24.1's flows exist) | Slack for the day-6 re-plan | 1.5 |
+| | | | | | **Total** | **31.75 ≈ 32** |
+
+- **Estimate:** CR-010's accepted estimate was **28** build days (27.75). On 2026-10-26 you kept the three CR-010 Free items in v0.1 (§11.1 #1), which adds **4**: 19.7 (A-2, 1 d), 21.2 (R-2, 1.5 d) and 23.3 (M-1, 1.5 d). The spike phase stays at about 5 days.
+- **Elapsed time:** seven 3-day sprints = 21 days; the BUILD-PLAN allows 21 – 23 working days elapsed (13 sprint slots over two lanes).
+- **Re-plan on day 6:** actuals against these numbers. If a lane slips, **sequence, don't cut**: 23.2 (same-file) and 22.1 (usage) can move to v0.1.1 only with your OK (BUILD-PLAN §4). 23.3 depends on 23.2, so it would move with it.
+
+### 9.4 Release and operations facts *(CR-010 §5, §8)*
+- **Demand test first:** a landing page and waitlist on eucas.app, asking "which agents do you use?". It isn't published without your review (26.1).
+- **Unsigned v0.1** (your answer, 2026-10-26, §11.1 #3): no Authenticode signing until revenue covers it. Windows SmartScreen shows "Windows protected your PC", so the site explains the "More info → Run anyway" step and publishes the **SHA-256 of each installer** (26.2). The one UAC prompt shows "Unknown publisher" (yellow). **Updates stay signed** with the Tauri updater's Ed25519 key, so a tampered update is rejected. The elevate helper is checked against a **pinned SHA-256** embedded in the app build, not an Authenticode signature. Once Pro income pays for it, buy an individual **OV certificate with cloud signing** (about $130 – 400 a year) (26.5). This amends ADR-0013's v0.1 route.
+- **Anthropic:** the email goes **after the companion is built and tested**, and only if it's worth pursuing (26.3). The free tool needs no approval: it adds hooks around the official CLI, and the supervisor doesn't use your plan. **Pro can charge once it's built** (§11.1 #8). **Only the cloud beta waits for Anthropic's written OK,** because it starts work on your plan.
+- **Licence:** FSL. **Payments:** Lemon Squeezy (client, 2026-10-26). **Supporter tier:** pay what you want, $10 minimum, plus GitHub Sponsors (26.4).
+- **Channels:** `beta` (from `staging` tags), which you dogfood, and `stable` (from `main` tags), with a staged rollout (ADR-0013).
+- **The name is Eucas everywhere;** "Claude Code" appears only as the thing Eucas attaches to.
+
+### 9.5 Companion milestones and gates
+| Milestone | When | Gate |
+|---|---|---|
+| Demand test | Phase 0, about 2 weeks, alongside the spikes | You review the page before it goes live; a weak waitlist means don't build (§8.2) |
+| Feasibility | Phase 0, about 5 spike days | Spike reports; SP-H1 NO-GO stops and re-plans |
+| SRS, backlog | After BRD v1.4 and PRD v0.5 | G3, then G6: build starts |
+| Re-plan checkpoint | Day 6 | Actuals vs estimates; sequence, don't cut. **No cut without a change request** |
+| v0.1 ready for the first outside user | End of Sprint 7 (day 21; up to 23) | Your manual checklist on a clean VM; zero known bypasses (C5); **G9** |
+| Anthropic email | After v0.1 is built and tested | Your call on whether it's worth pursuing |
+| Kill-criteria checks | Launch + 4 weeks, + 8 weeks, + 12 weeks, + 6 months | §8.2 |
+| Companion Pro | After SP-SUP2 GO | Payments go live with E25, once it's built; the cloud beta only after Anthropic's written OK |
+| Team app | After the companion | Re-plan from §9.7 and its own G6 |
+
+### 9.6 Companion top 10 by value vs. effort vs. risk
+| # | Item | Why it's here |
+|---|---|---|
+| 1 | Landing page and waitlist (26.1) | The cheapest test of the riskiest assumption, demand; it costs no build days and can stop the build (§8.2) |
+| 2 | SP-H1 hook attach path (17.1) | The whole product rests on it; a fail-open path with no workaround stops the plan. 1.5 days |
+| 3 | SP-ST1 Tauri shell (17.2) | One day decides the stack, with Electron ready as the fallback (ADR-0008) |
+| 4 | The guard and the four limits, failing closed (19.2, 19.3) | The honest promise, in code; the Sprint 2 demo proves it |
+| 5 | The heartbeat (20.1) | "Tells you the moment it isn't running" is the promise; not detecting a stopped hook is a kill criterion |
+| 6 | The canary and "Verified for Claude Code x.y" (20.2) | Claude Code ships 6 – 8 releases a week, often touching hooks on Windows |
+| 7 | The mass-delete tripwire (20.4) | The worst field incidents (116 – 600 GB lost) are deletes the hooks can't see; it's the backstop |
+| 8 | Limits locked in managed settings (19.6) | Only admin-written settings are out of the agent's reach; one UAC prompt |
+| 9 | Contract and bypass suites in CI (19.5) | "Zero known bypasses" is the launch gate (C5), and every reported bypass becomes a test first |
+| 10 | First run: retro and live safety test (24.1) | An empty first screen kills a watcher tool; the retro gives value in minutes, and the test turns "protected" into something you saw |
+
+### 9.7 Team app release plan (v0.4, deferred by CR-010)
+**CR-010:** everything in §9.7 and §9.8 is the v0.4 plan as approved. It runs after the companion. "Day 1" here is the team app's own Gate 6, and the 14-day target, O4 and O6 apply to the team app only. The plan is re-run then, with what the companion built (the Rust guard and rules) as input.
+
 Build start = G6 approval = **day 1**. There are five goal-boxed sprints: four of 3 days, then a 2-day release sprint on days 13 – 14. Each sprint runs **parallel developer agents in lanes** (one task = one branch = one PR). The lane count, 3 – 5, comes from the S0-1 measurement and the usage meter. Each sprint opens with planning on its first morning and closes with a demo and retro on its last day.
 
 The order is **riskiest first**. The subscription runner, shell containment, version pinning and browser feasibility are settled on day 1. The permission engine (BR-82) ships before any automation, and the safety net (BR-90) ships with the automation it protects.
@@ -154,7 +410,7 @@ Off the critical path, but risky: the browser agent (Sprint 3), Gmail (Sprint 5)
 | v0.1, open-source ready | Day 14 | O4 checklist and O6 benchmark; G9 |
 | After v0.1 | — | Phone notifications, the embedded browser and Publish to Claude Docs, Claude Code depth (Phase 2), macOS/Linux packages |
 
-### 9.1 Top 10 by value vs. effort vs. risk
+### 9.8 Team app top 10 by value vs. effort vs. risk (v0.4, deferred)
 | # | Item | Why it's here |
 |---|---|---|
 | 1 | S0-1 subscription runner spike | Everything runs on it; it's the riskiest assumption (AS-1). Cheap (≤ 1 day) |
@@ -169,6 +425,27 @@ Off the critical path, but risky: the browser agent (Sprint 3), Gmail (Sprint 5)
 | 10 | What needs you overlay (BR-86) | Your main surface after the chat; it carries the "only what matters" promise |
 
 ## 10. Risks, assumptions and dependencies
+### 10.1 Companion *(CR-010 impact analysis and [BUILD-PLAN §5](../architecture/companion/BUILD-PLAN.md))*
+| Risk / assumption | Impact | Likelihood | Mitigation / test |
+|---|---|---|---|
+| **Demand.** Real conversion for a free-heavy indie dev tool is 1 – 3 %; the best-known Claude Code usage tool earns about $104/month from sponsors (pre-mortem §1) | High | High | The landing page and waitlist before building (26.1); the in-app waitlist line measures intent per moment (D-2); the kill criteria (§8.2) |
+| **Anthropic absorbs features.** Notifications, needs-input and usage warnings have already shipped; interactive budgets are "one product decision away" | High | Medium – High | The moat is **user-owned rules across sessions** plus **vendor neutrality** (ADR-0010; Cursor next, Codex later). Shipping budget caps plus enforced deny rules for Pro and Max is a kill criterion |
+| **A safety incident:** data lost while Eucas showed "protected" | Critical | Medium | Honest claims only; fail-closed guard; the heartbeat; the tripwire; the nightly canary; zero known bypasses before launch (C5); the incident playbook ([SECURITY-PRIVACY §9](../architecture/companion/SECURITY-PRIVACY.md)). One confirmed incident is a kill criterion |
+| **A Windows fail-open path we can't work around** (SP-H1) | Critical | Medium | Spike first; nightly canary; `known-bad` CLI marking; never show green without a check. A NO-GO stops and re-plans |
+| **Terms.** The free tool adds hooks around the official CLI, which the docs explicitly allow; the supervisor no longer uses your plan. The cloud beta *does* start work on your plan | High | Medium | Anthropic's written OK before the cloud beta ships; the email after v0.1 is built and tested (26.3); never read credentials (ADR-0002); never use or store the routine `/fire` token (SP-CR1). Refusal or withdrawal is a kill criterion |
+| **Provider churn** (the supervisor's model is removed, slowed or repriced) | Medium | Medium | Two fallback models (Gemma 4 26B, Llama 4 Maverick), swapped by signed config with no app release; otherwise the supervisor asks you |
+| **Claude Code churn** (6 – 8 releases a week) eats your time | High | High | Automated fixture PRs; a narrow contract suite; the load-shedding order ([OPERATIONS §7](../architecture/companion/OPERATIONS.md)) |
+| **Unsigned v0.1 costs trust** *(CR-010; your answer, 2026-10-26, §11.1 #3)*: SmartScreen on every download; the one UAC prompt shows "Unknown publisher" (yellow) on a safety tool; a new unsigned `eucas-guard.exe` has no antivirus reputation, so guard latency with Defender on is also at higher risk | High | High | The download page shows the real dialog and the "More info → Run anyway" step and publishes each installer's SHA-256; updates are Ed25519-signed, so a tampered update is rejected; the elevate helper is checked against a pinned SHA-256; the OV certificate with cloud signing once Pro income pays (26.5); a 10 % SmartScreen abort rate is a kill signal (onboarding edge L, C12) |
+| **Fail-closed bricks your Claude Code** (antivirus quarantine, a deleted binary) | High | Medium | The guard lives in the plugin cache; the `failing` state with Repair; the one-line unbrick in the README, the diagnostic and the support page (SYSTEM-DESIGN §7.1) |
+| **Tauri gaps on Windows** (toast activation, updater) | Medium | Medium | SP-ST1 with a 2-day kill criterion → Electron shell, same Rust core |
+| **Guard latency** with Defender on exceeds 50 ms | Medium | Low – Medium | A small static exe; measured in SP-H1; fallback to a warm helper |
+| **Tripwire attribution too coarse** (shared folders) | Medium | Medium | Stop every session in that folder with a tool call in flight; ETW service in v0.2 |
+| **Rust + Tauri slows a TypeScript-first workflow** | Medium | Medium | Small crates; the renderer stays TypeScript/React |
+| **Real-world shells and setups differ from CI** | Medium | High | The diagnostic in every bug; the known-setups table; the beta channel first |
+| **Estimates are optimistic** (the pre-mortem said 12 – 15 days for a smaller cut; the build is now about 32 with 19.7, 21.2 and 23.3 added on 2026-10-26) | Medium | High | Day-6 re-plan; Sprint 7 keeps a slack lane; sequence, don't cut |
+| **Prompted rules weaken safety** (a drafted rule allows more than you meant) | High | Medium | Exact rules only (no globs or regex); shown with exactly what they allow or block; enabled only after you confirm; checked against the bypass suite; they can never make Eucas auto-approve one of the four limits (CR-010 §6, §11.1 #4). The draft comes from gpt-oss-120b through the Eucas server, which receives only the sentence you typed (§11.1 #2) |
+
+### 10.2 Team app (v0.4, deferred by CR-010)
 | Risk / assumption | Impact | Likelihood | Mitigation / test |
 |---|---|---|---|
 | **Subscription policy and volume.** Anthropic moved third-party harnesses off subscriptions once (Apr 2026), then paused it. A no-cap, many-agent Eucas looks like the pattern it acted against ([risk facts §1](../research/risk-facts-2026-10-23.md)) | High | Medium | ADR-0002 rules (no login, no tokens, strip `ANTHROPIC_API_KEY`). One responder by default. Idle agents use no tokens. Schedules ≥ 1 h and event triggers, with no 24/7 polling. Runaway guard (BR-79). API-key plan B (BR-80). Terms re-checked each release |
@@ -209,6 +486,33 @@ One merged list: the PM's questions plus BRD v1.1 §10 #36 – #40. Each had a r
 | 11 | Does the agent's full screen show diff, files and terminal output **read-only**, with the interactive terminal and diff review in Phase 2? | **Yes** | **As recommended** *(G2-Q11)* | PM | Client |
 | 12 | Run spikes S0-1, SP-B1 and M8 now, before G6, and close G0 on their results? | **Yes** | **As recommended** *(G2-Q12)* | PM | Client |
 
+### 11.1 Open questions from CR-010 (v0.5)
+Things CR-010 and the approved design leave open, or where they disagree. Each has a recommendation; none blocks the spikes. #1 – #4 should be answered before G6. The requirement-level versions are in BRD v1.4 §10 #44 – #53 (#4 here is BRD #44, with the same recommendation).
+
+**2026-10-26:** you answered #1 – #4, #8 and #14, plus budgets (below the table). #9 is narrowed by #8 but stays open; the rest stay open.
+
+| # | Question | Recommendation | Client answer | Source | Owner |
+|---|---|---|---|---|---|
+| 1 | Three CR-010 Free items aren't in the BUILD-PLAN's 28 days: **choosing which rules to lock** (19.7), **prompted rules** (21.2) and the **guided merge** (23.3). The BUILD-PLAN and SYSTEM-DESIGN put the last two out of v0.1. Do they go in v0.1 (a longer build) or in v0.1.1? | The UX designer and the tech lead design and estimate all three before G6. Then you choose: a Sprint 7 inside v0.1, or v0.1.1. Sequenced, not cut. 19.7 is the most urgent, because it changes the first run and the admin step | **Answered, 2026-10-26:** *"doo both, i didn't expect gudided merge to be a code"*. All three stay in v0.1's Free tier. The guided merge is plain-code housekeeping (rebase, run the tests, open the PR), with no AI. Estimated in the BUILD-PLAN: A-2 (19.7) 1 d, R-2 (21.2) 1.5 d, M-1 (23.3) 1.5 d; the build grows from 28 to about 32 days over 7 sprints (§9.3) | CR-010 §2, §6; BUILD-PLAN scope line; SYSTEM-DESIGN §1 | Client (tech lead estimates) |
+| 2 | **Prompted rules: what drafts the exact rule from your plain words?** Free has no model call, the companion uses no Claude tokens except the setup test, and "Nothing about your work leaves this PC unless you turn it on" | The tech lead proposes the drafting path in the SRS. Whatever it is, it's opt-in and shows what leaves the PC; the PM doesn't pick one here | **Answered, 2026-10-26** (with #1): the provider-hosted **gpt-oss-120b** through the Eucas server (the Worker's `/v1/draft-rule`). It sends **only the sentence you typed**, and each draft counts toward the supervisor budget. No Claude tokens are used | CR-010 §6, impact analysis "Usage", §8 copy | Tech lead → Client |
+| 3 | **Unsigned v0.1 vs the design.** ADR-0013 rejects unsigned builds; SYSTEM-DESIGN §5.6 checks `eucas-elevate.exe`'s Authenticode signature before the UAC prompt; the first-run copy tells you to press No if Windows says "Unknown publisher"; BUILD-PLAN R1 and Q-1 include signing and "verify signatures" | The tech lead amends ADR-0013, SYSTEM-DESIGN §5.6, the UAC copy and R1/Q-1 for an unsigned v0.1 before G6. The PM doesn't choose the replacement check | **Answered, 2026-10-26:** *"yes"*. No Authenticode signing in v0.1. Updates stay signed with the Tauri updater's Ed25519 key, so a tampered update is rejected; installer SHA-256s are published on the site; Authenticode comes once revenue covers it. The UAC prompt shows "Unknown publisher" (yellow). The elevate helper check is a pinned SHA-256 hash embedded in the app build, not an Authenticode check | CR-010 §8; ADR-0013; onboarding-flow screen 4 | Tech lead + UX |
+| 4 | **D-4: can you leave one of the four hard limits unlocked, or switch it off?** CR-010 makes them library rules, on by default, and lets you pick which to lock; the honest promise says no rule can change them; the Rules screen design shows them read-only and always on | The four stay always on; your choice is only whether each is locked (admin) or at user scope (labelled not locked). Other library rules can be on or off | **Answered, 2026-10-26:** *"yes"*, as recommended. The four limits (delete, push to your default branch, send, payment) are **always on** and can never be switched off. Per limit, you choose only whether it's locked with admin (managed settings) or left at user scope, labelled "not locked". Other library rules can be on or off, and you can add your own. No rule, written by you or drafted, can ever make Eucas auto-approve one of the four. Changing the locked set later asks for admin again | CR-010 §2, §6 (D-4); ia-and-flows §3.2 | Client |
+| 5 | **The guided merge has no design yet.** The companion can't create worktrees or inject messages into a session. Does "guided" mean Eucas runs the git steps, or shows them for you to run? | Plain, copyable steps you run (rebase, test, PR), in keeping with "watch, warn, guard"; designed with 23.3 | **Answered, 2026-10-26** (with #1): *"i didn't expect gudided merge to be a code"*; the guided merge is plain-code housekeeping that **Eucas runs**: rebase, run the tests, open the PR, with no AI and never writing code (BUILD-PLAN M-1: it stops and restores both branches on a conflict or a failing test, and shows the `gh` command if `gh` isn't set up). This replaces the "copyable steps" recommendation | CR-010 §2; ia-and-flows (what the companion can't do) | UX + tech lead |
+| 6 | **Which "other tested safety rules" are in the library?** CR-010 names the four limits "plus other tested safety rules"; the design has the four limits and 5 templates | The tech lead proposes the list from the bypass suite; a rule ships in the library only with its tests | Open | CR-010 §6 (D-4) | Tech lead → Client |
+| 7 | **What counts as a "weak" waitlist?** The pre-mortem says "if the waitlist is weak, don't build" but sets no number | You set the number before the page goes live, so the result can't be argued afterwards | Open | Pre-mortem §4 | Client |
+| 8 | **Does Pro (budgets, supervisor) need Anthropic's written OK before it goes on sale?** The pre-mortem says no paid tier before it; the design shows payments "after Anthropic's written OK"; CR-010 requires it only for the cloud beta | Ask in the Anthropic email (26.3); Pro stays a waitlist until it's answered | **Answered, 2026-10-26:** *"yes"*: follow CR-010. **Pro can charge once it's built** (the supervisor doesn't use your Claude plan). **Only the cloud beta waits** for Anthropic's written OK. This amends the pre-mortem-derived text that held all payments until Anthropic's OK, and ADR-0012 | CR-010 §8; pre-mortem §3; SYSTEM-DESIGN §3 | Client |
+| 9 | The "+12 weeks: under 20 payers" kill criterion assumes Pro is on sale. If Pro is still a waitlist then, when does that clock start? | Count the payer criteria from Pro's launch date; the install and weekly-active criteria stay on the v0.1 launch date | **Open, narrowed by #8.** Pro no longer waits for Anthropic, but it still isn't built in v0.1 (E25 isn't estimated), so it may still be a waitlist at launch + 12 weeks; the question stands | Pre-mortem §4 | Client |
+| 10 | **Supervisor model:** gpt-oss-120b with fallbacks, or the Jev 1.14 (choice) + gpt-oss-120b hybrid. CR-010 decides it in SP-SUP2 on real moments. SUPERVISOR §6 adds ship conditions for the hybrid: the same eval with 0 dangerous mistakes, retention confirmed in writing by the provider, and the Decisions API out of alpha | Keep both in SP-SUP2 (17.8) and carry the hybrid's ship conditions into its GO bar | Open | CR-010 "Supervisor update"; SUPERVISOR §6; SP-SUP1b | Tech lead → Client |
+| 11 | **Does the companion ever get the notch?** | Decide after v0.1 has real use; the notch's global key hook looks like a keylogger to antivirus on a new, unsigned app (pre-mortem) | **Answered 2026-10-26:** yes (CR-011), with no voice and no global keyboard hook | CR-010 §7, "Still open" | Client |
+| 12 | **Lemon Squeezy or Paddle?** | Decide when E25 is planned | **Answered 2026-10-26: Lemon Squeezy** | CR-010 §5 | Client |
+| 13 | **How is the SmartScreen abort rate measured?** Opt-in telemetry only sees installs that got past SmartScreen | Compare release downloads with first-run counts; treat it as a watch signal, not a hard number | Open | onboarding-flow edge L | Tech lead |
+| 14 | **"Push to main" or "push to your default branch"?** CR-010's promise says main; the design's copy and the limit itself cover the default branch, whatever it's called | Use "your default branch" in the product copy: it's what the guard enforces. You approve the exact promise string | **Answered, 2026-10-26:** *"yes"*. In the app: "your default branch". Marketing may say "main" | CR-010 §2; onboarding-flow screen 4; SECURITY-PRIVACY §4 | Client |
+| 15 | **What is Pro's "export"?** Free already exports the Protection log (CSV/Markdown) and your rules | Free keeps the log and rules export; Pro's export covers the history beyond 7 days | Open | CR-010 §3; ia-and-flows §3.5, §5 | Client / BA |
+| 16 | **When do the supporter tier and GitHub Sponsors start?** | GitHub Sponsors at the v0.1 launch (no payment code); the supporter tier with the payment provider (E25) | Open | CR-010 §5 | Client |
+| 17 | The UX shows an **optional global shortcut** for the popover (off by default); the BUILD-PLAN has no story for it, and the pre-mortem warns about global key hooks | Leave it out of v0.1 | Open | ia-and-flows §1; SYSTEM-DESIGN §9 | UX + tech lead |
+
+**Budgets (your sixth answer, 2026-10-26, no row above):** *"ok"*. When a budget runs out, Eucas blocks the agent's next step (PreToolUse) and adds a needs-you item: "Budget reached for this session. Continue?". The copy says "stops before the next step", never "pauses" (25.2).
+
 ## 12. Sign-off
 | Client | Decision | Date |
 |---|---|---|
@@ -222,6 +526,7 @@ These are drafts using the `user_story.yml` fields; the PM creates the issues af
 - **Acceptance criteria** use G/W/T, short for Given/When/Then.
 - **Design references** are routes in `direction.html` v0.7.
 - **Every story also meets the DoD:** it emits trace events, it's visible in Look inside, and it has isolation tests where it touches memory or connectors.
+- **v0.5 (CR-010):** **E0 – E16 are the team app's** and are deferred, not deleted. **E17 – E26 are the companion's** (after E16 below). Companion stories are estimated in **focused build days** from [BUILD-PLAN §3](../architecture/companion/BUILD-PLAN.md), not points: each story is a vertical slice of ≤ 2 days, and each task inside it is ≤ 1 day. Each companion story keeps its BUILD-PLAN ID in its own column, so the design and the sprint plan can be read side by side. (BUILD-PLAN's `N-1` is the needs-you story 23.1, not E16's N1.) Every companion story ends with a log event visible in the UI (BUILD-PLAN §3). Traces use UC-54 – UC-64 (§5.1) until BRD v1.4 assigns IDs.
 
 ### E0. Feasibility spikes (Sprint 1, day 1, or earlier) · `spike/` branches, timeboxed
 | ID | Story | Acceptance criteria | Traces | Pts |
@@ -365,6 +670,18 @@ These are drafts using the `user_story.yml` fields; the PM creates the issues af
 ### E16. Atlas notch & voice (N0 – N2: Sprint 3 · N4, N6, N7: Sprint 4, late · N3, N5, N8 – N10: Sprint 5) · CR-009
 IDs follow CR-009. Design reference: [notch design](../design/ux/2026-10-25-atlas-notch-design.md); the prototype gets the notch states in the design-update pass. N0 replaces the BACKLOG item "Voice input with local Whisper".
 
+**Re-cut for the companion (CR-010).** All IDs are kept and E16 stays whole with the team app. **No E16 story ships in companion v0.1:** voice is out of the companion, and so is the notch (whether the companion ever gets it is open, §11.1 #11). Three stories have a **companion counterpart**, which carries their rule into a companion story. The E16 stories themselves don't move.
+
+| ID | Companion v0.1 | Where it goes | Why / companion counterpart |
+|---|---|---|---|
+| N0 | No | Team app | *"No need for voice input in this tool"* (CR-010 §7); voice stays in the team app (BR-97) |
+| N1, N2 | No | Team app | The notch and its global hold/tap key stay with the team app (CR-010 §7); the key hook looks like a keylogger to antivirus on a new app (pre-mortem) |
+| N3 | No | Team app | The companion relies on Windows Focus to quiet toasts and sounds (DESIGN §6) |
+| N4, N5, N8, N9 | No | Team app | They hand things to Atlas or try dropped skills; the companion has no Atlas |
+| **N6** | No, **re-cut** | Team app; counterpart **23.1** | Needs you shown without interruptions, never opening by itself, one sound, a count that stays: in the companion this is the **needs-you inbox in the tray** |
+| **N7** | No, **re-cut** | Team app; counterparts **20.3, 23.1** | Dangerous answers stay out of quick surfaces: in the companion, nothing the limits cover can be allowed from any surface (a block has no "Allow anyway"), and "Allow once" exists only if S-2 passes (17.7) |
+| **N10** | No, **re-cut** | Team app; counterpart **23.1** | Sounds: the companion has two, Needs you and Done, silenced by Focus (DESIGN §6). BR-89 (Revised v1.4) |
+
 | ID | Story | Acceptance criteria | Traces | Pts |
 |---|---|---|---|---|
 | N0 | As you, I want voice input in every composer, transcribed on the computer | G any composer W I talk into the mic T the words appear in the draft and nothing is sent until I send; no audio leaves the computer; Moonshine for English, Whisper for other languages; one shared speech worker loads on first use and unloads after about 60 s idle; models pinned, checksummed and stored in the Eucas home (ADR-0006) | BR-97, UC-52 | 5 |
@@ -379,10 +696,96 @@ IDs follow CR-009. Design reference: [notch design](../design/ux/2026-10-25-atla
 | N9 | As you, I want a quiet "Atlas replied" marker for a Just ask I sent | G I sent Just ask T the reply lands in Atlas's chat and the notch shows a marker with a small nod, no bounce and no sound; hovering shows the reply in a line or two with "Open in Eucas" | UC-52, BR-94 | 2 |
 | N10 | As you, I want the new quick-talk sounds | G sounds are on T listening, stopped and the hands-free lock tick join the existing three (six in all); one switch mutes them all | BR-89 (amended) | 1 |
 
+### E17. Companion spikes (before G6) · `spike/` branches, timeboxed · CR-010
+Only these run before Gate 6 (CR-010: *"run only the spikes now"*). Order = dependency order (BUILD-PLAN §2).
+
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 17.1 | As the tech lead, I want the hook attach path proven on Windows, so the core holds | G a minimal Rust guard as a user-scope plugin on CLI ≥ 2.1.310 W it runs in the terminal, the desktop app's local sessions and VS Code, with Git Bash present and absent, PowerShell 5.1 and 7, native and npm installs T every event fires; `onFailure: "block"` blocks on a crash, a hang, exit 1 and a missing exe; p95 ≤ 50 ms with Defender on; managed hooks survive a project `disableAllHooks` and `--settings`; the report answers whether running sessions pick up a new plugin, whether a plugin can ship the status line, which managed source the CLI reads, whether the agent can edit `~/.claude/settings.json`, and which signal shows "tool ran, no check" fastest. A fail-open case with no workaround → stop and re-plan | UC-55, UC-56, ADR-0007, ADR-0009 | SP-H1 | 1.5 |
+| 17.2 | As the tech lead, I want the Tauri shell proven on Windows, so the stack holds | G a Tauri tray app W tested at 100 / 125 / 150 % T the tray icon swaps with a tooltip, the flyout sits at the tray, toasts with buttons activate on click, the updater round-trips a signed manifest, Playwright drives WebView2 over CDP; idle < 90 MB with the flyout pre-warmed; popover first frame < 150 ms; measured against an Electron hello-tray on the same PC. Fail → Electron shell with the same Rust guard (ADR-0008) | ADR-0008 | SP-ST1 | 1 |
+| 17.3 | As you, I want the setup safety test to cost no tokens if it can (D-5) | G the guard W the canary drives it through the real Claude Code hook path with no model turn T a deny receipt with 0 tokens. Fail → a real model turn of about 400 tokens, and the copy says so | UC-54, UC-55, UC-56, D-5, ADR-0014 | S-1 | 0.5 |
+| 17.4 | As the tech lead, I want the tripwire proven under load | G a 50,000-file delete with 3 sessions W `ReadDirectoryChangesW` watches T buffer overflow is handled, paths are attributed, stopping starts ≤ 1 s after the threshold and the process tree is gone ≤ 3 s, including deletes that continue after the kill. Fail → lower thresholds and per-folder watch; ETW moves up to v0.2 | UC-55, UC-56 | SP-TW1 | 1 |
+| 17.5 | As you, I want Open session to bring me to the right window | G a session pid W Open session T it focuses the window for the top 3 hosts (Windows Terminal, conhost, VS Code, the desktop app); otherwise it names the tab | UC-60 | S-4 | 0.5 |
+| 17.6 | As you, I want one click to keep the tray icon visible | G current Windows 11 builds W first-run screen 6 T a deep link opens Settings › Personalization › Taskbar › Other system tray icons; otherwise numbered steps | UC-54 | S-6 | 0.25 |
+| 17.7 | *(Optional)* As you, I want "Allow once" from the app, if it can be done safely | G a waiting `PermissionRequest` hook W it's answered from the app in 50 trials T no double prompt and no lost answer. Fail → no "Allow once" in v0.1 | UC-60 | S-2 | 0.5 |
+| 17.8 | *(Pro, before Pro launch; not v0.1)* As the PM, I want the supervisor proven on real moments and its model chosen | G at least 300 new real moments from your own sessions, recorded locally with your consent and labelled blind by two labellers W gpt-oss-120b (with the Gemma 4 26B and Llama 4 Maverick fallbacks) and the Jev 1.14 (choice) + gpt-oss-120b hybrid run at Level 2 T one of them is chosen on 0 dangerous mistakes, over-asking cut ≥ 50 %, p95 < 3 s and cost; "No, rule N forbids it" counts as answering from the rules; the hybrid also meets SUPERVISOR §6's conditions (§11.1 #10). Fail → Pro ships rules-only | UC-63, ADR-0011, SP-SUP1, SP-SUP1b, SUPERVISOR §10 | SP-SUP2 | 2 + labelling |
+
+### E18. Companion foundation, server and release (Sprints 1, 2, 7) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 18.1 | As a developer agent, I want the monorepo scaffold and CI, so every lane builds the same way | G a clean clone W CI runs T the `ts`, `rust`, `contracts`, `licences` and `dependency-review` jobs pass on windows + ubuntu; `xtask codegen` round-trips the contracts; lint, format, typecheck, lefthook and changesets are set up; the licence file is FSL; user-visible names are `eucas-*` | ADR-0008, CI-CD, CR-010 §5 | S1-1 | 1.5 |
+| 18.2 | As you, I want Eucas in the tray: an icon that tells its state, a popover and a main window | G Eucas running T the icon shows Guarded, Needs you, Guard off, Not verified, Paused or Setting up, each with a tooltip sentence (never colour alone); left-click opens the popover; right-click opens the native menu (Open Eucas, Pause notifications, Run the diagnostic, Quit) with no "Turn off protection"; Quit says protection stays on; the main window never opens by itself after first run; one instance; starts at login; the renderer never polls (derived-state table tests, Playwright smoke) | UC-60, ADR-0008, ia-and-flows §1, DESIGN §4.1 – §4.6 | U-1 | 1.5 |
+| 18.3 | As you, I want Settings and the Pro waitlist line, served by a thin Worker | G the app W it starts T it reads signed `/v1/config` and `/v1/updates` from the Worker (staging and production; strict schemas); G one of the five Pro moments (on pace for the limit, a stopped idle session not stopped by a block or error, older Retro weeks, a 4th session, Settings › About for the cloud beta) T one Text 2 line with **Get notified · Not interested**; never in a worst moment, a toast or first run; once a week per moment and one per day; hidden offline; Get notified sends only `{ moment, installHash }` to `/v1/waitlist`; G Settings T Privacy (with *"Nothing about your work leaves this PC unless you turn it on"* and See what's sent), Updates, Appearance and Remove Eucas; `/v1/telemetry` only if you opt in | D-2, ADR-0012, ADR-0015, CR-010 §3, §4, §8, DESIGN §4.22 | W-1 | 1.5 |
+| 18.4 | As you, I want a per-user installer and auto-update, unsigned in v0.1 | G a clean Windows runner W install, upgrade and uninstall T an NSIS per-user installer, no admin, < 20 MB, installing in < 10 s; the Tauri updater with `stable` and `beta` channels and a staged rollout, with updates signed by its **Ed25519** key; SBOM and provenance; each installer's **SHA-256** published with the release and on the site; a verify job checks the updater signature and the published hash; G a tampered update T it's rejected; **no Authenticode signing in v0.1** (your answer, 2026-10-26, §11.1 #3; CR-010 amends ADR-0013's v0.1 route; Authenticode is 26.5) | CR-010 §8, ADR-0013 | R1 | 1.5 |
+| 18.5 | As QA, I want the hardening pass before the first outside user | G the release candidate T perf budgets pass in CI (C6 – C9); the axe pass; the full e2e set; your manual checklist on a clean VM (real UAC and SmartScreen); the README has the SmartScreen steps, the one-line unbrick and how to check the SHA-256; the bypass table and the threat model are published; zero known bypasses (C5) | TESTING, SECURITY-PRIVACY | Q-1 | 1.5 |
+
+### E19. The guard and the limits (Sprints 1 – 3; 19.7 in Sprint 6) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 19.1 | As the guard, I want one neutral tool-call model and shell tokenizers, so every command is judged the way it will run | G bash, PowerShell and cmd commands and Windows paths W they're parsed T a neutral `ToolCall` with canonical paths (junctions resolved, case-folded); unit, property and fuzz tests pass | UC-55, UC-56, ADR-0010 | G-1 | 1.5 |
+| 19.2 | As you, I want the four limits and self-protection as tested rules | G a delete, a push to your default branch, a send or a payment (SECURITY-PRIVACY §4) W an agent tries it T Eucas never auto-approves it; the limits are always on and can't be switched off; they can't be expressed in the rulebook and no rule can override them; the app's copy says "your default branch" (§11.1 #14); self-protection stops an agent switching Eucas off; unresolved commands that hit a limit token are denied; about 400 table cases (TESTING §2) | UC-55, UC-56, BR-58 (BRD v1.4 wording, ID pending), CR-010 §2, ADR-0010 | G-2 | 1.5 |
+| 19.3 | As you, I want a guard that fails closed | G a PreToolUse call W the guard panics, hangs, gets bad input or is missing T the call is denied (`onFailure: "block"`, 5 s timeout); observational hooks exit 0 on a crash, so a stop is never blocked; the deny message tells the agent to hand back to you; the check event goes over the pipe, or to the spool when the app is closed, within a 5 ms emit cap | UC-55, UC-56, ADR-0009 | G-3 | 1 |
+| 19.4 | As you, I want the guard to reach every local session without touching my repos | G Eucas installed W `claude plugin install` runs from the local marketplace at user scope T every local session loads the guard; nothing is written into project settings; uninstall removes it; `plugin validate --strict` passes | UC-55, UC-56, ADR-0007 | G-4 | 0.5 |
+| 19.5 | As the tech lead, I want contract and bypass suites on the pinned CLI in CI | G a PR W the `guard-contract` and `plugin` jobs run T a red suite blocks the merge; every reported bypass becomes a failing case first | UC-55, UC-56, TESTING §3, §5, C5 | G-5 | 1 |
+| 19.6 | As you, I want the limits locked where neither an agent nor a repo can switch them off, with one Windows prompt | G setup W you approve one UAC prompt T `eucas-elevate` (fixed operations only) merges Eucas's managed entries, recorded as a JSON patch, and installs the limits guard; Pause and Turn back on each ask Windows; Remove takes only Eucas's keys; G you decline T the rules still run at user scope, labelled **not locked** everywhere (ADR-0007's fallback) | UC-55, UC-56, D-4, ADR-0007 | A-1 | 1.5 |
+| 19.7 | As you, I want to choose my rules in setup, and lock the ones I want *(new, CR-010 D-4; your answer, 2026-10-26, §11.1 #4)* | G first run's **Choose your rules** step, before the UAC step T the four limits (delete, push to your default branch, send, payment) are **always on** and have no off switch; for each limit you choose only **locked** (admin, managed settings) or **not locked** (user scope, labelled "not locked"); other library rules can be on or off; you can add your own through 21.2 (an exact rule you confirm); W you approve the one UAC prompt T the limits you chose to lock are locked in managed settings; G any rule, written by you or drafted W it would auto-approve one of the four limits T it's rejected, locked or not; G you decline UAC T every rule runs at user scope, labelled not locked; G you change the locked set later T it goes through `eucas-elevate` (`update-locked-set`) and asks for admin again | UC-55, UC-56, UC-57, CR-010 §6 (D-4); BRD v1.4 ID pending | A-2 | 1 |
+
+### E20. Proof: heartbeat, canary, Protection, tripwire (Sprints 3 – 4) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 20.1 | As you, I want to know the moment a session isn't guarded | G running sessions W a tool's result appears with no matching check T within 2 s that session is **Not guarded** (a red row with the word), the tray icon gets the slash and a toast fires; "checked N s ago" means a real check; an idle session says idle, never a tick; a session started before the plugin says "restart it to guard"; G 4 sessions on Free T all 4 are guarded and details show for 3: "Showing details for 3 sessions. All 4 are guarded." (D-1) | UC-55, UC-56, UC-60, D-1, SYSTEM-DESIGN §5.2 | H-1 | 1.5 |
+| 20.2 | As you, I want Eucas to prove itself after every Claude Code update | G a new CLI version on your PC W the local canary runs (hook-only if 17.3 passed) T "Verified for Claude Code x.y" only if CI's nightly canary and your PC both proved it, otherwise amber "Not verified"; the nightly `canary.yml` files an issue on a failure and signs `verified-versions` | UC-55, UC-56, ADR-0014 | C-1 | 1.5 |
+| 20.3 | As you, I want one screen that shows whether the guard is on and what it did | G Protection T the status card (state, verified version, locked or user level, **Run the test again**), sessions with their last check, the log (time, session, what, why, which rule or limit; filters; CSV or Markdown export) and "What Eucas can't see", always present; a block's log entry is ≤ 2 clicks from its toast; a block offers **Copy command**, never "Allow anyway" | UC-55, UC-56, ia-and-flows §3.5 | P-1 | 1 |
+| 20.4 | As you, I want a session that starts mass-deleting stopped | G 200 deletes of git-tracked files in a session's folder, or any deletes outside the session folders, within 20 s W the tripwire trips T every later tool call in that session is denied, its process tree is killed and checked as gone, and only then the card says "Eucas stopped <project>", with what was deleted and how to get it back; if deletes continue, the card says so live and never claims "stopped"; deletes in git-ignored build folders don't count unless deletes also start outside the project; "This was expected" adds a folder, with its consequence spelled out | UC-55, UC-56, SYSTEM-DESIGN §5.5 | T-1 | 1.5 |
+
+### E21. Rules (Sprint 5) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 21.1 | As you, I want rules from my own approvals, from templates and from the library, switched on or off | G 7 days of history W you open Rules T the limits line (read-only), suggestions with their counts, your rules with live counters, and 5 templates while you have fewer than 3 rules; **Add** shows a dry run ("would have auto-approved 212 calls in 7 days, all in <project>/") and saves with Undo; exact commands only, no globs; the scope is a folder; programs that run code are never pre-ticked and never "everywhere"; a clash with your own Claude Code ask/deny rule says so and disables Add; the compiler rejects any overlap with a limit | UC-57, ADR-0010, CR-010 §6, ia-and-flows §3.2 | R-1 | 1.5 |
+| 21.2 | As you, I want to describe a rule in plain words and have Eucas draft it exactly *(new, CR-010 §6; your answers, 2026-10-26, §11.1 #1, #2)* | G you describe a rule in plain words W Eucas drafts it T the Eucas server (`/v1/draft-rule`) sends **only the sentence you typed** and the rulebook schema to the provider-hosted `gpt-oss-120b`; the answer must be an **exact rule** (exact commands, no globs or regex) that compiles, passes the bypass suite and never overlaps a limit, or it's rejected with the reason; it's shown with exactly what it will allow or block, and it's enabled only after you confirm; it can never make Eucas auto-approve one of the four limits; each draft counts toward the supervisor budget | UC-57, CR-010 §6; BRD v1.4 ID pending | R-2 | 1.5 |
+
+### E22. Usage: ledger and forecast (Sprint 5) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 22.1 | As you, I want my tokens and plan share live, and to know when I'll reach the limits | G sessions running W status-line ticks arrive T your own status line still shows byte for byte (chained, not replaced, and restored on uninstall only if ours is still set); Usage shows the 5-hour and weekly meters with reset times and freshness, one forecast time with its basis on hover, and the ledger by session and project; no plan data → tokens only, with why; an API key → cost; Eucas never reads credentials or an OAuth endpoint; at the limit, a card that informs, with no upsell | UC-58, ADR-0002, SYSTEM-DESIGN §5.3, ia-and-flows §3.3 | L-1 | 1.5 |
+
+### E23. Sessions: needs-you, same-file warning, guided merge (Sprints 3 – 4; 23.3 in Sprint 6) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 23.1 | As you, I want what needs me in the tray, with a Windows notification, without being interrupted for nothing | G a session waits on a prompt or a question, finishes a run of ≥ 2 min, or the guard or tripwire needs you T a needs-you card in the popover and Today, and a toast within the budget (one per event, ≤ 1 per 2 min per session, ≤ 2 on screen, grouped beyond); **Open session** focuses its window or names it; Not now snoozes 15 min with Undo; the card resolves itself when you answer in the terminal; Pause notifications works; nothing opens by itself; the Needs you and Done sounds play only when Eucas isn't focused, and Focus silences them (E16's N6, N7 and N10 counterparts) | UC-60, BR-89 (companion wording, BRD v1.4 ID pending), ia-and-flows §1.2, §3.1, DESIGN §4.7, §4.18, §6 | N-1 | 1.5 |
+| 23.2 | As you, I want to know when two sessions edit the same file | G session B writes a file that session A wrote in the last 15 min, in the same working tree T a toast and a card: "Two sessions are editing the same file", with each session's last edit; **Show both** · Open each · Don't warn for this file today; it never blocks the edit; different worktrees warn quietly as "may conflict when you merge"; it resolves when one session commits | UC-59, ia-and-flows §3.4 | F-1 | 0.75 |
+| 23.3 | As you, I want a guided merge when two sessions' work collides *(new, CR-010 §2; your answer, 2026-10-26, §11.1 #1)* | G a same-file warning W you choose **Merge safely** T in plain code, with no AI and never writing code, Eucas checks both trees are clean, rebases the later branch onto the earlier one, runs the project's test command, then opens the PR with `gh` when it's installed and signed in, or shows the exact command to copy; G a rebase conflict or a failing test T it stops, aborts the rebase, names the files and leaves both branches as they were; AI conflict resolution isn't in v0.1 (whether Eucas runs the steps or shows them is §11.1 #5) | UC-59, CR-010 §2, §7; BRD v1.4 ID pending | M-1 | 1.5 |
+
+### E24. First run and diagnostic (Sprints 5 – 6) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 24.1 | As you, I want first run to show my week and turn protection on in about 4:30 | G Claude Code installed and a fresh Eucas W first run T detection ≤ 3 s; the 7-day retro streams its 4 cards (usage, risky commands, same-file clashes, your approvals as rules), the first ≤ 5 s; then 19.7's **Choose your rules** step, then the protection step with one UAC prompt; the **live safety test** blocks a harmless push in a throwaway repo (D-5) and only then shows "You're protected" with a live heartbeat; Keep it visible (17.6); edges A – Q each name the cause, what's safe and one step; quitting before the protection step writes nothing; the privacy line is *"Nothing about your work leaves this PC unless you turn it on"*; telemetry is asked once, off by default | UC-54, D-4, D-5, onboarding-flow | O-1 | 2 |
+| 24.2 | As you, I want one button that tells me what's wrong and what to send | G a problem W Run the diagnostic T a checklist in about 5 s (versions, shells, hooks, managed settings, heartbeat, canary, status line, the last 20 events by program name only, error codes, the repair available); Copy, Save, and Open an issue (it opens GitHub's page for you to review; Eucas sends nothing); the report says *"No paths to your projects or files"*, and the redaction test proves it | UC-61, OPERATIONS §3, CR-010 §8 | D-1 | 0.5 |
+
+### E25. Companion Pro (a waitlist in v0.1; built after it) · CR-010
+Estimates are pending: the BUILD-PLAN covers v0.1 only. Pro can charge once it's built; only the cloud beta (25.5) waits for Anthropic's written OK (your answer, 2026-10-26, §11.1 #8).
+
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 25.1 | As you, I want to buy Pro at a fair, fixed price | G Pro built W you pay through Lemon Squeezy T $20/month, or **$15/month for life for the first 200 payers**; the Worker checks the licence and the quota and stores no content; Pro goes on sale once it's built, with no wait for Anthropic's OK (§11.1 #8) | CR-010 §3 – §5, ADR-0012; BRD v1.4 ID pending | — | Pending |
+| 25.2 | As you, I want a budget per task that stops work before my plan limit *(your answer, 2026-10-26)* | G a task with a budget W the budget runs out T Eucas blocks the agent's next step (PreToolUse) and adds a needs-you item: "Budget reached for this session. Continue?"; the copy says "stops before the next step", never "pauses" | UC-62, CR-010 §3, SUPERVISOR §5 (R6) | — | Pending |
+| 25.3 | As you, I want the supervisor to answer what my rules already answer, and ask me otherwise | G an agent tries to stop W Pro is on T plain-code rules v2 decide first; only at **Level 2** (opt-in, with a preview of your own redacted payload first) does the provider-hosted model decide what the rules can't; it **never approves a tool call** and **never nudges after a block**; at most 3 nudges per task; unsure, late, invalid or out of allowance → it asks you; **10,000 model calls a month**; "No, rule N forbids it" counts as answering from the rules; Level 1 sends nothing; the model is the one SP-SUP2 picks (17.8); every decision is logged with who decided | UC-63, ADR-0011, SUPERVISOR §1 – §5, CR-010 §3 | — | Pending |
+| 25.4 | As you, I want every session's details, my full history and export | G Pro W you have more than 3 sessions or look past 7 days T every session's details, older Retro weeks, and export (§11.1 #15) | CR-010 §3, D-1 | — | Pending |
+| 25.5 | As you, I want work to continue in my Claude cloud while the laptop is closed *(beta)* | G a GitHub repo whose default branch has `deletion`, `non_fast_forward` and `pull_request` rules with an empty bypass list W you hand off a task T it goes to your own Claude cloud routine with an explicit connector list or `clear_mcp_connections: true` and `disallowed_tools` set, read back and checked before it runs; one run at a time per routine; the pre-run estimate counts the cloud run (BR-93); any other repo → refused, with why; labelled "Eucas's limits don't apply there"; the routine `/fire` token is never used or stored; it ships only after **Anthropic's written OK**, the only Pro item that waits for it (§11.1 #8) | UC-64, SP-CR1, SYSTEM-DESIGN §5.8, ADR-0002, BR-76 and BR-93 (BRD v1.4 wording, ID pending) | — | Pending |
+
+### E26. Launch and the demand test (founder and PM; not app code) · CR-010
+| ID | Story | Acceptance criteria | Traces | BUILD-PLAN | Days |
+|---|---|---|---|---|---|
+| 26.1 | As you, I want a landing page and waitlist on eucas.app before building, as the demand test | G the page drafted W you've reviewed it T it goes live with a waitlist that asks "which agents do you use?"; it runs about 2 weeks before building; the result is read against your threshold (§8.2, §11.1 #7) | CR-010 §8, pre-mortem §4 | P5 | — |
+| 26.2 | As a first user, I want the download page to tell me what Windows will show and how to check the file | G an unsigned installer W you download it T the page shows the real "Windows protected your PC" dialog with "More info → Run anyway", and each installer's SHA-256 | CR-010 §8 | — | — |
+| 26.3 | As you, I want to contact Anthropic once there's something real to show | G the companion built and tested W you decide it's worth pursuing T the email goes; the cloud beta (25.5) waits for a written OK; Pro doesn't need one (§11.1 #8) | CR-010 §8 | — | — |
+| 26.4 | As a supporter, I want to pay for Eucas without needing Pro | G the supporter tier W you pay T pay what you want, $10 minimum; GitHub Sponsors is also offered (§11.1 #16) | CR-010 §5 | — | — |
+| 26.5 | As you, I want Authenticode-signed builds once revenue pays for them *(later; not in v0.1, §11.1 #3)* | G Pro income covers it W you buy an individual OV certificate with cloud signing (about $130 – 400 a year) T the installer, the app, both guard copies, the elevate helper and the uninstaller are signed in CI, and every signature is verified before publishing (ADR-0013); until then, updates are Ed25519-signed and installer SHA-256s are published (18.4) | CR-010 §8, ADR-0013 | — | — |
+
 ---
 
 ## Appendix B. Cross-check with BRD v1.1 (re-checked against v1.2 and v1.3)
-The draft PRD v0.2 used placeholder labels BA-1 – BA-24. Each one now maps to a BRD v1.1 ID, or stays open as noted. **v0.3:** re-checked against BRD v1.2 (CR-008 and G2 answers); the status column says where an item changed. **v0.4:** re-checked against BRD v1.3 (CR-009); the new IDs are mapped to E16 stories in the CR-009 rows at the end of the table.
+The draft PRD v0.2 used placeholder labels BA-1 – BA-24. Each one now maps to a BRD v1.1 ID, or stays open as noted. **v0.3:** re-checked against BRD v1.2 (CR-008 and G2 answers); the status column says where an item changed. **v0.4:** re-checked against BRD v1.3 (CR-009); the new IDs are mapped to E16 stories in the CR-009 rows at the end of the table. **v0.5:** CR-010 rows added at the end. BRD v1.4 is being written in parallel, so its new IDs are **pending**: the reviewer fills in the "Now" column once v1.4 lands.
 
 | Was | Now (BRD v1.1) | Status |
 |---|---|---|
@@ -414,6 +817,20 @@ The draft PRD v0.2 used placeholder labels BA-1 – BA-24. Each one now maps to 
 | CR-009 drops (new) | **UC-53** Try a dropped thing in a project → N8; UC-35 note (promotion only on accept, through UC-24) → N8 | Covered (E16) |
 | CR-009 flows | UC-12 A7 → N4 · UC-23/24/25 notch flows → N6, N7 · UC-29 step 3 revised → N6 | Covered (E16) |
 | CR-009 rules | BR-94 → N1, N2, N3, N5, N6, N9 · BR-95 → N7 · BR-96 → N4, N8 · BR-97 → N0, N5 · BR-89 amended → N5, N10 · BR-40 amended → N6 · BR-85 amended → N8 | Covered (E16) |
+| CR-010 attach and first-run retro (new) | **UC-54**; BR-102, BR-104, BR-105 | Covered: 17.3, 17.6, 24.1 |
+| CR-010 protection and heartbeat (new) | **UC-55, UC-56**; BR-99 – BR-102, BR-104 | Covered: 17.1, 17.4, 19.1 – 19.7, 20.1 – 20.4 |
+| CR-010 rules library and prompted rules (new) | **UC-57**; BR-103 | Covered: 21.1, 21.2, 19.7 (estimated 2026-10-26: R-2, A-2) |
+| CR-010 ledger and forecast (new) | **UC-58**; BR-106 | Covered: 22.1 |
+| CR-010 same-file warning, guided merge (new) | **UC-59**; BR-107 | Covered: 23.2, 23.3 (estimated 2026-10-26: M-1) |
+| CR-010 needs-you inbox (new) | **UC-60**; BR-108 | Covered: 18.2, 23.1, 17.5, 17.7 |
+| CR-010 diagnostic (new) | **UC-61**; BR-109 | Covered: 24.2 |
+| CR-010 budgets (new, Pro) | **UC-62**; BR-113 | Covered: 25.2 (after v0.1) |
+| CR-010 supervisor (new, Pro); new rules: never approves, never nudges after a block, Level 1/2 data | **UC-63**; BR-110 – BR-112 | Covered: 17.8, 25.3 (after v0.1) |
+| CR-010 cloud hand-off (new, Pro beta) | **UC-64**; BR-114; BR-76 reworded ("no runner of our own; hand-off to Claude cloud routines"); BR-93 (pre-run estimates count cloud runs) | Covered: 25.5 (after Anthropic's written OK) |
+| CR-010 BR-58 honest limits | BR-58 (Revised v1.4) | Covered: 19.2 |
+| CR-010 BR-89 sounds for the companion | BR-89 (Revised v1.4) | Covered: 23.1 |
+| CR-010 data minimisation, FSL, pricing | **BR-115**, **BR-116**, **BR-117** | Covered: 18.3 and 24.1 (copy, telemetry), 18.1 (FSL), 25.1 (pricing) |
+| CR-010 notch to the team app; voice out of the companion | BRD v1.4 scope change (UC-52, UC-53, BR-94 – BR-97 stay with the team app) | Covered: the E16 re-cut |
 
 **BRD/PRD conflicts found** (status in v0.3):
 1. **Reviewer check before automatic sends.** BR-82 runs it only before merges and the five client actions, so automatic emails and posts passed with no independent check. → §11 #6. **Resolved (moot):** agents never send (G2-Q6, CR-008).
@@ -421,3 +838,10 @@ The draft PRD v0.2 used placeholder labels BA-1 – BA-24. Each one now maps to 
 3. **Creating agents and projects, and deploy/release.** BR-58 still reserves them, but BR-86 doesn't list them among the five kinds. → §11 #1 (BRD #36). **Resolved:** both stay with you; proposal and BRD approvals are kind 4 (G2-Q1). How creating agents and deploying reach you inside the five kinds is a BRD v1.2 assumption (BR-86).
 4. **Checkpoint threshold.** The prototype and audit say 70 %; BR-66 says 80 %. A design copy fix (above).
 5. **UC-41's sprint.** The draft placed it in Sprint 3. The rename to "stop runaway loops" (BR-79) and the meter tie it to Sprint 1, so it moved there.
+
+**CR-010 vs the design sources** (v0.5; each is in §11.1):
+6. **Free scope vs the BUILD-PLAN.** CR-010 puts the guided merge and prompted rules in Free, and its D-4 answer adds "choose your rules". The BUILD-PLAN and SYSTEM-DESIGN were cut to the pre-mortem's v0.1 and leave the first two out, so the 28 days don't include any of the three. → §11.1 #1, #2, #5. **Resolved (2026-10-26):** all three stay in v0.1 (A-2, R-2, M-1; about 32 days); the drafting path is gpt-oss-120b through the Eucas server. #5 stays open.
+7. **Signing.** CR-010 ships v0.1 unsigned. ADR-0013 rejects unsigned builds, BUILD-PLAN P2/R1/Q-1 plan for signing, and the first-run design checks the helper's signature and tells you to press No on "Unknown publisher". → §11.1 #3. **Resolved (2026-10-26):** unsigned v0.1; Ed25519-signed updates, published SHA-256s, a pinned-hash check for the elevate helper.
+8. **D-4 and the four limits.** CR-010 lets you choose which library rules to lock; the honest promise and the Rules screen design treat the four limits as always on. → §11.1 #4. **Resolved (2026-10-26):** always on; the choice is only locked or not locked, per limit.
+9. **Pro and Anthropic's OK.** The pre-mortem and the design hold payments until Anthropic's written OK; CR-010 names only the cloud beta. → §11.1 #8. **Resolved (2026-10-26):** Pro charges once built; only the cloud beta waits.
+10. **"Push to main" vs "push to your default branch".** CR-010's promise wording vs the design's copy and the limit's actual coverage. → §11.1 #14. **Resolved (2026-10-26):** "your default branch" in the app; marketing may say "main".

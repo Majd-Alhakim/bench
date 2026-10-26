@@ -112,8 +112,8 @@ Each principle is something the UI must make visible, not a policy hidden in doc
 
 | Signal | Where | Rule |
 |---|---|---|
-| Signed installer and signed UAC prompt | Download, onboarding screen 4 | UAC is grey for a verified publisher, **yellow for unsigned** ([UAC how it works](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works)). A yellow prompt on a safety tool is a bad first impression, so signing matters for the UAC moment, not only SmartScreen |
-| SmartScreen expectation set before it happens | Download page | Say it may appear, show the real dialog, link how to check the signature (episko does this in its README) |
+| Signed installer and signed UAC prompt | Download, onboarding screen 4 | UAC is grey for a verified publisher, **yellow for unsigned** ([UAC how it works](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works)). A yellow prompt on a safety tool is a bad first impression, so signing matters for the UAC moment, not only SmartScreen. **v0.1 ships unsigned** (CR-010, founder 2026-10-26): the prompt is yellow, "Unknown publisher", so the sentence before it says so and tells you to check that it names `eucas-elevate.exe` from Eucas's folder |
+| SmartScreen expectation set before it happens | Download page | Say it will appear, show the real dialog and "More info → Run anyway", and say how to check the published SHA-256 (CR-010, founder 2026-10-26; was "check the signature"; episko does the SmartScreen part in its README) |
 | No account, no login | Whole first run | Eucas inherits Claude Code; never reads credentials (ADR-0002) |
 | Open source, threat model and bypass test suite published | Website, About | FSL is source-available, not OSI open source; say "source available" and link the code (TR F40) |
 | The first screen shows your data, not a pitch | Onboarding screens 1–3 | The retro |
@@ -123,7 +123,7 @@ Each principle is something the UI must make visible, not a policy hidden in doc
 ### 3.4 Windows trust facts that shape the plan
 
 - **O:** SmartScreen marks files without reputation as higher risk ([SmartScreen](https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/)). EV certificates have not bypassed SmartScreen since 2024. **Azure Artifact Signing** is about $9.99/month, and **individuals are eligible only in the USA and Canada**; "initial warnings expected" while reputation builds. **SignPath Foundation** offers free signing for qualifying open-source projects ([code-signing options](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/code-signing-options)).
-- **I:** If the founder isn't in the US or Canada, Artifact Signing as an individual is out (it resolves open unknown U4 in EX for that case). Realistic routes: SignPath (once the repo is public and qualifies; FSL may or may not qualify, to check), an organisation account, or an OV certificate. Either way, **early users will see SmartScreen**, so its moment is designed (onboarding screen 0). Decision D-3.
+- **I:** If the founder isn't in the US or Canada, Artifact Signing as an individual is out (it resolves open unknown U4 in EX for that case). Realistic routes: SignPath (once the repo is public and qualifies; FSL may or may not qualify, to check), an organisation account, or an OV certificate. Either way, **early users will see SmartScreen**, so its moment is designed (onboarding screen 0). Decision D-3, **resolved (CR-010, founder 2026-10-26): v0.1 is unsigned.** Installer SHA-256s are published on the site; updates are signed with the updater's key, so tampered updates are rejected; the elevate helper is checked against a pinned SHA-256 built into the app. Authenticode comes once revenue covers it.
 
 ---
 
@@ -210,9 +210,9 @@ The UX doesn't resolve these; they're flagged per the `ux-designer` role.
 | # | Decision | Options | Recommendation | Why |
 |---|---|---|---|---|
 | D-1 | "Up to 3 sessions free" vs "never meter safety" | (a) cap everything at 3; (b) cap only the session details and ledger, guard everything; (c) no session cap, meter history and budgets only | **(b) for now, (c) if possible** | A cap on a guard leaves session 4 unprotected (EX PT-7); (b) keeps the brief's shape without that trap |
-| D-2 | Pro moments before Pro exists | (a) hide them; (b) waitlist line; (c) checkout | **(b)** | PM: no paid tier before Anthropic's written OK; a waitlist also measures intent (EX kill criteria) |
-| D-3 | Code signing route | Artifact Signing (if eligible) · SignPath (OSS) · OV certificate · organisation account | Check eligibility first; plan for SmartScreen either way | Individuals: USA and Canada only (Microsoft Learn) |
-| D-4 | Admin prompt in first run | (a) ask for UAC (stronger limits); (b) user level only | **(a) with (b) as the declined path** | Only admin-written managed settings are out of the agent's reach (TR F16–F17) |
+| D-2 | Pro moments before Pro exists | (a) hide them; (b) waitlist line; (c) checkout | **(b)** | A waitlist measures intent (EX kill criteria). Amended (CR-010, founder 2026-10-26): Pro can charge once it is built; only the cloud beta waits for Anthropic's written OK (was "PM: no paid tier before Anthropic's written OK") |
+| D-3 | Code signing route | Artifact Signing (if eligible) · SignPath (OSS) · OV certificate · organisation account | **Resolved (CR-010, founder 2026-10-26): unsigned v0.1**; published SHA-256s, signed updates; Authenticode once revenue covers it | Individuals: USA and Canada only (Microsoft Learn) |
+| D-4 | Admin prompt in first run | (a) ask for UAC (stronger limits); (b) user level only | **Resolved (CR-010, founder 2026-10-26):** the four limits are always on and can never be switched off; per limit you choose Locked (admin, managed settings) or Not locked (user scope, labelled). Chosen in first-run "Choose your rules" (onboarding screen 3b), before the UAC step; changing the locked set later asks for admin again | Only admin-written managed settings are out of the agent's reach (TR F16–F17) |
 | D-5 | The canary costs tokens? | Hook-only synthetic call (free) vs a real model turn (~400 tokens) | Hook-only if spike S-1 shows it exercises the real path | Proof shouldn't cost the user's plan |
 
 ## 8. Open questions for spikes (engineering)

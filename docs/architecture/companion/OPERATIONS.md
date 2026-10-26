@@ -38,7 +38,7 @@ Settings › Diagnostic, the tray menu and every error's secondary action (DESIG
 | Versions | Eucas app, plugin, guard (user copy), limits guard (admin copy), Claude Code (each install found, with type: native, npm, desktop bundle), Windows build, WebView2 version |
 | Shells | Git Bash found?, PowerShell 5.1/7 paths, the shell Claude Code uses for hooks |
 | Hooks | Plugin enabled?, our hooks present in each source, other hook sources by **count** only, `disableAllHooks`/`allowManagedHooksOnly` flags and where they're set |
-| Managed settings | Source in use (file / HKLM / none / organisation), our marker present, limits guard path and signature check |
+| Managed settings | Source in use (file / HKLM / none / organisation), our marker present, which limits are locked, limits guard and helper paths and their **SHA-256 check against the hashes pinned in the app build** (unsigned v0.1, CR-010, founder 2026-10-26) |
 | Heartbeat | Per running session: guard state, last check age, tool activity seen without a check (count) |
 | Canary | Last 3 runs: CLI version, path (hook-only/model), result |
 | Status line | Wrapped? Saved command's program name; last tick age; `rate_limits` present? |
@@ -76,7 +76,7 @@ flowchart LR
 | Worker | Cloudflare analytics: 5xx rate, p95, request count | Cloudflare notification email: 5xx > 2 % for 10 min |
 | Model spend | DO daily spend sum; OpenRouter credit balance | Email at 50 % and 90 % of the daily breaker; OpenRouter low-credit email |
 | Update rollout | Telemetry `appVersion` mix (if on); GitHub release download counts | Manual check 48 h after a stable release, before widening from 10 % |
-| Signing certificate | Expiry date in `docs/support/calendar.md` | Calendar reminder 60 and 14 days before |
+| Signing certificate | **When Authenticode is bought** (none in v0.1, CR-010): expiry date in `docs/support/calendar.md` | Calendar reminder 60 and 14 days before |
 | Domains, Cloudflare and Lemon Squeezy billing | Their own emails | — |
 
 No pager, no on-call. The safety layer doesn't depend on anything the founder runs, so an outage of the Worker degrades Pro to "ask you" and stops updates, and nothing else.
@@ -101,8 +101,8 @@ No pager, no on-call. The safety layer doesn't depend on anything the founder ru
 | Read the Claude Code changelog for hooks, status line, plugins, permissions | Weekly | 20 min | The canary already ran; this is for semantic changes tests can't see |
 | Triage issues and Discussions | Weekly slot | 60 min | Diagnostic report in every bug; templates; known-setups table |
 | Dependabot PRs | Weekly | 20 min | Grouped minor/patch; CI decides |
-| Release (beta → stable) | Every 1–2 weeks | 45 min incl. the 15-minute manual checklist | Changesets, signed builds, staged rollout |
+| Release (beta → stable) | Every 1–2 weeks | 45 min incl. the 15-minute manual checklist | Changesets, updater-signed builds with published SHA-256s, staged rollout |
 | Supervisor eval and config (Pro) | Monthly | 30 min | `xtask` scripts |
 | **Total** | | **~3–4 h/week steady state**, more in a CLI-breaking week | |
 
-**Load shedding, in order, if it grows past 5 h/week:** stop the Ubuntu e2e (keep unit and contract), widen the beta cadence to monthly, drop arm64, freeze Pro scope. Never shed: the nightly canary, the bypass suite, fail-closed tests, signing.
+**Load shedding, in order, if it grows past 5 h/week:** stop the Ubuntu e2e (keep unit and contract), widen the beta cadence to monthly, drop arm64, freeze Pro scope. Never shed: the nightly canary, the bypass suite, fail-closed tests, update signing and the published hashes.

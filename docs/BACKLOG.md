@@ -4,6 +4,16 @@
 
 Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priority, top = next. Product model: [PRODUCT-MODEL.md](PRODUCT-MODEL.md).
 
+## Now: the Eucas companion v0.1 (CR-010)
+
+[CR-010](requirements/change-requests/CR-010.md) (approved 2026-10-26) puts the **companion first**. It guards and supervises the Claude Code sessions you already run. Requirements: BRD v1.4 (UC-54 – UC-64, BR-98 – BR-119). Plan: PRD v0.5 §9 and Appendix A (epics **E17 – E26**), built from [BUILD-PLAN](architecture/companion/BUILD-PLAN.md). Everything below this section is the **team app, after the companion**: deferred, not deleted.
+
+- **Before G6, spikes only (E17, about 5 days):** SP-H1, SP-ST1, S-1, SP-TW1, S-4, S-6, S-2 (optional); SP-SUP2 is Pro, after v0.1.
+- **Alongside:** landing page and waitlist on eucas.app (26.1, the demand test; published only after the client's review).
+- **After G6 (about 32 build days, seven 3-day sprints over two lanes; CR-010's 28 plus 4 added 2026-10-26):** E18 foundation, server and release (unsigned v0.1, SHA-256 published) · E19 guard and limits · E20 proof (heartbeat, canary, tripwire) · E21 rules · E22 usage · E23 sessions (needs-you, same-file) · E24 first run and diagnostic.
+- **In v0.1, Free (founder, 2026-10-26):** 19.7 / A-2 choose and lock your rules (D-4, 1 d), 21.2 / R-2 prompted rules (1.5 d), 23.3 / M-1 guided merge (plain code, 1.5 d).
+- **After v0.1:** E25 Pro ($20/month; the first 200 payers keep $15/month for life: budgets, supervisor, unlimited details, cloud beta) · E26 launch (the Anthropic email after build and testing; signing once revenue covers it).
+
 ## Sprint 0: Inception
 
 - ✅ **S0-4** ADR-0002 accepted for personal use (research: [anthropic-repos-and-auth](research/anthropic-repos-and-auth.md)). ADR-0001 awaiting founder confirmation.
@@ -37,7 +47,7 @@ Format: `ID · Story · Acceptance criteria (short) · Size`. Ordered by priorit
 - Duplicate an agent (without memory)
 
 ## Later (groomed per sprint)
-**E3** Groups & router · **E4** Handoffs & task board · **E5** Approvals, budgets, ledger · **E6** Curator (digests, extraction, dedupe) · **E7** Routines + Gmail/GitHub · **E8** Packaging, security, open-source at v0.1
+**E3** Groups & router · **E4** Handoffs & task board · **E5** Approvals, budgets, ledger · **E6** Curator (digests, extraction, dedupe) · **E7** Routines + Gmail/GitHub · **E8** Packaging, security, release (licence FSL per CR-010)
 - **E16 Atlas notch & voice** ([CR-009](requirements/change-requests/CR-009.md), approved 2026-10-25; [design](design/ux/2026-10-25-atlas-notch-design.md)): stories N0–N10 in PRD v0.4, Sprints 3–5. Before G6: a one-day `spike/notch` (hold-vs-tap keys, drop onto the notch, call detection) and ADR-0004/5/6. The voice story below is **N0**.
 - **N0 · Voice input with local Whisper** (M, client 2026-10-25). Talk instead of typing in any composer; the speech never leaves the computer. Proven in the prototype ([effects/](design/ui/prototype/effects/)), running in a worker via transformers.js. Engine by language: English uses Moonshine base on the CPU (~0.5–1 s a pass, words keep up with you); other languages, Arabic included, use Whisper base fp16 on WebGPU (~2–3 s a pass). Whisper costs a full 30 s window per pass, so it can't stream on a laptop GPU.
   - Why not the browser's speech API: in Electron it has no Google key, so it fails with a `network` error.

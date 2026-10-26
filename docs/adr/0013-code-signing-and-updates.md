@@ -1,13 +1,13 @@
 # ADR-0013: Code signing (D-3) and auto-update channels
 
-- **Status:** Proposed (2026-10-26). **The signing route is the founder's decision (D-3)**; this ADR recommends one and lists the rest.
+- **Status:** Proposed (2026-10-26), with **D-3 decided: v0.1 ships unsigned (option E), with signed updates and published hashes** (CR-010, founder 2026-10-26). Authenticode (route A, or B if a company exists) comes once revenue covers it; the options table below is that later plan.
 - **Date:** 2026-10-26
 
 ## Context
 Signing matters three times for a safety tool: SmartScreen on download, the **UAC prompt** in first run (grey "verified publisher" vs yellow "unknown"), and antivirus reputation for `eucas-guard.exe`, which Claude Code starts thousands of times a day. EV certificates no longer skip SmartScreen (since 2024); reputation builds per publisher over days to weeks either way. Since June 2023, publicly trusted code-signing keys must live on hardware (a token or a cloud HSM), which decides whether CI can sign. The founder is **outside the USA and Canada**, which rules out Azure Artifact Signing as an individual.
 
 ## Options for a founder outside the USA and Canada
-Prices are list prices seen in 2026 and **must be re-checked at purchase**.
+Prices are list prices seen in 2026 and **must be re-checked at purchase**. Routes A–D are the plan for when Authenticode is bought; E is the v0.1 choice (CR-010, founder 2026-10-26).
 
 | Route | Eligible? | Cost (approx.) | Signs in CI? | Notes |
 |---|---|---|---|---|
@@ -15,16 +15,24 @@ Prices are list prices seen in 2026 and **must be re-checked at purchase**.
 | B. Azure Artifact Signing (formerly Trusted Signing) as an **organisation** | Only with a registered legal entity in a supported country and Microsoft's identity validation | ~$9.99 a month (Basic) | Yes (GitHub Action) | Cheapest and best CI fit **if** a company is formed; the publisher shows the company name ("Eucas Labs" as in the UI mock) |
 | C. SignPath Foundation (free for open source) | **Unlikely while the licence is FSL** (it asks for an OSI licence); ask them | $0 | Yes | Re-check if the licence changes |
 | D. Certum Open Source Code Signing for individuals | Yes, individuals worldwide; aimed at open-source authors | ~€30–€70 a year plus a card or SimplySign | Partly (SimplySign needs a mobile confirmation) | Cheap, slow to automate |
-| E. Unsigned | — | $0 | — | Yellow UAC on a safety tool. **Rejected** |
+| **E. Unsigned (no Authenticode)** | — | $0 | — | **The v0.1 choice** (CR-010, founder 2026-10-26). Yellow "Unknown publisher" UAC prompt, SmartScreen on download, less antivirus reputation; see Consequences |
 
-## Decision (recommended)
-- **v0.1: route A**, choosing a provider whose cloud signer runs headless in GitHub Actions, signing only in the `release` job inside the protected `production` environment. If the founder forms a company before launch, switch to **B** (cheaper; company name on UAC).
-- **What gets signed (Authenticode, SHA-256, RFC 3161 timestamp):** the NSIS installer, `Eucas.exe`, `eucas-guard.exe` (both copies), `eucas-elevate.exe`, and the uninstaller. CI verifies every signature with `signtool verify /pa /all` before publishing.
-- **Updates: the Tauri updater**, with its own Ed25519 key (separate from Authenticode; offline, stored in the founder's password manager and as a CI secret only in `production`). Manifests are served by `GET /v1/updates/{channel}/{target}/{version}` (ADR-0012) from GitHub Release assets.
+## Decision
+- **v0.1: route E, unsigned** (CR-010, founder 2026-10-26). No Authenticode on any binary. What stays signed or checkable:
+  - **Updates** are signed with the Tauri updater's Ed25519 key, so a tampered update is rejected.
+  - **Installer SHA-256s** are published on the site and with each GitHub release (`SHA256SUMS`), and the README says how to check one.
+  - **The elevate helper** is checked by a **pinned SHA-256**, embedded in the app build, before the first-run UAC step (SYSTEM-DESIGN §5.6, SECURITY-PRIVACY T7), instead of an Authenticode check.
+- **Later: route A** once revenue covers it, choosing a provider whose cloud signer runs headless in GitHub Actions, signing only in the `release` job inside the protected `production` environment; **B** instead if the founder has formed a company by then (cheaper; company name on UAC). The release workflow keeps a pluggable `signCommand` so turning signing on is a secret and one line (CI-CD §6).
+- **What gets signed once Authenticode is bought (SHA-256, RFC 3161 timestamp):** the NSIS installer, `Eucas.exe`, `eucas-guard.exe` (both copies), `eucas-elevate.exe`, and the uninstaller. CI then verifies every signature with `signtool verify /pa /all` before publishing.
+- **Updates: the Tauri updater**, with its own Ed25519 key (separate from any Authenticode credential; offline, stored in the founder's password manager and as a CI secret only in `production`). Manifests are served by `GET /v1/updates/{channel}/{target}/{version}` (ADR-0012) from GitHub Release assets.
 - **Channels:** `stable` (from `main` tags `vX.Y.Z`), `beta` (from `staging` tags `vX.Y.Z-beta.N`). The founder dogfoods `beta`. Updates download in the background and install on the next quit or at a quiet moment (no session running); the guard keeps working through an update because Claude Code holds no lock on it beyond each short run (installer retries a locked file 3×, then schedules it for reboot and says so).
 - **The limits guard in Program Files updates only with a UAC prompt**, and only when its version changes (rare); release notes say "this update asks Windows for permission once".
 
 ## Consequences
-- Early users still see SmartScreen for a while; the download page says so with the real dialog (UX screen 0).
+- **v0.1 (unsigned, CR-010, founder 2026-10-26):**
+  - SmartScreen warns on every download until Authenticode exists (reputation can't build without a publisher). The download page and README show the real dialog and the "More info → Run anyway" steps (UX screen 0) and how to check the published SHA-256.
+  - The first-run UAC prompt is **yellow and says "Unknown publisher"**. It can't prove to the user that the prompt is ours, so the protection moves into the app (the pinned-hash check of the helper) and Program Files ACLs after install; the UacFrame copy can no longer tell the user to press No on "Unknown publisher".
+  - **Less antivirus reputation for `eucas-guard.exe`**: a higher chance of false-positive quarantine (which fails closed, SYSTEM-DESIGN §7.1) and possibly slower scans on each start (BUILD-PLAN risk 5).
+  - Each new release is a new set of binaries with no publisher identity tying them together; the updater key and the published hashes are the only chain of trust.
 - Losing the updater key strands every install, so there are two sealed backups and a documented rotation path (a release signed by the old key that ships the new public key).
 - Re-evaluate SignPath if the licence moves to an OSI licence at v1.

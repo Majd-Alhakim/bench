@@ -26,7 +26,7 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  ├─ guard-event.schema.json      # guard → core frames (check, needs, file_touch, usage, session, stop_moment, error)
 │  ├─ rulebook.schema.json         # ADR-0010
 │  ├─ install-manifest.schema.json # every file Eucas touched + backup + hash
-│  ├─ elevate-op.schema.json       # the fixed operation enum + options for eucas-elevate (no free-form plan, SECURITY-PRIVACY T7)
+│  ├─ elevate-op.schema.json       # the fixed operation enum + options for eucas-elevate (no free-form plan, SECURITY-PRIVACY T7); incl. update-locked-set with the locked set as an enum subset of the four limit ids (CR-010)
 │  ├─ ipc/
 │  │  ├─ state.schema.json         # GuardState, SessionState, StopReason, TrayState, UsageMode, Session, NeedsItem, LogEntry, … (DESIGN §5.1, §11)
 │  │  ├─ commands.schema.json      # renderer → core, one entry per Tauri command (§4)
@@ -36,6 +36,8 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  │  ├─ verified-versions.schema.json
 │  │  ├─ supervise-request.schema.json   # Level 2 only; Level 1 makes no call (SUPERVISOR §3–4)
 │  │  ├─ supervise-response.schema.json
+│  │  ├─ draft-rule-request.schema.json    # { text }: only the sentence you typed (CR-010, BUILD-PLAN R-2)
+│  │  ├─ draft-rule-response.schema.json   # one rule under rulebook.schema.json, or a rejection reason
 │  │  ├─ licence.schema.json
 │  │  └─ waitlist.schema.json
 │  ├─ errors.schema.json           # ErrorCode enum shared by Rust and TS
@@ -51,11 +53,11 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  │  └─ src/{lib.rs, claude_code/{input.rs, output.rs, settings_read.rs, version.rs}}   # cursor/ lands with the Cursor story
 │  ├─ eucas-guard/                 # BIN. Deps: types, platform, rules, adapters ONLY (no tokio, no sqlite, no tauri, no network crates)
 │  │  └─ src/{main.rs, cmd/{pre_tool_use.rs, post_tool_use.rs, permission_request.rs, stop.rs, notification.rs, session.rs, config_change.rs, status_line.rs, canary.rs}, emit.rs, rulebook_load.rs, tripped.rs, limits_only.rs}
-│  ├─ eucas-elevate/               # BIN, requireAdministrator manifest; fixed operations only (install, repair, pause-limits, resume-limits, remove, update-limits-guard), managed entries and the limits guard embedded; installs itself to Program Files
+│  ├─ eucas-elevate/               # BIN, requireAdministrator manifest; fixed operations only (install, repair, pause-limits, resume-limits, remove, update-limits-guard, update-locked-set), managed entries and the limits guard embedded; installs itself to Program Files; unsigned in v0.1, its SHA-256 pinned in the app build (ADR-0013)
 │  ├─ eucas-core/                  # LIB, no Tauri types (so a different shell can host it, ADR-0008 kill criterion)
 │  │  └─ src/
 │  │     ├─ lib.rs  app_state.rs (the store)  derive.rs (trayState, HeartbeatLine — pure fns)
-│  │     ├─ ingest/  sessions/  heartbeat/  transcripts/  tripwire/  samefile/  ledger/
+│  │     ├─ ingest/  sessions/  heartbeat/  transcripts/  tripwire/  samefile/ (incl. merge.rs, guided merge, CR-010)  ledger/  ruledraft/ (client for /v1/draft-rule + re-validate, compile, limit and bypass checks, CR-010)
 │  │     ├─ installer/ (plugin, status line, managed plan, uninstall)  canary/  notify/ (policy, budget)  diagnostic/
 │  │     ├─ store/ (rusqlite, migrations/*.sql, retention.rs)  config/ (signed config client, verified list)  updates/
 │  │     ├─ supervisor/ (rules_v2.rs, signals.rs, trimmer.rs, redactor.rs, client.rs, overrides.rs)      # Pro, flag-gated
@@ -74,7 +76,7 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  │     ├─ screens/{today, rules, protection, usage, retro, settings}/
 │  │     └─ components/<kebab-name>/   # one folder per DESIGN §4 component (§2)
 │  ├─ api/                         # Cloudflare Worker (Hono + zod), wrangler.toml with [env.staging] and [env.production]
-│  │  └─ src/{index.ts, routes/{config.ts, updates.ts, waitlist.ts, licence.ts, supervise.ts}, quota-do.ts, providers/openrouter.ts, prompts/, scan/secrets.ts}
+│  │  └─ src/{index.ts, routes/{config.ts, updates.ts, waitlist.ts, licence.ts, supervise.ts, draft-rule.ts}, quota-do.ts, providers/openrouter.ts, prompts/, scan/secrets.ts}
 │  └─ plugin/                      # plugin SOURCE: .claude-plugin/plugin.json, hooks/hooks.json, settings.json (shape proven in spikes/companion-hook-shape)
 │
 ├─ packages/
@@ -145,6 +147,7 @@ Tauri **commands** (renderer → core). Args are Rust structs with `#[serde(deny
 | `snooze_needs` / `undo` | `needs_id, minutes` / `undo_token` | Snooze; undo within 10 s | yes (token) |
 | `allow_once` | `needs_id` | Only when S-2 passed and the flag is on | yes (needs_id) |
 | `rule_preview` | `suggestion_id \| rule_draft` | Dry run over 7 days + conflicts | yes |
+| `rule_draft_from_text` | `text` | Prompted rules (CR-010): sends only `text` to `/v1/draft-rule`, re-validates and checks the draft (ruledraft/), returns a `rule_draft` for `rule_preview` or a rejection reason; saves nothing | yes |
 | `rule_save` / `rule_toggle` / `rule_delete` | `draft, client_key` / `rule_id, enabled` / `rule_id` | Writes rulebook.json atomically, recompiles rulebook.bin | yes (client_key) |
 | `run_canary` | — | Local canary | yes (single-flight) |
 | `run_diagnostic` / `export_report` | — / `format: md \| file` | Redacted report | yes |
@@ -156,6 +159,8 @@ Tauri **commands** (renderer → core). Args are Rust structs with `#[serde(deny
 | `firstrun_*` | per step | Detection, plan, apply, canary, finish | yes (step id) |
 | `use_admin` | — | Retry the UAC step | yes |
 | `waitlist_join` / `waitlist_dismiss` | `moment` | D-2 (b) | yes |
+| `update_locked_set` | `locked: limit id set` | Changes which of the four limits are locked (D-4, CR-010); the limits stay on either way; runs the helper's `update-locked-set`, one UAC prompt | yes |
+| `guided_merge` | `warning_id` | Plain-code guided merge from a `SameFileCard` (CR-010, BUILD-PLAN M-1); stops and restores on a conflict or a failing test | yes (warning_id) |
 | `pause_limits` / `resume_limits` | — | Admin-mode escape from a limits-guard brick (SYSTEM-DESIGN §7.1); one UAC prompt each | yes |
 | `remove_eucas` | — | Reverses Eucas's keys from `install-manifest.json` (your later edits stay); one UAC prompt | yes |
 

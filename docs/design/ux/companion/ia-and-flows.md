@@ -8,9 +8,9 @@
 
 > Links to `docs/research/…` point at the 25–26 Oct research files, which are not merged into `dev` yet (see [ux-research.md](ux-research.md), Inputs).
 
-**Scope:** the companion's v0.1 as briefed: the guard and its heartbeat, the rules editor (from suggestions), the live ledger and forecast, the same-file warning, the needs-you inbox in the tray with Windows notifications, the one-button diagnostic, and Pro moments (shown as a waitlist until Pro exists). Windows first; dark first, light as an option; calm UI (panels closed by default).
+**Scope:** the companion's v0.1 as briefed: the guard and its heartbeat, the rules editor (from suggestions, plus prompted rules and the lock choice on the four limits, in v0.1, Free: CR-010, founder 2026-10-26), the live ledger and forecast, the same-file warning with the guided merge (in v0.1, Free: CR-010, founder 2026-10-26), the needs-you inbox in the tray with Windows notifications, the one-button diagnostic, and Pro moments (shown as a waitlist until Pro exists). Windows first; dark first, light as an option; calm UI (panels closed by default).
 
-**What the companion can and can't do (shapes every flow).** It attaches through hooks and the status line to sessions you start anywhere: terminal, the Claude desktop app's Code tab, VS Code. It can **watch, warn, block and explain**. It can't pause an idle session, inject a message into it, create worktrees for it, or (unproven) answer a terminal prompt from outside ([execution pre-mortem](../../../research/teardowns/eucas-premortem-execution.md) F41–F46). So every "fix" button either blocks the next call, stops the process, or takes you to the session. Copy promises **watch, warn, guard**, never "manage".
+**What the companion can and can't do (shapes every flow).** It attaches through hooks and the status line to sessions you start anywhere: terminal, the Claude desktop app's Code tab, VS Code. It can **watch, warn, block and explain**. It can't pause an idle session, inject a message into it, create worktrees for it, or (unproven) answer a terminal prompt from outside ([execution pre-mortem](../../../research/teardowns/eucas-premortem-execution.md) F41–F46). So every "fix" button either blocks the next call, stops the process, or takes you to the session. The one exception is **Merge safely** on the same-file card (§3.4), which is plain-code git housekeeping, not the agent (CR-010, founder 2026-10-26). Copy promises **watch, warn, guard**, never "manage".
 
 ---
 
@@ -87,7 +87,7 @@ flowchart TB
     SE[Settings]
   end
   PR --> LOG[Protection log] & HB[Heartbeat per session] & TESTS[Tests: canary history]
-  RU --> SUG[Suggestions] & MINE[Your rules] & LIM[Limits, read-only]
+  RU --> SUG[Suggestions] & MINE[Your rules] & LIM[Limits: always on, lock choice] & OWN[Add your own: prompted rules]
   US --> LED[Ledger by session/project] & FC[5-hour and weekly forecast] & BUD[Budgets: Pro]
   SE --> DOC[Diagnostic] & NOTIF[Notifications] & APP[Appearance] & PRIV[What Eucas reads] & REM[Remove Eucas]
 ```
@@ -125,7 +125,7 @@ Every flow below follows the same skeleton: **trigger → evidence → one prima
 
 ### 3.1 The needs-you inbox
 
-**What counts as "needs you":** a session waiting on a permission prompt or a question; a session that finished a long run and is idle; a guard problem (off, unverified); a tripwire stop. **Not** "needs you": blocks that already happened (they're in the log), usage (it's a meter), tips, Pro.
+**What counts as "needs you":** a session waiting on a permission prompt or a question; a session that finished a long run and is idle; a guard problem (off, unverified); a tripwire stop; for Pro users, a budget that ran out: "**Budget reached for this task. Continue?**" (CR-010, founder 2026-10-26; §3.3). **Not** "needs you": blocks that already happened (they're in the log), usage (it's a meter), tips, Pro moments.
 
 **The needs-you card (one pattern everywhere: popover, Today, the toast's landing):**
 - Head: project name (the session's folder) + the state word + time ("bench · needs you · 2 min").
@@ -148,12 +148,12 @@ flowchart LR
 
 ### 3.2 Rules from suggestions
 
-The rules editor is an **accept screen, not a write screen** (execution §3 Q1). v0.1 has suggestions + 5 templates; no free-text compiler.
+The rules editor is mostly an **accept screen, not a write screen** (execution §3 Q1). v0.1 has suggestions + 5 templates, and **prompted rules, in v0.1, Free** (CR-010, founder 2026-10-26; replaces "no free-text compiler"): even a rule you describe ends as a preview you accept.
 
 **Rules screen layout:**
-1. **Limits** (top, read-only, collapsed to one line): "4 limits always on: delete · push to your default branch · send · pay. No rule can change them." Expanding shows exactly which commands and tools each covers, and the honest gap line ("Eucas sees tool calls, not what a program does once it runs").
-2. **Suggestions · 3** (from the last 7 days, refreshed daily): rows like the retro card. Each row: command (mono) · scope · "you allowed it 212 times" · **Add**.
+1. **Limits** (top, collapsed to one line): "4 limits always on: delete · push to your default branch · send · pay. No rule can change them." Expanding shows exactly which commands and tools each covers, the promise (fixed copy), and the honest gap line ("Eucas sees tool calls, not what a program does once it runs"). **Lock choice (D-4, CR-010, founder 2026-10-26):** the four limits are always on and can never be switched off; per limit the only choice is **Locked** (managed settings, with admin) or **Not locked** (user scope, labelled "not locked"). The same choice as first-run screen 3b. Changing which limits are locked asks for admin again.2. **Suggestions · 3** (from the last 7 days, refreshed daily): rows like the retro card. Each row: command (mono) · scope · "you allowed it 212 times" · **Add**.
 3. **Your rules** (list): command · scope · "auto-approved 1,204 times since 12 Oct" · last used · switch (on/off) · overflow (Edit scope, Delete).
+   - **Add your own** (prompted rules, in v0.1, Free; CR-010, founder 2026-10-26): describe a rule in plain words → the preview shows exactly what it allows or blocks → **Confirm**. Drafted by the provider-hosted model through the Eucas server; only your sentence is sent; it counts toward the supervisor budget. No drafted rule can make Eucas auto-approve one of the four limits.
 4. **Templates** (only while "Your rules" has fewer than 3): five starters, e.g. "Read-only git (`git status`, `git diff`, `git log`) in all projects".
 
 **Adding a suggestion (the one flow that writes):**
@@ -184,6 +184,7 @@ flowchart LR
 - **Work left, not just percent** (Luma pattern): "That's about 6 more runs like your last one in bench."
 - **Ledger table:** by session, then by project, for today / 7 days. Tokens, plan share, cost if API. Tabular figures, right-aligned.
 - **States:** no plan data (tokens only, with why; onboarding edge G) · stale (no session running: "Last updated 13:02, when bench stopped") · at limit (worst moment, below) · API mode (cost in $ instead of plan %).
+- **Budgets (Pro; CR-010, founder 2026-10-26):** when a budget you set runs out, Eucas **stops the session before its next step** (it blocks the next tool call) and adds a needs-you item: "**Budget reached for this task. Continue?**" Copy says "stops before the next step", never "pauses".
 
 **Worst moment: the 5-hour limit is hit.** Eucas didn't cause it and can't fix it, so it informs and gets out of the way: "**5-hour limit reached.** Claude Code pauses new requests until 15:40. Your sessions keep their work. Weekly: 64 %." No upsell on this card. One line under it, only if Pro exists and the user hasn't dismissed it: see §4.
 
@@ -194,7 +195,8 @@ flowchart LR
 **What it says (plain words, one sentence, then the facts):**
 - Toast: "bench and api-docs are both editing `src/router.ts`."
 - Card (Today and the popover): "**Two sessions are editing the same file.** api-docs changed `src/router.ts` 4 minutes after bench did. If both keep going, one may overwrite the other's work." Facts: each session's last edit time and lines changed.
-- Actions: **Show both** (opens a side-by-side of the two sessions' recent edits to that file, read-only) · Open bench · Open api-docs · "Don't warn for this file today".
+- Actions: **Show both** (opens a side-by-side of the two sessions' recent edits to that file, read-only) · **Merge safely** · Open bench · Open api-docs · "Don't warn for this file today".
+- **Merge safely (guided merge, in v0.1, Free; CR-010, founder 2026-10-26):** runs a plain-code rebase, runs your tests and opens the PR, with no AI. On a conflict or a failing test it stops and names the files.
 - What it never does: block the edit (a warning tool that blocks surprises people), or say "conflict" when git would merge cleanly.
 
 **States:** first warning (the toast + card), repeated (the card updates its count: "3 edits each since 14:02"; no new toast), resolved (one session committed or stopped: "Resolved: bench committed `src/router.ts` at 14:20").
@@ -245,7 +247,7 @@ Actions: **Copy report** (redacted, Markdown) · Save as file · "Open an issue"
 
 ## 4. Pro moments that never nag
 
-**Status:** Pro doesn't exist yet. The strategy pre-mortem says **no paid tier before Anthropic's written OK**, so v0.1 shows these moments as a **waitlist** ("Get notified"), never a checkout. Flagged as decision D-2 for the client.
+**Status:** Pro doesn't exist yet, so v0.1 shows these moments as a **waitlist** ("Get notified"), never a checkout. Decision D-2. Amended (CR-010, founder 2026-10-26): Pro can charge once it is built, because the supervisor doesn't use your Claude plan; only the cloud beta waits for Anthropic's written OK. This replaces the pre-mortem line "no paid tier before Anthropic's written OK".
 
 **The five rules:**
 1. **Never touch safety.** Limits, the heartbeat, the tripwire, same-file warnings and the needs-you inbox work for **every** session on the free plan (execution PT-7: never meter safety). If "up to 3 sessions" stays in Free, it caps the **ledger detail and the sessions list**, never the guard (decision D-1).
@@ -258,7 +260,7 @@ Actions: **Copy report** (redacted, Markdown) · Save as file · "Open an issue"
 
 | Moment | Where | Line (draft) | Why it's honest |
 |---|---|---|---|
-| A long task is on pace to hit the 5-hour limit (forecast, not the limit itself) | Usage meter, 30+ min before | "Pro can pause bench at a budget you set, before the limit does. Get notified when it's ready." | Budgets with auto-pause are the one Pro feature that saves real money (strategy §3) |
+| A long task is on pace to hit the 5-hour limit (forecast, not the limit itself) | Usage meter, 30+ min before | "Pro stops bench before the next step when it reaches a budget you set, before the limit does. Get notified when it's ready." (CR-010, founder 2026-10-26) | Budgets that stop before the next step are the one Pro feature that saves real money (strategy §3) |
 | A session stopped and has been idle 10+ min, **and** it didn't stop because of a block or an error | Session row in Today | "Pro's supervisor can nudge stopped sessions within a budget. It never nudges after a block." | Says the safety rule in the pitch |
 | Looking at last week in Retro | Retro, below the 7-day cards | "Older weeks are kept with Pro." | History is the plain metered value |
 | A 4th session starts (only if D-1 keeps the cap) | Sessions list | "Showing details for 3 sessions. All 4 are guarded. Pro shows every session's details." | Makes clear the 4th is still protected |
@@ -293,6 +295,7 @@ Actions: **Copy report** (redacted, Markdown) · Save as file · "Open an issue"
 - One **heartbeat line** in onboarding screen 6, the popover status line and the Protection status card.
 - One **log row** for blocks, warnings, tripwire and guard changes.
 - One **status vocabulary**: sessions use Working · Needs you · Idle · Done · Failed · Stopped (agent view's six states); the guard uses Guarded · Not guarded · Not verified · Blocked by your organisation. No synonyms ("protected" appears only in the sentence "You're protected" at the end of first run and on the status card).
-- One **honest promise string**, stored once, used in onboarding screen 4, Rules › Limits, Protection and the website.
+- One **honest promise string**, stored once, used in onboarding screens 3b (CR-010, founder 2026-10-26) and 4, Rules › Limits, Protection and the website.
+- One **lock choice** (Locked / Not locked) per limit, the same control in first-run screen 3b and Rules › Limits (CR-010, founder 2026-10-26).
 
 **Intelligence layer:** suggestions get better as history grows; each rule shows its counter; the weekly Retro compares to last week ("2 fewer same-file clashes than last week"); the forecast learns your pace. **Exit question:** what would you rebuild elsewhere? Your rules and their history. They are plain files you can export (Settings › Export rules), so the value is visible and nothing is locked in.

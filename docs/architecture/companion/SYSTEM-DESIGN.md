@@ -6,7 +6,7 @@
 
 **This folder:** this file (context, containers, flows, failure and scale checks) · [CODE-STRUCTURE](CODE-STRUCTURE.md) · [CI-CD](CI-CD.md) · [SUPERVISOR](SUPERVISOR.md) · [SECURITY-PRIVACY](SECURITY-PRIVACY.md) · [TESTING](TESTING.md) · [OPERATIONS](OPERATIONS.md) · [BUILD-PLAN](BUILD-PLAN.md). Decisions: [ADR-0007 … ADR-0015](../../adr/).
 
-**Naming:** everything is named Eucas (the rename is done, CR-010). Binaries, plugin name, pipe names, folders and UAC publisher are **user-visible and hard to rename once installed**, so they are `eucas-*` / `Eucas` from day one, and the crates follow so the codebase has one name; BUILD-PLAN §1 P6. "Claude Code" appears only as the name of the thing we attach to, never as ours.
+**Naming:** everything is named Eucas (the rename is done, CR-010). Binaries, plugin name, pipe names, folders and the UAC publisher (once Authenticode is bought, ADR-0013) are **user-visible and hard to rename once installed**, so they are `eucas-*` / `Eucas` from day one, and the crates follow so the codebase has one name; BUILD-PLAN §1 P6. "Claude Code" appears only as the name of the thing we attach to, never as ours.
 
 ---
 
@@ -14,13 +14,13 @@
 
 | # | Decision | ADR |
 |---|---|---|
-| 1 | Attach to the user's own sessions: a **user-scope plugin** calling a **native guard**, the four **limits in admin-written managed settings** (one UAC prompt), the app optional for safety | [0007](../../adr/0007-companion-attach-architecture.md) |
+| 1 | Attach to the user's own sessions: a **user-scope plugin** calling a **native guard**, the four **limits always on**, each one you lock held in **admin-written managed settings** (one UAC prompt), the app optional for safety | [0007](../../adr/0007-companion-attach-architecture.md) |
 | 2 | **Tauri 2 + Rust core + React renderer** for the companion (Electron stays for the team app) | [0008](../../adr/0008-companion-stack-tauri-rust.md) |
 | 3 | The guard is a **short-lived exe** that decides alone; events go over a **named pipe**, with a spool file when the app is closed | [0009](../../adr/0009-guard-process-and-event-channel.md) |
 | 4 | A **vendor-neutral rulebook** (JSON Schema) compiled per vendor; limits are not expressible in it | [0010](../../adr/0010-vendor-neutral-rulebook.md) |
 | 5 | Supervisor: **rules first, model only at Level 2**, never approves, falls back to asking you | [0011](../../adr/0011-supervisor-rules-first-model-at-level-2.md) |
-| 6 | A **thin stateless Worker** for config, updates, waitlist counts and opt-in telemetry, and (Pro) licence, quota and model routing | [0012](../../adr/0012-thin-server-cloudflare-workers.md) |
-| 7 | **Signed** binaries (route A recommended; D-3 is the founder's) and Tauri updater channels | [0013](../../adr/0013-code-signing-and-updates.md) |
+| 6 | A **thin stateless Worker** for config, updates, waitlist counts, opt-in telemetry and prompted-rule drafting (`/v1/draft-rule`, CR-010), and (Pro) licence, quota and model routing | [0012](../../adr/0012-thin-server-cloudflare-workers.md) |
+| 7 | **Unsigned v0.1** (no Authenticode; D-3 decided, CR-010, founder 2026-10-26): updates signed with the Tauri updater's Ed25519 key, installer SHA-256s published, the elevate helper checked by a **pinned SHA-256**; Tauri updater channels; Authenticode once revenue covers it | [0013](../../adr/0013-code-signing-and-updates.md) |
 | 8 | **Nightly canary** on the latest CLI; "Verified for Claude Code x.y" only for versions CI and the PC both proved | [0014](../../adr/0014-canary-and-verified-badge.md) |
 | 9 | **Counts, not text** in one local SQLite; transcripts read, never copied | [0015](../../adr/0015-local-data-counts-not-text.md) |
 
@@ -30,11 +30,13 @@
 
 **The core** (remove it and it isn't Eucas): a guard on every local Claude Code tool call that **proves it's running** and **holds the four limits** even when the app is closed.
 
-**In v0.1** (pre-mortem cut, D-1 (b), D-2 (b)): the guard with `onFailure: "block"`, the heartbeat and canary, the mass-delete tripwire, the limits in managed settings (UAC) with the labelled user-level fallback, rules from suggestions + 5 templates, the ledger and forecast through status-line chaining, the same-file warning, the tray, popover and Windows toasts, the 7-day retro first run, the diagnostic, signing, auto-update, clean uninstall, every session guarded, session details capped at 3, Pro as a waitlist line.
+**In v0.1** (pre-mortem cut, D-1 (b), D-2 (b)): the guard with `onFailure: "block"`, the heartbeat and canary, the mass-delete tripwire, the four limits always on, each locked in managed settings (UAC) or left at user scope and labelled "not locked", rules from suggestions + 5 templates, **"Choose your rules"** in first run (the four limits with a lock choice each, other library rules on or off), **prompted rules** (you describe a rule; `/v1/draft-rule` drafts it; it must validate, compile and pass the limit and bypass checks before you confirm it), the ledger and forecast through status-line chaining, the same-file warning with the plain-code **guided merge** (rebase, run the tests, open the PR; no AI, never writes code), the tray, popover and Windows toasts, the 7-day retro first run, the diagnostic, **unsigned binaries with Ed25519-signed updates and published installer SHA-256s** (ADR-0013), auto-update, clean uninstall, every session guarded, session details capped at 3, Pro as a waitlist line. Guided merge, prompted rules, "Choose your rules" and unsigned v0.1: CR-010, founder 2026-10-26.
 
-**Out of v0.1:** the notch (CR-009 stays with the team app), guided merge, the free-text rules compiler, payments and licence keys, the supervisor and budgets (Pro), cloud hand-off (Pro beta), launching sessions, "Allow once" unless S-2 passes, macOS and Linux installers (CI still builds and tests on Ubuntu).
+**Out of v0.1:** the notch (CR-009 stays with the team app), Authenticode signing (once revenue covers it), payments and licence keys (Pro; it can charge once built, CR-010), the supervisor and budgets (Pro), cloud hand-off (Pro beta; the only part that waits for Anthropic's written OK), launching sessions, "Allow once" unless S-2 passes, macOS and Linux installers (CI still builds and tests on Ubuntu).
 
-**Assumptions (owner):** Claude Code ≥ 2.1.310 on Windows for a "verified" state (founder, via docs); a plugin at user scope reaches the terminal, the desktop app's local sessions and VS Code (pre-mortem F30; confirmed in SP-H1); Windows 11 22H2+ x64 first, arm64 when CI can sign it (founder).
+**Budgets (Pro, CR-010, founder 2026-10-26):** when a task's budget runs out, the guard **blocks the agent's next step at PreToolUse** and the core adds the needs-you item "Budget reached for this session. Continue?". The copy says Eucas "stops before the next step", never "pauses".
+
+**Assumptions (owner):** Claude Code ≥ 2.1.310 on Windows for a "verified" state (founder, via docs); a plugin at user scope reaches the terminal, the desktop app's local sessions and VS Code (pre-mortem F30; confirmed in SP-H1); Windows 11 22H2+ x64 first, arm64 later (founder).
 
 ## 2. Numbers (NFRs)
 
@@ -71,9 +73,9 @@ flowchart TB
   end
   AN[Anthropic API<br/>via Claude Code only]
   GH[GitHub<br/>releases, issues, branch rules]
-  W[Eucas API on Cloudflare Workers<br/>config · updates · waitlist count<br/>Pro: licence, quota, routing]
-  OR[OpenRouter, ZDR providers<br/>Pro, Level 2 only]
-  LS[Lemon Squeezy<br/>Pro, after Anthropic's written OK]
+  W[Eucas API on Cloudflare Workers<br/>config · updates · waitlist count · draft-rule<br/>Pro: licence, quota, routing]
+  OR[OpenRouter, ZDR providers<br/>prompted-rule drafts · Pro Level 2]
+  LS[Lemon Squeezy<br/>Pro, once Pro is built]
   RT[Your Claude cloud scheduled tasks<br/>Pro beta, via RemoteTrigger in the CLI]
 
   U -- works in --> CC
@@ -83,7 +85,7 @@ flowchart TB
   E -- watches deletes, edits --> FS
   CC -- prompts, your plan --> AN
   E -- signed config, updates --> W
-  W -. Pro .-> OR
+  W -. your rule sentence · Pro .-> OR
   W -. Pro .-> LS
   E -. Pro beta: claude -p --tools RemoteTrigger .-> CC
   CC -. runs .-> RT
@@ -120,7 +122,7 @@ flowchart LR
       DB[(eucas.db SQLite)]
     end
   end
-  EL[eucas-elevate.exe · UAC helper<br/>first run: from the app folder after an Authenticode check<br/>later: from C:/Program Files/Eucas]
+  EL[eucas-elevate.exe · UAC helper<br/>first run: from the app folder after a pinned SHA-256 check<br/>later: from C:/Program Files/Eucas]
 
   CLI -- PreToolUse/PermissionRequest<br/>exec form · onFailure: block --> LG
   CLI -- all hook events<br/>exec form --> G
@@ -142,13 +144,13 @@ flowchart LR
 
 | Container | Tech | Runs | Owns | Fails how, and what's safe |
 |---|---|---|---|---|
-| **Limits guard** | Rust exe, signed, in Program Files | Per PreToolUse / PermissionRequest, from managed settings | The four limits | Crash or timeout → `onFailure: "block"` denies; managed `permissions.deny` patterns still apply with no binary. If it can't start at all, every session is blocked and **only an admin step lifts it** (§7.1) |
+| **Limits guard** | Rust exe in Program Files (unsigned in v0.1; admin-only ACLs) | Per PreToolUse / PermissionRequest, from managed settings | The limits you locked (D-4) | Crash or timeout → `onFailure: "block"` denies; managed `permissions.deny` patterns still apply with no binary. If it can't start at all, every session is blocked and **only an admin step lifts it** (§7.1) |
 | **Plugin** | Claude Code plugin (manifest, `hooks/hooks.json`, `settings.json`, `bin/eucas-guard.exe`). Our installer writes it to a **local marketplace** folder; `claude plugin install` copies it into Claude Code's plugin cache, so the guard doesn't depend on the app folder | Loaded by every local session | Wiring + the guard binary | Disabled by the user → heartbeat goes red within one tool call |
 | **Guard** | Same Rust exe, user copy, inside the plugin | Per hook event and per status-line tick | Rule decisions, check events, status-line wrapper | Internal error → deny (PreToolUse) or no opinion (others); app down → spool |
 | **Core** | Rust (`crates/eucas-app` + library crates) | Tray process, starts at login | State, verdicts, UI data, tripwire, canary | Crash → safety unchanged; the guard keeps deciding; Windows restarts it via the login task; the spool fills the gap |
 | **Renderer** | React 19, TS strict, Tailwind, shadcn, tokens from DESIGN | WebView2: the flyout is pre-warmed and hidden; the main and first-run windows are created on demand | Pixels only | Main and first-run windows destroyed when closed; no Node, no secrets |
-| **Elevate helper** | Rust exe, signed, `requireAdministrator` manifest. **Fixed operations only** (`install`, `repair`, `pause-limits`, `resume-limits`, `remove`, `update-limits-guard`); the managed entries and the limits-guard binary are embedded in it (SECURITY-PRIVACY T7). The first run launches it from the app folder only after the core checks its Authenticode signature and publisher; it then installs itself to `C:\Program Files\Eucas\`, and every later UAC step runs that copy | First run, Repair, pause/resume, uninstall, limits-guard updates | Managed-settings entries, limits guard copy | Declined → user-level fallback (D-4 (b)), labelled weaker |
-| **Eucas API** | Cloudflare Worker (TS, Hono, zod), KV, one DO class | Edge | Config, update manifests, waitlist counts, opt-in telemetry; Pro licence and quota | Down → cached config (7 days), no updates, Pro asks you |
+| **Elevate helper** | Rust exe, `requireAdministrator` manifest, unsigned in v0.1. **Fixed operations only** (`install`, `repair`, `pause-limits`, `resume-limits`, `remove`, `update-limits-guard`, `update-locked-set`); the managed entries and the limits-guard binary are embedded in it (SECURITY-PRIVACY T7); `install` and `update-locked-set` take the locked set as an enum-set option (a subset of the four limit ids), never free text. The first run launches it from the app folder only after the core checks its **SHA-256 against the hash pinned in the app build** (CR-010, founder 2026-10-26); it then installs itself to `C:\Program Files\Eucas\`, and every later UAC step runs that copy | First run, Repair, pause/resume, changing the locked set, uninstall, limits-guard updates | Managed-settings entries for the locked limits, limits guard copy | Declined → every limit stays on at user scope, labelled "not locked" (D-4) |
+| **Eucas API** | Cloudflare Worker (TS, Hono, zod), KV, one DO class | Edge | Config, update manifests, waitlist counts, opt-in telemetry, prompted-rule drafts (`/v1/draft-rule`, counted toward the supervisor budget); Pro licence and quota | Down → cached config (7 days), no updates, no rule drafting (suggestions and templates still work), Pro asks you |
 
 ### 4.1 Inside the core
 
@@ -161,10 +163,11 @@ Names below are modules in `crates/eucas-core/src/` (`eucas-ingest` = `ingest/`)
 | `eucas-heartbeat` | Per-session guard verdict → `GuardState` | check events + transcript tool-use ids + status-line ticks + canary results + verified list |
 | `eucas-transcripts` | Streaming, metadata-only reader of `~/.claude/projects/**/*.jsonl` (tail for live sessions, full for the retro) | JSONL → `ToolUseSeen { session, tool_use_id, tool, program, at }`, token usage, file paths |
 | `eucas-tripwire` | Delete counting per watched root, attribution, stop and verify | `ReadDirectoryChangesW` on each active session's folder + the user profile → `TripwireEvent`s, process-tree kill |
-| `eucas-samefile` | Same file touched by two sessions within 15 min, same working tree | PostToolUse file paths (canonicalised: junctions resolved, case-folded) → `SameFileWarning` |
+| `eucas-samefile` | Same file touched by two sessions within 15 min, same working tree | PostToolUse file paths (canonicalised: junctions resolved, case-folded) → `SameFileWarning`; **guided merge** (CR-010): clean-tree check, rebase the later branch, the project's test command, `gh pr create` or the command to copy; on a conflict or failing test it aborts and leaves both branches as they were |
 | `eucas-ledger` | Usage samples, per-session and per-project tokens and plan share, forecast | status-line JSON + transcript usage → `UsageSnapshot`, `Forecast` |
 | `eucas-rules` | Neutral `ToolCall` model, shell tokenizers, rule matching, compiler, dry runs, suggestions | rulebook + history → `rulebook.bin`, `DryRun`, `Suggestion`s |
-| `eucas-installer` | Plugin install via `claude plugin` CLI, status-line wrap, the helper operation to request, **key-level** restore | current config → `InstallPlan` (shown as the checklist) → applied, with a JSON patch per touched file |
+| `eucas-ruledraft` (CR-010) | Prompted rules: sends only your sentence to `/v1/draft-rule`, then re-validates the draft against the rulebook schema, compiles it, rejects any overlap with a limit or any bypass case it would auto-approve, and hands it to `RulePreview`; nothing is saved until you confirm | sentence → `RuleDraft` or a rejection reason |
+| `eucas-installer` | Plugin install via `claude plugin` CLI, status-line wrap, the helper operation to request (including `update-locked-set` when you change which limits are locked), **key-level** restore | current config → `InstallPlan` (shown as the checklist) → applied, with a JSON patch per touched file |
 | `eucas-canary` | Local canary (S-1 path or a real turn) | → `CanaryResult` |
 | `eucas-notify` | Notification policy (DESIGN §4.18 budget), toasts, tray icon state | store changes → toasts, `TrayState` |
 | `eucas-diagnostic` | Redacted report | everything above → Markdown |
@@ -216,7 +219,7 @@ flowchart LR
 ```
 
 - `guarded` needs a real check; `idle` means no tool activity and is never shown as a tick. A session that starts without a `SessionStart` from our plugin (installed before the plugin, S-3) is `not_guarded` with "restart it to guard" until its first check arrives.
-- Verdict priority per session: `org` › `failing` › `off` › `not_guarded` › `untested` › `not_verified` › `user_level` › `guarded` › `idle`; the app-level `GuardState` is the worst session state, `setup` before first run ends.
+- Verdict priority per session: `org` › `failing` › `off` › `not_guarded` › `untested` › `not_verified` › `user_level` (at least one limit not locked; the label says "not locked", CR-010) › `guarded` › `idle`; the app-level `GuardState` is the worst session state, `setup` before first run ends.
 - `failing` = the guard is blocking calls without a rule deciding, on ≥ 3 calls in 60 s: either it reported its own error (`GUARD_INTERNAL`, `GUARD_SCHEMA` when a CLI release changed a required field), or the transcript shows tool results that Claude Code blocked because a hook failed to start or timed out with **no** check event (antivirus quarantine, a missing binary). The recovery paths are in §7.1.
 
 ### 5.3 Status-line chaining (ledger and forecast)
@@ -275,18 +278,21 @@ sequenceDiagram
   C->>C: read settings (statusLine, hooks, managed flags), list 7 days of transcripts
   C-->>R: detection checklist (≤ 3 s)
   C-->>R: retro cards streamed (first ≤ 5 s)
-  R->>C: Turn on protection · 3 rules
+  R->>C: Choose your rules: the four limits (always on), a lock choice for each; library rules on or off
+  R->>C: Turn on protection
   C->>CC: claude plugin marketplace add + install eucas@eucas --scope user
-  C->>C: wrap status line (backup), write rulebook, compile rulebook.bin
-  C->>C: check eucas-elevate.exe's Authenticode signature and publisher
-  C->>E: ShellExecute runas "install --source auto" (UAC, names the signed publisher)
-  E->>E: install itself to Program Files; merge its embedded managed entries (JSON patch recorded), install the embedded limits guard, set ACLs
+  C->>C: wrap status line (backup), write rulebook, compile rulebook.bin; deny patterns for limits left not locked → user settings
+  C->>C: SHA-256 of eucas-elevate.exe == hash pinned in the app build? (no → stop, nothing elevated)
+  C->>E: ShellExecute runas "install --source auto --lock <chosen limits>" (UAC; v0.1 names no verified publisher)
+  E->>E: install itself to Program Files; merge its embedded managed entries for the locked limits (JSON patch recorded), install the embedded limits guard, set ACLs
   E-->>C: result
   C->>C: canary (S-1 path)
   C-->>R: "Blocked by Eucas · logged" → You're protected
 ```
 
-Every write is **atomic per file** (write temp, flush, rename) and recorded as a JSON patch of the keys Eucas added or changed; any failure rolls back the steps already done in reverse order (UX edge I). Quitting before step 4 leaves nothing written. The UacFrame copy tells you which publisher Windows must name, and to press No if it says "Unknown publisher".
+Every write is **atomic per file** (write temp, flush, rename) and recorded as a JSON patch of the keys Eucas added or changed; any failure rolls back the steps already done in reverse order (UX edge I). Quitting before step 4 leaves nothing written. **Unsigned v0.1 (CR-010, founder 2026-10-26):** Windows shows the prompt in yellow with "Unknown publisher", so the UacFrame copy can't use the publisher name as the check and must not tell you to press No on "Unknown publisher"; the check is the core's pinned-hash comparison just before the prompt, and every later UAC step runs the admin-only Program Files copy. If you lock none of the four, no UAC prompt is shown and all four stay on at user scope, labelled "not locked".
+
+**Changing the locked set later** (D-4, CR-010, founder 2026-10-26): the four limits stay on whatever you choose; locking or unlocking one runs the Program Files helper's fixed `update-locked-set` operation with the new set, which asks Windows for admin again. Moving a limit from locked to not locked puts its deny patterns in your user settings in the same step, so it is never off in between. No rule, user-written or drafted, can make Eucas auto-approve one of the four (ADR-0010).
 
 ### 5.7 Supervisor at a Stop moment (Pro, not v0.1)
 
@@ -317,7 +323,7 @@ From SP-CR1: one routine per cloud-eligible project, created disabled with a far
 | `canary_run` | id | cli_version, path (hook-only / model), result, at |
 | `setting` | key | JSON value |
 
-Files (single sources of truth): `rulebook.json` (rules), `statusline.saved.json`, `install-manifest.json` (every file Eucas touched, the **JSON patch of the keys it added or changed**, the file's hash right after install, and a backup). Uninstall reverses only Eucas's keys; it restores the whole file from backup only if the file's hash still equals the post-install hash. Your later edits survive, managed-settings entries (owned by the helper).
+Files (single sources of truth): `rulebook.json` (rules), `statusline.saved.json`, `install-manifest.json` (which of the four limits are locked (D-4, CR-010), every file Eucas touched, the **JSON patch of the keys it added or changed**, the file's hash right after install, and a backup). Uninstall reverses only Eucas's keys; it restores the whole file from backup only if the file's hash still equals the post-install hash. Your later edits survive, managed-settings entries (owned by the helper).
 
 ---
 
@@ -349,7 +355,7 @@ A fail-closed guard that can't run blocks every tool call. That is the right fai
 | Layer | First try | Escape | Admin? |
 |---|---|---|---|
 | Plugin guard (user) | **Repair**: re-install the plugin from the local marketplace (`claude plugin update eucas@eucas`), re-run the canary | **Off for 15 minutes**: the app runs `claude plugin disable eucas@eucas` and re-enables it when the time is up (a guard that can't start can't read a flag, so Off works by removing the hook, not by telling the guard). Without the app: the same command by hand | No |
-| Limits guard (admin, D-4 (a)) | **Repair (asks Windows)**: the Program Files helper restores the limits guard from its embedded copy | **Pause the limits (asks Windows)**: `pause-limits` removes our managed hook entry and leaves the deny patterns (they need no binary); **Turn them back on** runs `resume-limits` with a second UAC prompt. The copy says both prompts up front. While paused, every surface shows `user_level` | Yes, once each way |
+| Limits guard (admin, the limits you locked, D-4) | **Repair (asks Windows)**: the Program Files helper restores the limits guard from its embedded copy | **Pause the limits (asks Windows)**: `pause-limits` removes our managed hook entry and leaves the deny patterns (they need no binary); **Turn them back on** runs `resume-limits` with a second UAC prompt. The copy says both prompts up front. While paused, every surface shows `user_level` | Yes, once each way |
 | Both | — | Settings › Remove Eucas (one UAC prompt) | Yes |
 
 After any unbrick, Eucas tells you to **restart running sessions**: whether a running session picks up a disabled plugin or a changed managed entry is part of SP-H1 (until it's proven, the copy assumes it doesn't). If antivirus quarantined the binary, Repair may be re-quarantined; the banner then links the vendor's false-positive submission and keeps the escape on screen.
