@@ -147,17 +147,9 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   height: 32px; min-width: 124px; padding: 0 22px; border: 0; cursor: pointer;
   background: var(--notch-bg); color: var(--notch-text);
   border-radius: 0 0 16px 16px;
-  outline: 1px solid rgb(255 255 255 / 0.09); outline-offset: 0; /* the product's ring, so the notch reads on dark wallpapers */
   transition: min-width 0.32s var(--ease), padding 0.32s var(--ease);
 }
 .notch:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
-/* concave shoulders where it meets the top edge, so it reads as part of the screen (product fragment) */
-.notch::before, .notch::after, .peek::before, .peek::after {
-  content: ""; position: absolute; top: 0; width: 8px; height: 8px; pointer-events: none;
-  background: radial-gradient(circle at 0 100%, transparent 7.5px, var(--notch-bg) 8px); /* taste-skill-ignore: the notch's concave shoulders, as in the product */
-}
-.notch::before, .peek::before { left: -8px; transform: scaleX(-1); }
-.notch::after, .peek::after { right: -8px; }
 .eyes { display: flex; gap: 9px; --ex: 0px; --ey: 0px; }
 .eyes i {
   display: block; width: 5px; height: 13px; border-radius: 99px; background: var(--notch-eye);
@@ -187,7 +179,7 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 .peek {
   position: absolute; top: 0; width: min(372px, calc(100vw - 32px)); padding: 40px 16px 14px;
   background: var(--notch-bg); color: var(--notch-text); border-radius: 0 0 22px 22px;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.09), 0 18px 48px rgb(0 0 0 / 0.45); /* taste-skill-ignore: the peek floats over the page, like a menu */
+  box-shadow: 0 18px 48px rgb(0 0 0 / 0.45); /* taste-skill-ignore: the peek floats over the page, like a menu */
   font-size: 13px; line-height: 1.35; z-index: -1;
   transform-origin: top center; animation: peek 0.32s var(--ease);
 }
@@ -195,8 +187,6 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 /* folding back: the card shrinks into the notch, the way it came out */
 .peek.folding { animation: fold 0.3s var(--ease) forwards; pointer-events: none; }
 @keyframes fold { from { clip-path: inset(0 0 0 0 round 0 0 22px 22px); } to { clip-path: inset(0 33% 83% 33% round 0 0 16px 16px); } }
-/* the 1px light ring is for dark wallpapers; on a light page it reads as a grey outline */
-:root[data-theme="light"] .notch:not(:focus-visible) { outline: 0; }
 :root[data-theme="light"] .peek { box-shadow: 0 18px 48px rgb(0 0 0 / 0.25); } /* taste-skill-ignore: the peek floats over the page, like a menu */
 .pk-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 4px; }
 .pk-item + .pk-item { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08); } /* taste-skill-ignore: the peek's own divider */
@@ -224,9 +214,6 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
   position: relative; display: flex; align-items: center; justify-content: center; gap: 9px;
   min-width: 124px; height: 32px; padding: 0 20px; border-radius: 0 0 16px 16px; background: var(--notch-bg);
 }
-.mini-notch::before, .mini-notch::after { content: ""; position: absolute; top: 0; width: 8px; height: 8px; background: radial-gradient(circle at 0 100%, transparent 7.5px, var(--notch-bg) 8px); } /* taste-skill-ignore: the notch's shoulders */
-.mini-notch::before { left: -8px; transform: scaleX(-1); }
-.mini-notch::after { right: -8px; }
 .mini-notch i { display: block; width: 5px; height: 13px; border-radius: 99px; background: var(--notch-eye); transform: rotate(-12deg); }
 .mini-notch b { display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--marker-attn); color: #161616; font-size: 11px; font-weight: 600; }
 
@@ -350,7 +337,7 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 .know h2 { max-width: 8ch; }
 .know-list { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 48px; }
 .know-list dt { font-size: var(--t-b); font-weight: 600; letter-spacing: -0.01em; }
-.know-list dt::before { content: ""; display: block; width: 30px; height: 12px; margin-bottom: 14px; background: var(--notch-bg); border-radius: 0 0 6px 6px; box-shadow: 0 0 0 1px rgb(var(--ink-rgb) / 0.12); } /* taste-skill-ignore: keeps the black notch bullet visible on the dark ground */
+.know-list dt::before { content: ""; display: block; width: 30px; height: 12px; margin-bottom: 14px; background: var(--ink); border-radius: 0 0 6px 6px; }
 .know-list dd { margin-top: 6px; color: var(--muted); font-size: 17px; }
 
 /* ---------- The waitlist: a sentence with a blank ---------- */
