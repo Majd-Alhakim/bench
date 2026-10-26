@@ -1,7 +1,21 @@
-# Cloudflare Pages project for eucas.app. Nothing here deploys by itself; see README.md "Going live".
+# Cloudflare Worker for eucas.app: static files from public/, /api/* runs src/index.ts.
+# Nothing here deploys by itself; DEPLOY.md is the go-live runbook.
 name = "eucas-landing"
-pages_build_output_dir = "public"
+main = "src/index.ts"
 compatibility_date = "2026-10-01"
+upload_source_maps = true
+# Only the custom domains (added in the dashboard, DEPLOY.md step 9) serve the site, so the zone's WAF and rate limit always apply.
+workers_dev = false
+preview_urls = false
+
+[assets]
+directory = "public"
+run_worker_first = ["/api/*"]
+
+[observability]
+enabled = true
+# Confirm and unsubscribe links carry the row's token in ?t=; keep it out of the logs.
+redact_query_string = true
 
 [[d1_databases]]
 binding = "DB"
@@ -10,8 +24,14 @@ database_name = "eucas-waitlist"
 database_id = "00000000-0000-0000-0000-000000000000"
 migrations_dir = "migrations"
 
+# Second line of defence behind the zone's WAF rate-limit rule: 10 POSTs a minute per IP and path, per Cloudflare location.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
+
 [vars]
 SITE_URL = "https://eucas.app"
 MAIL_FROM = "Eucas <hello@eucas.app>"
 TURNSTILE_HOSTNAMES = "eucas.app,www.eucas.app"
-# Secrets, never in this file: TURNSTILE_SECRET, RESEND_API_KEY (Pages > Settings > Variables and Secrets).
+# Secrets, never in this file: TURNSTILE_SECRET, RESEND_API_KEY (`npx wrangler secret put <NAME>`, or Worker > Settings > Variables and Secrets).

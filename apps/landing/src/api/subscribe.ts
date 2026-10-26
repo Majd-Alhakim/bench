@@ -1,5 +1,5 @@
 // POST /api/subscribe: adds an email to the waitlist and sends the confirm link when a mailer is set.
-import { AGENTS, CONSENT, PLANS, type Ctx, cleanRef, json, newToken, normaliseEmail, readJson, sendConfirm, verifyTurnstile } from "../../lib/waitlist";
+import { AGENTS, CONSENT, PLANS, type Ctx, cleanRef, json, newToken, normaliseEmail, readJson, sendConfirm, verifyTurnstile } from "../../lib/waitlist.ts";
 
 export const onRequestPost = async ({ request, env }: Ctx): Promise<Response> => {
   const body = await readJson(request);

@@ -1,5 +1,5 @@
 // GET /api/confirm?t=…: the double opt-in link from the email.
-import { type Ctx, isToken, page } from "../../lib/waitlist";
+import { type Ctx, isToken, page } from "../../lib/waitlist.ts";
 
 export const onRequestGet = async ({ request, env }: Ctx): Promise<Response> => {
   const t = new URL(request.url).searchParams.get("t");

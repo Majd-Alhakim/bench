@@ -1,15 +1,16 @@
 {
   "name": "@eucas/landing",
   "private": true,
-  "description": "eucas.app: the landing page and waitlist (Cloudflare Pages + Functions + D1).",
+  "description": "eucas.app: the landing page and waitlist (Cloudflare Workers static assets + D1).",
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev",
+    "dev": "wrangler dev",
     "db:local": "wrangler d1 migrations apply eucas-waitlist --local",
     "typecheck": "tsc --noEmit",
     "test": "node --test test/*.test.ts",
     "screens": "node scripts/capture-screens.mjs",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "check:deploy": "wrangler deploy --dry-run --outdir .wrangler/dry-run"
   },
   "devDependencies": {
     "typescript": "5.9.3",

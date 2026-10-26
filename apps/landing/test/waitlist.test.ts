@@ -33,6 +33,6 @@ test("Turnstile fails closed when a secret is set but the token or hostnames are
   assert.equal(await verifyTurnstile({ TURNSTILE_SECRET: "x" } as Env, "tok", null, "waitlist"), false);
 });
 
-test("Turnstile is skipped only when no secret is set", async () => {
-  assert.equal(await verifyTurnstile({} as Env, undefined, null, "waitlist"), true);
+test("Turnstile fails closed when no secret is set, so a missed deploy step can't switch it off", async () => {
+  assert.equal(await verifyTurnstile({ TURNSTILE_HOSTNAMES: "eucas.app" } as Env, "tok", null, "waitlist"), false);
 });

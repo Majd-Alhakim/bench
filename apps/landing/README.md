@@ -1,10 +1,11 @@
 # eucas.app: landing page and waitlist
 
-The demand test for the Eucas companion, built on the approved notch design (`docs/design/ui/companion/DESIGN.md`): Pip lives in a live notch at the top of the page, its state follows the section you read, and every product picture is a real capture from the notch prototype. A static page on Cloudflare Pages, a waitlist stored in Cloudflare D1 through Pages Functions, Turnstile against bots, and an optional confirm email through Resend. **Nothing here is deployed.** Going live is the founder's job; the steps are below.
+The demand test for the Eucas companion, built on the approved notch design (`docs/design/ui/companion/DESIGN.md`): Pip lives in a live notch at the top of the page, its state follows the section you read, and every product picture is a real capture from the notch prototype. One Cloudflare Worker: the static page served as Workers static assets, a small API (`src/`) that stores the waitlist in Cloudflare D1, Turnstile against bots, and an optional confirm email through Resend. **Nothing here is deployed.** Going live is the founder's job: [DEPLOY.md](DEPLOY.md) is the runbook.
 
 ```
 public/          the site: index.html, privacy.html, styles.css, main.js, fonts/, screens/, og.png, _headers
-functions/api/   subscribe (POST), details (POST), confirm (GET), unsubscribe (GET page, POST delete)
+src/index.ts     the Worker: routes /api/*, security headers, per-IP rate limit (static files never reach it)
+src/api/         subscribe (POST), details (POST), confirm (GET), unsubscribe (GET page, POST delete)
 lib/waitlist.ts  validation, Turnstile siteverify, the Resend call, small HTML pages
 migrations/      the D1 schema
 scripts/         capture-screens.mjs (cut-outs from docs/design/ui/companion/prototype/notch.html), og.mjs, check.mjs
@@ -18,7 +19,7 @@ cd apps/landing
 npm install
 cp .dev.vars.example .dev.vars          # Cloudflare's always-pass Turnstile test keys, no real secrets
 npx wrangler d1 migrations apply eucas-waitlist --local
-npx wrangler pages dev                  # http://localhost:8788
+npm run dev                             # http://localhost:8787
 ```
 
 To test the form with the Turnstile widget, set `<meta name="turnstile-sitekey" content="1x00000000000000000000AA">` in `public/index.html` (Cloudflare's test site key) and change it back before committing. Then `node scripts/check.mjs` renders both themes at 1440 and 390 px and submits the form (set `PUPPETEER_CORE` to a puppeteer-core folder; `BROWSER` to a Chrome or Edge binary if Edge isn't at its default path). After a design change in the prototype, `node scripts/capture-screens.mjs` re-renders `public/screens/` and `node scripts/og.mjs` the share card. Read the list with:
@@ -29,7 +30,7 @@ npx wrangler d1 execute eucas-waitlist --local --command "SELECT email, status, 
 
 ## Why Cloudflare and not a form service
 
-| | Cloudflare Pages + D1 (built) | Tally | Loops |
+| | Cloudflare Workers + D1 (built) | Tally | Loops |
 |---|---|---|---|
 | Cost at this size | $0 | $0 (Tally branding; Pro $29/mo removes it) | $0 to 1,000 contacts, then $49/mo |
 | Where the list lives | Your Cloudflare account | Tally's servers | Loops' servers |
@@ -47,36 +48,13 @@ Cloudflare keeps the list in your account, costs nothing, and keeps the page at 
 - **ref**: the `?ref=` or `utm_source` of the link. Post `https://eucas.app/?ref=x` on X and `?ref=reddit` on Reddit to see which one worked.
 - No IP addresses, no user agents, no names. The privacy note at `/privacy` says exactly this.
 
-Spam: a hidden honeypot field, a 1.5 s minimum fill time, Turnstile (checks success, action `waitlist` and the hostname, and fails closed), and one WAF rate-limit rule (step 9). A duplicate email gets the same answer as a new one, so the form never reveals who is on the list.
+Spam: a hidden honeypot field, a 1.5 s minimum fill time, Turnstile (checks success, action `waitlist` and the hostname, and fails closed), one WAF rate-limit rule ([DEPLOY.md](DEPLOY.md) step 9), and a per-IP limit in the Worker. Without a Turnstile secret, sign-ups are refused rather than let through. A duplicate email gets the same answer as a new one, so the form never reveals who is on the list.
 
 Double opt-in: with Resend set up, new rows are `pending` until the confirm link is clicked, and `pending` rows older than 30 days are deleted. Without Resend, rows are `unconfirmed` and the page only promises the consent line. Every email carries a one-click unsubscribe that deletes the row.
 
 ## Going live (founder steps)
 
-Each step is in your Cloudflare dashboard or terminal. Steps 6 and 8 are optional for the first day.
-
-1. **Cloudflare account.** Sign up at dash.cloudflare.com (free plan).
-2. **Put eucas.app on Cloudflare.** *Add a domain* → eucas.app → Free. If the domain is registered elsewhere, change its nameservers at your registrar to the two Cloudflare shows you, and wait until the zone says Active (minutes to a few hours).
-3. **Create the database.** From `apps/landing`:
-   ```bash
-   npx wrangler login
-   npx wrangler d1 create eucas-waitlist
-   ```
-   Paste the `database_id` it prints into `wrangler.toml`, commit it (the id isn't a secret), then:
-   ```bash
-   npx wrangler d1 migrations apply eucas-waitlist --remote
-   ```
-4. **Create the Pages project.** *Workers & Pages* → *Create* → *Pages* → *Connect to Git* → `eucas-app/eucas`. Production branch `main`, root directory `apps/landing`, build command empty, output directory `public`. The D1 binding `DB` comes from `wrangler.toml`. The first build gives you a `*.pages.dev` address to check before the domain.
-5. **Turnstile.** *Turnstile* → *Add widget*: name "eucas waitlist", hostnames `eucas.app` and `www.eucas.app`, mode Managed. Put the **site key** in `public/index.html` (`<meta name="turnstile-sitekey" content="…">`) and commit it; it's public. Put the **secret key** in the Pages project: *Settings* → *Variables and Secrets* → add `TURNSTILE_SECRET` as a Secret, for Production. If you test on the `pages.dev` address first, add that hostname to the widget and to `TURNSTILE_HOSTNAMES` in `wrangler.toml` too.
-6. **Confirm emails (optional, recommended).** Sign up at resend.com, *Domains* → add `eucas.app`, and add the DNS records it lists (SPF, DKIM) in Cloudflare *DNS*. Create an API key with sending access only and add it to the Pages project as the Secret `RESEND_API_KEY`. Until you do, sign-ups are stored with the consent line only.
-7. **The domain.** Pages project → *Custom domains* → add `eucas.app`, then `www.eucas.app`. Cloudflare adds the DNS records and the certificate.
-8. **hello@eucas.app.** *Email* → *Email Routing* → route `hello@eucas.app` to your own inbox. The page, the privacy note and the error messages use this address.
-9. **Rate limit.** *Security* → *WAF* → *Rate limiting rules* → one rule: URI path equals `/api/subscribe`, 5 requests per 10 seconds per IP, action Block.
-10. **Visit counts.** Pages project → *Metrics* → enable *Web Analytics*. It needs no code and no cookie banner; the CSP in `public/_headers` already allows its beacon.
-11. **Try it.** Join with your own email, click the confirm link, then use the unsubscribe link and check the row is gone:
-    ```bash
-    npx wrangler d1 execute eucas-waitlist --remote --command "SELECT count(*) FROM waitlist"
-    ```
+Follow [DEPLOY.md](DEPLOY.md): a checkbox runbook with the reason and the Cloudflare doc for each step, from two-factor sign-in to the smoke test, rollback and costs. In short: lock the account, put eucas.app on Cloudflare with DNSSEC and Full (strict), add the rate-limit rule and Bot Fight Mode, create the Turnstile widget and the D1 database, connect the repo with Workers Builds (`main` only, previews off), add the two secrets, attach the custom domains, set up email (Email Routing, Resend, DMARC) and Web Analytics, then run the smoke test. Before a PR, `npm run check:deploy` validates the Worker config without deploying.
 
 Reading the results later:
 
@@ -89,8 +67,8 @@ npx wrangler d1 execute eucas-waitlist --remote --command "SELECT ref, plan, cou
 
 | Item | Free allowance | Cost now |
 |---|---|---|
-| Cloudflare Pages (static files) | Unlimited requests and bandwidth, 500 builds a month | $0 |
-| Pages Functions | 100,000 requests a day (Workers Free) | $0 |
+| Workers static assets (the site) | Free and unlimited | $0 |
+| Worker requests (`/api/*` only) | 100,000 a day (Workers Free) | $0 |
 | D1 | 5 GB, 5 million rows read and 100,000 written a day | $0 |
 | Turnstile, Web Analytics, Email Routing | Free | $0 |
 | Resend | 3,000 emails a month, 100 a day | $0; $20/month for 50,000 if you outgrow it |
