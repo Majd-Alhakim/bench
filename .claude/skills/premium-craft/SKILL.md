@@ -1,6 +1,6 @@
 ---
 name: premium-craft
-description: Eucas's always-on premium design process. Takes a screen past "looks decent" to "feels premium" through evidence of quality (system status, undo, recovery), cross-screen coherence, designed worst moments, a visible intelligence layer, emotional moments and motion, and a craft checklist, scored with a Beginner→Staff rubric that blocks hand-off below Senior. Use it with ui-ux-guide on ANY UX or UI work: designing, prototyping, redesigning, reviewing, critiquing or fixing a screen, flow, component, token, copy, animation or brand element, and in UI review of PRs.
+description: "Eucas's always-on premium design process. Takes a screen past \"looks decent\" to \"feels premium\" through evidence of quality (system status, undo, recovery), cross-screen coherence, designed worst moments, a visible intelligence layer, emotional moments and motion, and a craft checklist, scored with a Beginner→Staff rubric that blocks hand-off below Senior. Use it with ui-ux-guide on ANY UX or UI work: designing, prototyping, redesigning, reviewing, critiquing or fixing a screen, flow, component, token, copy, animation or brand element, and in UI review of PRs."
 ---
 
 # Premium craft for Eucas
