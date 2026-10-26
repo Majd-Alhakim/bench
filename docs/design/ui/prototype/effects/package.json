@@ -1,0 +1,21 @@
+{
+  "name": "eucas-prototype-effects",
+  "private": true,
+  "description": "React islands for the UI prototype: thinking orbs, the gooey plus menu, the voice glow and local Whisper dictation. Builds ../effects.js and ../whisper-worker.js.",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:page && npm run build:worker",
+    "build:page": "esbuild src/index.jsx --bundle --minify --format=iife --target=chrome120,safari17 --jsx=automatic --define:process.env.NODE_ENV=\\\"production\\\" --legal-comments=eof --outfile=../effects.js",
+    "build:worker": "esbuild src/whisper-worker.js --bundle --minify --format=esm --external:https://* --target=chrome120,safari17 --legal-comments=eof --outfile=../whisper-worker.js"
+  },
+  "dependencies": {
+    "liquid-gooey": "0.2.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "thinking-orbs": "0.3.2",
+    "voice-glow": "0.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.2"
+  }
+}
