@@ -349,15 +349,15 @@ Labels: `companion`, `type:story`, `lane:B`, `priority:must`, `epic:E18`, `epic:
 ### [N-0] The native notch
 Labels: `companion`, `type:story`, `lane:B`, `priority:must`, `epic:E27`, `blocked:SP-ST2` · Milestone: `Sprint 3`, `v0.1`
 
-**Story:** The native notch · 3.0 d (plan 2.5) · depends: U-1, SP-ST2 · PRD 27.1, 27.2, 27.10 · UC-60, UC-55
+**Story:** The native notch · 3.25 d (plan 2.5) · depends: U-1, SP-ST2 · PRD 27.1, 27.2, 27.10 · UC-60, UC-55
 
-**Estimate:** 3 d over 8 tasks (tech lead). **Spikes:** SP-ST2.
+**Estimate:** 3.25 d over 8 tasks (tech lead). **Spikes:** SP-ST2.
 
-**Traces (26):** NFR-185, FR-173, NFR-134, FR-103, FR-105, NFR-133, FR-104, FR-106, FR-042, FR-058, FR-117, FR-102, FR-001, NFR-011, NFR-137, NFR-047, NFR-136, FR-107, FR-109, NFR-007, NFR-008, NFR-132, NFR-131, FR-118, NFR-078, NFR-010
+**Traces (27):** NFR-185, FR-173, NFR-134, FR-103, FR-104, FR-105, FR-106, FR-114, FR-042, FR-058, NFR-133, NFR-008, FR-117, FR-102, FR-001, NFR-011, NFR-137, NFR-047, NFR-136, FR-107, FR-109, NFR-007, NFR-132, NFR-131, FR-118, NFR-078, NFR-010
 
 **Tasks** (acceptance criteria, files and tests per task in [tasks-lane-b.md](tasks-lane-b.md)):
 - [ ] N-0.1 Notch tokens as plain values → generated Rust constants (0.25 d)
-- [ ] N-0.2 Drawing core: pill, eyes, blink, follow; Resting, Dozing, Before setup (0.5 d)
+- [ ] N-0.2 Drawing core and the eye grammar: exactly eight faces (0.75 d)
 - [ ] N-0.3 Drawing: beam, markers, Not protected, tripwire, thin line, arrival (0.5 d)
 - [ ] N-0.4 Notch window: layered, no-activate, click-through, placement, full-screen step-aside, panic catch (0.5 d)
 - [ ] N-0.5 Hover poll, peek trigger, click → panel, input idle; the budgets (0.25 d; spike: SP-ST2 (keyboard-focus peek only))

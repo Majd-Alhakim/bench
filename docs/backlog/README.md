@@ -22,20 +22,21 @@
 | | Stories | Tasks | Days |
 |---|---|---|---|
 | BUILD-PLAN (2026-10-26) | 32 | — | 48.25 |
-| Tech-lead re-estimate of those stories | 32 | 138 | 54.25 |
+| Tech-lead re-estimate of those stories | 32 | 138 | 54.5 |
 | + LY-1 "learns you" (UC-67; PRD 27.7, 27.9, "That was wrong") | 1 | 8 | 3.0 |
 | + Windows 10 22H2 VM pass (G3-5), in Q-1 | — | (in Q-1) | 1.0 |
-| **Backlog v0.1** | **33** | **146** | **58.25** |
+| **Backlog v0.1** | **33** | **146** | **58.5** |
 
-Every task is ≤ 1 day, traces to at least one SRS FR or NFR, and names its files, acceptance criteria, test approach, estimate, dependencies, spike and trace event. **Where the +10 days come from** (per-story tables at the end of each task file):
+Every task is ≤ 1 day, traces to at least one SRS FR or NFR, and names its files, acceptance criteria, test approach, estimate, dependencies, spike and trace event. **Where the +10.25 days come from** (per-story tables at the end of each task file):
 - **Guard and core, +2.75:**
   - the Windows 10 VM pass (G3-5), in Q-1: +1;
   - the SQLite store, migrations and retention, which no story owned, in H-1: +0.5;
   - +0.25 each in G-1 (PowerShell `-EncodedCommand`), G-3 (pipe-server identity check), G-4 (Repair and Off for 15 minutes), G-5 (the S-1 loopback, moved from C-1), A-1 (embedded-guard build order) and SUP-1 (the receipts UI);
   - C-1: −0.25.
-- **App and server, +4.25:**
+- **App and server, +4.5:**
   - R-1: +1.75, for the 10 library safety rules (G3-7) and rulebook tamper restore;
-  - +0.5 each in U-1 (the Playwright harness), N-0 (the gooey peek, DESIGN §5.1), N-1 (the toast fallback and the sounds) and P-1 (the block Why? page, removing log export, the gooey switch);
+  - +0.5 each in U-1 (the Playwright harness), N-1 (the toast fallback and the sounds) and P-1 (the block Why? page, removing log export, the gooey switch);
+  - N-0: +0.75, for the gooey peek (DESIGN §5.1) and the eight-face eye grammar with its state mapping and repo scan (founder, 2026-10-26);
   - +0.25 each in O-1 and W-1.
 - **LY-1 "learns you", new: +3.**
 
@@ -63,7 +64,7 @@ Before Sprint 1, S1-1 pre-creates every module file and splits copy, error codes
 | **0** (now, before G6) | The last unknowns are closed | SP-ST2 · SP-AC1 | You: P9 (Cloudflare Email on `eucas.app`, Workers Paid, D1); the recorder keeps recording | 0.75 |
 | **1** | The repo builds green on Windows and Ubuntu, the guard's parser turns bash, PowerShell and cmd commands into the exact calls and paths it will judge, and the hidden panel shows live state in under 150 ms | S1-1 → G-1 | U-1.1, .2, .3, .5 (after S1-1) | 3.25 / 1.5 |
 | **2** | A real tool call is blocked by a guard that fails closed, and the Worker serves signed config | G-2 → G-3 | U-1.4, U-1.6 → W-1 → SUP-3 | 3.0 / 3.25 |
-| **3** | The plugin installs through Claude Code, the limits are locked at admin level with one Windows prompt, and your Euca has eyes in the notch | G-4 → A-1 | N-0 | 3.0 / 3.0 |
+| **3** | The plugin installs through Claude Code, the limits are locked at admin level with one Windows prompt, and your Euca shows its eight faces in the notch | G-4 → A-1 | N-0 | 3.0 / 3.25 |
 | **4** | Every session is seen within 2 s, the bypass suite blocks every bad merge, and the server can sign you in and keep your budget | G-5 → H-1 | AC-1 → BU-1 | 3.25 / 2.75 |
 | **5** | It proves itself after a Claude Code update, explains itself in one button, warns about same-file edits, and you can sign in from the app | C-1 → D-1 → F-1 | AC-2 → ME-1 | 2.5 / 2.75 |
 | **6** | It stops a mass delete; the panel has its header, Settings and Usage; the supervisor endpoint answers | T-1 → SUP-2 | P-1 → L-1 | 3.0 / 3.0 |
@@ -75,7 +76,7 @@ Before Sprint 1, S1-1 pre-creates every module file and splits copy, error codes
 
 - **The schedule:**
   - 11 sprints, about **33 working days** elapsed;
-  - 58.25 of 66 lane-days are planned, so 7.75 are slack: 1.5 of it is lane B waiting for S1-1 in Sprint 1, and the rest is spread over Sprints 5, 7, 9, 10 and 11.
+  - 58.5 of 66 lane-days are planned, so 7.5 are slack: 1.5 of it is lane B waiting for S1-1 in Sprint 1, and the rest is spread over Sprints 5, 7, 9, 10 and 11.
 - **The re-plans:**
   - The **day-6 re-plan** (end of Sprint 2) checks actuals against these numbers.
   - The **Sprint 5 review** checks SP-SUP2's pace toward 300 moments.

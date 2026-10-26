@@ -43,7 +43,7 @@ Estimates are BUILD-PLAN focused build days (they win where the PRD's "Days" col
 | **LY-1** | have your Euca learn from what you allow, deny and answer, show what it knows, and let you forget it | 27.7, 27.8 ("That was wrong"), 27.9 (proposed, §2) | UC-67 | Must (FR-167, FR-172, FR-173 Should) | 3 | A | 10 | **Needs** a BUILD-PLAN row (files, tests, depends: R-1, N-1, SUP-1, AC-2) and a firm estimate (decision 5) |
 | Q-1 | get a hardened build that's ready for the first outside user | 18.5 | all | Must | 2.5 | A | 11 | Needs the Windows 10 VM pass added (G3-5) |
 
-**Totals:** the tech leads' estimate is **58.25 build days** over 146 tasks (BUILD-PLAN had 48.25; LY-1 3.0 and Windows 10 1.0 are inside). Lane and sprint follow the [sprint plan](README.md#4-sprint-plan) (11 sprints), which supersedes BUILD-PLAN §4. Some DoR notes below are already resolved in the task files (the 10 library rules in R-1, sounds in N-1, the Windows 10 VM pass in Q-1.4, B-2 confirmed in AC-2.3, LY-1 sized); the rest are document fixes listed in [G6-DECISIONS](G6-DECISIONS.md#documents-to-correct-after-g6-owners-not-decisions).
+**Totals:** the tech leads' estimate is **58.5 build days** over 146 tasks (BUILD-PLAN had 48.25; LY-1 3.0 and Windows 10 1.0 are inside). Lane and sprint follow the [sprint plan](README.md#4-sprint-plan) (11 sprints), which supersedes BUILD-PLAN §4. Some DoR notes below are already resolved in the task files (the 10 library rules in R-1, sounds in N-1, the Windows 10 VM pass in Q-1.4, B-2 confirmed in AC-2.3, LY-1 sized); the rest are document fixes listed in [G6-DECISIONS](G6-DECISIONS.md#documents-to-correct-after-g6-owners-not-decisions).
 
 **Sprint 1 goal:** see [sprint-01](../sprints/sprint-01/README.md).
 

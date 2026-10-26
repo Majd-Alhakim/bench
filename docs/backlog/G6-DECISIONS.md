@@ -1,7 +1,7 @@
 # Gate 6: what you decide
 
 **For:** you (the client) · **From:** PM, with the two tech leads · **Date:** 2026-10-26
-**On:** [the backlog](README.md) (33 stories, 146 tasks, 58.25 build days), [the sprint plan](README.md#4-sprint-plan) (11 three-day sprints over two lanes) and [Sprint 1](../sprints/sprint-01/README.md).
+**On:** [the backlog](README.md) (33 stories, 146 tasks, 58.5 build days), [the sprint plan](README.md#4-sprint-plan) (11 three-day sprints over two lanes) and [Sprint 1](../sprints/sprint-01/README.md).
 
 **Already settled, not asked again:**
 - the manual checklist (passed);
@@ -13,7 +13,8 @@
 - the $10/day spend cap;
 - the library rules;
 - "no export";
-- learns-you from structured events.
+- learns-you from structured events;
+- the eye grammar: Pip shows only the eight faces in DESIGN §11 (founder order, 2026-10-26; in N-0.2, +0.25 d).
 
 Reply with the numbers you accept, or "approve G6 as recommended".
 
@@ -25,8 +26,8 @@ Reply with the numbers you accept, or "approve G6 as recommended".
 
 **Recommendation: (a).** Sprint 1 is pure foundation (the scaffold, the guard's parser and the shell). It needs nothing still open, and its demo takes five minutes.
 
-**2. Accept the estimate going from about 48 to 58.25 build days (11 sprints, about 33 working days)?**
-- What's in the +10: +3 is learns-you and +1 is Windows 10, both of which you approved. The other +6 is work no story owned (the SQLite store, sounds, tamper restore) and approved scope nobody had sized (the 10 library rules, the gooey peek and switches). The breakdown is in [README §2](README.md#2-totals).
+**2. Accept the estimate going from about 48 to 58.5 build days (11 sprints, about 33 working days)?**
+- What's in the +10.25: +3 is learns-you and +1 is Windows 10, both of which you approved; +0.25 is your eight-face order. The other +6 is work no story owned (the SQLite store, sounds, tamper restore) and approved scope nobody had sized (the 10 library rules, the gooey peek and switches). The breakdown is in [README §2](README.md#2-totals).
 - (a) Accept it, and sequence rather than cut.
 - (b) Hold to 10 sprints by moving F-1 and L-1 to v0.1.1.
 - (c) Ask for cuts.
@@ -92,7 +93,7 @@ Options:
 - (a) R-2's "Describe a rule" can return a guidance rule on the same draft card. That's one card variant for you to approve, and +0.25 d in R-2.
 - (b) v0.1 has no guidance rules: the group shows its empty line, and the supervisor answers only from block and allow rules.
 
-**Recommendation: (a).** It's the cheapest way to make "learns you" real, and R-2 sits in Sprint 10, where there is 1.25 d of buffer. The +0.25 is not in the 58.25.
+**Recommendation: (a).** It's the cheapest way to make "learns you" real, and R-2 sits in Sprint 10, where there is 1.25 d of buffer. The +0.25 is not in the 58.5.
 
 **10. F-1 and L-1: decide their v0.1.1 escape now?**
 - (a) No pre-approval: I ask at the day-6 re-plan, with the numbers.

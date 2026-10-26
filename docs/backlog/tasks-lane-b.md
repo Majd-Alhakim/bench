@@ -149,7 +149,7 @@
 
 ---
 
-## N-0 · The native notch · 3.0 d (plan 2.5) · depends: U-1, SP-ST2 · PRD 27.1, 27.2, 27.10 · UC-60, UC-55
+## N-0 · The native notch · 3.25 d (plan 2.5) · depends: U-1, SP-ST2 · PRD 27.1, 27.2, 27.10 · UC-60, UC-55
 
 **+0.5:** the gooey peek (DESIGN §5 / §5.1, 2026-10-26) replaced the clip-path morph after the plan. The native notch and the peek webview now have to hand the notch body over between two windows (N-0.8).
 
@@ -171,29 +171,61 @@
 - **Test approach:** codegen round-trip; `tokens::tests::every_state_has_colour_and_shape`; CI `codegen --check`.
 - **Estimate:** 0.25 · **Depends:** U-1.3 · **Blocked by spike:** none · **Trace event:** — (build time)
 
-### N-0.2 · Drawing core: pill, eyes, blink, follow; Resting, Dozing, Before setup
-- **Traces:** FR-103, FR-105, FR-173, NFR-133, NFR-134
-- **Files:** `crates/eucas-notch/src/{draw,eyes,shape,anim,sprites}.rs`, `crates/eucas-notch/tests/golden/*.png`
+### N-0.2 · Drawing core and the eye grammar: exactly eight faces
+**Founder order (2026-10-26):** the eye grammar in DESIGN §11 ([sheet](../design/ui/companion/screens/eyes-sheet-d.png)) is the **only** set of faces Pip may show, here and everywhere else that draws Pip's eyes (panel header avatar, `CaughtUp`, setup birth and homecoming).
+
+| Face | Shape (DESIGN §11, the sheet) | Motion | Reduced motion |
+|---|---|---|---|
+| **Calm** | two 5 × 13 pills, −12° | eye-follow ≤ 2.5 px; blink every 3.8–7.2 s | still, centred |
+| **Focused** | 6 × 9 pills | reads ±2 px over 2.4 s, alternate: **the only loop** | still |
+| **Glance** | Calm, looking at the marker (3 px right, 1 px down) | one look, then hands over | the shape only, no travel |
+| **Toward you** | Calm, 1.5 px up and front | eye-follow; no bobbing | still, centred |
+| **Concerned** | pills rotated ±16°, 1.5 px down | none ("never alarmed") | same shape |
+| **Sleepy** | 9 × 2.6 lines, dim | none; wakes with a blink | same shape, no blink |
+| **Pleased** | 9 × 5 arcs | held 1.6 s, then back | same shape for 1.6 s |
+| **Closed** | two closed arcs | none | same shape |
+
+**State → face** (one face at a time, first match wins; this is the prototype's grammar, `prototype/src/app.js`):
+
+| # | App state (U-1.3 `notch_state`, plus the two transient moments) | Face |
+|---|---|---|
+| 1 | Not protected (FR-042) or Tripwire stop (FR-058) | Concerned |
+| 2 | Dozing (FR-105) | Sleepy |
+| 3 | Before setup (FR-173) | Closed |
+| 4 | *Moment:* a needs-you item arrives (FR-106) | Glance, then row 6 |
+| 5 | *Moment:* you're all caught up (FR-114), 1.6 s | Pleased, then row 7 or 8 |
+| 6 | Needs you | Toward you |
+| 7 | Working (FR-104) | Focused |
+| 8 | Resting | Calm |
+
+- **Traces:** FR-173, FR-103, FR-104, FR-105, FR-106, FR-114, FR-042, FR-058, NFR-133, NFR-134, NFR-008
+- **Files:** `crates/eucas-notch/src/{face,draw,eyes,shape,anim,sprites}.rs` (`face.rs`: `enum Face` and `fn face_for(state, moment) -> Face`), `crates/eucas-notch/tests/golden/*.png`, `contracts/ipc/state.schema.json` (`Face` enum, so the panel avatar uses the same eight)
 - **Acceptance criteria:**
-  - `draw(state, t, cursor, scale) -> BGRA` is pure (time and cursor are arguments).
-  - The eyes follow ≤ 2.5 px and blink every 3.8–7.2 s; the calm, sleepy and closed-grey shapes are drawn.
-  - Reduced-motion variants: no follow, crossfades only.
-  - In a 1-bit render every state stays distinct.
+  - `enum Face` has exactly the eight variants above. **No other face exists:** no other variant, sprite, shape or CSS expression anywhere in the repo (notch, panel avatar, setup, `CaughtUp`), and the webview reads `Face` from the generated contract rather than defining its own.
+  - Each face is a native-drawable shape: pills, arcs, lines and rotations from plain token values (ADR-0016). No filter, effect or webview is involved; the gooey layer (N-0.8) draws the body, never the eyes.
+  - `face_for` implements the state → face table, and every app state and moment maps to exactly one of the eight.
+  - `draw(state, t, cursor, scale) -> BGRA` is pure, with time and cursor passed as arguments.
+  - Eye-follow runs only for Calm and Toward you. Focused is the only looping animation. Blink applies only to Calm and Toward you.
+  - Reduced motion keeps every shape and drops the movement: no follow, no Focused loop, no Glance travel, no blink.
+  - In a 1-bit render, all eight faces stay distinct.
 - **Test approach:**
-  - Golden images at 100 / 125 / 150 % against `docs/design/ui/companion/screens/notch-{rest,doze}-zoom.png` (small tolerance).
-  - `insta` snapshots; `one_bit_states_distinct`, `reduced_motion_has_no_follow`.
+  - `face::tests::face_enum_has_exactly_eight` (an exhaustive `match` with no wildcard, plus a variant count).
+  - `face::tests::every_state_maps_to_one_of_eight`: the cartesian product of U-1.3's state inputs × {no moment, arrival, caught up} → `face_for` returns one variant, and the table's rows hold.
+  - `face::tests::only_focused_loops`, `follow_only_calm_and_toward_you`, `reduced_motion_keeps_shape_drops_motion`, `one_bit_faces_distinct`.
+  - `xtask check-faces`: a repo scan in CI that fails on any face or expression name outside the eight (`data-x` values, sprite names, copy keys).
+  - Golden images: all eight at 100 / 125 / 150 %, compared with the eye sheet and `docs/design/ui/companion/screens/notch-{rest,doze}-zoom.png` (small tolerance).
   - proptest: `draw` never panics for any cursor or time.
-- **Estimate:** 0.5 · **Depends:** N-0.1 · **Blocked by spike:** none · **Trace event:** —
+- **Estimate:** 0.75 (was 0.5: the full set of eight, the mapping and the repo scan) · **Depends:** N-0.1 · **Blocked by spike:** none · **Trace event:** `notch.face_changed {from, to, cause}`
 
 ### N-0.3 · Drawing: beam, markers, Not protected, tripwire, thin line, arrival
 - **Traces:** FR-104, FR-106, FR-042, FR-058, FR-117, FR-103, NFR-134
 - **Files:** `crates/eucas-notch/src/{beam,marker,thin_line,words}.rs`, golden PNGs
 - **Acceptance criteria:**
   - The working beam is in the Euca's colour; the amber count marker stays.
-  - "**Not protected**" is red with a ring and concerned eyes, and overrides thin line.
+  - "**Not protected**" is red with a ring (eyes: `Face::Concerned` from N-0.2), and overrides thin line.
   - "**Stopped: <project>**" is a red marker with a middle ellipsis for long names.
-  - The thin line is 96 × 4 with a needs dot; arrival drops 3 px and the eyes glance.
-  - The pleased eyes exist for LY-1.7.
+  - The thin line is 96 × 4 with a needs dot; arrival drops 3 px (eyes: `Face::Glance`).
+  - This task draws no eyes of its own: every face comes from N-0.2's eight (Pleased for LY-1.7 included).
   - Text uses a pure-Rust rasteriser (`ab_glyph`, MIT/Apache) and the bundled UI font; there is no DirectWrite in the pure crate.
 - **Test approach:**
   - Golden images at 3 scales against `notch-{working,marker,off,trip,thin,thin-needs}-zoom.png`.
@@ -570,7 +602,7 @@
 - **Traces:** FR-109, FR-065, FR-040, FR-053
 - **Files:** `apps/companion/src/surfaces/panel/{header,tabs}.tsx` (uses H-1's `components/heartbeat-line`)
 - **Acceptance criteria:**
-  - The header shows the avatar, the name, the Locked / Not locked chip (amber "press to lock" → Rules) and "Protected · 3 sessions · checked 2 s ago".
+  - The header shows the avatar (its eyes are one of N-0.2's eight faces, read from the shared `Face` contract; no other face), the name, the Locked / Not locked chip (amber "press to lock" → Rules) and "Protected · 3 sessions · checked 2 s ago".
   - Tabs Usage · Rules · Settings remember the last tab (Usage first); sub-pages have a back arrow; Esc goes back, then closes.
 - **Test approach:** Vitest header states; Playwright tab memory and Esc; a bundle string scan: "Guarded" absent.
 - **Estimate:** 0.25 · **Depends:** U-1.2, H-1 · **Blocked by spike:** none · **Trace event:** `panel.tab {tab}`
@@ -651,7 +683,7 @@
 - **Traces:** FR-007, FR-174
 - **Files:** `apps/companion/src/surfaces/setup-window/step-2-make.tsx` (P-1.2's `euca-editor`; a DOM mini-notch preview)
 - **Acceptance criteria:**
-  - Name suggestions; Continue is disabled with the hint for whichever is missing; the birth blink plays.
+  - Name suggestions; Continue is disabled with the hint for whichever is missing; the birth blink plays (Closed → Calm; the avatar's eyes use only N-0.2's eight faces).
   - The name and look persist for resume.
 - **Test approach:** a Vitest gating table; a Playwright screenshot against `setup-2-create-born-d.png`.
 - **Estimate:** 0.25 · **Depends:** O-1.1, P-1.2 · **Blocked by spike:** none · **Trace event:** `setup.euca_made`
@@ -1083,7 +1115,7 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
 - **Traces:** FR-114, FR-171, FR-172, FR-173, NFR-136
 - **Files:** `crates/eucas-core/src/moments/{caught_up,away,back_to_normal}.rs`, `apps/companion/src/components/{away-digest,back-to-normal-card}/*`, `src/surfaces/panel/peek.tsx` (after N-1.2)
 - **Acceptance criteria:**
-  - When the last item folds: "You're all caught up. Pip is watching n sessions.", pleased eyes for 1.6 s and the Done sound.
+  - When the last item folds: "You're all caught up. Pip is watching n sessions.", `Face::Pleased` (N-0.2) for 1.6 s and the Done sound.
   - After 30+ min away (`last_input_at` from N-0.5), the digest shows the next time you look, never opening by itself, with a receipt and Got it.
   - After an outage, one Back to normal card says what the guard did and "Nothing was lost."
 - **Test approach:** unit tests: away at 29:59 vs 30:00, the digest from a fixture, the outage card; Playwright for each moment.
@@ -1106,7 +1138,7 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
 | Story | Tasks | Task days | BUILD-PLAN | Δ | Why |
 |---|---|---|---|---|---|
 | U-1 | 6 | 2.0 | 1.5 | +0.5 | Playwright / CDP harness bootstrap; the two platform pieces (peek without activation, AUMID) |
-| N-0 | 8 | 3.0 | 2.5 | +0.5 | Gooey peek handoff between the native notch and the webview (DESIGN §5.1, new) |
+| N-0 | 8 | 3.25 | 2.5 | +0.75 | Gooey peek handoff between the native notch and the webview (DESIGN §5.1, new); the eight-face eye grammar with its mapping and repo scan (founder, 2026-10-26) |
 | N-1 | 6 | 2.0 | 1.5 | +0.5 | SP-ST1 toast fallback; the sounds (PRD 27.10, in no story) |
 | L-1 | 4 | 1.5 | 1.5 | 0 | |
 | R-1 | 9 | 3.25 | 1.5 | +1.75 | The 10 library rules (G3-7) 1.25; tamper restore and idempotent save with Undo 0.5 |
@@ -1120,9 +1152,9 @@ What lives elsewhere: the sounds (27.10) are N-1.6 (story map), Undo itself is N
 | ME-1 | 2 | 0.5 | 0.5 | 0 | |
 | SUP-2 | 2 | 1.0 | 1 | 0 | |
 | R1 | 4 | 1.75 | 1.75 | 0 | |
-| **Subtotal** | **71** | **28.25** | **24.0** | **+4.25** | |
+| **Subtotal** | **71** | **28.5** | **24.0** | **+4.5** | |
 | LY-1 (new) | 8 | 3.0 | 2–3 (indicative, not in the 48) | +3.0 | Learns-you core 2.25 + moments and the undo audit 0.75 |
-| **Lane B total** | **79** | **31.25** | | **+7.25** vs the 48.25 plan | |
+| **Lane B total** | **79** | **31.5** | | **+7.5** vs the 48.25 plan | |
 
 ## Tasks blocked by a spike
 
