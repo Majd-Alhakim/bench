@@ -83,7 +83,7 @@ flowchart LR
 | Signing certificate | **When Authenticode is bought** (none in v0.1, CR-010): expiry date in `docs/support/calendar.md` | Calendar reminder 60 and 14 days before |
 | Domains, Cloudflare and Lemon Squeezy billing | Their own emails | — |
 | Sign-in email *(CR-012)* | Sends, bounces and rejects per day (Email Service analytics); `auth/start` → `verify` conversion | Email if bounces > 5 % or conversion < 70 % for a day (codes not arriving) |
-| Accounts and budgets *(CR-011, CR-012)* | D1 size and write rate; `402 budget_empty` and `413 prompt_too_large` rates; `spend_day` vs the breaker; accounts with `device_count` > 10 (a weekly query; no fingerprint exists to look at) | Email at 50 % and 90 % of the daily breaker |
+| Accounts and budgets *(CR-011, CR-012)* | D1 size and write rate; `402 budget_empty` and `413 prompt_too_large` rates; `spend_day` vs the breaker; `trial_claim` hits (alias or deleted-account re-sign-ups refused a second trial; a daily count, no email) ~~accounts with `device_count` > 10~~ (no device count is stored since 2026-10-26) | Email at 50 % and 90 % of the daily breaker |
 | Disposable-domain list | The weekly blocklist PR | Review it like any PR |
 
 No pager, no on-call. The safety layer doesn't depend on anything the founder runs, so an outage of the Worker degrades ~~Pro~~ the supervisor (every user since 2026-10-26) to rules only and "ask you", stops sign-ins, drafting and updates, and nothing else.
