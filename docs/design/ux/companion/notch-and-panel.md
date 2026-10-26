@@ -2,7 +2,7 @@
 
 | Date | Author | Status | Read with |
 |---|---|---|---|
-| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **§1–§8 approved by the founder 26 Oct** (D-1 to D-8 as recommended) · **§9 "New since approval" needs approval** · **§10 CR-012 / always-on (account, What is sent) approved 26 Oct** with decisions U-1 – U-8 (*"don't allow to access without sign in"*: signed out, the panel shows only sign-in) · **2026-10-26, setup reordered** (founder, *"okay do that"*): the four limits are locked before sign-in; setup step numbers below follow the new order | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · [setup-flow.md](setup-flow.md) · [UI DESIGN.md](../../ui/companion/DESIGN.md) · [the 2026-10-25 notch design](../2026-10-25-atlas-notch-design.md) |
+| 2026-10-26 | PM + UX (Claude), `ux-designer` role standards | **§1–§8 approved by the founder 26 Oct** (D-1 to D-8 as recommended) · **§9 "New since approval" needs approval** · **§10 CR-012 / always-on (account, What is sent) approved 26 Oct** with decisions U-1 – U-8 (*"don't allow to access without sign in"*: signed out, the panel shows only sign-in) · **2026-10-26, setup reordered** (founder, *"okay do that"*): the four limits are locked before sign-in; setup step numbers below follow the new order · **2026-10-26 (later), no account (founder, (a)–(c) answered the same day): without an account you get everything a Free account sees, minus memory, with 10 supervisor answers per install and 1 rule of your own** (§11; **screens need approval**). Signed out or deleted now returns to this state instead of a sign-in-only panel. Counts as a meter are fine everywhere; never dollars or money (§5) | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · [setup-flow.md](setup-flow.md) · [UI DESIGN.md](../../ui/companion/DESIGN.md) · [the 2026-10-25 notch design](../2026-10-25-atlas-notch-design.md) |
 
 **Replaces** the surfaces, map and flows in [ia-and-flows.md](ia-and-flows.md) (tray popover as home, six-section main window). **Keeps** from it: the honest promise, the notification budget idea, the needs-you rules, the same-file rules, the heartbeat as evidence, the tripwire's content, the diagnostic, the Pro rules that never nag, and the edge paths. Where this file is silent, those still apply.
 
@@ -25,7 +25,7 @@ There is one character and two surfaces. No main window.
 | **The notch** | Is my Euca on, are sessions working, does anything need me? | Always there (top centre of the primary display) | 124 × 32 at rest; 164 with a marker; wider only for "Not protected" and a tripwire stop | **Never** |
 | **The peek** (part of the notch) | What needs me, in one line each? | Resting the pointer on the notch for 280 ms, or focusing it with the keyboard | 372 wide, grows down from the notch | Never |
 | **The panel** | Everything else: needs-you, Usage, Rules, Settings | A click on the notch (or the peek's "Open panel"), the global shortcut, or the tray menu | 400 × up to 640, 8 px under the notch | Yes: you asked for it |
-| Tray icon (fallback only) | Is Eucas running at all? | Right-click: Show the panel · Show the notch as a thin line / pill · Quit Eucas… | 16 px + count badge | — |
+| Tray icon (fallback only, with or without an account) | Is Eucas running at all? | Right-click: Show the panel · Show the notch as a thin line / pill · Quit Eucas… (no account: the menu in §11.4) | 16 px + count badge (no account: **never a badge**) | — |
 | Windows notification (fallback only) | Something serious while the notch is hidden | Only when a full-screen app hides the notch **and** the event is a tripwire stop or "not protected" | Drawn by Windows | — |
 
 **Why no main window.** The founder's picture is one character and three plain sections. Everything the old six-section window held fits the panel: Today becomes the needs-you list, Protection becomes the header line plus Rules and Settings › Protection, Retro becomes a page under Usage. Less to open, nothing to manage.
@@ -52,7 +52,7 @@ flowchart TB
       R[Rules]
       S[Settings] --> ED[Name and look]
       S --> WS
-      S --> AC[Account: Sign in · Sign out · Delete account]
+      S --> AC[Account: Sign out · Delete account]
     end
     NY --> SF[Same file] & TW[Tripwire stop] & FX[Fix: not protected]
   end
@@ -63,7 +63,7 @@ flowchart TB
 1. **Header** (always): the Euca's soft avatar (its eyes follow you), its name, the lock chip (**Locked** / **Not locked**, opens Rules), and the status line: "Protected · 3 sessions · checked 2 s ago" or, in red, "Not protected · bench: no check for 40 s". This is the heartbeat; it moves only when a real check happened.
 2. **Needs you · n** (only when n > 0): up to 3 items, then "Show n more". When empty: one quiet line, "Nothing needs you." (kept by the removal test: you opened the panel to find out).
 3. **Tabs: Usage · Rules · Settings.** The panel remembers the last tab; the first open shows Usage.
-4. **Sub-pages** replace the panel's content in place, with a back arrow: Your week, Same file, Tripwire stop, Fix it, Name and look, and (*CR-012 / always-on, 2026-10-26*) What is sent, Sign in, Sign out, Delete account. Esc goes back, then closes.
+4. **Sub-pages** replace the panel's content in place, with a back arrow: Your week, Same file, Tripwire stop, Fix it, Name and look, and (*CR-012 / always-on, 2026-10-26*) What is sent, ~~Sign in,~~ Sign out, Delete account (*2026-10-26, no account:* signing in happens in the setup window, opened from Settings › Account or the tray, §11.5). Esc goes back, then closes.
 
 **Tab order (decision D-1 for the founder).** The founder named them "settings, rules, and usage". The prototype orders them by how often you'll open them: **Usage** (every day), **Rules** (now and then), **Settings** (rarely). Switching to the founder's order is a one-line change.
 
@@ -73,7 +73,7 @@ flowchart TB
 |---|---|---|---|
 | **Usage** | 5-hour and weekly meters with a one-sentence forecast; where it went (today / 7 days, by project); the **supervisor meter** with the **What is sent** link under it (*CR-012 / always-on*); Your week | none (read view) | "Usage appears after your first session." |
 | **Rules** | the honest promise; the lock row; **Limits** (the four, always on, no switch: each shows Locked or Not locked); Safety rules (tested library, switches, lock glyphs); Your rules (from approvals and described); **Describe a rule** → drafted exact rule → Add | **Add rule** (only while a draft is open) | Your rules empty: "Rules you add show up here with how often they were used." |
-| **Settings** | Name and look; What Pip knows; Protection (admin lock, safety test); Privacy: **What is sent** (*CR-012 / always-on*: was the Level 1/2 radio); The notch (Pill / Thin line, sounds, theme); Help (diagnostic); **Account** (*CR-012 / always-on*: email, plan, Sign out, Delete account; replaces "Plan"); Quit | per row | Account when signed out: "Not signed in" + Sign in |
+| **Settings** | Name and look; What Pip knows; Protection (admin lock, safety test); Privacy: **What is sent** (*CR-012 / always-on*: was the Level 1/2 radio); The notch (Pill / Thin line, sounds, theme); Help (diagnostic); **Account** (*CR-012 / always-on*: email, plan, Sign out, Delete account; replaces "Plan"); Quit | per row | ~~Account when signed out: "Not signed in" + Sign in~~ No account: no What Pip knows row; Account reads "No account" + **Create an account** (§11.2) |
 
 ---
 
@@ -166,7 +166,7 @@ Eucas stops the process tree, **verifies it stopped**, then: red notch marker "S
 Trigger: tool activity with no check, within one tool call. → The notch widens with "Not protected", red ring, concerned eyes; overrides thin line. → Item "bench isn't protected" [Fix it]. → Sub-page: a checklist (what's fine, what isn't, why), the specific repair ("Restart bench to protect it. Nothing it did was lost."), Run the diagnostic. Never green until a real check passes. **Fail-closed brick** (our guard crashes and blocks every call) keeps the old design: the only place a 15-minute off switch is offered, with an automatic return.
 
 ### 4.5 Describe a rule (prompted rules, D-4)
-Drafting uses the supervisor model and **counts on the meter** (founder, 26 Oct); the draft card says so ("Drafted with supervisor help · counts on the meter"). When the meter is empty or you're offline (*CR-012 / always-on*: was "at Level 1"; signed out, the panel shows only sign-in, so there is no composer), the composer turns into a guided form ("Write it as an exact rule: block / allow · tools · folder") so you can still add rules without the model.
+Drafting uses the supervisor model and **counts on the meter** (founder, 26 Oct); the draft card says so ("Drafted with supervisor help · counts on the meter"). When the meter is empty or you're offline (*CR-012 / always-on*: was "at Level 1"; ~~signed out, the panel shows only sign-in, so there is no composer~~ without an account the composer works for 1 rule of your own and uses the taste, §11.2), the composer turns into a guided form ("Write it as an exact rule: block / allow · tools · folder") so you can still add rules without the model.
 
 In Rules (or setup step 7; *reordered 2026-10-26*: was step 5, and step 4 before CR-012): "Describe a rule in your own words" → **Draft it** → a draft card: *You wrote: "…"*, the exact rule in mono (`block Edit, Write · in api-docs/migrations/ and everything in it`), what it would have done last week ("would have blocked 3 calls, all from api-docs"), "It can't loosen a locked rule." → **Add rule** · Reword · ☑ Lock it too (asks for admin; **in Rules only**: setup has one admin prompt, at step 4, so setup's draft card has no Lock it too). Drafts are checked against the bypass suite; anything that would relax a hard limit can't be added.
 
@@ -187,11 +187,11 @@ Usage › Supervisor shows "Help left this month · 0% · Resets 1 Dec" and, in 
 
 ## 5. The supervisor meter, trial and taste (CR-011 §4–5)
 
-- **What it shows:** help left this month as a percentage and a bar in the Euca's colour, plus the reset date (trial: the end date). **Never dollars, never a call count.** The limit behind it is a hidden per-user cost budget.
+- **What it shows:** help left this month as a percentage and a bar in the Euca's colour, plus the reset date (trial: the end date). ~~**Never dollars, never a call count.**~~ **Never dollars or money; counts as a meter are fine** (founder, 2026-10-26: *"Show counts always, but as meter not dollars or money"*; the no-account taste reads "7 of 10", §11.3). The limit behind it is a hidden per-user cost budget.
 - **Value line under it**, to make the deposit visible (premium-craft gate 6): "Answered your agents 41 times so far, so they didn't wait for you. It never approves a tool call."
 - **States:** trial ("Trial · 12 days left", ends 9 Nov) · trial ended (100 %, "From now on Pip gets a small amount of supervisor help each month") · taste (55 %) · running low (9 %, "When it's empty, Pip asks you instead until 1 Dec") · empty (above) · Pro and Founders' price (64 %, resets on the renewal date) · supervisor unreachable ("The supervisor isn't reachable right now. Pip asks you until it's back.") · ~~**not signed in**: the chip "Not signed in", no bar…~~ *(removed 2026-10-26: signed out, the panel shows only sign-in, so the meter has no signed-out state)*.
 - **What is sent** (*CR-012 / always-on*): a quiet link under every meter state, opening the same page as Settings › What is sent.
-- **Trial start** (*CR-012 / always-on*; replaces D-3): one trial per **account**, started **when setup finishes**. ~~A Sign in later user starts it when they sign in (decision U-3).~~ (U-3 is moot: sign-in is mandatory.) The meter never shows dollars.
+- **Trial start** (*CR-012 / always-on*; replaces D-3): one trial per **account**, started **when setup finishes**. ~~A Sign in later user starts it when they sign in (decision U-3).~~ (U-3 is moot: sign-in is mandatory.) *(2026-10-26, no account, founder (b), decided:)* someone who finishes setup without an account starts the trial when they create the account (setup-flow edge W), so no trial days pass without an account; the no-account taste (§11.3) doesn't count against it. The meter never shows dollars.
 
 ---
 
@@ -206,12 +206,15 @@ Every cell is designed or marked N/A with why. *(proto)* = drawn in the prototyp
 | **Panel header** | Protected line *(proto)* | — | "Protected · no sessions running" *(proto)* | — | Red line *(proto)* | Unaffected | — | "Blocked by your organisation" *(spec)* | Not locked → Locked chip after UAC *(spec)* |
 | **Needs you** | List *(proto)* | — | "Nothing needs you." *(proto)* | Show n more *(spec)* | Stale: "bench ended before you answered. Nothing ran." *(spec)* | — | — | — | Opened/snoozed toast *(proto)* |
 | **Usage** | Meters + where + supervisor *(proto)* | — | "Usage appears after your first session." *(spec)* | Tokens only, no plan data: "Claude Code hasn't reported plan limits yet" *(spec)* | Status line not reporting → Diagnostic *(spec)* | Supervisor unreachable line *(spec)* | "5-hour limit reached. Claude Code pauses new requests until 15:40. Your sessions keep their work." No upsell *(spec)* | API key mode: cost in $ (it's your bill, not ours) *(spec)* | — |
-| **Supervisor meter** | Trial *(proto)* | — | Empty *(proto)* | Low *(proto)* | Unreachable *(spec)* | Unreachable *(spec)* | Empty *(proto)* | ~~Not signed in~~ (removed 2026-10-26: signed out, the panel shows only sign-in) | Trial ended → taste *(proto)* |
+| **Supervisor meter** | Trial *(proto)* | — | Empty *(proto)* | Low *(proto)* | Unreachable *(spec)* | Unreachable *(spec)* | Empty *(proto)* | ~~Not signed in~~ (removed 2026-10-26: ~~signed out, the panel shows only sign-in~~ without an account the meter is the install's taste, "7 of 10", §11.3) | Trial ended → taste *(proto)* |
 | **Rules** | Promise + lock + lists *(proto)* | Drafting ("Drafting…" on the button, ≤ 3 s) *(spec)* | Your rules empty line *(spec)* | Not locked *(proto)* | Couldn't save: "Your settings file is locked by another program. Nothing changed. Retry" *(spec)* | Drafting needs the supervisor: offline, not signed in (CR-012) or an empty meter → the guided "Write it as an exact rule" form *(spec)* | N/A | Locked rule toast *(proto)*; org policy: read-only with why *(spec)* | Added toast + Undo *(proto)* |
 | **Settings** | Groups *(proto)* | Safety test running *(spec)* | — | — | Diagnostic red lines *(spec)* | Account row: "Can't check your plan offline. Pro keeps working for 7 days." *(spec)* | — | — | — |
 | **What is sent** *(CR-012)* | Your last session, redacted *(proto)* | — | No session yet: the labelled sample, "Nothing sent yet" *(proto)* | — | Can't redact: the sample, and nothing is sent for that question *(spec)* | Unaffected: it's local *(spec)* | — | — | — |
-| **Account** *(CR-012)* | Email + plan (Free trial / Free / Pro / Founders') *(proto)* | Signing out, deleting: the button reads "Signing out…" / "Deleting…" *(spec)* | ~~Not signed in + Sign in~~ signed out, the panel shows only sign-in *(proto)* | — | Delete failed: "Couldn't reach the Eucas server, so nothing was deleted. Try again" *(spec)* | "Can't sign out or delete while offline. Your account is unchanged." *(spec)* | — | — | Signed out toast *(proto)*; deleted toast, no Undo *(proto)* |
-| **Sign in (panel)** *(CR-012; the whole panel when signed out)* | Email + the unticked news box + what keeps guarding *(proto)* | Code *(proto)* | — | — | Same states as setup step 6 *(spec here; proto in setup)* | "You need to be online to sign in. Pip keeps guarding while you wait." *(spec; revised 2026-10-26: the guard and the four limits never wait for sign-in)* | — | — | Toast "Signed in as …"; a different account: the warning first *(proto)* |
+| **Account** *(CR-012)* | Email + plan (Free trial / Free / Pro / Founders') *(proto)* | Signing out, deleting: the button reads "Signing out…" / "Deleting…" *(spec)* | ~~Not signed in + Sign in~~ ~~signed out, the panel shows only sign-in~~ signed out or deleted: the no-account state, "No account" (or "Signed out") + Create an account / Sign in (§11.2) *(proto: `panel-noacct-settings-d`)* | — | Delete failed: "Couldn't reach the Eucas server, so nothing was deleted. Try again" *(spec)* | "Can't sign out or delete while offline. Your account is unchanged." *(spec)* | — | — | Signed out toast *(proto)*; deleted toast, no Undo *(proto)* |
+| ~~**Sign in (panel)**~~ *(CR-012; superseded 2026-10-26 by setup step 6, opened from Settings › Account or the tray, §11.5; the row is kept for the record)* | Email + the unticked news box + what keeps guarding *(proto)* | Code *(proto)* | — | — | Same states as setup step 6 *(spec here; proto in setup)* | "You need to be online to sign in. Pip keeps guarding while you wait." *(spec; revised 2026-10-26: the guard and the four limits never wait for sign-in)* | — | — | Toast "Signed in as …"; a different account: the warning first *(proto)* |
+| **Usage › Supervisor, no account** *(2026-10-26)* | "No account" chip · "Answers left · For this install · 7 of 10" *(proto: `panel-noacct-d`)* | — (as with an account) | N/A: the taste starts full | Low (≤ 2): amber with the words *(spec)* | Unreachable, as §5 *(spec)* | "The supervisor can't be reached offline. Pip asks you instead." *(spec)* | **Used up:** "0 of 10" · "Pip asks you now. Sign up for 14 more days of the supervisor. Create an account" *(proto: `panel-noacct-empty-d`)* | N/A | Account created: the trial meter *(spec)* |
+| **Rules › Your rules, no account** *(2026-10-26)* | One described rule + "One rule of your own without an account. Create an account for more rules" *(proto: `panel-noacct-rules-d`)* | Drafting uses one answer *(spec)* | No rule yet: the composer *(spec)* | — | As Rules | The guided exact-rule form *(spec)* | Taste used up: the guided form *(spec)* | As Rules | Account created: the composer comes back *(spec)* |
+| **Tray, no account** *(fallback)* | "Protected · 4 limits locked · tripwire on" *(proto: `noacct-tray-d`)* | — | N/A: the menu always has its items | Not locked: "Protected · 4 limits on, not locked · tripwire on" *(spec)* | "Not protected · {cause}" + the icon's red dot *(proto: `noacct-tray-off-d`)* | Unaffected *(spec)* | N/A | Org policy: "Not protected · blocked by your organisation" *(spec)* | — |
 | **Setup** | see [setup-flow.md §4](setup-flow.md) |
 
 ---
@@ -322,7 +325,7 @@ Suggestion (quiet item) · learned line · undo toast · Why page · What Pip kn
 
 ## 10. CR-012 / always-on, 2026-10-26: your account and what is sent
 
-Founder decisions (26 Oct): accounts for everyone (email + a 6-digit code, no password); the supervisor is always on, with no off switch; Level 1/2 is retired; a permanent What is sent page; Settings › Account. Setup's side is in [setup-flow.md](setup-flow.md) (steps 6 and 8, edges S, T and U; sign-in moved from step 4 to step 6 on 2026-10-26, after the limits are locked). **Founder decisions, 2026-10-26 (U-1 – U-8, approved):** sign-in is mandatory (*"don't allow to access without sign in"*); signed out (Sign out or Delete account), the panel shows **only sign-in**; the guard, the four limits and your locked rules keep protecting the PC, because the locks live in the PC's managed settings and turning safety off on sign-out would be unsafe (founder, 2026-10-26, *"yes"*); the supervisor, drafting, Usage and Rules editing need sign-in; switching accounts keeps each account's data on the PC, nothing is wiped (U-2); a deleted account leaves a keyed hash of the email and "trial used", and the delete page says so (U-4); deleting on Pro stops Pro at once with no partial refund (U-5); only the redacted, trimmed last message is sent (U-6); an unticked "Send me product news" box (U-7); never the unredacted original (U-8). Locks from the PC show in another account's Rules as **"Locked on this PC"**, read-only; **only block rules can be locked**. **Calm rule, unchanged:** nothing about the account ever reaches the notch, the peek or a sound. An account problem is never a needs-you item: it only changes what the supervisor can do, and the meter already says that.
+Founder decisions (26 Oct): accounts for everyone (email + a 6-digit code, no password); the supervisor is always on, with no off switch; Level 1/2 is retired; a permanent What is sent page; Settings › Account. Setup's side is in [setup-flow.md](setup-flow.md) (steps 6 and 8, edges S, T and U; sign-in moved from step 4 to step 6 on 2026-10-26, after the limits are locked). **Founder decisions, 2026-10-26 (U-1 – U-8, approved):** ~~sign-in is mandatory (*"don't allow to access without sign in"*); signed out (Sign out or Delete account), the panel shows **only sign-in**;~~ *(partly reversed 2026-10-26, no account, §11: safety and a small supervisor taste work without an account; signed out or deleted, Eucas returns to the no-account state: everything Free sees, minus memory, §11)*; the guard, the four limits and your locked rules keep protecting the PC, because the locks live in the PC's managed settings and turning safety off on sign-out would be unsafe (founder, 2026-10-26, *"yes"*); the supervisor, drafting, Usage and Rules editing need sign-in; switching accounts keeps each account's data on the PC, nothing is wiped (U-2); a deleted account leaves a keyed hash of the email and "trial used", and the delete page says so (U-4); deleting on Pro stops Pro at once with no partial refund (U-5); only the redacted, trimmed last message is sent (U-6); an unticked "Send me product news" box (U-7); never the unredacted original (U-8). Locks from the PC show in another account's Rules as **"Locked on this PC"**, read-only; **only block rules can be locked**. **Calm rule, unchanged:** nothing about the account ever reaches the notch, the peek or a sound. An account problem is never a needs-you item: it only changes what the supervisor can do, and the meter already says that.
 
 ### 10.1 The approved privacy line (stored once)
 
@@ -349,27 +352,27 @@ Used verbatim (with your Euca's name) as the lede of setup step 8 and of Setting
 | State | Rows |
 |---|---|
 | Signed in | `sam@example.com` · "Holds only your email, your plan and how much supervisor help you've used" · **Sign out** · then the plan card: **Free trial** "12 days left" ("The full supervisor until 9 Nov. Then Free: a small amount each month.") / **Free** "monthly taste" / **Pro** "$20/month · renews 26 Nov" / **Pro · Founders' price** "$15/month for life" ("Renews 26 Nov. The price stays yours for as long as you keep Pro.") · under the group, a quiet link **Delete account** |
-| Not signed in | ~~"Not signed in" row~~ **Revised 2026-10-26:** there is no signed-out Settings: the **whole panel shows only sign-in** (header "Pip · Protected · signed out", "Sign in to use Pip", the email field, the unticked news box, **Send a code**, then two lines: "Pip keeps guarding while you're signed out: the four limits and your locked rules still block." and "The supervisor, drafting rules, Usage and Rules come back when you sign in."). The notch keeps its eyes (the guard's state) |
+| Not signed in | ~~"Not signed in" row~~ **Revised 2026-10-26:** there is no signed-out Settings: the **whole panel shows only sign-in** (header "Pip · Protected · signed out", "Sign in to use Pip", the email field, the unticked news box, **Send a code**, then two lines: "Pip keeps guarding while you're signed out: the four limits and your locked rules still block." and "The supervisor, drafting rules, Usage and Rules come back when you sign in."). The notch keeps its eyes (the guard's state). **Revised again 2026-10-26 (no account, founder (a)):** ~~the whole panel shows only sign-in~~ signed out, the panel is in the **no-account state** (§11.2: everything Free sees, minus memory); this row reads "**Signed out**" with **Sign in**; the notch keeps Pip |
 
 Dollars appear only on the plan card (a price you choose), never on the meter.
 
 ### 10.4 Flows
 
-**Sign in (panel).** Signed out, the panel itself is the sign-in (revised 2026-10-26): the same lede, field and unticked news box as setup step 6 → **Send a code** → "Check your email" with the six cells → the 6th digit signs in → back to where you were, toast "Signed in as sam@example.com". Wrong code and an address that expires: the same copy as setup step 6. Offline: "You need to be online to sign in. Pip keeps guarding while you wait."
+**Sign in.** ~~Signed out, the panel itself is the sign-in (revised 2026-10-26): the same lede, field and unticked news box as setup step 6 → **Send a code** → "Check your email" with the six cells → the 6th digit signs in → back to where you were, toast "Signed in as sam@example.com".~~ *Revised 2026-10-26 (no account):* Settings › Account **Sign in** (or **Create an account**) opens the setup window at step 6: the same lede, field and unticked news box → **Send a code** → the six cells → the 6th digit signs in → **Done** (setup-flow edge W). Wrong code and an address that expires: the same copy as setup step 6. Offline: "You need to be online to sign in. Pip keeps guarding while you wait."
 
 **Sign out.** Account › Sign out → sub-page "Sign out of sam@example.com" with three lines (the evidence before the click):
 - ✓ "Pip keeps guarding · The four limits, the tripwire and your locked rules keep working while you're signed out."
-- ◷ "Everything else waits for you to sign in · Until then the panel shows only sign-in: no supervisor, drafting, Usage or Rules." *(revised 2026-10-26)*
+- ◷ ~~"Everything else waits for you to sign in · Until then the panel shows only sign-in: no supervisor, drafting, Usage or Rules."~~ *(revised 2026-10-26, no account)* "Memory waits for you to sign in · Pip keeps Usage, Rules and what needs you. What Pip knows and learning come back when you sign in; until then you can't add rules beyond the ones you have." (Your existing rules keep working; Rules shows "Create an account for more rules" in place of the composer while you have one or more.)
 - ▤ "Your rules, what Pip knows and your history stay on this PC · Sign back in with this email to pick up where you left off. A different account starts with no learned items, rules or history."
-→ **Sign out** · Stay signed in. After: toast "Signed out. Pip keeps guarding." The panel shows only sign-in. No Undo (signing back in is the undo, and it needs a code).
+→ **Sign out** · Stay signed in. After: toast "Signed out. Pip keeps guarding." ~~The panel shows only sign-in.~~ *(revised 2026-10-26, no account)* The panel is in the no-account state (§11.2): memory is off, Settings › Account reads "Signed out" with **Sign in**. No Undo (signing back in is the undo, and it needs a code).
 
 **Switching account** (founder: warn on sign-out and on switch). Signing in with an email that isn't the last account on this PC shows, under the field, before any code is sent: "**A different account from last time.** It starts with no learned items, rules or history. sam@example.com's stay on this PC for when you sign back in. Nothing is wiped." (U-2) (amber tint, the Not locked pattern: a consequence, not an error).
 
 **Delete account.** Account › Delete account → sub-page "Delete your Eucas account" · "This removes sam@example.com from the Eucas server." · three lines:
 - ✕ "Removed from the server · Your email, your plan and your trial. Eucas keeps only a scrambled form of your email, so signing up again with it doesn't start a new trial." (U-4) (Pro: "Pro stops now. Nothing more is charged, and the rest of this month isn't refunded." (U-5) Founders': "+ The Founders' price ends with this account.")
 - ✓ "Stays on this PC until you uninstall · Your rules, what Pip knows and your history."
-- ✓ "Pip keeps guarding · The four limits and your locked rules keep working. Everything else waits until you sign in."
-→ **Delete account · can't be taken back** (danger tint, the only red button in the panel) · Keep my account. After: the panel shows only sign-in; toast "Account deleted. Your rules and history stay on this PC." (no Undo: the button already said it can't be taken back). This is your own action on your own server record, not an agent delete (CR-008).
+- ✓ "Pip keeps guarding · The four limits and your locked rules keep working. ~~Everything else waits until you sign in.~~ Pip stays, without memory." *(revised 2026-10-26, no account)*
+→ **Delete account · can't be taken back** (danger tint, the only red button in the panel) · Keep my account. After: ~~the panel shows only sign-in;~~ the panel is in the no-account state (§11.2; *revised 2026-10-26, no account*); toast "Account deleted. Your rules and history stay on this PC." (no Undo: the button already said it can't be taken back). The no-account taste is per install: whatever is left of it stays; deleting doesn't refill it. This is your own action on your own server record, not an agent delete (CR-008).
 
 ### 10.5 Removed: Level 1/2 everywhere
 
@@ -377,7 +380,7 @@ Dollars appear only on the plan card (a price you choose), never on the meter.
 |---|---|---|
 | Setup step 7 | Level 1 / Level 2 cards, trial email | Step 8 What is sent (no choice) |
 | Settings › Privacy | Level radio | What is sent row |
-| Supervisor meter | "The supervisor needs Level 2" | ~~Not signed in~~ no state: signed out, the panel shows only sign-in |
+| Supervisor meter | "The supervisor needs Level 2" | ~~Not signed in~~ no state: ~~signed out, the panel shows only sign-in~~ without an account, the meter is the install's taste (§11.3) |
 | Rules (§4.5) | guided form "at Level 1" | guided form when offline or the meter is empty |
 | Why page (§9.3) | "at Level 2, the trimmed question" | "the trimmed question with code, paths and secrets removed" |
 | D-3 (trial email optional at Level 2) | approved | **replaced** by CR-012 (email at sign-in, now step 6, for everyone) |
@@ -393,12 +396,99 @@ Dollars appear only on the plan card (a price you choose), never on the meter.
 | 5 | Settings › Account, Founders' $15 for life | `p-account-founders` |
 | 6 | Account › Sign out (the three consequences) | `p-signout` |
 | 7 | Account › Delete account (can't be taken back) | `p-delete` |
-| 8 | Account deleted: the panel shows only sign-in + toast | `p-deleted` |
-| 9 | Signed out: the panel shows only sign-in + toast | `p-signedout` |
-| 10 | Sign in (the signed-out panel) | `p-signin` |
-| 11 | Sign in: the code (panel) | `p-signin-code` |
-| 12 | Sign in with a different account: the warning | `p-switch` |
+| 8 | Account deleted: ~~the panel shows only sign-in~~ the no-account state + toast *(revised 2026-10-26, §11)* | `p-deleted` |
+| 9 | Signed out: ~~the panel shows only sign-in~~ the no-account state, Account "Signed out · Sign in" + toast *(revised 2026-10-26, §11)* | `p-signedout` |
+| ~~10~~ | ~~Sign in (the signed-out panel)~~ superseded 2026-10-26: sign-in is setup step 6, opened from Settings › Account (§11.5) | `p-signin` |
+| ~~11~~ | ~~Sign in: the code (panel)~~ superseded 2026-10-26, as row 10 | `p-signin-code` |
+| 12 | Sign in with a different account: the warning (*2026-10-26:* now shown on setup step 6 opened from Settings › Account; same words) | `p-switch` |
 | ~~13~~ | ~~The meter sheet gains "Not signed in"~~ removed 2026-10-26 | `sheet-meter` |
 | — | Spec only: delete failed, offline sign-out/delete, Account offline plan check | — |
 
 Plus the ten setup screens in [setup-flow.md §7](setup-flow.md). Decisions U-1 to U-8 are in [SELF-REVIEW.md §5b](../../ui/companion/SELF-REVIEW.md), answered by the founder on 2026-10-26.
+
+---
+
+## 11. No account: everything Free sees, minus memory (2026-10-26; screens need approval)
+
+**Founder decisions, 2026-10-26 (later):** *"we make people have a small taste without sign up and then they have to create account or buy pro"*, then *"Let the no account also have to try the supervisor also but like small number of usage"*, then the answers: (a) *"Everything a free account sees but with limited supervisour usage and no memory and 1 custom role"* ("role" read as **rule**); (b) the 14-day trial starts when the account is created; (c) the taste is 10 per install; counts: *"Show counts always, but as meter not dollars or money"*; *"Yes install ID"*. Setup can finish without an account ([setup-flow.md](setup-flow.md) steps 6 → 7 → 8 → 9, edges V and W). **Why:** Show HN and the awesome-claude-code list exclude sign-up-gated tools. **Partly reverses U-1** (BRD §10 #57, ~~*"don't allow to access without sign in"*~~).
+
+| Same as a Free account | Different without an account | Needs an account |
+|---|---|---|
+| The notch, the peek and the full panel (Needs you, **Usage**, **Rules**, **Settings**) · the four limits and the tripwire · the tested library rules · receipts and the ledger, kept on this PC · guided merge · What is sent · the tray as the fallback | **Supervisor:** 10 answers per install, in total, as a meter ("7 of 10 supervisor answers left") · **No memory:** no learning, no What Pip knows, no learned suggestions, no "Pip learned" line or Applied chips · **1 rule of your own** (drafting it uses the taste) | Memory · more rules of your own · the 14-day trial (starts when the account is created; the taste doesn't count against it), then the monthly taste or Pro |
+
+*Superseded the same day:* a "Safety is on" end screen, a tray-only surface and a "minimal panel" without tabs were drafted before the founder's answer (a) and are gone.
+
+**What talks to the server without an account:** only a supervisor answer from the taste, signed with an **install token** for a random **install ID** made at setup (no hardware fingerprint and no ID derived from the PC). The server keeps that ID and how much of the taste was used, nothing else; abuse is held by a per-IP rate limit and the global daily spend cap. Once the taste is used up, Eucas makes no server calls without an account (the update check aside). The guard, the limits and the tripwire never need the network. The tripwire needs the app running, with or without an account.
+
+### 11.1 The notch and the peek: the same
+
+Pip lives in the notch exactly as on Free: the **full eye grammar** (the eight faces of the eyes sheet, no new ones), the working beam, the needs-you marker and the **peek**. Nothing in the notch is about the account: no marker, no word, no sound (§10's calm rule). The peek's quiet second line reads "5-hour 46% · week 62% · supervisor 7 of 10 left". **The notch never** changes face because the taste is low, shows a marker for the account, or opens by itself: a notch that sulked when you didn't sign up would be nagging with eyes.
+
+### 11.2 The panel: the same tabs, minus memory
+
+The same panel as Free (§2), with these differences only. **Nothing is greyed out or padlocked**: what isn't there is simply absent, so the panel never reminds you of what you don't have.
+
+| Where | Without an account |
+|---|---|
+| **Needs you** | The same items (§3.3), guided merge included. Absent: rule suggestions, the "Pip learned" line and Applied chips (all from memory) |
+| **Usage** (`panel-noacct-d` / `-l`: Needs you + Usage) | The 5-hour and weekly meters, where it went, Your week: as on Free. **Usage › Supervisor is the taste** (§11.3): the chip **No account** beside the section title; the meter "**Answers left** · For this install · **7 of 10**" (the bar in the Euca's colour; "For this install" where the reset date would be); the line "When Pip isn't sure, the supervisor answers your agents so they don't wait for you. After that, Pip asks you."; and the **What is sent** link. Absent: the monthly compounding line (memory) |
+| **Rules** (`panel-noacct-rules-d`) | The promise, the lock row, the four limits and the tested library: as on Free. **Your rules** holds **1 rule of your own**, a described rule, e.g. "Block edits in api-docs/migrations/ · Your own · drafted from your words". No rules learned from approvals (no memory). While you have none, the composer works (drafting uses one of the 10 answers; offline or with the taste used up, the guided exact-rule form). Once you have one, the composer is replaced by one quiet line: "One rule of your own without an account. **Create an account for more rules**" (the link opens setup step 6). Deleting your one rule brings the composer back |
+| **Settings** (`panel-noacct-settings-d`) | As on Free, minus the **What Pip knows** row. **Account** reads "**No account** · 10 supervisor answers, one rule of your own, no memory. Eucas keeps only a random ID for this install." with the primary **Create an account** (it opens setup step 6; signed out the row reads "Signed out" and the button **Sign in**). No plan card, no Sign out, no Delete account (there's nothing to sign out of or delete). What is sent's privacy line uses the no-account last sentence (setup-flow step 8) |
+| **Sub-pages** | All as on Free except What Pip knows. The Why? page omits "what you taught it" |
+
+**Why "no memory" is quiet:** Pip still answers from your rules and the taste; it just doesn't keep anything about how you work. There's no "learning is off" banner: the honest places to say it are step 6's consequence line, step 9's invite line and Settings › Account.
+
+### 11.3 The taste
+
+- **Size (founder (c), decided):** 10 supervised answers per install, in total, not monthly. Shown as a count on the meter, which the founder's rule allows everywhere (*"Show counts always, but as meter not dollars or money"*): **never dollars or money; counts as a meter are fine** (§5 is corrected to say the same, so this isn't an exception). The cost limit behind it stays hidden.
+- **Low:** at 2 left the bar is amber with the words "2 left"; no other change, no notch marker.
+- **Used up** (`panel-noacct-empty-d`): the meter reads "**0 of 10**" with an empty track, and under it, in place of the explanation line: "**Pip asks you now.** Sign up for 14 more days of the supervisor. **Create an account**" (the link opens setup step 6). When Pip isn't sure, it puts the question in Needs you as usual (§3.3's "Pip didn't answer: not sure"). This line is the meter's own used-up state, shown only where the meter is (Usage), so you see it when you go looking, never otherwise: never in the notch, the peek, Needs you, a sound or a Windows notification. Drafting your one rule then uses the guided form.
+- **Offline:** "The supervisor can't be reached offline. Pip asks you instead." (the §5 unreachable line); the taste isn't spent.
+- **Reinstall:** a new install ID and a new taste (accepted by the founder: a few cents).
+- **Signing up:** the taste ends; the 14-day trial starts when the account is created (founder (b), decided); answers used from the taste don't count against it.
+
+### 11.4 The tray (fallback, Windows draws it: Segoe UI, Windows metrics, Windows theme)
+
+As with an account (§1), it's a fallback: is Eucas running, is the PC protected. Never a badge.
+
+| Item | Kind | Copy |
+|---|---|---|
+| Header | disabled text (Narrator reads it) | "**Protected · 4 limits locked · tripwire on**" · Not locked: "Protected · 4 limits on, not locked · tripwire on" · not yet tested: "Protected · not yet tested · tripwire on" · problem: "**Not protected** · the guard isn't answering" / "· blocked by your organisation" · signed out with locked rules: "Protected · 4 limits + 3 rules locked · tripwire on" |
+| Show the panel | item | As with an account |
+| — | separator | |
+| Create an account | item, **one, no badge, no bold** | Opens the setup window at step 6 (setup-flow edge W). Signed out it reads **Sign in** |
+| — | separator | |
+| Quit Eucas… | item | As with an account. Its confirmation says the consequence: "The tripwire stops until you open Eucas again. The four limits stay locked." |
+
+The thin-line / pill choice and sounds live in Settings, as on Free. **Not protected** (`noacct-tray-off-d`): the icon gains a small red dot (never colour alone: the tooltip and the header say it in words) and the header reads "**Not protected** · the guard isn't answering" (or "· blocked by your organisation"). The notch shows Not protected as usual; the tray only mirrors it.
+
+### 11.5 Flows
+
+- **Finish setup without an account:** step 6 → **Continue without an account** → 7 Choose your rules (1 of your own) → 8 What is sent → 9 Pip is watching (no account) → the flight → the notch and panel + the coach mark (setup-flow V).
+- **Create an account later:** Settings › Account **Create an account**, Rules' "Create an account for more rules", the used-up taste line, or the tray item → the setup window at step 6 → "You're signed in" → **Done**; the window fades and Pip blinks once in the notch with the done sound (setup-flow W). Nothing else is repeated: your rules are already on the PC, step 8 and the flight have happened. Memory turns on, Rules' composer comes back, and the 14-day trial starts (founder (b)).
+- **Sign back in after signing out:** Settings › Account **Sign in** → step 6 → "Welcome back" → **Done**. A different account: the §10.4 warning first.
+- **Sign out / Delete account:** §10.4, then this state.
+
+**Never nags** (founder): the Account row in Settings, the one line in Rules after your one rule, the tray item, and the used-up line when the taste runs out. No badge, no timed prompt, no reminder, no countdown, no Windows notification about the account, no greyed-out features, no change to the notch's face or marker because you haven't signed up.
+
+### 11.6 Founder decisions (answered 2026-10-26)
+
+| # | Question | Answer | Was recommended |
+|---|---|---|---|
+| **(a)** | The no-account surface | **Everything a Free account sees** (§11.1–§11.2), with the 10-answer taste, no memory and 1 rule of your own | ~~A minimal notch and panel~~; ~~tray only~~ (both dropped) |
+| **(b)** | When the 14-day trial starts | **When the account is created.** The taste doesn't count against it. One trial per account (BR-123 (9)); an existing account on a new PC keeps its plan or trial | Same |
+| **(c)** | The size of the no-account taste | **10 answers per install, in total** | Same |
+| — | Counts | **Never dollars or money; counts as a meter are fine**, everywhere (§5 corrected) | — |
+| — | Install ID | A random per-install ID is approved; no hardware fingerprint, no ID derived from the PC | — |
+
+### 11.7 New for approval
+
+| # | Screen or state | Prototype route / screenshot |
+|---|---|---|
+| 1 | Usage without an account, scrolled to the supervisor (the taste meter), dark and light | `panel-noacct-d` / `-l` |
+| 2 | Rules without an account: your one rule, and the composer replaced | `panel-noacct-rules-d` |
+| 3 | Settings without an account: no What Pip knows, Account "No account" | `panel-noacct-settings-d` |
+| 4 | Usage, the taste used up | `panel-noacct-empty-d` |
+| 5 | The tray menu without an account, dark and light, and Not protected | `noacct-tray-d` / `-l`, `noacct-tray-off-d` |
+| 6 | Setup steps 7, 8 and 9 without an account | `setup-7-rules-noacct-d`, `setup-8-sent-noacct-d`, `setup-9-noacct-d` / `-l` / `-declined-d`, in [setup-flow §7](setup-flow.md) |
+| — | Spec only: the peek's "supervisor 7 of 10 left"; low taste (2 left); offline taste; signed out ("Signed out · Sign in"); the Why? page without "what you taught it" | — |

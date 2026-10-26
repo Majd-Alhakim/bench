@@ -4,7 +4,7 @@ Sized for **one founder working with Claude, about 5 hours a week of business ti
 
 ## 1. Telemetry (opt-in, no content)
 
-**Off by default.** Asked once, at the end of first run, in one line: "Send anonymous counts (no commands, paths or text) to help fix Eucas? [Send counts] [No]". Changeable in Settings › Privacy, with **See what's sent** (the last 7 days of payloads, verbatim).
+**Off by default, and never with no account** (2026-10-26: with no account only the supervisor taste, drafting your one own rule, and the update check reach the server, SYSTEM-DESIGN §4.2; kept off although no account otherwise sees what Free sees, BUILD-PLAN §7; the question isn't asked, and it is asked at the end of steps 6 – 9 if you create an account later). Asked once, at the end of first run, in one line: "Send anonymous counts (no commands, paths or text) to help fix Eucas? [Send counts] [No]". Changeable in Settings › Privacy, with **See what's sent** (the last 7 days of payloads, verbatim).
 
 Sent at most once a day to `POST /v1/telemetry`, schema-allowlisted on both ends (`contracts/api/telemetry.schema.json`, `.strict()`):
 
@@ -15,12 +15,14 @@ Sent at most once a day to `POST /v1/telemetry`, schema-allowlisted on both ends
 | `guardP95Ms`, `checkEventsLostPer10k` | `21`, `0` | Budgets in the field |
 | `canary` | `{ ran: 2, blocked: 2, couldNotRun: 0 }` | Edge J/K rates |
 | `counts` | `{ blocks: { delete: 3, push_default: 1, send: 0, pay: 0 }, tripwireStops: 0, needsYou: 41, rulesSaved: 2 }` | Value and noise |
-| `firstRun` | `{ stepReached: 6, secondsToProtected: 262, uac: "accepted" }` | The ~5:00 setup target (CR-012) and the D-4 split; plus ~~`signIn` (now or later)~~ whether setup waited at sign-in (no "Sign in later"; the limits are locked before it, 2026-10-26) |
+| `firstRun` | `{ stepReached: 6, secondsToProtected: 262, uac: "accepted" }` | The ~5:00 setup target (CR-012) and the D-4 split; plus ~~`signIn` (now or later)~~ whether setup waited at sign-in (no "Sign in later"; the limits are locked before it, 2026-10-26), and `accountAt: "setup" | "tray"` (whether the account was made in setup or later, 2026-10-26; no-account installs send no telemetry) |
 | `errors` | `{ GUARD_INTERNAL: 0, PIPE_TIMEOUT: 3 }` | Error codes only |
 
 **Added 2026-10-26 (always-on supervisor, CR-012):** `supervisor: { moments, settledByRules, modelCalls, notSentMostlyCode, budgetEmpty, unreachable }` (counts only) and `account: { signedIn: bool }`. Telemetry **never carries the account token or id**, so counts stay unlinkable to an email (ADR-0015).
 
 `installHash` (salted per release, not linkable across releases) dedupes daily counts. No IP is stored (Workers Analytics Engine row without it). **Never:** commands, paths, project or repo names, rule text, prompt or file text, usernames, emails.
+
+**No-account installs are nearly invisible by design (2026-10-26):** they send no telemetry, so the founder sees them only as update-check volume per release and as `install` rows (registers per day, tastes used up per day; Worker analytics and D1 counts, no id leaves the Worker), not as weekly actives. The kill-criteria numbers therefore count signed-in installs only.
 
 **Without telemetry**, the founder still sees: GitHub downloads per release, waitlist counts (anonymous), the canary, and issues. That is enough to run the product; telemetry only makes the kill-criteria numbers (installs, weekly actives) measurable, so the prompt says that plainly.
 
@@ -82,6 +84,7 @@ flowchart LR
 | Update rollout | Telemetry `appVersion` mix (if on); GitHub release download counts | Manual check 48 h after a stable release, before widening from 10 % |
 | Signing certificate | **When Authenticode is bought** (none in v0.1, CR-010): expiry date in `docs/support/calendar.md` | Calendar reminder 60 and 14 days before |
 | Domains, Cloudflare and Lemon Squeezy billing | Their own emails | — |
+| No-account taste *(2026-10-26)* | Registers per day, tastes used up per day, anonymous daily spend vs `anonDailyMicroUsd` (D1 `spend_day_anon`) | Email if the anonymous cap trips two days running (farming, or a launch spike); then raise the cap, tighten `installRegisterPerIp`, or flip `killSwitches.anonTaste` |
 | Sign-in email *(CR-012)* | Sends, bounces and rejects per day (Email Service analytics); `auth/start` → `verify` conversion | Email if bounces > 5 % or conversion < 70 % for a day (codes not arriving) |
 | Accounts and budgets *(CR-011, CR-012)* | D1 size and write rate; `402 budget_empty` and `413 prompt_too_large` rates; `spend_day` vs the breaker; `trial_claim` hits (alias or deleted-account re-sign-ups refused a second trial; a daily count, no email) ~~accounts with `device_count` > 10~~ (no device count is stored since 2026-10-26) | Email at 50 % and 90 % of the daily breaker |
 | Disposable-domain list | The weekly blocklist PR | Review it like any PR |

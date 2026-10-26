@@ -1,6 +1,6 @@
 # ADR-0008: Companion stack: Tauri 2 shell, Rust core and guard, React renderer
 
-- **Status:** Proposed (2026-10-26). **Amends ADR-0001 for the companion only** (the team app keeps Electron + the Agent SDK). **Extends ADR-0003**: its TypeScript, pnpm, ESLint, Vitest, Playwright, lefthook and changesets rules stay; Rust tooling is added.
+- **Status:** Accepted (2026-10-26, Gate 6 decision 4a); proposed 2026-10-26. **Amends ADR-0001 for the companion only** (the team app keeps Electron + the Agent SDK). **Extends ADR-0003**: its TypeScript, pnpm, ESLint, Vitest, Playwright, lefthook and changesets rules stay; Rust tooling is added.
 - **Date:** 2026-10-26
 - **Amended 2026-10-26 (SP-ST1, CR-011):** **Tauri stays; the kill criterion was not triggered.** The surfaces change: the **notch is a native Rust layered window** ([ADR-0016](0016-notch-native-layered-window.md)), the **panel** is the one pre-warmed webview (it also renders the peek), the tray is a fallback, and there's **no main window** (CR-011 §3). Measured numbers are in "SP-ST1 results" at the end; they replace the estimates in the options table.
 

@@ -2,9 +2,9 @@
 
 **Status:** ~~Pro feature, **not in v0.1** (Pro is a waitlist line, D-2 (b)).~~ **Updated 2026-10-26 (CR-011, CR-012, founder decisions relayed by the PM):**
 - **In v0.1, always on for every user, Free included, with no off switch:** *"The supervisor is the main thing for this tool so keep it on and tell the user what is being sent."* **Level 1 / Level 2 are retired;** every moment the rules can't settle sends what Level 2 sent (signals + the trimmed, redacted last message), through the Worker to the zero-data-retention provider. Setup and Settings show exactly what is sent (§3).
-- **Tiers differ only in budget** ([ADR-0018](../../adr/0018-supervisor-hidden-dollar-budget.md)): a 14-day trial that starts when setup finishes (one per account), then a monthly taste on Free; Pro gets more. **An empty budget means rules only**, asking you more.
+- **Tiers differ only in budget** ([ADR-0018](../../adr/0018-supervisor-hidden-dollar-budget.md)): a 14-day trial that ~~starts when setup finishes~~ starts when the account is created (founder, 2026-10-26) (one per account); with no account, a taste of 10 decisions per install (ADR-0018), then a monthly taste on Free; Pro gets more. **An empty budget means rules only**, asking you more.
 - **SP-SUP2 is the gate:** it ships behind `killSwitches.supervisor`, on (rules only) until the real-moment eval passes (§10).
-- Every call needs a Eucas account token ([ADR-0017](../../adr/0017-accounts-email-code-d1.md)). Evidence: [SP-SUP1](https://github.com/eucas-app/eucas/pull/56) (189 moments, κ 0.86, $1.75). Decision: [ADR-0011](../../adr/0011-supervisor-rules-first-model-at-level-2.md). Server: [ADR-0012](../../adr/0012-thin-server-cloudflare-workers.md).
+- Every call needs a Eucas account token, or since 2026-10-26 a no-account install token while its taste lasts ([ADR-0017](../../adr/0017-accounts-email-code-d1.md)). Evidence: [SP-SUP1](https://github.com/eucas-app/eucas/pull/56) (189 moments, κ 0.86, $1.75). Decision: [ADR-0011](../../adr/0011-supervisor-rules-first-model-at-level-2.md). Server: [ADR-0012](../../adr/0012-thin-server-cloudflare-workers.md).
 
 ## 1. What it is, and what it can never do
 

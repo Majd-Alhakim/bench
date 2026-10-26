@@ -1151,9 +1151,9 @@ const BASE = () => ({
   scene:"desk", step:1, euca:{name:"Pip", shape:"sphere", hue:"lavender"},
   guard:"ok", working:true, doze:false, mode:"pill", needs:[], peek:false, arrive:false, born:false,
   panel:false, tab:"usage", sub:null, meter:"trial", locked:true, draft:false, coach:false,
-  signedIn:true, auth:"email", authEmail:EMAIL, resent:false, sample:false,
+  signedIn:true, noacct:false, taste:10, auth:"email", authEmail:EMAIL, resent:false, sample:false,
   menu:false, fullscreen:false, wtoast:null, toast:null, uac:false, declined:false, testFail:false, sheet:null,
-  where:"today", sessions:3, learned:false, month:false, away:false, caught:false, banner:null, writeFail:false, pleased:false, knowsEmpty:false
+  where:"today", sessions:3, learned:false, month:false, away:false, caught:false, banner:null, writeFail:false, pleased:false, knowsEmpty:false, scroll:null
 });
 let S = BASE();
 
@@ -1180,9 +1180,13 @@ const ROUTES = [
     ["s-signin-back","6 · Signed in: an existing account keeps its plan", {scene:"setup", step:6, auth:"back", meter:"founders"}],
     ["s-rules","7 · Choose your rules", {scene:"setup", step:7}],
     ["s-rules-draft","7 · A described rule, drafted", {scene:"setup", step:7, draft:true}],
+    ["s-rules-noacct","7 · Choose your rules (no account: one of your own)", {scene:"setup", step:7, noacct:true, signedIn:false}],
     ["s-sent","8 · What is sent (your last session, redacted)", {scene:"setup", step:8}],
     ["s-sent-sample","8 · What is sent: a labelled sample", {scene:"setup", step:8, sample:true}],
+    ["s-sent-noacct","8 · What is sent (no account)", {scene:"setup", step:8, noacct:true, signedIn:false}],
     ["s-done","9 · Pip is watching", {scene:"setup", step:9}],
+    ["s-noacct-done","9 · Pip is watching (no account)", {scene:"setup", step:9, noacct:true, signedIn:false}],
+    ["s-noacct-declined","9 · Pip is watching (no account, not locked)", {scene:"setup", step:9, noacct:true, signedIn:false, locked:false}],
     ["s-coach","After setup: the notch, once", {coach:true, born:true, working:false}]
   ]],
   ["The notch", [
@@ -1262,14 +1266,20 @@ const ROUTES = [
     ["p-account-founders","Settings › Account (Founders' $15 for life)", {panel:true, tab:"settings", meter:"founders", scroll:"account"}],
     ["p-signout","Account › Sign out", {panel:true, tab:"settings", sub:"signout"}],
     ["p-delete","Account › Delete account", {panel:true, tab:"settings", sub:"delete"}],
-    ["p-deleted","Account deleted: the panel shows only sign-in", {panel:true, signedIn:false, toast:{t:"Account deleted. Your rules and history stay on this PC.", undo:false}}],
-    ["p-signedout","Signed out: the panel shows only sign-in", {panel:true, signedIn:false, toast:{t:"Signed out. Pip keeps guarding.", undo:false}}],
+    ["p-deleted","Account deleted: back to no account", {panel:true, signedIn:false, noacct:true, taste:0, toast:{t:"Account deleted. Your rules and history stay on this PC.", undo:false}}],
+    ["p-signedout","Signed out: back to no account", {panel:true, signedIn:false, noacct:true, taste:0, toast:{t:"Signed out. Pip keeps guarding.", undo:false}}],
     ["p-signin","Signed out: sign in (panel)", {panel:true, signedIn:false}],
     ["p-signin-code","Sign in: the code (panel)", {panel:true, signedIn:false, auth:"code"}],
     ["p-switch","Sign in with a different account: the warning", {panel:true, signedIn:false, auth:"switch", authEmail:"kim@studio.dev"}]
   ]],
   ["Fallback", [
-    ["t-menu","Tray icon menu (fallback)", {menu:true}]
+    ["t-menu","Tray icon menu (fallback)", {menu:true}],
+    ["p-noacct","No account: Needs you + Usage", {noacct:true, signedIn:false, panel:true, taste:7, needs:["wait"], tab:"usage", scroll:"#sup"}],
+    ["p-noacct-rules","No account: Rules, one rule of your own", {noacct:true, signedIn:false, panel:true, taste:7, tab:"rules", scroll:"#mine"}],
+    ["p-noacct-settings","No account: Settings", {noacct:true, signedIn:false, panel:true, taste:7, tab:"settings", scroll:"#account"}],
+    ["p-noacct-empty","No account: the supervisor taste is used up", {noacct:true, signedIn:false, panel:true, taste:0, needs:["wait"], tab:"usage", scroll:"#sup"}],
+    ["t-noacct","No account: the tray menu", {noacct:true, signedIn:false, needs:[], menu:true}],
+    ["t-noacct-off","No account: the tray menu, not protected", {noacct:true, signedIn:false, needs:[], guard:"off", menu:true}]
   ]]
 ];
 const ROUTE = Object.fromEntries(ROUTES.flatMap(([, list]) => list.map(([id, label, s]) => [id, {label, s}])));
@@ -1426,7 +1436,7 @@ function panelHTML(){
                         : `<button class="chip attn" data-act="tab" data-tab="rules">${I.unlock}Not locked</button>`;
   const head = `<div class="ph"><span class="av">${avatarSVG(S.euca, {soft:true, follow:FOLLOWS(faceOf()), expr:faceOf()})}</span>
     <div class="who"><div class="nmrow"><span class="nm">${esc(N())}</span>${lock}</div><div class="st${st.off ? " off" : ""}">${st.off ? '<span class="offd"></span>' : '<span class="okd"></span>'}${esc(st.t)}</div></div></div>`;
-  if (!S.signedIn) return signedOutPanel();
+  if (!S.signedIn && !S.noacct) return signedOutPanel();
   if (S.sub) return `<div class="panel" role="dialog" aria-label="${esc(N())}">${subHTML()}${S.toast ? toastHTML() : ""}</div>`;
   const danger = hasDanger();
   const order = [...loud(), ...S.needs.filter(k => NEEDS[k].quiet)];
@@ -1472,7 +1482,7 @@ function learnedHTML(){
 }
 
 function supervisorHTML(){
-  /* CR-012 / always-on: the supervisor has no off switch. Signed out, the panel shows only sign-in (founder, 2026-10-26), so the meter has no signed-out state. */
+  /* CR-012 / always-on: the supervisor has no off switch. Signed out or with no account, the meter shows the install's taste (founder, 2026-10-26). */
   const sentLink = `<div class="m-meta"><button class="link" data-act="sub" data-sub="sent">What is sent</button></div>`;
   const MS = {
     trial:{chip:'<span class="chip">Trial · 12 days left</span>', v:"78%", w:78, l:"Trial ends 9 Nov", line:"Answered your agents 41 times so far, so they didn't wait for you. It never approves a tool call."},
@@ -1483,9 +1493,11 @@ function supervisorHTML(){
     pro:{chip:'<span class="chip">Pro</span>', v:"64%", w:64, l:"Resets 26 Nov", line:"Answered your agents 212 times this month, so they didn't wait for you. It never approves a tool call."}
   };
   MS.founders = MS.pro;
-  const M = MS[S.meter];
+  /* Founder, 2026-10-26: no account = 10 supervisor answers per install, shown as a count on a meter, never as money */
+  MS.noacct = {chip:'<span class="chip">No account</span>', v:`${S.taste} of 10`, w:S.taste * 10, l:"For this install", line:S.taste > 0 ? `When ${N()} isn't sure, the supervisor answers your agents so they don't wait for you. After that, ${N()} asks you.` : `<b>${esc(N())} asks you now.</b> Sign up for 14 more days of the supervisor. <button class="link" data-act="signup">Create an account</button>`};
+  const M = S.noacct ? MS.noacct : MS[S.meter];
   return `<div class="sec-t" id="sup"><span>Supervisor</span>${M.chip}</div>
-  <div class="group"><div class="meter"><div class="m-top"><span class="ml">Help left this month</span><span class="mr">${M.l}</span><span class="mv">${M.v}</span></div>
+  <div class="group"><div class="meter"><div class="m-top"><span class="ml">${S.noacct ? "Answers left" : "Help left this month"}</span><span class="mr">${M.l}</span><span class="mv">${M.v}</span></div>
     <div class="bar sup" role="meter" aria-label="Supervisor help left" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${M.w}"><i style="width:${M.w}%"></i></div>
     <div class="m-line">${M.line}</div>
     ${M.pro ? `<div class="pro-line">Pro keeps it going all month: $20/month, $15 for the first 200. <button class="link" data-act="tab" data-tab="settings" data-scroll="account">See Pro</button></div>` : ""}
@@ -1494,7 +1506,7 @@ function supervisorHTML(){
 }
 function usageHTML(){
   const W = S.where === "today" ? [["bench",58],["api-docs",30],["notes",12]] : [["bench",51],["api-docs",22],["notes",14],["site",9],["infra",4]];
-  const month = S.month ? `<div class="month">${esc(N())} asked you <b>40% less</b> this month than in September. <button class="link" data-act="sub" data-sub="knows">See why</button></div>` : "";
+  const month = S.month && !S.noacct ? `<div class="month">${esc(N())} asked you <b>40% less</b> this month than in September. <button class="link" data-act="sub" data-sub="knows">See why</button></div>` : "";
   const wk = S.banner === "week";
   return `${month}<div class="sec-t"><span>Your Claude usage</span><span class="meta">updated 20 s ago</span></div>
   <div class="group">
@@ -1529,6 +1541,8 @@ function draftHTML(){
     <div class="acts"><button class="btn pri" data-act="adddraft">${S.writeFail ? "Try again" : "Add rule · blocks about 3 a week"}</button><button class="btn ghost" data-act="nodraft">Reword</button>
     ${S.scene === "setup" ? "" : `<label><span class="cb-box on">${I.check}</span>Lock it too</label>`}</div></div>`; /* setup keeps one admin prompt (founder, 2026-10-26) */
 }
+/* No account: no memory, so no rules learned from approvals; the one rule of your own is one you described */
+const MINE_NOACCT = [{t:'Block edits in <span class="mono">api-docs/migrations/</span>', d:"Your own · drafted from your words", on:true}];
 function rulesHTML(){
   const lockrow = S.locked
     ? `<div class="lockrow">${I.lock}<span class="grow">4 limits and 5 rules locked with Windows admin</span><button class="link" data-act="lockchange">Change</button></div>`
@@ -1538,10 +1552,10 @@ function rulesHTML(){
   <div class="group">${LIMITS.map(limitRow).join("")}</div>
   <div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div>
   <div class="group">${LIB.map((r, i) => ruleRow(r, i, "lib")).join("")}</div>
-  <div class="sec-t"><span>Your rules</span></div>
-  <div class="group">${MINE.map((r, i) => ruleRow(r, i, "mine")).join("")}</div>
-  <form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>
-  ${S.draft ? draftHTML() : ""}`;
+  <div class="sec-t" id="mine"><span>Your rules</span></div>
+  <div class="group">${(S.noacct ? MINE_NOACCT : MINE).map((r, i) => ruleRow(r, i, "mine")).join("")}</div>
+  ${S.noacct ? `<p class="quiet">One rule of your own without an account. <button class="link" data-act="signup">Create an account for more rules</button></p>` : `<form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>
+  ${S.draft ? draftHTML() : ""}`}`;
 }
 function planHTML(){
   if (S.meter === "pro") return `<div class="plan"><div class="pt"><span>Pro</span><span class="num">$20/month</span></div><div class="pd">Renews 26 Nov. Supervisor help all month, every session's details, history and export.</div><button class="btn">Manage</button></div>`;
@@ -1553,6 +1567,8 @@ function planHTML(){
 }
 /* ---------- CR-012 / always-on, 2026-10-26: account, sign-in, what is sent ---------- */
 function accountHTML(){
+  if (S.noacct) return `<div class="sec-t" id="account"><span>Account</span></div>
+  <div class="group"><div class="row"><span class="rl"><div class="rt">No account</div><div class="rd">10 supervisor answers, one rule of your own, no memory. Eucas keeps only a random ID for this install.</div></span><button class="btn pri" data-act="signup">Create an account</button></div></div>`;
   return `<div class="sec-t" id="account"><span>Account</span></div>
   <div class="group"><div class="row"><span class="rl"><div class="rt">${esc(EMAIL)}</div><div class="rd">Holds only your email, your plan and how much supervisor help you've used</div></span><button class="btn" data-act="sub" data-sub="signout">Sign out</button></div>${planHTML()}</div>
   <p class="quiet"><button class="link" data-act="sub" data-sub="delete">Delete account</button></p>`;
@@ -1601,7 +1617,7 @@ function signedOutPanel(){
 }
 function settingsHTML(){
   return `<div class="group"><button class="row" data-act="sub" data-sub="edit"><span style="width:28px;height:28px;flex:none">${avatarSVG(S.euca)}</span><span class="rl"><div class="rt">${esc(N())}</div><div class="rd">${HUE[S.euca.hue].n} ${SHAPES[S.euca.shape].n.toLowerCase()} · name and look</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button>
-    <button class="row" data-act="sub" data-sub="knows"><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;color:var(--text-2)">${I.note.replace("<svg", '<svg width="16" height="16"')}</span><span class="rl"><div class="rt">What ${esc(N())} knows</div><div class="rd num">Together since 28 Sep · 1,204 checks · 9 rules learned</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button></div>
+    ${S.noacct ? "" : `<button class="row" data-act="sub" data-sub="knows"><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;color:var(--text-2)">${I.note.replace("<svg", '<svg width="16" height="16"')}</span><span class="rl"><div class="rt">What ${esc(N())} knows</div><div class="rd num">Together since 28 Sep · 1,204 checks · 9 rules learned</div></span>${I.chev.replace("<svg", '<svg class="chev"')}</button>`}</div>
   <div class="sec-t"><span>Protection</span></div>
   <div class="group">
     <div class="row"><span class="rl"><div class="rt">Admin lock</div><div class="rd">${S.locked ? "On · 4 limits and 5 rules no agent can change" : "Off · the limits and your rules run, not locked"}</div></span><button class="btn" data-act="tab" data-tab="rules">${S.locked ? "Rules" : "Lock"}</button></div>
@@ -1754,7 +1770,7 @@ function setupHTML(){
     const send = dis => `<button class="btn pri lg" data-act="auth" data-v="code"${dis ? " disabled" : ""}>Send a code</button>`;
     if (a === "done" || a === "back") {
       const L = a === "done"
-        ? [[`Signed in as ${esc(EMAIL)}`, "A new account. It holds only your email, your plan and how much supervisor help you've used."], ["Your 14-day supervisor trial", "Starts when setup finishes. No card."]]
+        ? [[`Signed in as ${esc(EMAIL)}`, "A new account. It holds only your email, your plan and how much supervisor help you've used."], ["Your 14-day supervisor trial", "Starts now, with your account. No card."]]
         : [[`Signed in as ${esc(EMAIL)}`, "Your account since 2 Oct"], ["Your plan carries over: Pro, Founders' price", "$15/month for life · renews 26 Nov"], ["This PC starts fresh", `Your rules and what ${esc(N())} knows live on each PC, never in your account.`]];
       body = `<h1>${a === "done" ? "You're signed in" : "Welcome back"}</h1><div class="checklist" style="margin-top:12px">${L.map(([t, d]) => `<div class="ci">${I.check}<span>${t}<small>${d}</small></span></div>`).join("")}</div>`;
       foot = `${backB}<span class="sp"></span>${next("Choose your rules")}`;
@@ -1770,9 +1786,10 @@ function setupHTML(){
       <div class="auth"><div class="field-l">Email</div><input class="field${bad ? " bad" : ""}" type="email" autocomplete="email" aria-label="Email" placeholder="you@example.com" value="${bad ? "sam@tempmail.dev" : esc(EMAIL)}"${bad ? ' aria-invalid="true" aria-describedby="auth-err"' : ""}>
       ${bad ? `<div class="werr" id="auth-err" role="alert">${I.alert}<span>Please use an address you'll keep. This one expires.</span></div>` : ""}
       ${off ? `<div class="banner" role="status">${I.cloud}<div>${esc(nm(COPY.offline)).replace(/^([^.]+.)/, "<b>$1</b>")} ${esc(N())} is already guarding: the four limits ${S.locked ? "are locked" : "run, not locked"}.</div></div>` : newsBox()}</div>
-      ${off ? "" : `<ul class="conseq"><li>${I.clock}<span>Your 14-day supervisor trial starts when setup finishes. No card.</span></li><li>${I.key}<span>Your Claude login stays as it is. Eucas never sees it.</span></li></ul>`}`;
-      foot = off ? `${backB}<span class="sp"></span><button class="btn pri lg" data-act="auth" data-v="email">Retry</button>`
-                 : `${backB}<span class="sp"></span>${send(bad)}`;
+      ${off ? "" : `<ul class="conseq"><li>${I.clock}<span>Your 14-day supervisor trial starts when you create your account. No card.</span></li><li>${I.key}<span>Your Claude login stays as it is. Eucas never sees it.</span></li><li>${I.check}<span>Without an account: everything on Free with 10 supervisor answers, one rule of your own and no memory. The 14-day trial starts when you create one.</span></li></ul>`}`;
+      const skip = `<button class="btn ghost lg" data-act="noacct">Continue without an account</button>`;
+      foot = off ? `${backB}<span class="sp"></span>${skip}<button class="btn pri lg" data-act="auth" data-v="email">Retry</button>`
+                 : `${backB}<span class="sp"></span>${skip}${send(bad)}`;
     }
   } else if (st === 7) {
     const sugg = [['Allow <span class="mono">pnpm test</span> in bench',"You approved it 212 times",true],['Allow <span class="mono">git status</span> everywhere',"Read-only · 540 times",true],['Allow <span class="mono">pnpm lint</span> in bench',"Runs code from the project · 96 times",false]];
@@ -1781,8 +1798,9 @@ function setupHTML(){
     <div class="sec-t"><span>Safety rules</span><span class="meta">tested</span></div><div class="group">${LIB.map((r, i) => ruleRow({...r, lock:false}, i, "lib")).join("")}</div></div>
     <div class="col"><div class="sec-t"><span>Your own</span></div>
     <form class="compose" data-act="draftform"><input aria-label="Describe a rule" placeholder="Describe a rule in your own words" value="${S.draft ? "don't let agents touch the migrations in api-docs" : ""}"><button class="btn" type="submit">Draft it</button></form>${S.draft ? draftHTML() : ""}
-    <div class="sec-t"><span>From your week</span></div><div class="group">${sugg.map(([t, d, on]) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${t}</div><div class="rd">${d}</div></span></div>`).join("")}</div></div></div>`;
-    foot = `${backB}<span class="hint">Not locked yet. Lock them from Rules any time; Windows asks once more.</span><span class="sp"></span>${next(`Continue · ${S.draft ? 8 : 7} rules`)}`;
+    ${S.noacct ? `<p class="quiet" style="margin-top:10px">Without an account: one rule of your own, drafted with one of your 10 supervisor answers. <button class="link" data-act="signup">Create an account for more rules</button></p>`
+      : `<div class="sec-t"><span>From your week</span></div><div class="group">${sugg.map(([t, d, on]) => `<div class="row"><span class="cb-box${on ? " on" : ""}">${on ? I.check : ""}</span><span class="rl"><div class="rt">${t}</div><div class="rd">${d}</div></span></div>`).join("")}</div>`}</div></div>`;
+    foot = `${backB}<span class="hint">Not locked yet. Lock them from Rules any time; Windows asks once more.</span><span class="sp"></span>${next(S.noacct ? `Continue · ${S.draft ? 6 : 5} rules` : `Continue · ${S.draft ? 8 : 7} rules`)}`;
   } else if (st === 4) {
     if (S.declined) {
       body = `<h1>The four limits are on, but not locked</h1><p class="lede">Windows didn't give permission, so they sit in your user settings and still block.</p>
@@ -1804,8 +1822,17 @@ function setupHTML(){
     foot = S.testFail ? `<button class="btn ghost lg">Show what happened</button><span class="sp"></span><button class="btn pri lg">Run the diagnostic</button>` : `<span class="sp"></span>${next("Sign in")}`;
   } else if (st === 8) {
     /* CR-012 / always-on, 2026-10-26: no level to choose. Show exactly what is sent, from your own last session. */
-    body = `<h1>What is sent</h1><p class="lede">${esc(nm(COPY.privacy))}</p>${sentHTML(S.sample)}<p class="always">${esc(COPY.alwaysOn)}</p>`;
+    const privacy = S.noacct ? COPY.privacy.replace(/Your account holds .*$/, "Without an account, Eucas keeps only a random ID for this install and how many answers it has used.") : COPY.privacy;
+    body = `<h1>What is sent</h1><p class="lede">${esc(nm(privacy))}</p>${sentHTML(S.sample)}<p class="always">${esc(COPY.alwaysOn)}</p>`;
     foot = `<span class="hint">Always in Settings › What is sent</span><span class="sp"></span>${next("Start watching")}`;
+  } else if (st === 9 && S.noacct) {
+    /* Founder, 2026-10-26: "a small taste without sign up" + "try the supervisor ... small number of usage" */
+    const L = [[S.locked ? "The four limits are locked" : "The four limits are on, but not locked", S.locked ? "Any agent, any session" : "An agent or a repo could change them. Lock them from the panel any time; Windows asks once more."], ["The tripwire is on", "Stops a session that deletes 200+ files"], [`${S.taste} supervisor answers to try`, `When ${esc(N())} isn't sure, the supervisor answers your agents so they don't wait for you`]];
+    body = `<div class="done-wrap"><span class="hero" id="hero" style="width:84px;height:88px;margin-bottom:2px">${avatarSVG(S.euca, {soft:true, follow:true})}</span><h1>${esc(N())} is watching</h1>
+      <span class="hb"><i></i>Checked 2 s ago</span>
+      <div class="checklist" style="margin:8px auto 0;text-align:left;max-width:540px">${L.map(([t, d], i) => `<div class="ci">${i === 0 && !S.locked ? I.alert : I.check}<span>${t}<small>${d}</small></span></div>`).join("")}</div>
+      <p class="zero">An account adds 14 days of the supervisor, more rules and memory. <button class="link" data-act="signup">Create an account</button></p></div>`;
+    foot = `<span class="sp"></span><button class="btn pri lg" data-act="fly">Send ${esc(N())} to the top</button>`;
   } else if (st === 9) {
     body = `<div class="done-wrap"><span class="hero" id="hero">${avatarSVG(S.euca, {soft:true, follow:true})}</span><h1>${esc(N())} is watching</h1>
       <p class="lede">2 sessions running, both protected. ${esc(N())} lives at the top of your screen and never opens by itself.</p>
@@ -1817,7 +1844,7 @@ function setupHTML(){
     <div class="app"><i style="color:#eceef3">${I.quartet.replace("<svg", '<svg width="18" height="18"')}</i><b>Eucas</b></div><div class="kv">Publisher: Unknown<br>File origin: Hard drive on this computer</div></div>
     <div class="btns"><button class="y" data-act="uacyes">Yes</button><button data-act="uacno">No</button></div></div></div>` : "";
   return `<div class="setup-scrim"><div class="swin" role="dialog" aria-label="Set up Eucas"><div class="cap"><span class="t">Eucas</span><span class="cb">${I.min}</span><span class="cb">${I.close}</span></div>
-    <div class="s-prog"><span class="dots" aria-hidden="true">${dots}</span><span>Step ${st} of ${STEPS}</span></div>
+    <div class="s-prog"><span class="dots" aria-hidden="true">${dots}</span><span>Step ${st} of ${STEPS}${S.noacct ? " · no account" : ""}</span></div>
     <div class="s-body">${body}</div><div class="s-foot">${foot}</div></div></div>${uac}`;
 }
 
@@ -1879,7 +1906,9 @@ function render(){
       ${S.panel ? panelHTML() : ""}
       ${S.coach ? `<div class="coach" role="status"><p><b>${esc(N())} lives here.</b> Hover to peek at what needs you. Click to open the panel. Nothing here opens by itself.</p><button class="btn" data-act="coach">Got it</button></div>` : ""}</div>`;
   }
-  if (S.menu) html += `<div class="ctx" role="menu"><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="m-mode">${S.mode === "thin" ? "Show the notch as a pill" : "Show the notch as a thin line"}</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  if (S.menu && S.noacct) html += `<div class="ctx" role="menu" style="width:264px"><div style="padding:8px 12px 6px;line-height:1.35">${S.guard === "off" ? "<b>Not protected</b><br><span style='opacity:.7'>The guard isn't answering. Restart Eucas.</span>" : `<b>Protected</b><br><span style='opacity:.7'>4 limits ${S.locked ? "locked" : "on, not locked"} · tripwire on</span>`}</div><hr><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="signup">Create an account</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  else if (S.menu) html += `<div class="ctx" role="menu"><button role="menuitem" data-act="m-panel">Show the panel</button><button role="menuitem" data-act="m-mode">${S.mode === "thin" ? "Show the notch as a pill" : "Show the notch as a thin line"}</button><hr><button role="menuitem" data-act="quit">Quit Eucas…</button></div>`;
+  if (S.noacct && S.toast && S.scene !== "setup" && !S.panel) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div>${esc(S.toast.t)}</div>`; /* no account: Windows notifications, no panel */
   if (S.wtoast) html += `<div class="wtoast" role="status"><div class="wa">${I.quartet.replace("<svg", '<svg width="14" height="14"')}Eucas</div><b>${esc(N())} stopped the notes session</b>It deleted 1,240 files in 20 seconds. Stopped at 14:02:31.<div class="wb"><button>See what happened</button><button>Dismiss</button></div></div>`;
   html += demoHTML();
   $("#app").innerHTML = html;
@@ -1892,6 +1921,7 @@ function render(){
   /* Glance is one look at the marker (900 ms), then Toward you while it waits */
   if (S.arrive && !FREEZE) setTimeout(() => { $(".notch")?.classList.remove("arrive"); S.arrive = false; setFace($(".notch .eyes"), LASTFACE = faceOf()); }, 900);
   if (S.draft) $(".panel .draft, .swin .draft")?.scrollIntoView({block:"nearest"});
+  if (S.scroll) { $(".panel " + S.scroll)?.scrollIntoView({block:"center"}); S.scroll = null; } /* routes that show a section further down */
   follow();
 }
 
@@ -2015,17 +2045,19 @@ function act(a, el, ev){
     case "auth": if (d.v === "code" && S.auth === "wrong") S.resent = true; else if (d.v === "code" && S.auth === "code") { S.resent = true; say("A new code is on its way"); } S.auth = d.v; break;
     case "fillcode": if (S.scene === "setup") S.auth = "done"; else { S.signedIn = true; S.sub = null; S.auth = "email"; showToast(`Signed in as ${S.authEmail}`); } break;
     case "news": S.news = el.checked; return;
-    case "dosignout": S.signedIn = false; S.sub = null; S.auth = "email"; showToast(`Signed out. ${N()} keeps guarding.`); break;
-    case "dodelete": S.signedIn = false; S.sub = null; S.auth = "email"; showToast("Account deleted. Your rules and history stay on this PC."); break;
+    case "dosignout": S.noacct = true; S.taste = 0; S.signedIn = false; S.sub = null; S.auth = "email"; showToast(`Signed out. ${N()} keeps guarding.`); break;
+    case "dodelete": S.noacct = true; S.taste = 0; S.signedIn = false; S.sub = null; S.auth = "email"; showToast("Account deleted. Your rules and history stay on this PC."); break;
     case "mode": S.mode = d.v; S.menu = false; break;
     case "theme": S.theme = d.v; break;
     case "rm": S.rm = !S.rm; break;
     case "toggle": el.setAttribute("aria-checked", el.getAttribute("aria-checked") !== "true"); SND.on = el.getAttribute("aria-checked") === "true"; return;
     case "coach": S.coach = false; break;
     case "traymenu": S.menu = !S.menu; break;
+    case "noacct": S.noacct = true; S.signedIn = false; S.uac = false; S.step = 7; break;
+    case "signup": S.menu = false; S.noacct = false; S.sub = null; S.panel = false; S.scene = "setup"; S.step = 6; S.auth = "email"; break;
     case "m-panel": S.menu = false; S.panel = true; break;
     case "m-mode": S.mode = S.mode === "thin" ? "pill" : "thin"; S.menu = false; break;
-    case "quit": S.menu = false; showToast("Protection stays on while Eucas is closed. The notch and the heartbeat stop."); break;
+    case "quit": S.menu = false; showToast(S.noacct ? "The four limits stay on while Eucas is closed. The tripwire stops." : "Protection stays on while Eucas is closed. The notch and the heartbeat stop."); break;
     case "sim-arrive": S.needs = S.needs.includes("wait") ? S.needs : ["wait", ...S.needs]; S.arrive = true; S.panel = false; jumpOpen = false; render(); sfx("needs", 60); say(`${NEEDS.wait.t}. ${S.needs.length} need you.`); return;
     case "sim-work": S.working = !S.working; S.doze = false; break;
     case "sim-doze": S.doze = !S.doze; if (S.doze) S.working = false; break;

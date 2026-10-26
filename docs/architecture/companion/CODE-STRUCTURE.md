@@ -41,8 +41,9 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  │  ├─ draft-rule-request.schema.json    # { text }: only the sentence you typed (CR-010, BUILD-PLAN R-2)
 │  │  ├─ draft-rule-response.schema.json   # one rule under rulebook.schema.json, or a rejection reason
 │  │  ├─ auth-start.schema.json  auth-verify.schema.json  auth-refresh.schema.json   # CR-012
+│  │  ├─ install-register.schema.json   # {} → { installToken, tasteLeft, tasteTotal } (no-account taste, 2026-10-26; no machine data)
 │  │  ├─ account.schema.json            # email, plan, planUntil?, meter
-│  │  ├─ meter.schema.json              # { period, percentLeft, resetsAt }: NO money or count fields (ADR-0018)
+│  │  ├─ meter.schema.json              # { period, percentLeft, resetsAt }: NO money fields; counts as a meter are fine (founder 2026-10-26; ADR-0018)
 │  │  ├─ ~~licence.schema.json~~        # replaced by the account's plan (CR-012)
 │  │  └─ waitlist.schema.json
 │  ├─ errors.schema.json           # ErrorCode enum shared by Rust and TS
@@ -67,11 +68,12 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  │     ├─ installer/ (plugin, status line, managed plan, uninstall)  canary/  notify/ (policy, budget)  diagnostic/
 │  │     ├─ store/ (rusqlite, migrations/*.sql, retention.rs)  config/ (signed config client, verified list)  updates/
 │  │     ├─ supervisor/ (rules_v2.rs, signals.rs, trimmer.rs, redactor.rs, client.rs, overrides.rs, sent_log.rs)   # always on (2026-10-26); kill switch in config
-│  │     ├─ account/ (client.rs, tokens.rs (DPAPI), profiles.rs (per-account folders, switch, adopt), meter.rs)       # CR-012
+│  │     ├─ account/ (client.rs, tokens.rs (DPAPI), profiles.rs (per-account folders, switch, adopt; profiles\local\ with no account), meter.rs, state.rs (AccountState: no_account | signed_in | signed_out), gate.rs (features(AccountState, TasteState) -> FeatureSet, the ONE gate: max_own_rules, memory, taste), install.rs (install token, DPAPI; the no-account taste state; 2026-10-26))       # CR-012
+│  │     ├─ api_client.rs           # the ONE door to eucas-api; routes take UpdateCheck, InstallToken (install/register + supervise + draft-rule only, while the no-account taste lasts) or SignedToken, handed out by the gate only; no other HTTP client in eucas-core (2026-10-26)
 │  │     ├─ cloud/ (branch_rules.rs, routine_body.rs, runs.rs)                                         # Pro beta, flag-gated
 │  │     └─ retry.rs                # the ONE retry/backoff helper (CLAUDE.md)
 │  ├─ eucas-app/                   # BIN, Tauri 2. tauri.conf.json, capabilities/*.json, icons/ (tray ICOs per TrayState × OS theme)
-│  │  └─ src/{main.rs, commands.rs, events.rs, tray.rs (fallback), context_menu.rs, notch.rs (hosts eucas-notch in a platform notch_window), windows/{panel.rs (pre-warmed; peek without activation), setup.rs}, single_instance.rs, autostart.rs}   # ~~tray_flyout.rs, main_window.rs~~ (CR-011)
+│  │  └─ src/{main.rs, commands.rs, commands/gate.rs (refuses a command whose feature is off: FEATURE_NEEDS_ACCOUNT, 2026-10-26), events.rs, tray.rs (fallback), context_menu.rs (incl. the no-account fallback menu, 2026-10-26), notch.rs (hosts eucas-notch in a platform notch_window), windows/{panel.rs (pre-warmed; peek without activation), setup.rs}, single_instance.rs, autostart.rs}   # ~~tray_flyout.rs, main_window.rs~~ (CR-011)
 │  └─ xtask/                       # cargo xtask: codegen (contracts → Rust/TS), check-deps (§3), build-plugin, build-marketplace, sbom, release helpers
 │
 ├─ apps/
@@ -83,7 +85,7 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 │  │     ├─ screens/{needs-you, usage, rules, settings}/   # Usage holds the retro and the supervisor meter; Settings holds Account and What is sent
 │  │     └─ components/<kebab-name>/   # one folder per DESIGN §4 component (§2)
 │  ├─ api/                         # Cloudflare Worker (Hono + zod), wrangler.toml with [env.staging] and [env.production]
-│  │  └─ src/{index.ts, routes/{config.ts, updates.ts, waitlist.ts, auth.ts, account.ts, meter.ts, trial.ts, supervise.ts, draft-rule.ts, webhooks-lemonsqueezy.ts (Pro)}, auth/{tokens.ts, codes.ts}, budget/{ledger.ts, prompt-cap.ts}, email/{sender.ts, cloudflare.ts, resend.ts}, db/migrations/*.sql (D1, ADR-0017), generated/disposable-domains.ts, providers/openrouter.ts, prompts/, scan/secrets.ts}   # ~~licence.ts, quota-do.ts~~
+│  │  └─ src/{index.ts, routes/{config.ts, updates.ts, waitlist.ts, install.ts (no-account taste, 2026-10-26), auth.ts, account.ts, meter.ts, ~~trial.ts~~, supervise.ts, draft-rule.ts, webhooks-lemonsqueezy.ts (Pro)}, auth/{tokens.ts, codes.ts}, budget/{ledger.ts, prompt-cap.ts}, email/{sender.ts, cloudflare.ts, resend.ts}, db/migrations/*.sql (D1, ADR-0017), generated/disposable-domains.ts, providers/openrouter.ts, prompts/, scan/secrets.ts}   # ~~licence.ts, quota-do.ts~~
 │  └─ plugin/                      # plugin SOURCE: .claude-plugin/plugin.json, hooks/hooks.json, settings.json (shape proven in spikes/companion-hook-shape)
 │
 ├─ packages/
@@ -109,9 +111,11 @@ Design only: this is the tree story **S1-1** creates (ADR-0003, ADR-0008). Nothi
 |---|---|---|
 | `Notch` (CR-011, ADR-0016) | `crates/eucas-notch` (drawing) + `eucas-platform::windows::notch_window` + `eucas-app/src/notch.rs` | Native, no DOM; states from `derive::notch_state`; UIA provider in `eucas-platform::windows::uia` |
 | `Peek`, `Panel` (needs-you list + Usage · Rules · Settings) | `apps/companion/src/surfaces/panel/` | One pre-warmed webview; shown without activation for the peek |
-| `SupervisorMeter`, `PlanCard`, `BudgetItem`, `AccountPage`, `SignInStep`, `WhatIsSent` | `components/…`, `screens/settings/` | Meter: percent + reset date only; WhatIsSent renders the sent log verbatim |
+| `SupervisorMeter`, `PlanCard`, `BudgetItem`, `AccountPage`, `SignInStep`, `WhatIsSent` | `components/…`, `screens/settings/` | Meter: percent + reset date, or the no-account taste as a count ("7 of 10 supervisor answers left"); never money (founder 2026-10-26); WhatIsSent renders the sent log verbatim |
 | `TrayIcon` (fallback) | `crates/eucas-app/src/tray.rs` + `icons/tray/{calm,needs,off,unverified,paused,setup}-{dark,light,hc}.ico` | `Tray.setImage` + `setToolTip(sentence)`; state from `derive::tray_state` |
-| `ContextMenu` | `crates/eucas-app/src/context_menu.rs` | Native Windows 11 menu; no "turn off protection" item |
+| `ContextMenu` | `crates/eucas-app/src/context_menu.rs` | Native Windows 11 menu; no "turn off protection" item. **No account, as the fallback (2026-10-26, design `t-noacct`):** the status line in words, What's guarded, "Create an account to get Pip" / "Sign in", Repair and Off for 15 minutes only while `failing`, Quit; no badge |
+| ~~`SafetyIsOn`~~ `PipIsWatchingNoAccount` *(2026-10-26, design `s-noacct-done`, "9 · Pip is watching (no account)")* | `surfaces/setup-window/pip-is-watching` (a variant of step 9) | The no-account end of setup; `SignInStep` gains the secondary "Continue without an account" (`s-signin`); `ChooseRules` caps own rules at 1 with no account |
+| ~~`MinimalPanel`, `TasteMeter`, `CreateAccountBlock`~~ | — | Gone with the founder answers (2026-10-26): no account uses the full panel; the taste is a state of `SupervisorMeter`; "Create an account for more rules" is a line in Rules, and "Create an account" sits in Settings › Account |
 | `WinToast` | `crates/eucas-core/src/notify/toast.rs` → `eucas-platform::windows::toast` | Kinds = DESIGN §4.18 rows (`NeedsYou`, `Done`, `Blocked`, `Tripwire`, `SameFile`, `GuardOff`, `NearLimit`, `FirstSession`, `Grouped`) |
 | ~~`TrayFlyout`, `MainWindow`~~ | — | Removed by CR-011 (the panel replaces both) |
 | `SetupWindow` (was `FirstRunWindow`), `UacFrame`, `CanaryLog`, `PinHelper` | `surfaces/setup-window/` | `Installer` is NSIS, not React; it registers the AUMID shortcut |
@@ -161,7 +165,7 @@ Tauri **commands** (renderer → core). Args are Rust structs with `#[serde(deny
 | `allow_once` | `needs_id` | Only when S-2 passed and the flag is on | yes (needs_id) |
 | `rule_preview` | `suggestion_id \| rule_draft` | Dry run over 7 days + conflicts | yes |
 | `rule_draft_from_text` | `text` | Prompted rules (CR-010): sends only `text` to `/v1/draft-rule`, re-validates and checks the draft (ruledraft/), returns a `rule_draft` for `rule_preview` or a rejection reason; saves nothing | yes |
-| `rule_save` / `rule_toggle` / `rule_delete` | `draft, client_key` / `rule_id, enabled` / `rule_id` | Writes rulebook.json atomically, recompiles rulebook.bin | yes (client_key) |
+| `rule_save` / `rule_toggle` / `rule_delete` | `draft, client_key` / `rule_id, enabled` / `rule_id` | Writes rulebook.json atomically, recompiles rulebook.bin; `rule_save` refuses a second own rule with no account (`OWN_RULE_LIMIT`, 2026-10-26) | yes (client_key) |
 | `run_canary` | — | Local canary | yes (single-flight) |
 | `run_diagnostic` / `export_report` | — / `format: md \| file` | Redacted report | yes |
 | `repair_guard` | — | Re-install plugin from the local marketplace; re-run canary | yes |
@@ -170,6 +174,8 @@ Tauri **commands** (renderer → core). Args are Rust structs with `#[serde(deny
 | `tripwire_expected` | `session_id, folder` | Adds folder to that project's tripwire allow list | yes |
 | `export_log` | `format: md \| csv, filter` | Save dialog | yes |
 | `setup_*` (was `firstrun_*`) | per step | In order (setup reorder, founder 2026-10-26): detection (incl. Smart App Control), make your Euca, your week, lock the four limits (the one UAC prompt), canary, sign in, choose rules (user scope, "Not locked"), what is sent, finish | yes (step id) |
+| `setup_continue_without_account` *(2026-10-26)* | — | Step 6 → steps 7 (one own rule), 8, 9 (no-account form): sets `no_account`; the same notch and panel; no server call unless you press Draft | yes |
+| `open_signup` *(2026-10-26; from Settings › Account, the Rules "more rules" line, the used-up line, or the tray)* | — | Opens the setup window at step 6 (sign in) and returns to the notch (sign up later); allowed only in `no_account` / `signed_out` | yes (single window) |
 | `use_admin` | — | Retry the UAC step | yes |
 | `waitlist_join` / `waitlist_dismiss` | `moment` | D-2 (b); the Pro button joins the waitlist (CR-011 D-7) and sets `waitlist_at` on the account when signed in | yes |
 | `account_start` / `account_verify` | `email` / `email, code` | Sign in (CR-012); `verify` switches to (or creates) that account's profile | yes (start: rate-limited) |
@@ -177,7 +183,7 @@ Tauri **commands** (renderer → core). Args are Rust structs with `#[serde(deny
 | `account_delete` | `confirm: true` | `DELETE /v1/account`, then local tokens and email removed; rules stay | yes |
 | `meter_get` | — | Percent left, period, reset date | yes |
 | `sent_log_get` | — | The last 20 supervisor payloads verbatim (What is sent) | yes |
-| `setup_finish` | — | Calls `/v1/trial/start` (once per account) and shows the notch | yes |
+| `setup_finish` | — | ~~Calls `/v1/trial/start`~~ (removed 2026-10-26: the trial starts at account creation, in `verify`, ADR-0017) Shows the notch | yes |
 | `update_locked_set` | `locked: limit id set` | Changes which of the four limits are locked (D-4, CR-010); the limits stay on either way; runs the helper's `update-locked-set`, one UAC prompt | yes |
 | `guided_merge` / `guided_merge_close_pr` | `offer_id` | Plain-code guided merge from the needs-you item offered when a session finishes on a branch (approved design, BRD #60; BUILD-PLAN M-1); stops on a conflict or failing test with nothing pushed; never merges into the default branch / Close the PR (the undo) | yes (offer_id) |
 | `pause_limits` / `resume_limits` | — | Admin-mode escape from a limits-guard brick (SYSTEM-DESIGN §7.1); one UAC prompt each | yes |
