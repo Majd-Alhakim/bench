@@ -15,10 +15,9 @@ const OUT = process.env.OUT ?? path.resolve(here, "../public/screens");
 const FILE = pathToFileURL(path.resolve(here, "../../../docs/design/ui/companion/prototype/notch.html")).href;
 
 // [file name, route, what to capture, themes]. A selector captures that element (plus `pad` px);
-// `top: [w, h]` captures a box of that size at the top centre of the screen (the notch and its peek).
+// `top: [w, h]` captures a box of that size at the top centre of the screen (the notch).
 const NOTCH = { top: [300, 56] };
 const SHOTS = [
-  ["peek", "n-peek", { top: [420, 210] }, ["dark"]],
   ["notch-rest", "n-rest", NOTCH, ["dark"]],
   ["notch-working", "n-working", NOTCH, ["dark"]],
   ["notch-marker", "n-marker", NOTCH, ["dark"]],
@@ -32,7 +31,9 @@ const SHOTS = [
   ["sent", "s-sent", { sel: "figure.sent" }],
   ["founders", "p-account-founders", { sel: ".plan" }],
 ];
-const HIDE = ".wall, .win, .setup-scrim, .taskbar, .tb { visibility: hidden !important; } .swin { visibility: visible !important; } html, body { background: transparent !important; }";
+const HIDE = ".wall, .win, .setup-scrim, .taskbar, .tb { visibility: hidden !important; } .swin { visibility: visible !important; } html, body { background: transparent !important; }"
+  // The shoulders and the ring join the notch to a black screen bezel; on the page there is none, so they read as hooks.
+  + " .notch::before, .notch::after, .peek::before, .peek::after { display: none !important; } .notch, .peek { box-shadow: none !important; } .glow { display: none !important; }";
 
 const only = process.argv.slice(2);
 fs.mkdirSync(OUT, { recursive: true });

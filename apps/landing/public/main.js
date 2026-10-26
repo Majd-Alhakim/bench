@@ -61,7 +61,7 @@
     if (notch.dataset.state === s || !STATES[s]) return;
     notch.dataset.state = s;
     marker.textContent = STATES[s][0];
-    label.textContent = `Pip, the Eucas notch: ${STATES[s][1]}. ${notch.getAttribute("aria-expanded") === "true" ? "Hide" : "Show"} the peek.`;
+    label.textContent = `Your Euca, in the Eucas notch: ${STATES[s][1]}. ${notch.getAttribute("aria-expanded") === "true" ? "Hide" : "Show"} the peek.`;
   }
   if ("IntersectionObserver" in window) {
     const seen = new Map();
@@ -114,19 +114,31 @@
 
   // The panel's own tabs pick the screen on the plate.
   const SHOW = {
-    needs: ["One click under the notch.", "Hover the notch for a peek; click it for the panel. Everything that waits on you sits at the top, with one action each. Nothing opens by itself, and Pip never says yes for you.", "needs",
+    needs: ["One click under the notch.", "Hover the notch for a peek, click it for the panel. What waits on you sits on top, one action each. Nothing opens by itself.", "needs",
       "The panel. Needs you, 3: bench is waiting for you and wants to run pnpm build; two sessions are editing one file; search is ready, open a PR for search with the tests first."],
-    usage: ["Where your usage went.", "Your 5-hour and weekly Claude usage, when you'll reach the limit at today's pace, and which sessions and projects used it. The supervisor's own meter sits under it.", "usage",
+    usage: ["Where your usage went.", "Your 5-hour and weekly Claude usage, when you'll reach the limit at today's pace, and which projects used it.", "usage",
       "The Usage tab: the 5-hour window at 46 percent, resetting at 15:40, with a forecast of when you reach it; the week at 62 percent; where it went by project; the supervisor meter."],
-    rules: ["Your rules, locked or not.", "The four limits are locked. Your own rules sit under them, each with a switch, and suggestions come from what you approved by hand.", "rules",
+    rules: ["Your rules, locked or not.", "The four limits are locked. Your own rules sit under them, each with a switch.", "rules",
       "The Rules tab: the promise, the four limits locked, and your rules with switches, such as allow pnpm test in bench."],
   };
   const tabs = $$("[data-show]");
   const showImg = $("[data-show-img]");
   const panel = $("#show-text");
+  const show = $(".show");
+  let swapT = 0;
+  // A tab change fades the old screen and words out and the new ones in.
   function pickTab(btn, focus) {
-    const [title, text, shot, alt] = SHOW[btn.dataset.show];
+    if (btn.getAttribute("aria-selected") === "true" && showImg.dataset.shot === btn.dataset.show) return;
     tabs.forEach(b => { const on = b === btn; b.setAttribute("aria-selected", String(on)); b.tabIndex = on ? 0 : -1; });
+    if (focus) btn.focus();
+    clearTimeout(swapT);
+    if (reduce || !showImg.dataset.shot) return fillTab(btn);
+    show.classList.add("swap");
+    swapT = setTimeout(() => { fillTab(btn); requestAnimationFrame(() => show.classList.remove("swap")); }, 220);
+  }
+  function fillTab(btn) {
+    const [title, text, shot, alt] = SHOW[btn.dataset.show];
+    showImg.dataset.shot = shot;
     panel.setAttribute("aria-labelledby", btn.id);
     $("[data-show-title]").textContent = title;
     $("[data-show-text]").textContent = text;
@@ -134,9 +146,18 @@
     showImg.dataset.light = `screens/${shot}-light.webp`;
     showImg.src = showImg.dataset[root.dataset.theme === "light" ? "light" : "dark"];
     showImg.alt = alt;
-    if (focus) btn.focus();
   }
   pickTab(tabs[0], false);
+  // Warm the other tabs' screens once the plate is near, so the fade-in never shows a blank.
+  if ("IntersectionObserver" in window) {
+    const warm = new IntersectionObserver(es => {
+      if (!es.some(e => e.isIntersecting)) return;
+      warm.disconnect();
+      const t = root.dataset.theme === "light" ? "light" : "dark";
+      ["usage", "rules"].forEach(n => { new Image().src = `screens/${n}-${t}.webp`; });
+    }, { rootMargin: "400px 0px" });
+    warm.observe(show);
+  }
   tabs.forEach((b, i) => {
     b.addEventListener("click", () => pickTab(b, false));
     b.addEventListener("keydown", e => {
@@ -155,7 +176,7 @@
     sw.addEventListener("click", () => {
       if (sw.hasAttribute("data-locked")) {
         sw.classList.remove("nope"); void sw.offsetWidth; sw.classList.add("nope");
-        $("[data-locked-text]", band).textContent = "This one stays on. Pip asks you every time, whatever your rules say.";
+        $("[data-locked-text]", band).textContent = "This one stays on. Your Euca asks you every time, whatever your rules say.";
         return;
       }
       sw.setAttribute("aria-checked", String(sw.getAttribute("aria-checked") !== "true"));
