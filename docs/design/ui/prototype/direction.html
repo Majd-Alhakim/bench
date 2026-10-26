@@ -1587,6 +1587,54 @@ html.embed .comp-hint{display:none}
 .demo-fresh:hover{background:rgb(255 255 255 / .08)}
 .demo-fresh{flex:none}
 .demo-id b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ===== v0.9 (client 2026-10-25): pinned Eucas, thinking orbs, gooey +, voice ===== */
+/* Pinned: a row of bigger faces at the top of the panel. They lean toward the pointer and hop on hover. */
+.pins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;padding:6px 0 10px;margin-bottom:6px;border-bottom:1px solid var(--line-subtle,var(--line-control))}
+.pin{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;padding:8px 2px 6px;border-radius:var(--r-sm);corner-shape:var(--corner);color:var(--text-2);transition:background-color var(--dur-micro) ease,color var(--dur-micro) ease;--cut:var(--bg-ground)}
+.pin:hover,.pin:focus-visible{background:var(--state-hover,var(--action-tint));color:var(--text-1)}
+.pin[aria-current="page"]{background:var(--state-selected);color:var(--text-1);--cut:var(--cut-selected)}
+.pin-av{display:block;transform:translateX(var(--nudge,0px)) rotate(var(--lean,0deg));transform-origin:50% 90%;transition:transform 420ms var(--spring-gentle)}
+.pin-av .av{display:block;transform-origin:50% 100%}
+.pin-av .look{transition:transform 140ms ease-out}
+.pin-n{max-width:100%;font-size:12px;line-height:16px;font-weight:600}
+.pin.hop .pin-av .av{animation:pinHop 640ms var(--ease-in-out,ease-in-out) 1}
+@keyframes pinHop{
+  0%{transform:none}
+  16%{transform:scale(1.14,.84)}
+  42%{transform:translateY(-14px) scale(.9,1.12)}
+  64%{transform:translateY(0) scale(1.1,.9)}
+  80%{transform:scale(.97,1.03)}
+  100%{transform:none}
+}
+.side.collapsed .pins{grid-template-columns:1fr;border:0}
+.side.collapsed .pin-n{display:none}
+/* Thinking orb: the canvas sits where the three dots were. */
+/* The orb is its own shape: no bubble behind it. */
+.think-dots.efx-orb{padding:0;gap:0;align-items:center;background:none;box-shadow:none;border-radius:0}
+.tdots.efx-orb{margin:0 4px 0 0;vertical-align:middle}
+.efx-orb canvas{display:block}
+/* Gooey +: three round buttons pour out of the plus and melt back into it. */
+.efx-fan-host{display:inline-flex;flex:none}
+.efx-fan{position:relative;z-index:6;width:40px;height:40px}
+.efx-fan>div{width:40px;height:40px}
+.efx-fan>div>div{position:absolute;left:0;top:0;display:block!important}
+.efx-fan .efx-sat,.efx-fan .efx-plus{display:grid;place-items:center;--h:40px;border-radius:999px}
+.efx-fan .efx-plus svg{transition:transform 320ms var(--spring-gentle)}
+.efx-fan[data-open="true"] .efx-plus svg{transform:rotate(45deg)}
+.efx-fan .efx-sat{transition:opacity 160ms ease}
+.efx-fan[data-open="false"] .efx-sat{pointer-events:none;opacity:0}
+/* Voice: the glow overlays the composer's bottom edge and never takes a click. */
+.efx-voice{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1}
+.efx-voice>*,.efx-voice-face{width:100%;height:100%;border-radius:inherit}
+/* Same 40px target as Send; the mic glyph is narrow, so it draws a size up to read as equal. */
+.composer .btn.icon.efx-mic{--h:40px}
+.composer .btn.icon.efx-mic svg{width:22px;height:22px}
+/* Listening: the mic turns into a stop button, a rounded square on a soft disc. */
+.efx-mic[aria-pressed="true"]{color:var(--text-1);background:color-mix(in srgb,var(--text-1) 16%,transparent)}
+.efx-mic[aria-pressed="true"]:hover{background:color-mix(in srgb,var(--text-1) 22%,transparent)}
+/* While the speech model loads: a thin ring turns around the mic. */
+.efx-mic{position:relative}
+.efx-mic[data-loading]::after{content:"";position:absolute;inset:2px;border-radius:50%;border:2px solid transparent;border-top-color:currentColor;border-right-color:currentColor;opacity:.75;animation:spin .9s linear infinite;pointer-events:none}
 </style>
 </head>
 <body>
@@ -1930,6 +1978,7 @@ IC.gear = (() => {
 })();
 /* v0.7: reply. Points back (left) and the tail runs on to the right and down: an answer, not an undo */
 IC.reply = '<path d="M9.5 7 4.5 12l5 5"/><path d="M4.5 12h9a6 6 0 0 1 6 6v1"/>';
+IC.pin = '<path d="M9 4.5h6M10 4.5v5.2l-3 3.3v1.5h10V13l-3-3.3V4.5M12 14.5V20"/>';
 function ic(name, size = 16){ return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${IC[name] || ""}</svg>`; }
 /* The Look as a glyph: it opens the glass box (Look inside) or marks who saw something. Never decoration. */
 function eyes(size = 14){ return `<svg width="${size}" height="${size}" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><g fill="currentColor"><rect x="3.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 4.5 7)"/><rect x="8.2" y="3.4" width="2.6" height="7.2" rx="1.3" transform="rotate(-12 9.5 7)"/></g></svg>`; }
@@ -2002,7 +2051,11 @@ const SFX = {
       src.connect(bp); bp.connect(g); g.connect(p); p.connect(SND.master);
       src.start(t); src.stop(t + .3);
       sndTone(t + .03, 659.25, .22, {gain:.05, glide:1.335, lp:2400});
-    }}
+    }},
+  recStart:{n:"Listening", spec:"D5 → A5, a quick rising fifth · 190 ms", when:"You press the mic and the composer starts listening",
+    play(t){ sndTone(t, 587.33, .1, {gain:.13, lp:3000}); sndTone(t + .07, 880, .12, {gain:.15, lp:3000}); sndTone(t + .07, 1760, .06, {gain:.02}); }},
+  recStop:{n:"Stopped listening", spec:"A5 → D5, the same fifth falling · 190 ms", when:"You stop the mic, or send while it's listening",
+    play(t){ sndTone(t, 880, .1, {gain:.12, lp:3000}); sndTone(t + .07, 587.33, .12, {gain:.13, lp:2600}); }}
 };
 /* Play a sound if sound is on and you've interacted; one sound per kind per 600 ms. Audio never breaks the demo. */
 function sfx(key, delayMs = 0){
@@ -2388,10 +2441,31 @@ function projGroup(pid){
     <div class="pg-list" id="pgl-${pid}"${open ? "" : " inert"}><div>${rows}</div></div>
   </div>`;
 }
+/* Pinned (client 25 Oct): pinned Eucas sit at the top of the panel, bigger, and watch your pointer; hover one and it hops.
+   Right-click any agent row to pin or unpin it. The list is remembered in this browser. */
+const PINS = (() => {
+  try { const v = JSON.parse(localStorage.getItem("eucas-pins")); if (Array.isArray(v)) return v.filter(id => AG[id]); } catch (e) { /* storage off: use the default */ }
+  return ["karim", "noor", "jade", "maya"];
+})();
+function savePins(){ try { localStorage.setItem("eucas-pins", JSON.stringify(PINS)); } catch (e) { /* storage off: pins last this visit */ } }
+function pinAv(id, expr){ return avatar(id, 44, {status:effStatus(id), hidden:true, expr}); }
+function pinsHTML(){
+  if (!PINS.length || S.scen === "first") return "";
+  return `<div class="pins" role="group" aria-label="Pinned">${PINS.map(id => {
+    const a = AG[id], st = effStatus(id);
+    return `<button type="button" class="pin" data-row="${id}" data-pin="${id}" aria-label="${esc(a.name)}, ${ST[st].l}" title="${esc(a.name)} · ${esc(a.title || a.role)}\n${ST[st].l} · right-click to unpin"><span class="pin-av">${pinAv(id)}</span><span class="pin-n ellip">${esc(a.name)}</span></button>`;
+  }).join("")}</div>`;
+}
+function togglePin(id){
+  const i = PINS.indexOf(id);
+  if (i < 0) PINS.push(id); else PINS.splice(i, 1);
+  savePins(); buildSidebar();
+  toast(i < 0 ? `${esc(AG[id].name)} is pinned to the top.` : `${esc(AG[id].name)} is unpinned.`, {undo:() => togglePin(id)});
+}
 function buildSidebar(){
   const first = S.scen === "first";
   /* Home is the chat with Atlas (C6), so the first row is Atlas. What needs you lives in the top bar and opens over any screen. */
-  let h = atlasRow();
+  let h = pinsHTML() + atlasRow();
   if (!first || S.scen === "long") h += `<div class="side-sec"><h2>Company</h2><button type="button" class="btn icon sm" data-act="company" aria-label="Open the Company page" title="Company page">${ic("building")}</button></div>`;
   h += (first ? "" : agentRow("iris")) + (S.scen === "long" ? agentRow("relbot") : "");
   h += `<div class="side-sec"><h2>Projects</h2><button type="button" class="secbtn" data-act="newProject">${ic("plus", 14)}New project</button></div>`;
@@ -2428,14 +2502,53 @@ function markSide(){
   $$("#sideList [aria-current]").forEach(b => b.removeAttribute("aria-current"));
   if (current === "settings") $("#gearBtn").setAttribute("aria-current", "page"); else $("#gearBtn").removeAttribute("aria-current");
   const k = sideKey(); if (!k) return;
-  const r = $(`#sideList [data-row="${k}"]`); if (r) r.setAttribute("aria-current", "page");
+  $$(`#sideList [data-row="${k}"]`).forEach(r => r.setAttribute("aria-current", "page"));
 }
 function refreshSideRow(id){
-  const r = $(`#sideList [data-row="${id}"]`); if (!r) return;
+  const p = $(`#sideList .pin[data-pin="${id}"]`); if (p && !p.dataset.hov) $(".pin-av", p).innerHTML = pinAv(id);
+  const r = $(`#sideList [data-row="${id}"]:not(.pin)`); if (!r) return;
   const cur = r.getAttribute("aria-current"), hid = r.hidden;
   r.outerHTML = agentRow(id, r.dataset.more);
-  const nr = $(`#sideList [data-row="${id}"]`); if (nr) { if (cur) nr.setAttribute("aria-current", cur); nr.hidden = hid; }
+  const nr = $(`#sideList [data-row="${id}"]:not(.pin)`); if (nr) { if (cur) nr.setAttribute("aria-current", cur); nr.hidden = hid; }
 }
+/* Pinned: eyes follow the pointer, bodies lean toward it as it comes close, a hover makes them hop and smile. */
+const PINFX = {x:-1e4, y:-1e4, q:false};
+function pinLook(){
+  PINFX.q = false;
+  const still = reduced();
+  $$("#sideList .pin-av").forEach(av => {
+    const look = av.querySelector(".look");
+    if (still) { av.style.removeProperty("--lean"); av.style.removeProperty("--nudge"); if (look) look.style.transform = ""; return; }
+    const r = av.getBoundingClientRect();
+    const dx = PINFX.x - (r.left + r.width / 2), dy = PINFX.y - (r.top + r.height / 2), d = Math.hypot(dx, dy) || 1;
+    const reach = Math.min(1, d / 120), near = Math.max(0, 1 - d / 420);
+    if (look) look.style.transform = `translate(${(dx / d * 5 * reach).toFixed(2)}px,${(dy / d * 4 * reach).toFixed(2)}px)`;
+    av.style.setProperty("--lean", (dx / d * 10 * near).toFixed(2) + "deg");
+    av.style.setProperty("--nudge", (dx / d * 4 * near).toFixed(2) + "px");
+  });
+}
+document.addEventListener("pointermove", e => {
+  PINFX.x = e.clientX; PINFX.y = e.clientY;
+  if (!PINFX.q) { PINFX.q = true; requestAnimationFrame(pinLook); }
+}, {passive:true});
+function pinHover(p, on){
+  if (!!p.dataset.hov === on) return;
+  if (on) p.dataset.hov = "1"; else delete p.dataset.hov;
+  $(".pin-av", p).innerHTML = pinAv(p.dataset.pin, on ? "pleased" : undefined);
+  pinLook();
+  if (on && !reduced()) { p.classList.remove("hop"); void p.offsetWidth; p.classList.add("hop"); }
+}
+$("#sideList").addEventListener("mouseover", e => { const p = e.target.closest(".pin"); if (p && !p.contains(e.relatedTarget)) pinHover(p, true); });
+$("#sideList").addEventListener("mouseout", e => { const p = e.target.closest(".pin"); if (p && !p.contains(e.relatedTarget)) pinHover(p, false); });
+$("#sideList").addEventListener("animationend", e => { if (e.animationName === "pinHop") e.target.closest(".pin").classList.remove("hop"); });
+document.addEventListener("contextmenu", e => {
+  const r = e.target.closest && e.target.closest("#sideList .pin, #sideList .srow[data-row]");
+  const id = r && (r.dataset.pin || r.dataset.row);
+  if (!id || !AG[id] || id === "atlas") return;
+  e.preventDefault();
+  const on = PINS.includes(id);
+  openMenu([{act:"pin", icon:"pin", label:on ? "Unpin from the top" : "Pin to the top"}], r, {x:e.clientX, y:e.clientY}, () => togglePin(id), AG[id].name);
+});
 
 /* ---------- top bar, banners, counts ---------- */
 function crumbsHTML(){
@@ -5654,5 +5767,7 @@ JUMP.push(["Your review, round 5 (v0.8)", [["fresh","Start as a new user · welc
 buildJump();
 if (["team-card","composer-grow","composer-big","split-drag","memory-graph"].includes(H0)) ROUTES[H0]();
 </script>
+<!-- v0.9: React islands (thinking orbs, gooey +, voice). Source and build in effects/. -->
+<script src="effects.js" defer></script>
 </body>
 </html>

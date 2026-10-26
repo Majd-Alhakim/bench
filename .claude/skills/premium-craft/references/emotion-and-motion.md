@@ -12,7 +12,7 @@
 - **Physics, not timelines.** Use springs (mass, stiffness, damping) instead of linear or ease curves for anything the user moves or opens. Momentum on flings, and a **rubber band** past the edges of scrollable content: the interface feels like an object with weight.
 - **Spatial continuity.** Persistent elements morph instead of disappearing. Panels enter from where they live and leave the way they came. The user's mental map stays intact.
 - **Micro-feedback** confirms every action: a press scale, a check morph, a counter tick, a soft settle.
-- **Subtle cues teach behaviour without tutorials** (Apple's home-indicator line trained a gesture over years). For Bench: a grabber on resizable panes, and a faint drag affordance on project headers.
+- **Subtle cues teach behaviour without tutorials** (Apple's home-indicator line trained a gesture over years). For Eucas: a grabber on resizable panes, and a faint drag affordance on project headers.
 - **Change gradually.** Introduce new behaviours in steps across versions.
 - **Precise geometry.** Continuous-curvature corners (squircles) feel softer and more expensive than plain rounded rectangles. Use consistent proportions.
 - **Respect reduced motion:** the same information arrives without the movement (crossfade or instant).
@@ -27,7 +27,7 @@
 | `dur.move` | message in, crossfades | 180–240 ms |
 | `dur.scene` | screen-level transitions | 300–400 ms |
 
-## Bench signature-moment candidates (pick 2–3 per flow)
+## Eucas signature-moment candidates (pick 2–3 per flow)
 - **Birth:** a new agent's shape forms, its eyes open and it blinks at Create.
 - **Handoff:** the sender's avatar chip travels into the receiver's conversation.
 - **Thinking:** the eyes track the stream; dots in the agent's hue.

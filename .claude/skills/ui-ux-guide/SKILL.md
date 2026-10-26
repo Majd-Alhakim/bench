@@ -1,16 +1,16 @@
 ---
 name: ui-ux-guide
-description: Bench's UI/UX design rulebook (UX laws, user intent, layouts, color, typography, visual weight, components, microcopy, empty states, microinteractions, design judgment), adapted for a desktop agent-team app. Use in Phase 4 (UX) and Phase 5 (UI) whenever designing, reviewing or critiquing a screen, wireframe, prototype, design token, component or copy, and in UX/UI review of PRs.
+description: Eucas's UI/UX design rulebook (UX laws, user intent, layouts, color, typography, visual weight, components, microcopy, empty states, microinteractions, design judgment), adapted for a desktop agent-team app. Use in Phase 4 (UX) and Phase 5 (UI) whenever designing, reviewing or critiquing a screen, wireframe, prototype, design token, component or copy, and in UX/UI review of PRs.
 ---
 
-# UI/UX Guide for Bench
+# UI/UX Guide for Eucas
 
-Source: [references/guide.md](references/guide.md), compiled from @startuxdesign's posts (paraphrased; 22 posts, Nov 2024 – Oct 2026). This file turns that guide into **working rules for Bench**. When a rule here conflicts with the BRD, the security baseline or accessibility, those win (see "Bench adaptations").
+Source: [references/guide.md](references/guide.md), compiled from @startuxdesign's posts (paraphrased; 22 posts, Nov 2024 – Oct 2026). This file turns that guide into **working rules for Eucas**. When a rule here conflicts with the BRD, the security baseline or accessibility, those win (see "Eucas adaptations").
 
 ## How to use this skill
 
 1. **Before designing a screen**, fill in its *screen card*:
-   - **Intent** (Know / Go / Do / Buy; for Bench usually Know, Go or Do, see §2 of the guide)
+   - **Intent** (Know / Go / Do / Buy; for Eucas usually Know, Go or Do, see §2 of the guide)
    - **Primary action** (exactly one)
    - **Use-case IDs** (from the BRD)
    - **States:** default, loading, empty (first use / no results / cleared / error), error, success
@@ -81,11 +81,11 @@ Source: [references/guide.md](references/guide.md), compiled from @startuxdesign
 - Signature moments: a handoff between agents, a debate timer, a context checkpoint, a sprint accepted. Subtle and fast.
 - Always respect `prefers-reduced-motion`.
 
-## Bench adaptations (these override the guide where they differ)
+## Eucas adaptations (these override the guide where they differ)
 1. **Never color alone.** Status and risk always have a **text tag** too (OUTWARD, RESERVED, LEAD, LOAN, BLOCKED). This is a BRD/UX principle and an accessibility rule.
 2. **Desktop first:** a fingertip target of about 44px becomes a **click target of 32px or more, 40px or more for primary actions**, with full keyboard access and visible focus. Keep 44px for any touch or mobile companion later.
 3. **Accessibility:** WCAG 2.2 AA minimum (4.5:1 body text, 3:1 large text and UI parts); aim for AAA (7:1) on body text where possible.
-4. **No dark patterns.** Bench's promise is the glass box: no hidden costs, no hidden actions, cancel and stop always one click away, outward actions always explicit.
+4. **No dark patterns.** Eucas's promise is the glass box: no hidden costs, no hidden actions, cancel and stop always one click away, outward actions always explicit.
 5. **Glass box:** every agent action, cost and memory write is visible on demand. Design progressive disclosure: summary first, trace one click away.
 6. **Variable rewards and gamification** never touch approvals, money or decisions.
 

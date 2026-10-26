@@ -1,6 +1,6 @@
-# Product Vision — "Bench" (working codename)
+# Product Vision — Eucas
 
-> Working codename only. "Claude" is an Anthropic trademark, so a product we ever share publicly can't be called "Claude Bot". "Bench" comes from the founder's own metaphor: *Claude Code feels like a workbench.*
+> Eucas (formerly codenamed Bench, from the founder's metaphor *Claude Code feels like a workbench*). "Claude" is an Anthropic trademark, so the product can't be called "Claude Bot" or "Claude Code".
 
 **Status:** Sprint 0 (Inception) · **Owner:** Founder (human in the loop) · **PM/CTO:** Claude · **Last updated:** 2026-10-21
 
@@ -28,7 +28,7 @@ A native desktop app (Windows first, then macOS and Linux) where you build and r
 
 ## 4. Positioning: "Glass-box agent company"
 
-| | Agent-team bots (Grok/Meta style) | Claude Code | **Bench** |
+| | Agent-team bots (Grok/Meta style) | Claude Code | **Eucas** |
 |---|---|---|---|
 | Persistent team of personas | ✅ | ❌ | ✅ |
 | Group chat + agent→agent handoffs | ✅ | Partial (subagents) | ✅ |
@@ -62,7 +62,7 @@ A native desktop app (Windows first, then macOS and Linux) where you build and r
 
 - **North star:** tasks completed by the agent team per week that the founder accepts without redoing.
 - **Guardrails:** tokens per accepted task (trend down); weekly subscription-limit headroom (≥ 30%); zero unapproved destructive actions.
-- **Dogfood bar:** the founder uses Bench daily for 2 weeks instead of plain chats.
+- **Dogfood bar:** the founder uses Eucas daily for 2 weeks instead of plain chats.
 
 ## 8. Explicitly out of scope (for now)
 

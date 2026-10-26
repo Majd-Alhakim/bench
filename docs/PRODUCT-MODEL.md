@@ -1,6 +1,6 @@
-# Product Model — Bench
+# Product Model — Eucas
 
-**Founder correction (2026-10-21):** no predefined company of agents. Bench is **one main agent + agents you create yourself**, each one like a *Claude Project turned into a person*. This document replaces the "starter org" idea.
+**Founder correction (2026-10-21):** no predefined company of agents. Eucas is **one main agent + agents you create yourself**, each one like a *Claude Project turned into a person*. This document replaces the "starter org" idea.
 
 ---
 
@@ -51,10 +51,10 @@ GLOBAL MEMORY  (about you, your business, preferences, decisions)
 
 ## 3. Connectors, skills and plugins: global inventory, per-agent selection
 
-- Bench **reads what's already on your account/machine**: the MCP servers, plugins and skills configured in your Claude Code. That's the *inventory*.
+- Eucas **reads what's already on your account/machine**: the MCP servers, plugins and skills configured in your Claude Code. That's the *inventory*.
 - Each agent ticks only the ones it needs. Only those tool definitions load into that agent's context.
 - **Why it matters for tokens:** every connected MCP server adds its tool definitions to *every* request. An agent with 2 connectors instead of 20 saves those tokens on every turn, and the model picks tools more accurately.
-- Credentials stay where they already live (Claude Code / OS keychain). Bench never copies them.
+- Credentials stay where they already live (Claude Code / OS keychain). Eucas never copies them.
 
 ## 4. How it feels (the Grokbot lessons, plus what Grokbot lacks)
 

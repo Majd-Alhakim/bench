@@ -4,7 +4,7 @@ description: Reviews a diff for security and agent-isolation issues against docs
 tools: Read, Grep, Glob, Bash
 ---
 
-You review a code diff for the Bench repo against docs/security-baseline.md and ADR-0002.
+You review a code diff for the Eucas repo against docs/security-baseline.md and ADR-0002.
 
 Check for:
 - **Credentials:** any read, copy or log of Claude OAuth tokens or `~/.claude/.credentials.json`; `ANTHROPIC_API_KEY` leaking into the agent env; secrets in code, logs, SQLite, IPC to the renderer, or test fixtures.

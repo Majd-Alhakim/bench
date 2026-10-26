@@ -1,0 +1,17 @@
+# Cloudflare Pages project for eucas.app. Nothing here deploys by itself; see README.md "Going live".
+name = "eucas-landing"
+pages_build_output_dir = "public"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "eucas-waitlist"
+# Paste the id that `wrangler d1 create eucas-waitlist` prints. The placeholder works for local runs only.
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[vars]
+SITE_URL = "https://eucas.app"
+MAIL_FROM = "Eucas <hello@eucas.app>"
+TURNSTILE_HOSTNAMES = "eucas.app,www.eucas.app"
+# Secrets, never in this file: TURNSTILE_SECRET, RESEND_API_KEY (Pages > Settings > Variables and Secrets).

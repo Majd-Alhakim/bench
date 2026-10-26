@@ -1,0 +1,1 @@
+{ "name": "eucas-st1-electron", "private": true, "version": "0.1.0", "main": "main.js", "devDependencies": { "electron": "45.0.0" } }

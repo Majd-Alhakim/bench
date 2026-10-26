@@ -4,8 +4,32 @@
     {
       "name": "prototype",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "4180", "--bind", "127.0.0.1", "--directory", "docs/design/ui/prototype"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4180",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "docs/design/ui/prototype"
+      ],
       "port": 4180
+    },
+    {
+      "name": "landing",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "apps/landing/node_modules/wrangler/bin/wrangler.js",
+        "pages",
+        "dev",
+        "--cwd",
+        "apps/landing",
+        "--port",
+        "8788",
+        "--ip",
+        "127.0.0.1"
+      ],
+      "port": 8788
     }
   ]
 }

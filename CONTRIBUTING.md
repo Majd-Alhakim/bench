@@ -1,4 +1,4 @@
-# Contributing to Bench
+# Contributing to Eucas
 
 Applies to humans and AI agents alike.
 

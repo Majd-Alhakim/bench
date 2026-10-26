@@ -1,8 +1,8 @@
-# Change & Release Checklist — Bench
+# Change & Release Checklist — Eucas
 
 Versioning and release mechanics: [RELEASING.md](../RELEASING.md).
 
-Bench is a desktop app, so "deploy" means **merge to `main`**, then **publish a release** on GitHub Releases (prerelease first, then stable).
+Eucas is a desktop app, so "deploy" means **merge to `main`**, then **publish a release** on GitHub Releases (prerelease first, then stable).
 
 ## A. Every change (feature/fix branch → PR)
 1. Branch from up-to-date `main`: `feat/<backlog-id>-<slug>` (or `fix/`, `chore/`, `docs/`, `spike/`).
@@ -17,7 +17,7 @@ Bench is a desktop app, so "deploy" means **merge to `main`**, then **publish a 
 1. `main` green; CHANGELOG updated; version bumped (SemVer).
 2. Re-check Anthropic's Claude Code legal page (subscription rules, ADR-0002).
 3. Tag `vX.Y.Z-rc.N`; CI builds signed installers and publishes a **GitHub prerelease**.
-4. Smoke test the installed RC on a clean machine or VM, using a **separate Bench home**:
+4. Smoke test the installed RC on a clean machine or VM, using a **separate Eucas home**:
    - [ ] onboarding detects Claude Code + login; no API key leaks into agents
    - [ ] main agent chat streams; trace and usage meter update
    - [ ] create agent → its connectors are the only ones visible to it
@@ -30,4 +30,4 @@ Bench is a desktop app, so "deploy" means **merge to `main`**, then **publish a 
 ## C. Rollback
 - **Bad release:** mark it as a prerelease or delete the release asset so the updater stops serving it; publish the previous version as `vX.Y.Z+1` (the updater only moves forward).
 - **Bad merge:** `git revert <sha>` on a branch, then PR (never force-push `main`).
-- **Bad DB migration:** every migration ships with a tested down-path or a backup step; the app backs up `bench.sqlite` before migrating.
+- **Bad DB migration:** every migration ships with a tested down-path or a backup step; the app backs up `eucas.sqlite` before migrating.

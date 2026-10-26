@@ -1,0 +1,52 @@
+# ADR-0012: A thin server on Cloudflare Workers (config, accounts and budgets since CR-012, model routing; no content stored)
+
+- **Status:** Proposed (2026-10-26). ~~Pro traffic only when Pro opens; v0.1 uses only the config, update-manifest, waitlist-count, opt-in telemetry and prompted-rule (`/v1/draft-rule`) routes (CR-010, founder 2026-10-26).~~ **Since CR-011, CR-012 and the founder's 2026-10-26 decisions, v0.1 uses every route except the Lemon Squeezy webhook:** config, updates, telemetry, accounts, meter, draft-rule and supervise (always on for every signed-in user).
+- **Date:** 2026-10-26
+- **Amended 2026-10-26 (CR-011, CR-012, founder answers):**
+  - The server now has **accounts** (email + one-time code, [ADR-0017](0017-accounts-email-code-d1.md)). "No accounts" in the context below no longer holds; "no user content stored, no payload logs" still does.
+  - It tracks a **budget, not calls** ([ADR-0018](0018-supervisor-hidden-dollar-budget.md)).
+  - **Cloudflare D1** holds accounts and budgets; it **replaces the Durable Object class**. KV keeps the config.
+  - **All model routes require the account token.** The per-IP limit stays only for abuse.
+  - **Payments: Lemon Squeezy, decided** (founder, 2026-10-26: Stripe doesn't take Qatar-registered businesses). The plan is set on the account by webhook, so licence keys aren't needed. Paddle is no longer the fallback.
+  - Workers Paid ($5/month) is needed from v0.1 for Email Service and D1 write volume.
+  - **Trial abuse (founder, 2026-10-26, "Apply 2 and 3"; detail in ADR-0017):**
+    - `/v1/auth/start` **refuses disposable-email domains** (`422 disposable_email`: "Please use an address you'll keep. This one expires."). The list is the public CC0 `disposable-email-domains` list, bundled into the Worker as a generated module, refreshed by a weekly PR and shipped with the next deploy; nothing is fetched at runtime.
+    - **A new account starts from zero on the PC** (local profiles keyed to the account; nothing synced).
+    - **Rejected:** one trial per PC via a hashed machine id. The server stores **no device fingerprint**; the trial is one per account, bounded by its ~$0.50 hidden cap.
+
+## Context
+The supervisor's model calls can't go straight from the app to OpenRouter: that would ship our provider key to every PC, and we couldn't enforce the per-user supervisor budget, swap models without a release, or kill a bad config. The business constraint is **infrastructure under $100/month** and a solo maintainer. Security-baseline §1 says Eucas has no server; this ADR adds one, so its surface must stay minimal: **no user content stored, no accounts, no logs of payloads.**
+
+## Options
+| | Ops load | Cost at 1k Pro users | Fit |
+|---|---|---|---|
+| **Cloudflare Workers + one Durable Object class + KV** | Near zero (no servers, deploy with wrangler) | Workers Paid $5/month base; requests and DO usage at this volume cost cents to a few dollars | Edge latency, secrets store, staging/production environments built in |
+| Vercel Functions | Low | Similar | Fine, but counters need an external store |
+| A small VPS | Patching, TLS, uptime are ours | ~$5–20 | Worst ops load for a solo founder |
+
+## Decision
+**Cloudflare Workers**, one Worker `eucas-api` (TypeScript, Hono, zod), environments `staging` and `production` (separate secrets, KV namespaces and DO namespaces).
+
+| Route | v0.1 | What it does | Stores |
+|---|---|---|---|
+| `GET /v1/config/{channel}` | ✅ | Signed runtime config: supervisor models and params, prompt version, feature flags, kill switches, minimum verified CLI | KV (config only) |
+| `POST /v1/waitlist` | ✅ | Increments a counter per moment (`{ installHash, moment }`; `installHash` is a pseudonymous per-release id used only to dedupe) | Analytics Engine counter; no email, no IP kept |
+| `POST /v1/telemetry` | ✅ (opt-in) | Daily counts and enums only, schema-allowlisted ([OPERATIONS §1](../architecture/companion/OPERATIONS.md)) | Analytics Engine rows; no IP |
+| `GET /v1/updates/{channel}/{target}/{version}` | ✅ | Tauri updater manifest, proxied from GitHub Releases | Nothing |
+| ~~`POST /v1/licence/activate`, `/validate`~~ | — | **Replaced (CR-012, 2026-10-26)** by the account's plan, set by Lemon Squeezy webhooks (`POST /v1/webhooks/lemonsqueezy`, signature-verified; Pro, after v0.1) | D1 `account.plan`, `plan_until` |
+| `POST /v1/auth/start`, `/v1/auth/verify`, `/v1/auth/refresh`, `/v1/auth/signout`; `GET`/`DELETE /v1/account` | ✅ (CR-012) | Email + one-time code → short-lived signed token; Settings › Account; Delete account (ADR-0017) | D1 `account` (email, plan, budget used, `news_opt_in`; no device count since 2026-10-26), `trial_claim` (a keyed email hash that outlives a deleted account) and `auth_code` (≤ 10 min) |
+| `GET /v1/meter` | ✅ (CR-011) | Percent left + reset date for the supervisor meter; **no money, no counts** (ADR-0018) | — |
+| `POST /v1/supervise` | ✅ (founder, 2026-10-26: trial and taste ship in v0.1, gated by SP-SUP2; always on for every signed-in user) | Token check, strict schema check, prompt cap, **budget reserve**, provider routing, output schema check, settle | D1 `account` budget columns only |
+| `POST /v1/draft-rule` | ✅ (CR-010, founder 2026-10-26) | Prompted rules (BUILD-PLAN R-2): token check, strict schema check, budget reserve, sends **only the sentence the user typed plus a trimmed rule schema** to `gpt-oss-120b` with zero data retention, output schema check, settle; returns a draft the app validates again before showing it. Pressing Draft is the opt-in for that sentence (founder, 2026-10-26) | The same budget as `/v1/supervise`; the sentence and the draft are never stored or logged |
+
+- **Strict request allowlist:** every body is parsed with a `.strict()` zod schema (unknown keys → 400), size ≤ 8 KiB, ~~only `level: 2` is accepted~~ (levels retired 2026-10-26: the supervisor is always on, so the body has no `level` field), the text field ≤ 1,200 chars and **re-scanned** for secret patterns and code fences (match → 422; the app then asks the user). No free-form passthrough to the provider: the server builds the prompt from the template named in config.
+- **`/v1/draft-rule` (CR-010, founder 2026-10-26):** the body is `{ text }` (the user's sentence, `.strict()`, same size cap and secret re-scan as above); the server adds the rulebook schema (`contracts/rulebook.schema.json`) and the drafting template from config, calls `gpt-oss-120b` through the same ZDR provider block, and returns the model's answer only if it parses as a rule under that schema. Each draft counts toward the user's **supervisor budget**. The app never trusts the draft: it re-validates, compiles, runs the limit-overlap and bypass checks (ADR-0010) and shows `RulePreview`; nothing is enabled until the user confirms. ~~**Open:** what the budget counter is keyed on for a Free install, which has no licence (not decided in CR-010); until it is, the per-IP rate limit and the daily spend circuit breaker bound it.~~ **Resolved (CR-012, 2026-10-26):** the account. The rule schema sent with a draft is a trimmed drafting schema (≤ 800 tokens, CI token-count test), so the prompt stays under the 2,000-token cap.
+- **No storage of content:** request and response bodies are never logged (`console.log` banned in the Worker by lint; Workers Logs sampling off for this route; errors log the route, status and a request id only).
+- **Provider:** OpenRouter with the ZDR provider block from ADR-0011, one API key per environment with a **hard credit limit** on OpenRouter's side, plus a server-wide daily spend circuit breaker in config.
+- **Payments: Lemon Squeezy** (merchant of record, pays out to Qatar banks; **decided by the founder 2026-10-26**). ~~Paddle is the fallback (no native licence keys, so we would mint our own).~~ With accounts (CR-012), the plan lives on the account and webhooks set it; licence keys aren't used. **Pro can charge once it is built**, because the supervisor doesn't use the user's Claude plan; only the **cloud beta** (cloud hand-off) waits for Anthropic's written OK (CR-010, founder 2026-10-26; this replaces the earlier "no payment route before Anthropic's written OK").
+- **Config signing:** the config is signed offline with a minisign/Ed25519 key that never lives on Cloudflare; the app pins the public key and rejects unsigned or older configs (anti-rollback via `version`).
+
+## Consequences
+- Security-baseline §1 gains a "server" row (SECURITY-PRIVACY.md §2). ~~The only user-derived data at rest is two hashed identifiers and integer counters.~~ **Since CR-012:** the account row (email, plan, budget used, product-news choice; ADR-0017), a keyed email hash per trial used, and nothing about the user's work.
+- If the Worker is down, Pro degrades to rules-only and "ask you"; nothing in the guard or the free features depends on it, except drafting a prompted rule, which then fails with a plain reason while suggestions and templates keep working (CR-010, founder 2026-10-26). The app caches the last good config for 7 days.
+- Cost estimate at 1,000 Pro users at the full allowance: model ≤ $1.48 per user (SP-SUP1 §6), Workers + DO a few dollars; well under the $100 ceiling before model spend, which Pro revenue covers.

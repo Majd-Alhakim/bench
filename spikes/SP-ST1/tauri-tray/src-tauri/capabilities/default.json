@@ -1,0 +1,5 @@
+{
+  "identifier": "default",
+  "windows": ["flyout", "main", "notch", "panel"],
+  "permissions": ["core:default", "updater:default"]
+}

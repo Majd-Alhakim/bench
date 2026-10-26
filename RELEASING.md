@@ -1,4 +1,4 @@
-# Releasing Bench
+# Releasing Eucas
 
 Versions and the changelog are managed with **changesets** (the MCP TypeScript SDK pattern). Installers are built with electron-builder. Nothing is published to npm (all packages are `private: true`).
 

@@ -2,17 +2,17 @@
 
 Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md). Updated by the PM; gates are approved only by the client.
 
-**Current phase:** 3 (SRS), lean mode. G0, G1, G2, **G4 and G5** approved (G4/G5 on prototype v0.8.2, 2026-10-24).
-**Next step:** the logo design (next session, client's choice), then the SRS (`/specs`): BA functional requirements + tech-lead NFRs (M8 hook-based jail, M9 version pin, M10 worktrees, browser agent, runaway guard, safety net, the `claude auth status` onboarding check), then G3 → backlog and Sprint 1 → G6. Product name: **Eucas** (domain **eucas.app** ours); follow-ups: GitHub org and npm names.
+**Current phase:** 6 (backlog), lean mode. G0, G1, G2, **G3**, G4 and G5 approved (G3 on the companion SRS v0.2, baselined as v1.0, 2026-10-26).
+**Next step:** the companion v0.1 backlog from SRS v1.0 and the PRD epics (E17–E28), then **G6**; before launch, SP-SUP2 must pass (the supervisor is on from launch) and the Windows 10 VM checklist must run. SRS Appendix B lists the source documents to correct. *Earlier:* CR-011 and CR-012 are applied in **BRD v1.5 / PRD v0.6** (your Euca in the notch and one panel; the supervisor meter, never dollars; the trial and taste in v0.1, gated on SP-SUP2; the supervisor always on for everyone with Level 1/2 retired; a Eucas account for everyone). Open for the client: BRD §10 #56 (Pro's budget), #57 (sign-in offline), #58 (device count), #60 (guided merge trigger), #61 (panel shortcut), #62 (design approval of the sign-in, Account and "What is sent" screens), #63 (the new privacy line). The tech lead re-estimates the build (PRD §11.1 #18). ~~BRD v1.4 §10 #44 – #48, #51, #53 and PRD v0.5 §11.1 #1 – #5, #8, #14 answered 2026-10-26 (signing: unsigned v0.1; the four limits always on, lock per limit; guided merge, prompted rules and choose-your-rules in v0.1 at about 32 build days); still open: BRD #49, #50, #52.~~ Then the companion SRS (`/specs`) and G3 → backlog → G6. Only spikes run before G6 (CR-010). Earlier SRS scope for the team app: BA functional requirements + tech-lead NFRs (M8 hook-based jail, M9 version pin, M10 worktrees, browser agent, runaway guard, safety net, the `claude auth status` onboarding check), then G3 → backlog and Sprint 1 → G6. Session 4 (2026-10-24/25): the Quartet logo refined ([lessons](../design/ui/brand/logo-lessons.md), BRAND §6) and a 51 s showcase video approved ([marketing/showcase](../../marketing/showcase/README.md)).
 
 ## Phase tracker
 
 | # | Phase | Status | Artifacts | Gate |
 |---|---|---|---|---|
 | 0 | Problem & validation | ✅ Spikes S0-1, SP-B1, M8 GO (2026-10-24); S0-2, S0-3 in Sprint 1 | [VISION](../VISION.md), [research](../research/), [risk facts](../research/risk-facts-2026-10-23.md) | G0 ✅ 2026-10-24 |
-| 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.2** applies CR-001…008 + G2 answers; open items §10 #41–#43 | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
-| 2 | PRD | ✅ **v0.3** (5 × 3-day sprints, 51 UCs), G2 questions answered | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
-| 3 | SRS / specs | ⚪ Not started (ARCHITECTURE and ADRs exist as early input) | `docs/requirements/SRS.md` | G3 ⏳ |
+| 1 | Requirements / BRD | ✅ v1.0 baselined; **v1.5** applies CR-001…012 (CR-010: companion first, UC-54–UC-64, BR-98–BR-119; team app deferred; CR-011/012: the notch and panel, meter, trial and taste, accounts, UC-65–UC-67, BR-120–BR-129, supervisor always on); open items §10 #56–#58, #60–#63 | [BRD](../requirements/BRD.md), [interviews](../requirements/interviews/) | G1 ✅ 2026-10-22 |
+| 2 | PRD | ✅ **v0.6** (CR-010: companion v0.1 first, about 5 spike + 32 build days (28 + 4 added 2026-10-26), epics E17–E26, kill criteria §8.2, Pro waitlist; CR-011/012: epics E27–E28, supervisor in v0.1, build to be re-estimated; the v0.4 team-app plan follows), G2 questions answered; open questions §11.1 | [PRD](../requirements/PRD.md), [G2 answers](../requirements/interviews/2026-10-23-g2-answers.md) | G2 ✅ 2026-10-23 |
+| 3 | SRS / specs | ✅ Companion v0.1 SRS **v1.0** baselined (189 FRs, 118 NFRs, interfaces, data model, traceability; 7 G3 answers applied: supervisor on from launch, no export in What Pip knows, learns-you from structured events, $10/day spend cap, Windows 10 22H2 (tested in a VM) + 11, proposed numbers, 10 library rules) | [SRS](../requirements/SRS.md) | G3 ✅ 2026-10-26 |
 | 4 | UX design | ✅ Premium spec, Laws of UX audit; flows proven in prototype v0.8.2 | [UX premium](../design/ux/premium/README.md), [Laws of UX audit](../design/ux/laws-of-ux-audit.md) | G4 ✅ 2026-10-24 |
 | 5 | UI design & brand | ✅ Brand decided (Quartet logo, Porcelain/Ink/Cobalt, Instrument Sans, sounds, dark first); hi-fi prototype **v0.8.2** (review rounds 5–7 applied); **name: Eucas** (one agent is a Euca) | [DIRECTION](../design/ui/DIRECTION.md), [prototype](../design/ui/prototype/direction.html), [brand](../design/ui/brand/BRAND.md), [system](../design/ui/system/DESIGN-SYSTEM.md) | G5 ✅ 2026-10-24 |
 | 6 | Backlog & Sprint 1 | ⚪ Not started (stories drafted in PRD v0.2 Appendix A) | GitHub Issues / board | G6 ⏳ |
@@ -20,11 +20,11 @@ Single source of truth for where the project is in the [lifecycle](LIFECYCLE.md)
 
 ## Already decided (input to the phases above)
 Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo conventions (ADR-0003) · engineering workflow and skills (premium-craft, engineering-craft, ui-ux-guide).
-- Personal project, shared openly and customisable · lean mode · 3-day sprints · **full scope, open-source ready 14 days after G6** · licence MIT.
-- Positioning: Bench complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
+- Personal project, shared openly and customisable · lean mode · 3-day sprints · **companion first (CR-010)**; the 14-day full-scope target now applies to the team app only · licence **FSL** (CR-010; was MIT).
+- Positioning: Eucas complements Claude (software workspace with an agent team); no usage caps or pacing; models picked per task; local only; no phone in v0.1.
 - Design: calm, chat-first Home with Atlas; dark first (charcoal) + light; copy removal test; second-person voice.
 
-**Product name:** **Eucas** (2026-10-24, [decision](../requirements/interviews/2026-10-24-product-name.md)); "Bench" stays the codename in the repo until the rename task.
+**Product name:** **Eucas** (2026-10-24, [decision](../requirements/interviews/2026-10-24-product-name.md)); the codename "Bench" was replaced in the living docs on 2026-10-26 (CR-010).
 
 ## Gate log
 
@@ -34,6 +34,7 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 | 2026-10-23 | G2 (PRD) | **Approved with changes**: PRD v0.3, BRD v1.2 | Accepted 8 recommendations; changed Q3 (browser asks only at first sign-in), Q4 (model auto by complexity, changeable), Q5 (agents never delete on the computer), Q6 (drafts only, never send or post). Recorded as CR-008 |
 | 2026-10-24 | G0 (Problem & feasibility) | **Approved (go)** on spikes S0-1, SP-B1 and M8 ([reports](../spikes/)) | "Approve G0: go on S0-1, SP-B1 and M8. Record it and move on." S0-2 and S0-3 run in Sprint 1 |
 | 2026-10-24 | G4 (UX) + G5 (UI) | **Approved** on prototype v0.8.2 | "Approve G4 (UX) and G5 (UI) on prototype v0.8.2." After three review rounds the same day: [UF5](../requirements/interviews/2026-10-24-ui-feedback-5.md) (titles and agent card, growing composer, drag-to-split, memory graph, scrollbars, fresh install), [UF6](../requirements/interviews/2026-10-24-ui-feedback-6.md) (left \| right split rules, pane borders, welcome copy), [UF7](../requirements/interviews/2026-10-24-ui-feedback-7.md) (compact panes) |
+| 2026-10-26 | G3 (SRS) | **Approved**: companion v0.1 SRS v0.2, baselined as v1.0 | "Approve G3 on SRS v0.2. Record it and move on." G3 answers: supervisor "on from launch"; no export and learns-you "yes"; spend cap and numbers "okay lets do this", "approve the numbers"; "Keep Windows 10 in v0.1 and test it in a free Windows 10 virtual machine on my PC."; library rules "yes" |
 
 ## Change requests
 
@@ -47,3 +48,7 @@ Product model · auth (ADR-0002) · **Electron accepted (ADR-0001)** · repo con
 | [CR-006](../requirements/change-requests/CR-006.md) | 2026-10-22 | Routines can do anything the agent can | Approved |
 | [CR-007](../requirements/change-requests/CR-007.md) | 2026-10-23 | Only what matters needs you; merge and commit are automatic (send part replaced by CR-008) | Approved |
 | [CR-008](../requirements/change-requests/CR-008.md) | 2026-10-23 | Drafts, not sends; no deletes on the computer; browser asks only at sign-in | Approved |
+| [CR-009](../requirements/change-requests/CR-009.md) | 2026-10-25 | The Atlas notch and local voice input in v0.1 (epic E16, N0–N10 in Sprints 3–5; spike + ADR-0004/5/6 before G6; N8/N9 checked at the day-6 re-plan) | Approved (option A) |
+| [CR-010](../requirements/change-requests/CR-010.md) | 2026-10-26 | Companion first (guards and supervises existing Claude Code sessions); Pro $20, first 200 at $15 for life, with a provider-hosted open-model supervisor; FSL; Tauri + Rust (ADR-0007–0015); spikes only before G6; landing page and waitlist first | Approved (option A); applied in BRD v1.4 and PRD v0.5 |
+| [CR-011](../requirements/change-requests/CR-011.md) | 2026-10-26 | Your Euca, an agentsitter created at setup, lives in the notch; a panel with needs-you, Settings, Rules and Usage (no main window); a visible supervisor meter (never dollars); a 14-day trial plus a monthly taste on Free; a design approval gate | Approved (option A); applied in BRD v1.5 and PRD v0.6 |
+| [CR-012](../requirements/change-requests/CR-012.md) | 2026-10-26 | Everyone signs in with a Eucas account (email + one-time code, no password); the account holds only email, plan, budget and device count | Approved; applied in BRD v1.5 and PRD v0.6 |

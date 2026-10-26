@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eucas notch</title>
+<!-- Hi-fi prototype of the Eucas companion as one Euca in the notch (CR-011). Needs founder design approval.
+     Built by ../build.mjs from this folder; open ../notch.html. Fonts load from Google Fonts for review only;
+     the app bundles them (tokens.css §3). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/*@include ../../../system/tokens.css*/
+/*@include ../../tokens-notch.css*/
+/*@include notch.css*/
+</style>
+</head>
+<body>
+<div id="desk" class="desk" aria-label="Windows desktop (mock)"></div>
+<div id="app"></div>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<script>
+/*@include app.js*/
+</script>
+</body>
+</html>
