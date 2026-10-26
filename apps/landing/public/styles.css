@@ -287,8 +287,7 @@ h3 { font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; line-hei
 .limits { margin-top: 40px; display: grid; gap: 10px; }
 .limits li { display: flex; align-items: center; gap: 16px; font-size: var(--t-m); font-weight: 600; letter-spacing: -0.015em; }
 .limits li::before { content: ""; flex: none; width: 30px; height: 12px; background: var(--notch-eye); border-radius: 0 0 6px 6px; } /* the notch, at text size */
-.promise { margin-top: 40px; max-width: 36ch; font-size: var(--t-m); line-height: 1.35; }
-.never-copy > p:last-child { margin-top: 24px; max-width: 52ch; color: var(--notch-text-2); }
+.never-copy > p:last-child { margin-top: 40px; max-width: 52ch; color: var(--notch-text-2); }
 .trip { justify-self: center; width: min(400px, 100%); }
 .trip figcaption, .sent-shot figcaption { margin-top: 16px; font-size: var(--t-s); color: var(--muted); }
 .never .trip figcaption { color: var(--notch-text-2); }

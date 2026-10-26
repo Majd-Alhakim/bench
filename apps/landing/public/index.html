@@ -88,7 +88,7 @@
 
 <!-- Proof: the notch's states, large, each on its own tile. -->
 <section class="states wrap" data-state="marker" aria-labelledby="states-title">
-  <ul class="board">
+  <ul class="board" data-ui>
     <li class="tile tile-head" data-rise><h2 id="states-title">Read your Euca at a glance.</h2></li>
     <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="calm"><i></i><i></i></span></span><p><b>Calm.</b> Protected, nothing running. It follows your pointer and blinks.</p></li>
     <li class="tile" data-rise><span class="tile-notch" data-ui aria-hidden="true"><span class="eyes" data-x="focused"><i></i><i></i></span></span><p><b>Focused.</b> Your sessions are working. The eyes read left to right.</p></li>
@@ -136,7 +136,6 @@
         <li>A send</li>
         <li>A payment</li>
       </ul>
-      <p class="promise" data-rise>Eucas never auto-approves a delete, a push to your default branch, a send or a payment, and no rule can change that.</p>
       <p data-rise>Setup locks these four limits with one Windows admin prompt, where no agent or repo can change them. If a session starts deleting files in bulk, the tripwire stops it and shows you what went and how to get it back.</p>
     </div>
     <figure class="trip" data-rise>
@@ -172,8 +171,8 @@
     </li>
     <li class="band band-locked" data-band="ink">
       <div class="wrap band-in">
-        <div><p class="band-say">Ask me before a delete, a push, a send or a payment</p><p class="band-then" data-locked-text>Locked. No rule can switch this off.</p></div>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="Ask before a delete, a push to your default branch, a send or a payment. Locked." data-locked><i><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></i></button>
+        <div><p class="band-say">The four limits</p><p class="band-then" data-locked-text>Locked. No rule can switch them off.</p></div>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-disabled="true" aria-label="The four limits. Locked." data-locked><i><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7"/></svg></i></button>
       </div>
     </li>
   </ul>
@@ -192,7 +191,7 @@
       <figcaption>Setup shows you this with a message from your own sessions. Settings always shows it too.</figcaption>
     </figure>
     <ul class="facts" data-rise>
-      <li><b>The supervisor is always on and can't be switched off.</b> Your rules always decide first.</li>
+      <li><b>The supervisor is always on and can't be switched off.</b></li>
       <li><b>It never approves a tool call.</b> It can nudge a stopped session on, answer from your rules, or ask you.</li>
       <li><b>Its help is counted monthly.</b> When it runs out, your Euca asks you more often until the meter resets.</li>
     </ul>
@@ -231,8 +230,7 @@
 <section class="know wrap" data-state="rest" aria-labelledby="know-title">
   <h2 id="know-title" data-rise>Before you install.</h2>
   <dl class="know-list" data-rise>
-    <div><dt>An agentsitter, not a coder</dt><dd>Your Euca watches, guards and tells you what needs you. It never writes code or does your project's work.</dd></div>
-    <div><dt>A Eucas account, by email</dt><dd>You sign in with your email and a 6-digit code, no password. Your account holds only your email, your plan and how much supervisor help you've used.</dd></div>
+    <div><dt>A Eucas account, by email</dt><dd>You sign in with your email and a 6-digit code, no password.</dd></div>
     <div><dt>Your Claude login stays yours</dt><dd>Eucas never sees or stores your Claude credentials. It works beside Claude Code through its hooks and the history already on your PC.</dd></div>
     <div><dt>Claude Code, for now</dt><dd>Claude Code sessions only, in a terminal, the desktop app or VS Code. What comes next depends on the waitlist's answers.</dd></div>
     <div><dt>Windows first, unsigned</dt><dd>The first build isn't code-signed yet, so Windows will say "Unknown publisher". Each installer's SHA-256 is published so you can check it.</dd></div>
@@ -295,7 +293,7 @@
   <ul class="cards" data-faq>
     <li class="card"><h3><button type="button" aria-expanded="true" aria-controls="a1" id="q1"><span class="tab">Today</span>Can I use it today?</button></h3><div class="a" id="a1" role="region" aria-labelledby="q1"><p>Not yet. Eucas is in development. The waitlist gets the first Windows build, and you'll hear from us when it's ready to install.</p></div></li>
     <li class="card"><h3><button type="button" aria-expanded="false" aria-controls="a4" id="q4"><span class="tab">Agents</span>Does it work with Cursor or Codex?</button></h3><div class="a" id="a4" role="region" aria-labelledby="q4" hidden><p>Not yet. Claude Code comes first. Which one follows depends on the answers to "Which agents do you use?" in the waitlist.</p></div></li>
-    <li class="card"><h3><button type="button" aria-expanded="false" aria-controls="a5" id="q5"><span class="tab">Pro</span>What does the founders' price mean?</button></h3><div class="a" id="a5" role="region" aria-labelledby="q5" hidden><p>Pro is $20 a month. The first 200 people who pay keep $15 a month for life; it belongs to your Eucas account, not your PC. Free stays free.</p></div></li>
+    <li class="card"><h3><button type="button" aria-expanded="false" aria-controls="a5" id="q5"><span class="tab">Pro</span>What does the founders' price mean?</button></h3><div class="a" id="a5" role="region" aria-labelledby="q5" hidden><p>It belongs to your Eucas account, not your PC, for as long as you keep Pro. Free stays free.</p></div></li>
     <li class="card"><h3><button type="button" aria-expanded="false" aria-controls="a6" id="q6"><span class="tab">Computers</span>macOS or Linux?</button></h3><div class="a" id="a6" role="region" aria-labelledby="q6" hidden><p>Windows first. Tell us your computer after you join the waitlist: it's how we decide which one is next.</p></div></li>
   </ul>
 </section>

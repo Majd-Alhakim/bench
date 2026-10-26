@@ -176,7 +176,7 @@
     sw.addEventListener("click", () => {
       if (sw.hasAttribute("data-locked")) {
         sw.classList.remove("nope"); void sw.offsetWidth; sw.classList.add("nope");
-        $("[data-locked-text]", band).textContent = "This one stays on. Your Euca asks you every time, whatever your rules say.";
+        $("[data-locked-text]", band).textContent = "These stay on. Your Euca asks you every time, whatever your rules say.";
         return;
       }
       sw.setAttribute("aria-checked", String(sw.getAttribute("aria-checked") !== "true"));
