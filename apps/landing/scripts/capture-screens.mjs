@@ -21,6 +21,7 @@ const SHOTS = [
   ["usage", "p-usage", { sel: ".panel" }],
   ["rules", "p-rules", { sel: ".panel" }],
   ["tripwire", "p-trip", { sel: ".panel" }],
+  ["same-file", "p-same", { sel: ".panel" }],
   ["sent", "s-sent", { sel: "figure.sent" }],
   ["founders", "p-account-founders", { sel: ".plan" }],
 ];
