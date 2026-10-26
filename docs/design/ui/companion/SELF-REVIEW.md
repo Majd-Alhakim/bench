@@ -10,6 +10,38 @@
 
 ---
 
+## 00a. CR-012 / always-on, 2026-10-26: accounts for everyone, What is sent
+
+**What changed** (spec: [setup-flow.md](../../ux/companion/setup-flow.md) steps 4 and 8, edges S and T, §7 · [notch-and-panel.md §10](../../ux/companion/notch-and-panel.md) · [DESIGN §12](DESIGN.md)):
+- **Setup has 9 steps.** New step 4 **Sign in** (email, 6-digit code, wrong code, an address that expires, offline + Sign in later, new account, existing account keeps its plan). Step 8 **What is sent** replaces the Level 1/2 step: the approved privacy line verbatim and a real redacted example from your last session, or a labelled sample.
+- **Level 1/2 is gone everywhere:** setup, Settings › Privacy (now a What is sent row), the meter's Level 1 state (now Not signed in), the guided rule form's trigger, the Why page, the prototype state (`level`), its CSS (`.levels`, `.lvl`, `.trial-f`, `.radio`) and its routes (`s-privacy`, `s-privacy-2`). D-3 is replaced.
+- **Settings › Account** replaces Settings › Plan: email, plan (Free trial / Free / Pro / Founders' $15 for life), Sign out, Delete account; sign-in in the panel with the different-account warning.
+- **What is sent** is a permanent page and a link under every meter state.
+
+**How it was checked, and what wasn't.** This session had **no shell**, so `build.mjs` and `capture.mjs` could not run. Instead:
+- `notch.html` was brought up to date by applying **the same edits** to it as to `src/` (the build is a verbatim concatenation; line offsets were checked: `src/app.js` line *n* is `notch.html` line *n* + 997, as before plus the 14 net CSS lines). Running `node docs/design/ui/companion/prototype/build.mjs` should produce a byte-identical file; please run it once to confirm.
+- The new code was read back for syntax and every new route traced by hand through `go()`, `render()` and `act()`.
+- **Not rendered and not looked at:** every screen listed in [DESIGN §12.7](DESIGN.md). Render-and-look (premium-craft gate 10) is **still owed** for this round: `node docs/design/ui/companion/prototype/capture.mjs setup-4 setup-8 acct panel-settings panel-usage panel-needs meter plan new-why` covers them. Risks to look for: the step 8 lede (3 sentences) plus the card inside 600 px; the code cells in light theme; the delete button's wrap at 400 px; the toast length "Account deleted. Your rules and history stay on this PC." in the 400 px panel.
+- **Stale PNGs to delete** after re-rendering (their names now mean other steps): `setup-4-rules-d`, `setup-4-rules-draft-d`, `setup-5-lock-d`, `setup-5-uac-d`, `setup-5-declined-d`, `setup-6-test-d`, `setup-6-test-failed-d`, `setup-7-privacy-d`, `setup-7-privacy-level2-d`, `setup-8-watching-d`, `setup-9-coach-d`.
+
+**State matrix:** setup-flow §4 (rows 4 and 8 new) and notch-and-panel §6 (rows What is sent, Account, Sign in; the meter's denied cell). **Emotional moments:** unchanged on purpose; sign-in and What is sent carry no motion (a chore should feel short; proof should feel plain). **Worst moments:** offline at sign-in (Sign in later, everything local keeps working), wrong / expired code, an expiring address, the code never arriving (edge T), redaction failing (send nothing, show the sample), delete with Pro or Founders' (says what ends), signing in to a different account (warned before the code is sent). **Coherence:** one `SignIn` in setup and the panel; one `SentExample` in setup and Settings; the privacy line stored once; the offline banner, inline error, checklist and consequence list reused, no new pattern; "Sign in" is neutral navigation everywhere and the blue goes to the decision (Send a code, Sign out).
+
+**Rubric for this round** (the §4 table still holds for everything else):
+
+| Axis | Level | Why |
+|---|---|---|
+| Copy | **Staff** | The privacy line verbatim; the sign-in lede answers the two questions people ask there (password? my Claude login?); What is sent answers "can I turn it off?" before it's asked; Sign out and Delete say what keeps working before the click |
+| Visuals | **Senior** | Plain on purpose; the one new idea, the in-place redaction tag, reuses the mono language |
+| Color | **Senior** | No new colour; one Cobalt per view; amber only for the different-account consequence; delete is a danger tint, not a solid red |
+| Type | **Senior** | ≤ 4 sizes per new view, 2 weights, tabular digits in the code cells |
+| Structure | **Senior** | Hierarchy test: step 4 headline → field → primary; step 8 headline → privacy line → example; Account email → plan → delete (quiet, last) |
+| States and recovery | **Senior** | Full matrix rows; every error has a cause and one next step; nothing on this PC depends on the account |
+| Motion and emotion | **Senior** | No new motion, deliberately; reduced motion is identical; the three pinned moments are untouched |
+| Coherence | **Senior** | One pattern per situation, reused (above) |
+| Intelligence | **Senior** | "Welcome back" tells you plainly that rules and learning stay per PC; What is sent counts what went this month |
+
+**No axis below Senior on paper.** **Blocker before hand-off:** render-and-look for the screens above (gate 10 can't be waived by me).
+
 ## 00. New since approval (26 Oct, evening)
 The founder approved D-1 to D-8 as recommended and asked for the full app's UX features. Added (spec: [notch-and-panel §9](../../ux/companion/notch-and-panel.md), [DESIGN §11](DESIGN.md)):
 - **Learns you:** ongoing rule suggestions (quiet, never in the notch count), the "Pip learned" line with Undo, Applied chips, the ledger line, the monthly compounding line, **What Pip knows** in Settings (sources, Forget, export), the honest zero at setup.
@@ -26,7 +58,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 | Decision | Where it landed |
 |---|---|
 | Guided merge stays in Free | New needs-you item and its result (`p-needs`, `p-merge-done`, `n-peek-merge`); notch-and-panel §4.7 |
-| Choose your rules and prompted rules stay; drafting uses the supervisor and counts on the meter | Draft card line; guided exact-rule form when the meter is empty, at Level 1 or offline (§4.5) |
+| Choose your rules and prompted rules stay; drafting uses the supervisor and counts on the meter | Draft card line; guided exact-rule form when the meter is empty, you're not signed in (CR-012; was "at Level 1") or offline (§4.5) |
 | The four limits are always on; lock per limit | `LimitRow` in Rules and setup 4–5; no switch; Locked / Not locked chips |
 | "Your default branch", not "main" | All prose; `main` only in literal commands |
 | Budgets stop before the next step | `p-budget`, notch-and-panel §4.8 |
@@ -70,7 +102,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 
 ## 3. `premium-craft` outputs
 - **State matrix:** [notch-and-panel.md §6](../../ux/companion/notch-and-panel.md), [setup-flow.md §4](../../ux/companion/setup-flow.md).
-- **Emotional moments (3):** birth (setup 2), the proof (setup 6), the homecoming (setup 8). Everyday micro-moment: the glance when something arrives.
+- **Emotional moments (3):** birth (setup 2), the proof (setup 7), the homecoming (setup 9) (*CR-012*: renumbered from 6 and 8). Everyday micro-moment: the glance when something arrives.
 - **Worst moments:** tripwire stop, not protected, test not blocked, admin declined, meter empty, 5-hour limit, stale item, long names. Each names the cause, what's safe and one next step.
 - **Coherence fixed:** "Guarded" retired for "Protected" (one word, CR-011's); one needs-you item in peek and panel; one Euca editor; one rule row and draft card in setup and Rules; one status line in peek, header and setup end.
 - **Intelligence:** rule counters, the supervisor's value line, the forecast, Your week.
@@ -97,7 +129,7 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 |---|---|---|---|
 | **D-1** | Tab order in the panel | **Usage · Rules · Settings** (by how often you open them) | Settings · Rules · Usage (your words' order) |
 | **D-2** | The notch colour in the light theme | **Always black** (it belongs to the screen, like a hardware notch) | Follows the theme (white notch in light) |
-| **D-3** | Where the trial email is asked | **Optional at setup when you pick Level 2**, skippable, startable later from Usage | Only later, from Usage (a shorter setup, fewer trials started) |
+| ~~D-3~~ | ~~Where the trial email is asked~~ | **Replaced by CR-012 / always-on, 2026-10-26:** everyone signs in at setup step 4; Level 2 no longer exists | — |
 | **D-4** | Hover when nothing needs you | **A two-line status peek** ("Protected · 3 sessions · checked 2 s ago" + usage) — answers "is it on?" | Nothing happens (the 25 Oct design's rule for Atlas) |
 | **D-5** | When the eyes doze | **Only when you're away 5 min *and* nothing is running** (so dozing never reads as "off") | Whenever you're away |
 | **D-6** | The Pro button in v0.1 | **"Join the Pro waitlist"** until checkout exists (CR-010 D-2) — the prototype shows "Get Pro · $20/month" so you can see the final copy | Real checkout at launch |
@@ -106,8 +138,22 @@ Checked: rendered every new state (dark, two in light) and looked at them; fixed
 
 Also worth a glance: the example Euca is "Pip", a lavender sphere; the name suggestions (Pip, Moss, Juno, Kit); the setup headline "First, let's find your sessions".
 
+## 5b. Decisions for the founder (CR-012 / always-on, 2026-10-26)
+
+| # | Decision | Recommended | Alternative |
+|---|---|---|---|
+| **U-1** | When "Sign in later" is offered | **Only when the code can't be sent or doesn't arrive** (offline, server down, edge T): accounts stay for everyone, and a broken mail provider can't block setup | Always, as a secondary on the email screen (more installs finish setup without an account) |
+| **U-2** | What happens to this PC's data when a different account signs in | **Kept per account on this PC**: the new account starts empty, the old one's rules, learning and history wait for it to sign back in (nothing is deleted without asking, CR-008's spirit) | Wiped on switch (simpler, but a mistyped email would erase your learning) |
+| **U-3** | When the trial starts for someone who chose Sign in later | **When they sign in** (the trial belongs to the account) | When setup finishes, account or not (they'd lose trial days while offline) |
+| **U-4** | After Delete account, can the same email get a new trial? | **No: the server keeps a one-way hash of the email and a "trial used" flag, nothing else**, and the delete page says so ("Signing up again with this email doesn't start a new trial") | Delete everything; the same email gets a fresh trial (easy trial abuse) |
+| **U-5** | Delete account while on Pro or the Founders' price | **Pro stops at once and nothing more is charged; no partial refund**; the page says so, and Founders' is told the price ends with the account | Refund the unused part of the month (fairer, more billing work) |
+| **U-6** | Exactly what the supervisor payload holds | **Only the trimmed, redacted last message**, as the approved line says; if the build needs the tool name (Bash, Edit), that's a copy change to bring back to you first | Message plus the tool name without arguments |
+| **U-7** | Mailing list | **Account emails only** (codes, trial ending, plan changes); product news is an opt-in later in Settings › Account | An unticked "Send me product news" box at sign-in |
+| **U-8** | Show the unredacted original beside the example | **No**: it would put a real secret on screen during setup; the counts say what was removed | A "Show the original (stays on this PC)" toggle |
+
 ## 6. Gaps (honest)
-- **Spec-only, not drawn:** the supervisor unreachable and Level 1 meter lines; org policy; offline plan check; the "supervisor wasn't sure" item; "Show n more"; the fail-closed brick (unchanged from #57's spec).
+- **CR-012 / always-on, 2026-10-26:** the new and renumbered screens are **not rendered** (no shell this session; §00a lists them); spec-only: expired code, too many tries, resend cooldown, the code never arriving (edge T), redaction failing, delete failed, sign-out/delete offline.
+- **Spec-only, not drawn:** the supervisor unreachable meter line (the Level 1 line is retired); org policy; offline plan check; the "supervisor wasn't sure" item; "Show n more"; the fail-closed brick (unchanged from #57's spec).
 - **Not rendered:** 125 % / 150 % display scaling; multi-monitor; a real Windows title bar under the notch (browser tabs at the top centre) to test the 280 ms hover intent against real pointer paths — **this is the biggest UX risk and needs a test on the founder's laptop in SP-ST1**.
 - **Fonts** load from Google Fonts in the prototype; the app bundles them.
 - The unsigned-build UAC copy ("Unknown publisher") follows CR-010's no-signing decision; it changes when a certificate is bought.

@@ -2,11 +2,11 @@
 
 | Date | Author | Status | Builds on |
 |---|---|---|---|
-| 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **§1–§10 approved by the founder 26 Oct** with D-1 to D-8 as recommended · **§11 "New since approval" needs approval** | [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
+| 2026-10-26 | PM + UI (Claude), `ui-designer` role standards | **§1–§10 approved by the founder 26 Oct** with D-1 to D-8 as recommended · **§11 "New since approval" needs approval** · **§12 CR-012 / always-on (account, What is sent) needs approval** | [CR-012](../../../requirements/change-requests/CR-012.md) · [CR-011](../../../requirements/change-requests/CR-011.md) · UX: [notch-and-panel.md](../../ux/companion/notch-and-panel.md), [setup-flow.md](../../ux/companion/setup-flow.md) · [BRAND](../brand/BRAND.md) · [tokens.css](../system/tokens.css) · [the 2026-10-25 notch design](../../ux/2026-10-25-atlas-notch-design.md) · the [direction prototype](../prototype/direction.html) effects |
 
 **In this folder:** this file · [tokens-notch.css](tokens-notch.css) (the only new tokens) · [prototype/notch.html](prototype/notch.html) (hi-fi, clickable, one file) · [screens/](screens/) (78 PNGs) · [SELF-REVIEW.md](SELF-REVIEW.md). The unapproved tray-and-window design (PR #57) is in [v1-tray-superseded/](v1-tray-superseded/), kept as history.
 
-**Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 74 states, light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
+**Open the prototype:** double-click `prototype/notch.html` (Edge or Chrome; fonts load from Google Fonts for review). It opens on a Windows desktop with your Euca, Pip, in the notch. Hover the notch, click it. The **States** button bottom-left is the demo control, not the UI: a jump menu to all 93 states (*CR-012 / always-on, 2026-10-26*: 74 + 19, a new group "Account and what is sent"), light/dark, reduced motion, thin line, and "Simulate: needs you". URL: `?r=<state>`, `?theme=light`, `?bar=0`, `?freeze=1`. `node prototype/build.mjs` rebuilds from `prototype/src/`; `node prototype/capture.mjs` re-renders the screens.
 
 ---
 
@@ -105,17 +105,18 @@ The notch's own body grows down into a 372 px card (clip-path morph from the not
 | `SupervisorMeter` | Usage, meter sheet | % left + reset date + value line; **no dollars, no counts of budget**; empty state copy fixed (CR-011) |
 | `PromiseText` | Rules | the one honest-promise string |
 | `LockRow` | Rules | locked (neutral) / not locked (amber, with Lock) |
-| `LimitRow` | Rules, setup 4 and 5 | the four limits: title, detail, **Locked** chip or amber **Not locked** (press to lock); never a switch |
+| `LimitRow` | Rules, setup 5 and 6 (*CR-012*: were 4 and 5) | the four limits: title, detail, **Locked** chip or amber **Not locked** (press to lock); never a switch |
 | `GuidedMergeItem` | needs-you | the offer ("Open a PR for search · tests first"; in the peek "Update, test, open PR") becomes its result in place (green check, "Open the PR") |
 | `BudgetItem` (Pro) | needs-you | "Budget reached for this session. Continue?" · Continue · Open session |
-| `RuleRow` | Rules, setup 4 | title, detail, lock glyph, switch; locked switches explain on press |
-| `RuleComposer` + `DraftCard` | Rules, setup 4 | described → exact rule in mono → effect last week → Add · Reword · Lock it too |
-| `SettingsRow`, `Radio` (privacy), `Seg` (notch look, theme) | Settings | — |
-| `PlanCard` | Settings › Plan | trial / taste / Pro |
+| `RuleRow` | Rules, setup 5 | title, detail, lock glyph, switch; locked switches explain on press |
+| `RuleComposer` + `DraftCard` | Rules, setup 5 | described → exact rule in mono → effect last week → Add · Reword · Lock it too |
+| `SettingsRow`, `Seg` (notch look, theme) | Settings | — (*CR-012 / always-on*: the privacy `Radio` is retired) |
+| `PlanCard` | Settings › Account | Free trial / Free / Pro / Founders' price (*CR-012 / always-on*: moved from Settings › Plan) |
 | `EucaEditor` | setup 2, Settings › Name and look | **one** editor in both places |
-| `SetupWindow` + `StepProgress` | setup | 760 × 600, 8 segments |
+| `SetupWindow` + `StepProgress` | setup | 760 × 600, **9 segments** (*CR-012 / always-on*) |
 | `Stage` + `MiniNotch` | setup 2 | the birth moment and a preview of where it lives |
-| `DraftCard`, `Checklist`, `LiveLog`, `LevelCard`, `Heartbeat` | setup | — |
+| `DraftCard`, `Checklist`, `LiveLog`, `Heartbeat` | setup | — (*CR-012 / always-on*: `LevelCard` is retired) |
+| `SignIn`, `CodeField`, `SentExample`, `AccountGroup`, `ConfirmPage` | setup 4 and 8, Settings | *CR-012 / always-on*: §12 |
 | `CoachMark` | once after setup | arrow to the notch, Got it |
 | Windows-drawn: `UAC`, `TrayMenu`, `WinNotification` | — | Segoe UI, Windows metrics |
 
@@ -148,7 +149,7 @@ Physics from `tokens.css`; only the character overshoots.
 | Peek | clip-path morph from the notch (`--spring-smooth`, 320 ms) | instant |
 | Panel | scale 0.97 → 1, rise 10 px, fade (320 ms) | fade |
 | **Birth** (setup 2) | squash 1.06/0.94 and settle (`--spring-gentle`), one blink | blink only |
-| **Homecoming** (setup 8) | the avatar flies to the notch (900 ms) and becomes its eyes; eyes open from a line | crossfade |
+| **Homecoming** (setup 9; *CR-012*: was 8) | the avatar flies to the notch (900 ms) and becomes its eyes; eyes open from a line | crossfade |
 | Heartbeat chip | ring every 2.4 s, never faster than 2 s | timestamp only |
 
 ## 6. Sound (BRAND §11, P-7)
@@ -164,7 +165,7 @@ Second person; your Euca speaks of itself by name ("Pip will check with you more
 
 ### 7.1 Fixed strings (stored once)
 - **Promise:** "Eucas never auto-approves a delete, a push to your default branch, a send or a payment, and no rule can change that."
-- **Privacy (approved):** "Nothing about your work leaves this PC unless you turn it on."
+- **Privacy (approved, CR-012 / always-on, 2026-10-26; replaces "Nothing about your work leaves this PC unless you turn it on."):** "When Pip isn't sure, it sends the waiting session's last message, trimmed and with code, paths and secrets removed, to the supervisor. Nothing else about your work leaves this PC. Your account holds only your email and your plan."
 - **Diagnostic (approved):** "No paths to your projects or files."
 - **Meter empty (CR-011, with the name):** "Pip will check with you more often until 1 Dec."
 - **Never approves:** "It never approves a tool call."
@@ -232,3 +233,48 @@ The founder approved §1–§10 with the 8 recommendations and asked for the ful
 **Wording fixed:** the tripwire marker reads **"Stopped: notes"**; the item and the Windows notification read "Pip stopped the notes session".
 
 **Screens:** `new-suggest-d`, `new-learned-d`, `new-knows-d` / `-l`, `new-knows-empty-d`, `new-why-d`, `new-undo-d`, `new-away-d` / `-l`, `peek-away-d`, `new-caught-up-d`, `eyes-sheet-d`, `worst-offline-d`, `worst-login-d`, `worst-week-d`, `worst-claude-d`, `worst-write-failed-d`, `worst-back-to-normal-d` (78 screens in all; the prototype has 74 states).
+
+---
+
+## 12. CR-012 / always-on, 2026-10-26: sign in, What is sent, Account
+
+The UX is in [setup-flow.md](../../ux/companion/setup-flow.md) (steps 4 and 8) and [notch-and-panel.md §10](../../ux/companion/notch-and-panel.md). Everything here is built from existing parts: the field, the `conseq` list, the checklist, the banner, the inline error, the check list on sub-pages, the plan card. **No new tokens** (`tokens-notch.css` is unchanged); no new colour.
+
+### 12.1 Why it looks like this
+The account is a chore and the privacy step is a proof, so both are **plain on purpose**: no illustration, no motion, no Euca expression. The personality budget stays on the three pinned moments (birth, proof, homecoming). The one visual idea is the **redaction tag**: a removal shown in place, as a neutral mono tag inside the message, so you read the sentence the supervisor reads and see exactly where your code, paths and secrets were. That is the glass box made literal, and it reuses the mono language Eucas already uses for commands and rules.
+
+### 12.2 Components
+
+| Component | Where | Spec |
+|---|---|---|
+| `SignIn` | setup 4, panel › Sign in | **One pattern in both places.** Email state: `field-l` "Email" + the 40 px `.field` (max 460 px in setup, full width in the panel); setup adds the two-line `conseq` list (clock glyph: the trial; key glyph: your Claude login). The primary is in the setup footer ("Send a code", 40 px Cobalt) and inline in the panel (32 px Cobalt). Offline replaces the `conseq` list with the neutral `Banner` (cloud glyph) and the footer becomes Try again (ghost) + **Sign in later** (Cobalt) |
+| `CodeField` | setup 4, panel | Six cells, 48 × 56 in setup (44 × 48 in the panel), radius 12, `--bg-ground`, 1 px `--line-control` ring; digits 20/600 tabular; the current cell has the focus ring and a 2 × 22 caret. Wrong: every cell's ring turns `--danger-fill` and the `InlineError` sits under it ("That code didn't match. Send a new one", the link inherits the danger ink). **No shake** (the eye grammar never alarms; a shake also fails reduced motion). Build: **one** `<input inputmode=numeric autocomplete=one-time-code maxlength=6>` drawn as cells, so paste and Windows' one-time-code fill work and a screen reader hears one field ("6-digit code") |
+| `SentExample` | setup 8, panel › What is sent | A `figure`: radius 14; in setup `--bg-ground` with a 1 px `--line` ring (like the live log), in the panel the surface card with `--elev-1`. Caption row 12 Text 3 (where it came from) + a neutral chip (**Yours, redacted** or **Sample**). The message 13/22 Text 1 in Instrument Sans (it's prose, not code), with **redaction tags** inline: JetBrains Mono 12, Text 3 on `--bg-sunken`, 1 px `--line-subtle` ring, radius 5, `nowrap`; words not glyphs ("path removed", "secret removed", "6 lines of code removed") so the tag reads aloud correctly. A trailing "…" marks the trim. Footer under a hairline: 12 Text 3, the counts (tabular) and where it goes |
+| `AccountGroup` | Settings › Account | The `SettingsRow` (email 13/600, "Holds only your email and your plan" 12) with **Sign out** (32 px neutral), then the `PlanCard` in the same group under a hairline; a quiet **Delete account** link under the group. Not signed in: one row, "Not signed in" + neutral **Sign in** |
+| `PlanCard` | Account | + **Pro · Founders' price** "$15/month for life" · **Free trial** (was "Free · supervisor trial") "12 days left" |
+| `ConfirmPage` | Sign out, Delete account | A sub-page: 20 px title naming the account · a check list of consequences, each with its glyph (✓ ok ink: what keeps working; clock / note in Text 3: what waits or stays; ✕ danger ink: what's removed) · actions row. Sign out: Cobalt **Sign out** + ghost "Stay signed in". Delete: **danger-tint button** "Delete account · can't be taken back" (`--danger-tint` with `--danger-ink`, not a solid red: the solid red marker fill is 4.2:1 with white, under AA for 13 px text) + ghost "Keep my account". **No modal**: the panel already holds focus, and a sub-page shows the consequences before the button, which a modal's two lines can't |
+| Supervisor meter: not signed in | Usage | Chip "Not signed in" (neutral), no bar (an empty bar would read as "used up"), the m-line with the bold cause, a neutral **Sign in**; the **What is sent** link under it, as under every meter state |
+| `WhatIsSentRow` | Settings › Privacy | A `button.row` with chevron; replaces the Level radio |
+
+### 12.3 Type, colour and state budget per new view
+- **Setup 4 (code):** 28 headline · 20 digits · 15 lede · 13 resend line: 4 sizes, 2 weights. **Setup 8:** 28 · 15 · 13 · 12: 4 sizes. **Panel pages:** 20 · 15 · 13 · 12, as before.
+- **One Cobalt per view:** Send a code / Sign in later / Sign out (the decision). Sign in (navigation to the form) is neutral everywhere (R1). Delete is the only danger-tinted button in the product.
+- **Amber** only for the different-account warning (a consequence, the Not locked pattern). **Red** only for the wrong code, the expiring address and the delete button. **Green** only on the checklist ticks of a real sign-in.
+- **States:** the field and the code cells have default, focus (ring + halo), error (danger ring + text) and disabled (the primary, with the reason in the error line); buttons keep the system's hover and press. Every error has words.
+
+### 12.4 Motion
+None new. The code screen replaces the email screen in place, like every setup step; the 6th digit submits after 150 ms so the last digit is seen. Reduced motion: identical (nothing moves).
+
+### 12.5 Accessibility
+Labels: "Email", "6-digit code". Errors use `role=alert` and `aria-describedby` from the field; the offline banner and the switch warning use `role=status`. The resend countdown is announced once when it ends. The redaction tags are real text, so a screen reader reads "path removed". The danger button's label includes "can't be taken back".
+
+### 12.6 Copy fixed (stored once)
+- Privacy line: §7.1.
+- Wrong code: "That code didn't match. Send a new one" · Disposable: "Please use an address you'll keep. This one expires." · Offline: "Sign in later" (founder, verbatim).
+- "Your Claude login stays as it is. Eucas never sees it." (ADR-0002) · "Your 14-day supervisor trial starts when setup finishes. No card."
+- "There's no off switch. Your rules always decide first; the supervisor only sees a message like this one."
+- Delete: "Delete account · can't be taken back".
+- **Removal test cut:** "Create an account" vs "Sign in" (one verb: email + code does both) · a password hint · "We'll never share your email" (the privacy line already says what the account holds) · the Level names · "Default" · a showing of the unredacted original.
+
+### 12.7 Screens to render (capture IDs in `prototype/capture.mjs`)
+Setup: `setup-4-signin-d` / `-l`, `setup-4-signin-code-d`, `setup-4-signin-wrong-d`, `setup-4-signin-disposable-d`, `setup-4-signin-offline-d`, `setup-4-signin-done-d`, `setup-4-signin-back-d`, `setup-8-sent-d` / `-l`, `setup-8-sent-sample-d`; renumbered: `setup-5-rules-d`, `setup-5-rules-draft-d`, `setup-6-lock-d`, `setup-6-uac-d`, `setup-6-declined-d`, `setup-7-test-d`, `setup-7-test-failed-d`, `setup-9-watching-d`, `setup-10-coach-d`. Panel: `acct-sent-d` / `-l`, `acct-sent-sample-d`, `acct-sent-link-d`, `acct-account-d` / `-l` / `-d1280`, `acct-account-founders-d`, `acct-signout-d`, `acct-delete-d`, `acct-deleted-d`, `acct-signedout-d`, `acct-signin-d`, `acct-signin-code-d`, `acct-switch-d`. Changed and to re-render: `panel-settings-d` / `-l`, `panel-usage-d`, `panel-needs-usage-d` / `-l` / `-d1280`, `meter-sheet-d` / `-l`, `meter-empty-d`, `plan-trial-d`, `plan-taste-d`, `new-why-d`. **Not yet rendered** (no shell in this session): see [SELF-REVIEW.md §00a](SELF-REVIEW.md).
