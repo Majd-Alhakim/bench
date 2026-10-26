@@ -1,0 +1,40 @@
+# ADR-0007: The companion attaches to the user's own sessions (plugin + native guard + managed limits)
+
+- **Status:** Proposed (2026-10-26). Needs the founder's approval with the companion architecture ([SYSTEM-DESIGN](../architecture/companion/SYSTEM-DESIGN.md)).
+- **Numbering:** CR-009 reserved ADR-0004/5/6 for the notch, so the companion ADRs start at 0007.
+- **Date:** 2026-10-26
+
+## Context
+The 26 Oct pivot ships a **companion** for Claude Code sessions people already run, not the Agent SDK team app of ADR-0001. None of the existing spikes (S0-1, M8, SP-B1) tested this "attach" path: they ran agents inside our own SDK process. The pre-mortem's must-haves fix the shape: distribute as a Claude Code plugin, `onFailure: "block"`, limits that neither a repo nor the agent can switch off, a heartbeat, a canary per CLI release, status-line chaining, no credential reading.
+
+Facts that decide it (pre-mortem trust F1, F14, F16; execution F12, F20, F25, F26, F30):
+- Hooks fail **open** by default; `onFailure: "block"` (2.1.295+) closes command and http hooks, not `Stop`.
+- Project settings can set `disableAllHooks` and switch off user hooks; **user, project and local settings can't disable managed hooks**.
+- Managed settings on Windows: `C:\Program Files\ClaudeCode\managed-settings.json` or `HKLM\SOFTWARE\Policies\ClaudeCode` (admin to write); `HKCU\…\Policies` is user-writable and used only when no admin source exists.
+- A user-scope plugin applies to the terminal, the desktop app's local sessions and VS Code.
+- One `statusLine` per settings scope.
+- An `http` hook to the app fails when the app is closed: open (unsafe) or, with `onFailure: "block"`, it blocks every session (bricking).
+
+## Options
+| | Limits hold with the app closed | A repo or the agent can switch them off | Bricks Claude Code if the app dies | Distribution |
+|---|---|---|---|---|
+| A. `http` hooks to the running app | ❌ | Yes (user scope) | **Yes** with `onFailure: block` | Plugin |
+| B. Edit `~/.claude/settings.json` from outside | ✅ | Yes | No | None (pollutes user config) |
+| **C. User-scope plugin calling a native guard exe + limits in admin-written managed settings** | ✅ | **No** (managed tier); user-level fallback is labelled weaker | No: the guard is standalone; the app is optional | Plugin + one UAC step |
+| D. Launcher (`claude --settings …` per session) | Only for sessions we launch | No for those | No | App (misses every other session) |
+
+## Decision
+**Option C.** Three independent layers, each useful alone:
+1. **Limits (managed tier, one UAC prompt, D-4 (a)).** An elevated helper writes our entries into the managed settings source (file or HKLM, whichever Claude Code reads on that build; merged, never overwriting an organisation's policy) and installs a **pinned limits-only guard** to `C:\Program Files\Eucas\limits\eucas-guard.exe` (admin-writable only). The managed entries are a `PreToolUse` + `PermissionRequest` hook to that exe with `onFailure: "block"`, plus `permissions.deny` patterns for the limits as a second layer that needs no binary at all. The app never sets `allowManagedHooksOnly` or `disableAllHooks`.
+2. **Plugin (user scope, no admin).** The `eucas` plugin, which **carries the guard binary in its own `bin/`**. The installer writes it to a local marketplace folder (`%LOCALAPPDATA%\Eucas\marketplace\`); `claude plugin marketplace add` + `claude plugin install eucas@eucas --scope user` copy it into Claude Code's plugin cache, so the guard never depends on the app folder. Hooks for heartbeat checks, user rules (auto-approve), needs-you, same-file, session lifecycle and the supervisor's `Stop` moments, all calling `eucas-guard.exe` in exec form. If the user declines UAC (D-4 (b)), the plugin's guard also enforces the limits, the same `permissions.deny` patterns go into the user's `~/.claude/settings.json` (recorded as a JSON patch, so "limits in your user settings" in the UI is literally true), and every surface says "user level".
+3. **App (per-user, tray).** Reads guard events, status-line JSON, `claude agents --json` (optional) and local transcripts (metadata only). It owns the UI, the heartbeat verdict, the tripwire, the retro, the rules editor, the canary and the diagnostic. **Closing or crashing the app weakens nothing in layers 1–2**; it stops the heartbeat display, notifications and the tripwire, and the quit dialog says so.
+
+Status line: the plugin (or, if SP-H1 shows a plugin can't ship it, the user `settings.json` with a backup) points `statusLine` at `eucas-guard status-line`, which runs the user's saved command, prints its output byte for byte, and tees the JSON to the app. Uninstall restores the saved command exactly.
+
+## Consequences
+- The limits survive a closed app, a crashed app, a repo's `disableAllHooks`, an agent editing user settings, and a user-writable guard being replaced. They do not survive an admin or an organisation policy, which is correct.
+- A limits guard that can't start blocks every session, and only an admin step lifts it: the helper's `repair` and `pause-limits` operations (one UAC prompt each), described in SYSTEM-DESIGN §7.1.
+- Two guard copies with different update paths: the limits guard changes rarely and each change costs one UAC prompt (stated in release notes); the plugin guard updates freely.
+- Org-managed PCs with `allowManagedHooksOnly` get the "Blocked by your organisation" state; we never write into an employer's policy.
+- Cloud sessions load none of this (trust F44); the gap line says so.
+- Open until SP-H1: whether a plugin can ship the main `statusLine`; whether a newly installed plugin reaches running sessions; the exact managed source Claude Code reads on current builds.
